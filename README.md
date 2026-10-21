@@ -1,6 +1,6 @@
-# Simulatore Quiz con Revisione e QR Code
+# Piattaforma Esami Telematici
 
-Simulatore interattivo di quiz statico eseguibile direttamente da **GitHub Pages** (`fmorea.github.io`) o in locale.
+Piattaforma telematica d'esame eseguibile direttamente da **GitHub Pages** (`fmorea.github.io`) o in locale.
 
 ## Caratteristiche Principali
 - **Scheda d'Esame Touch**: Mappa numerata delle domande, pulsanti VERO / FALSO, conto alla rovescia e controllo di sicurezza prima della consegna.
@@ -13,4 +13,4 @@ Simulatore interattivo di quiz statico eseguibile direttamente da **GitHub Pages
 ## Come pubblicare su GitHub Pages
 1. Apri la pagina del repository: `https://github.com/fmorea/fmorea.github.io`
 2. Carica o committa i file `index.html` e `template_domande.csv`.
-3. Vai su `https://fmorea.github.io` per visualizzare il simulatore attivo online!
+3. Vai su `https://fmorea.github.io` per visualizzare la piattaforma attiva online!

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulatore Quiz con Spiegazione Risposte</title>
+  <title>Piattaforma Esami Telematici</title>
   
   <!-- Tailwind CSS per layout responsive e moderno -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -32,7 +32,7 @@
     <div id="step-registration" class="p-6 md:p-10">
       <div class="border-b border-slate-200 pb-5 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
-          <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900">Simulatore Quiz</h1>
+          <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900">Piattaforma Esami Telematici</h1>
           <p class="text-sm text-slate-500 mt-0.5">Esercitazione e verifica con spiegazione dettagliata delle risposte</p>
         </div>
         <div class="flex items-center gap-2">
@@ -278,7 +278,7 @@
         </div>
         <div class="flex items-center gap-2">
           <button onclick="exitReview()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5">
-            <span>← Torna al Simulatore</span>
+            <span>← Torna alla Piattaforma</span>
           </button>
         </div>
       </div>
@@ -308,7 +308,7 @@
 
       <div class="flex justify-center pt-4 border-t border-slate-200">
         <button onclick="exitReview()" class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition">
-          Torna al Simulatore / Nuova Prova
+          Torna alla Piattaforma / Nuova Prova
         </button>
       </div>
     </div>
@@ -1226,7 +1226,7 @@
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(9.5);
       doc.setTextColor(100, 116, 139);
-      doc.text("SIMULATORE QUIZ - RIEPILOGO PROVA", 105, 24, { align: 'center' });
+      doc.text("PIATTAFORMA ESAMI TELEMATICI - RIEPILOGO PROVA", 105, 24, { align: 'center' });
 
       doc.setFontSize(20);
       doc.setTextColor(30, 41, 59);
@@ -1376,7 +1376,7 @@
         doc.setFont('Helvetica', 'normal');
         doc.setFontSize(8);
         doc.setTextColor(148, 163, 184);
-        doc.text("Scheda informativa generata dal Simulatore Quiz (fmorea.github.io)", 105, 272, { align: 'center' });
+        doc.text("Scheda informativa generata da Piattaforma Esami Telematici (fmorea.github.io)", 105, 272, { align: 'center' });
 
         const nomeFile = `Scheda_${examResultData.cand.cognome}_${examResultData.cand.cf}_${examResultData.id}.pdf`;
         doc.save(nomeFile);
