@@ -1,17 +1,16 @@
-# Piattaforma Quiz Statica & Certificata (Stile Patente Statale)
+# Simulatore Quiz con Revisione e QR Code
 
-Piattaforma d'esame e simulatore quiz statico per **GitHub Pages** (`fmorea.github.io`).
+Simulatore interattivo di quiz statico eseguibile direttamente da **GitHub Pages** (`fmorea.github.io`) o in locale.
 
-## Caratteristiche
-- **Interfaccia Touch Patente Statale**: Scheda d'esame con mappa numerata delle domande, pulsanti VERO / FALSO, conto alla rovescia e controllo di sicurezza pre-consegna.
-- **Validazione Formale Codice Fiscale**: Algoritmo ministeriale con calcolo del carattere di controllo per evitare errori o codici fittizi.
-- **Generazione Attestato PDF Ufficiale**: Stampa e download istantaneo con jsPDF e layout ministeriale.
-- **Protocollo Digitale Anticontraffazione**: Marcatura temporale e hash crittografico deterministico SHA-256 (`PROT-YYYYMMDD-CF-HASH-SCORE`).
-- **Facilità di Caricamento Domande**: Supporto diretto a file JSON e file CSV (redigibili su Excel o Google Sheets) e pulsante per caricare file al volo dal browser.
+## Caratteristiche Principali
+- **Scheda d'Esame Touch**: Mappa numerata delle domande, pulsanti VERO / FALSO, conto alla rovescia e controllo di sicurezza prima della consegna.
+- **QR Code di Verifica e Spiegazione**: Al termine della prova viene generato un QR Code (a video e nel PDF) che codifica lo stato delle risposte fornite. Inquadrandolo con lo smartphone si apre la scheda di revisione con la spiegazione didattica di ogni singolo quesito.
+- **Revisione Interattiva**: Schermata dedicata con filtri per visualizzare tutte le domande, solo gli errori commessi o le risposte corrette, con la motivazione di ciascuna soluzione.
+- **Validazione Formale Codice Fiscale**: Algoritmo ministeriale AdE con calcolo del carattere di controllo per evitare codici formalmente errati.
+- **Esportazione Scheda Risultati in PDF**: Generazione lato client del riepilogo della prova con tabella esiti e QR Code per la consultazione mobile.
+- **Caricamento Quesiti Flessibile**: Supporto diretto a banche dati integrate, file CSV o JSON (locali o remoti da repository GitHub) con campo per la spiegazione didattica del quesito.
 
 ## Come pubblicare su GitHub Pages
-1. Apri la pagina del tuo repository: `https://github.com/fmorea/fmorea.github.io`
-2. Trascina il file `index.html` all'interno della cartella principale (o clicca **Add file** -> **Upload files**).
-3. Clicca **Commit changes**.
-4. Vai su `https://fmorea.github.io` per visualizzare il simulatore attivo online!
-
+1. Apri la pagina del repository: `https://github.com/fmorea/fmorea.github.io`
+2. Carica o committa i file `index.html` e `template_domande.csv`.
+3. Vai su `https://fmorea.github.io` per visualizzare il simulatore attivo online!

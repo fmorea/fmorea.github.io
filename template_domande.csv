@@ -1,11 +1,11 @@
-argomento,testo,rispostaCorretta
-Segnaletica,Il segnale di stop obbliga ad arrestarsi sempre in corrispondenza della striscia trasversale di arresto,VERO
-Limiti,Sulle strade extraurbane principali il limite per autovetture è di 130 km/h,FALSO
-Precedenze,Chi svolta a sinistra deve dare la precedenza ai veicoli provenienti da destra e di fronte,VERO
-Distanza,La distanza di sicurezza deve essere aumentata su fondo stradale bagnato o innevato,VERO
-Alcol,Il limite alcolemico per i neopatentati è di 0.5 g/l nei primi tre anni dal conseguimento,FALSO
-Sorpasso,È consentito sorpassare un veicolo fermo che sta facendo attraversare i pedoni,FALSO
-Dispositivi,L'uso delle cinture di sicurezza è obbligatorio anche sui sedili posteriori,VERO
-Fari,I proiettori anabbaglianti devono essere accesi anche di giorno fuori dai centri abitati,VERO
-Sosta,La sosta è vietata in corrispondenza e in prossimità dei passaggi a livello,VERO
-Smartphone,Durante la marcia è consentito usare lo smartphone con auricolare o vivavoce,VERO
+argomento,testo,rispostaCorretta,spiegazione
+Segnaletica,"Il segnale di stop obbliga ad arrestarsi sempre in corrispondenza della striscia trasversale di arresto",VERO,"L'arresto è sempre obbligatorio alla striscia trasversale anche se l'incrocio sembra sgombro."
+Limiti,"Sulle strade extraurbane principali il limite per autovetture è di 130 km/h",FALSO,"Il limite massimo sulle extraurbane principali è 110 km/h; 130 km/h è il limite per le autostrade."
+Precedenze,"Chi svolta a sinistra deve dare la precedenza ai veicoli provenienti da destra e di fronte",VERO,"Svoltando a sinistra si impegna la corsia opposta, dando precedenza sia a destra sia ai veicoli di fronte."
+Distanza,"La distanza di sicurezza deve essere aumentata su fondo stradale bagnato o innevato",VERO,"La ridotta aderenza degli pneumatici su bagnato o neve allunga lo spazio di frenata."
+Alcol,"Il limite alcolemico per i neopatentati è di 0.5 g/l nei primi tre anni dal conseguimento",FALSO,"Per i neopatentati nei primi 3 anni e minori di 21 anni vige tolleranza zero (tasso alcolemico 0,0 g/l)."
+Sorpasso,"È consentito sorpassare un veicolo fermo che sta facendo attraversare i pedoni",FALSO,"È vietato sorpassare veicoli che si sono fermati o hanno rallentato per consentire il passaggio di pedoni."
+Dispositivi,"L'uso delle cinture di sicurezza è obbligatorio anche sui sedili posteriori",VERO,"Tutti gli occupanti del veicolo devono allacciare le cinture sia sui sedili anteriori sia posteriori."
+Fari,"I proiettori anabbaglianti devono essere accesi anche di giorno fuori dai centri abitati",VERO,"Fuori dai centri abitati e in autostrada è obbligatorio l'uso degli anabbaglianti anche durante il giorno."
+Sosta,"La sosta è vietata in corrispondenza e in prossimità dei passaggi a livello",VERO,"In corrispondenza e in prossimità di passaggi a livello e binari ferroviari la sosta è severamente vietata."
+Smartphone,"Durante la marcia è consentito usare lo smartphone con auricolare o vivavoce",VERO,"L'uso è ammesso purché le mani restino libere e non vengano compromesse le capacità uditive."
