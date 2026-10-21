@@ -2,26 +2,87 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Piattaforma Esami Telematici</title>
   
-  <!-- Tailwind CSS per layout responsive e moderno -->
+  <!-- Tailwind CSS per browser moderni -->
   <script src="https://cdn.tailwindcss.com"></script>
   
   <!-- jsPDF per generazione lato client della scheda riepilogativa PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   
-  <!-- QRCode.js per generare il codice QR a video e sul PDF -->
+  <!-- QRCode.js per generare il codice QR a video e sul PDF (compatibile IE6-IE11) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <!-- LZ-String per compressione efficiente dello stato delle domande nel QR code -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
 
+  <!-- Fogli di stile nativi con fallback per vecchi browser (Internet Explorer 9, 10, 11 e ambienti P.A.) -->
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-    body { font-family: 'Inter', sans-serif; }
-    .btn-quiz-number { transition: all 0.15s ease-in-out; }
-    .btn-quiz-number.active { ring: 3px solid #2563eb; transform: scale(1.08); font-weight: 800; }
+    
+    /* Regole generali e fallback per IE */
+    * { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      margin: 0;
+      padding: 12px;
+      background-color: #f1f5f9;
+      color: #1e293b;
+    }
+    .hidden { display: none !important; }
+    
+    /* Fallback container per browser che non interpretano Tailwind */
+    #app {
+      max-width: 900px;
+      margin: 15px auto;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+    
+    /* Fallback pulsanti e input */
+    input[type="text"] {
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+    button {
+      cursor: pointer;
+      font-family: inherit;
+    }
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+    .btn-quiz-number {
+      transition: all 0.15s ease-in-out;
+      display: inline-block;
+      text-align: center;
+    }
+    .btn-quiz-number.active {
+      outline: 3px solid #2563eb;
+      font-weight: 800;
+    }
+
+    /* Fallback flex / grid per vecchi browser P.A. */
+    .flex-fallback {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+    }
+    .row-fallback:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+    .col-6 {
+      float: left;
+      width: 50%;
+      padding: 0 8px;
+    }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 antialiased min-h-screen p-3 md:p-6 flex flex-col items-center justify-center">
@@ -33,7 +94,6 @@
       <div class="border-b border-slate-200 pb-5 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
           <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900">Piattaforma Esami Telematici</h1>
-          <p class="text-sm text-slate-500 mt-0.5">Esercitazione e verifica con spiegazione dettagliata delle risposte</p>
         </div>
         <div class="flex items-center gap-2">
           <button type="button" onclick="promptPasteReviewLink()" class="text-xs text-blue-700 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3 py-2 rounded-xl font-bold flex items-center gap-1.5 transition">
@@ -316,7 +376,76 @@
   </div>
 
   <script>
-    const BANCA_DATI_MATERIE = [
+    /* ==============================================================
+       POLYFILLS PER VECCHI BROWSER (Internet Explorer 9, 10, 11 e P.A.)
+       ============================================================== */
+    if (!String.prototype.trim) {
+      String.prototype.trim = function () {
+        return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+      };
+    }
+
+    if (!Array.prototype.find) {
+      Array.prototype.find = function (predicate) {
+        if (this == null) throw new TypeError('Array.prototype.find chiamato su null o undefined');
+        if (typeof predicate !== 'function') throw new TypeError('predicate deve essere una funzione');
+        var list = Object(this);
+        var length = list.length >>> 0;
+        var thisArg = arguments[1];
+        for (var i = 0; i < length; i++) {
+          var value = list[i];
+          if (predicate.call(thisArg, value, i, list)) return value;
+        }
+        return undefined;
+      };
+    }
+
+    if (typeof Object.assign !== 'function') {
+      Object.assign = function (target) {
+        if (target == null) throw new TypeError('Cannot convert undefined or null to object');
+        var to = Object(target);
+        for (var index = 1; index < arguments.length; index++) {
+          var nextSource = arguments[index];
+          if (nextSource != null) {
+            for (var nextKey in nextSource) {
+              if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+                to[nextKey] = nextSource[nextKey];
+              }
+            }
+          }
+        }
+        return to;
+      };
+    }
+
+    function pad2(num) {
+      var s = String(num);
+      return s.length < 2 ? '0' + s : s;
+    }
+
+    /* Lettura sicura dei parametri URL compatibile anche con IE9/IE10/IE11 */
+    function getQueryParameter(paramName) {
+      var searchStr = window.location.search || '';
+      if (!searchStr && window.location.hash) {
+        var hashIdx = window.location.hash.indexOf('?');
+        if (hashIdx !== -1) {
+          searchStr = window.location.hash.substring(hashIdx);
+        }
+      }
+      if (!searchStr || searchStr.length <= 1) return null;
+      var query = searchStr.substring(1);
+      var vars = query.split('&');
+      for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) === paramName) {
+          return decodeURIComponent(pair[1] || '');
+        }
+      }
+      return null;
+    }
+
+    /* BANCA DATI MATERIE D'ESAME INTEGRATE */
+    var BANCA_DATI_MATERIE = [
       {
         id: "patente_b",
         nome: "Patente B: Segnaletica e Norme",
@@ -329,7 +458,7 @@
             argomento: "Segnali di pericolo",
             testo: "Il segnale di pericolo con veicolo che sbanda preannuncia un tratto di strada con superficie particolarmente scivolosa in caso di pioggia.",
             rispostaCorretta: true,
-            spiegazione: "Vero: il segnale 'Strada sdrucciolevole' avverte di un tratto stradale che può diventare particolarmente scivoloso specialmente in condizioni di bagnato, fango, neve o ghiaccio."
+            spiegazione: "Vero: il segnale 'Strada sdrucciolevole' avverte di un tratto stradale che puo diventare particolarmente scivoloso specialmente in condizioni di bagnato, fango, neve o ghiaccio."
           },
           {
             id: 2,
@@ -442,36 +571,37 @@
       }
     ];
 
+    /* Algoritmo ministeriale formale del Codice Fiscale italiano */
     function checkCodiceFiscale(cf) {
       if (!cf || typeof cf !== 'string') return false;
       cf = cf.toUpperCase().trim();
-      const regex = /^[A-Z]{6}[0-9LMNPQRSTUV]{2}[A-EHLMPR-T][0-9LMNPQRSTUV]{2}[A-Z][0-9LMNPQRSTUV]{3}[A-Z]$/;
+      var regex = /^[A-Z]{6}[0-9LMNPQRSTUV]{2}[A-EHLMPR-T][0-9LMNPQRSTUV]{2}[A-Z][0-9LMNPQRSTUV]{3}[A-Z]$/;
       if (!regex.test(cf)) return false;
 
-      const tabDispari = {
+      var tabDispari = {
         '0': 1, '1': 0, '2': 5, '3': 7, '4': 9, '5': 13, '6': 15, '7': 17, '8': 19, '9': 21,
         'A': 1, 'B': 0, 'C': 5, 'D': 7, 'E': 9, 'F': 13, 'G': 15, 'H': 17, 'I': 19, 'J': 21,
         'K': 2, 'L': 4, 'M': 18, 'N': 20, 'O': 11, 'P': 3, 'Q': 6, 'R': 8, 'S': 12, 'T': 14,
         'U': 16, 'V': 10, 'W': 22, 'X': 25, 'Y': 24, 'Z': 23
       };
       
-      let somma = 0;
-      for (let i = 0; i < 15; i++) {
-        const c = cf[i];
+      var somma = 0;
+      for (var i = 0; i < 15; i++) {
+        var c = cf.charAt(i);
         if (i % 2 === 0) {
           somma += tabDispari[c];
         } else {
           somma += (c >= '0' && c <= '9') ? (c.charCodeAt(0) - 48) : (c.charCodeAt(0) - 65);
         }
       }
-      return String.fromCharCode(65 + (somma % 26)) === cf[15];
+      return String.fromCharCode(65 + (somma % 26)) === cf.charAt(15);
     }
 
     function validateCFInput() {
-      const input = document.getElementById('cand-cf');
-      const val = input.value.trim().toUpperCase();
-      const msg = document.getElementById('cf-msg');
-      const badge = document.getElementById('cf-badge');
+      var input = document.getElementById('cand-cf');
+      var val = input.value.trim().toUpperCase();
+      var msg = document.getElementById('cf-msg');
+      var badge = document.getElementById('cf-badge');
 
       if (val.length === 16) {
         if (checkCodiceFiscale(val)) {
@@ -488,22 +618,22 @@
           return false;
         }
       } else {
-        msg.textContent = `Caratteri: ${val.length}/16.`;
+        msg.textContent = "Caratteri: " + val.length + "/16.";
         msg.className = "text-xs text-slate-400 mt-1";
         badge.textContent = "";
         return false;
       }
     }
 
-    /* Robust CSV Line Parser */
+    /* Parser CSV compatibile con tutti i browser */
     function parseCsvLine(text) {
-      const result = [];
-      let cur = '';
-      let inQuotes = false;
-      for (let i = 0; i < text.length; i++) {
-        const c = text[i];
+      var result = [];
+      var cur = '';
+      var inQuotes = false;
+      for (var i = 0; i < text.length; i++) {
+        var c = text.charAt(i);
         if (c === '"') {
-          if (inQuotes && text[i + 1] === '"') {
+          if (inQuotes && text.charAt(i + 1) === '"') {
             cur += '"';
             i++;
           } else {
@@ -520,84 +650,96 @@
       return result;
     }
 
-    let selectedMateria = BANCA_DATI_MATERIE[0];
-    let candidate = { nome: '', cognome: '', cf: '' };
-    let currentQuestionIndex = 0;
-    let userAnswers = {};
-    let timerInterval = null;
-    let secondsRemaining = 0;
-    let totalSecondsElapsed = 0;
-    let examResultData = null;
-    let currentReviewData = null;
-    let currentReviewFilter = 'all';
+    var selectedMateria = BANCA_DATI_MATERIE[0];
+    var candidate = { nome: '', cognome: '', cf: '' };
+    var currentQuestionIndex = 0;
+    var userAnswers = {};
+    var timerInterval = null;
+    var secondsRemaining = 0;
+    var totalSecondsElapsed = 0;
+    var examResultData = null;
+    var currentReviewData = null;
+    var currentReviewFilter = 'all';
 
     function renderMaterieSelector() {
-      const container = document.getElementById('materie-selector');
+      var container = document.getElementById('materie-selector');
       container.innerHTML = '';
-      BANCA_DATI_MATERIE.forEach((mat) => {
-        const isSelected = mat.id === selectedMateria.id;
-        const card = document.createElement('div');
-        card.id = `materia-card-${mat.id}`;
-        card.className = `cursor-pointer p-4 rounded-xl border-2 transition ${isSelected ? 'border-blue-600 bg-blue-50/70 shadow-sm' : 'border-slate-200 hover:border-slate-300 bg-white'}`;
-        card.onclick = () => selectMateria(mat.id);
-        card.innerHTML = `
-          <div class="flex items-center justify-between">
-            <div class="font-bold text-sm text-slate-800">${mat.nome}</div>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">${mat.domande.length} Q</span>
-          </div>
-          <p class="text-xs text-slate-500 mt-1">${mat.descrizione}</p>
-        `;
-        container.appendChild(card);
-      });
+      for (var i = 0; i < BANCA_DATI_MATERIE.length; i++) {
+        (function(mat) {
+          var isSelected = mat.id === selectedMateria.id;
+          var card = document.createElement('div');
+          card.id = 'materia-card-' + mat.id;
+          card.className = 'cursor-pointer p-4 rounded-xl border-2 transition ' + (isSelected ? 'border-blue-600 bg-blue-50/70 shadow-sm' : 'border-slate-200 hover:border-slate-300 bg-white');
+          card.onclick = function() {
+            selectMateria(mat.id);
+          };
+          card.innerHTML = 
+            '<div class="flex items-center justify-between">' +
+              '<div class="font-bold text-sm text-slate-800">' + mat.nome + '</div>' +
+              '<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">' + mat.domande.length + ' Q</span>' +
+            '</div>' +
+            '<p class="text-xs text-slate-500 mt-1">' + mat.descrizione + '</p>';
+          container.appendChild(card);
+        })(BANCA_DATI_MATERIE[i]);
+      }
       updateMateriaInfo();
     }
 
     function selectMateria(id) {
-      selectedMateria = BANCA_DATI_MATERIE.find(m => m.id === id);
+      for (var i = 0; i < BANCA_DATI_MATERIE.length; i++) {
+        if (BANCA_DATI_MATERIE[i].id === id) {
+          selectedMateria = BANCA_DATI_MATERIE[i];
+          break;
+        }
+      }
       renderMaterieSelector();
     }
 
     function updateMateriaInfo() {
       document.getElementById('info-domande').textContent = selectedMateria.domande.length;
-      document.getElementById('info-tempo').textContent = `${selectedMateria.tempoMinuti} min`;
-      document.getElementById('info-soglia').textContent = `${selectedMateria.sogliaSuperamento}%`;
-      const maxErr = Math.floor(selectedMateria.domande.length * (1 - selectedMateria.sogliaSuperamento / 100));
-      document.getElementById('info-max-errori').textContent = `max ${maxErr} error${maxErr === 1 ? 'e' : 'i'}`;
+      document.getElementById('info-tempo').textContent = selectedMateria.tempoMinuti + ' min';
+      document.getElementById('info-soglia').textContent = selectedMateria.sogliaSuperamento + '%';
+      var maxErr = Math.floor(selectedMateria.domande.length * (1 - selectedMateria.sogliaSuperamento / 100));
+      document.getElementById('info-max-errori').textContent = 'max ' + maxErr + ' error' + (maxErr === 1 ? 'e' : 'i');
     }
 
     function handleCustomFileUpload(e) {
-      const file = e.target.files[0];
+      var file = e.target.files[0];
       if (!file) return;
-      const reader = new FileReader();
+      var reader = new FileReader();
       reader.onload = function(evt) {
         try {
-          const content = evt.target.result;
-          let newQuestions = [];
-          if (file.name.endsWith('.json')) {
+          var content = evt.target.result;
+          var newQuestions = [];
+          if (file.name.slice(-5).toLowerCase() === '.json') {
             newQuestions = JSON.parse(content);
-          } else if (file.name.endsWith('.csv')) {
-            const lines = content.split('\n').filter(l => l.trim().length > 0);
-            lines.slice(1).forEach((line, idx) => {
-              const cols = parseCsvLine(line);
-              if (cols.length >= 2) {
-                const ans = cols[2]?.trim().toUpperCase() === "VERO" || cols[2]?.trim().toUpperCase() === "TRUE" || cols[2]?.trim() === "1";
-                const spiegazione = cols[3]?.trim() || (ans ? "L'affermazione è vera e corretta." : "L'affermazione è falsa ed errata.");
-                newQuestions.push({
-                  id: idx + 1,
-                  argomento: cols[0]?.trim() || "Generale",
-                  testo: cols[1]?.trim() || "",
-                  rispostaCorretta: ans,
-                  spiegazione: spiegazione
-                });
+          } else if (file.name.slice(-4).toLowerCase() === '.csv') {
+            var lines = content.split('\n');
+            for (var idx = 1; idx < lines.length; idx++) {
+              var line = lines[idx].trim();
+              if (line.length > 0) {
+                var cols = parseCsvLine(line);
+                if (cols.length >= 2) {
+                  var rawAns = cols[2] ? cols[2].toUpperCase().trim() : '';
+                  var ans = (rawAns === "VERO" || rawAns === "TRUE" || rawAns === "1");
+                  var spiegazione = (cols[3] && cols[3].trim().length > 0) ? cols[3].trim() : (ans ? "L'affermazione e vera e corretta." : "L'affermazione e falsa ed errata.");
+                  newQuestions.push({
+                    id: newQuestions.length + 1,
+                    argomento: (cols[0] && cols[0].trim().length > 0) ? cols[0].trim() : "Generale",
+                    testo: (cols[1] && cols[1].trim().length > 0) ? cols[1].trim() : "",
+                    rispostaCorretta: ans,
+                    spiegazione: spiegazione
+                  });
+                }
               }
-            });
+            }
           }
 
           if (newQuestions.length > 0) {
-            const customMat = {
-              id: `custom_${Date.now()}`,
+            var customMat = {
+              id: 'custom_' + (new Date().getTime()),
               nome: file.name.replace(/\.[^/.]+$/, ""),
-              descrizione: `Caricato da file locale (${newQuestions.length} domande con spiegazione)`,
+              descrizione: 'Caricato da file locale (' + newQuestions.length + ' domande con spiegazione)',
               tempoMinuti: Math.max(5, Math.round(newQuestions.length * 1.5)),
               sogliaSuperamento: 80,
               domande: newQuestions
@@ -605,7 +747,7 @@
             BANCA_DATI_MATERIE.push(customMat);
             selectedMateria = customMat;
             renderMaterieSelector();
-            alert(`Materia "${customMat.nome}" caricata con successo (${newQuestions.length} quesiti).`);
+            alert('Materia "' + customMat.nome + '" caricata con successo (' + newQuestions.length + ' quesiti).');
           } else {
             alert("Il file caricato non contiene domande valide.");
           }
@@ -616,64 +758,80 @@
       reader.readAsText(file);
     }
 
-    /* Caricamento da GitHub */
-    async function caricaMateriaDaGitHub(url, nomeCustom = null) {
-      try {
-        let rawUrl = url.trim();
-        if (rawUrl.includes('github.com') && !rawUrl.includes('raw.githubusercontent.com')) {
-          rawUrl = rawUrl.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
-        }
-
-        const resp = await fetch(rawUrl);
-        if (!resp.ok) throw new Error(`HTTP ${resp.status} - Impossibile accedere al file su GitHub`);
-        
-        let questions = [];
-        if (rawUrl.endsWith('.csv')) {
-          const text = await resp.text();
-          const lines = text.split('\n').filter(l => l.trim().length > 0);
-          lines.slice(1).forEach((l, idx) => {
-            const cols = parseCsvLine(l);
-            if (cols.length >= 2) {
-              const ans = cols[2]?.trim().toUpperCase() === "VERO" || cols[2]?.trim().toUpperCase() === "TRUE" || cols[2]?.trim() === "1";
-              const spiegazione = cols[3]?.trim() || (ans ? "L'affermazione è vera e corretta." : "L'affermazione è falsa ed errata.");
-              questions.push({
-                id: idx + 1,
-                argomento: cols[0]?.trim() || "Generale",
-                testo: cols[1]?.trim() || "",
-                rispostaCorretta: ans,
-                spiegazione: spiegazione
-              });
-            }
-          });
-        } else {
-          const json = await resp.json();
-          questions = Array.isArray(json) ? json : (json.questions || json.domande || []);
-        }
-
-        if (questions.length === 0) throw new Error("Nessun quesito valido trovato nel repository.");
-
-        const repoName = nomeCustom || rawUrl.split('/').slice(-2).join('/');
-        const newMateria = {
-          id: `github_${Date.now()}`,
-          nome: `GitHub: ${repoName}`,
-          descrizione: `Banca dati remota collegata (${questions.length} domande totali)`,
-          tempoMinuti: 20,
-          sogliaSuperamento: 90,
-          domande: questions.length > 30 ? questions.sort(() => 0.5 - Math.random()).slice(0, 30) : questions
-        };
-
-        BANCA_DATI_MATERIE.unshift(newMateria);
-        selectedMateria = newMateria;
-        renderMaterieSelector();
-        alert(`Banca dati "${newMateria.nome}" associata con successo da GitHub! Scheda preparata con ${newMateria.domande.length} quesiti.`);
-      } catch (err) {
-        alert("Errore nel collegamento al repository GitHub: " + err.message);
+    /* Caricamento da GitHub con XMLHttpRequest (compatibile IE9/10/11) */
+    function caricaMateriaDaGitHub(url, nomeCustom) {
+      nomeCustom = nomeCustom || null;
+      var rawUrl = url.trim();
+      if (rawUrl.indexOf('github.com') !== -1 && rawUrl.indexOf('raw.githubusercontent.com') === -1) {
+        rawUrl = rawUrl.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
       }
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', rawUrl, true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              var text = xhr.responseText;
+              var questions = [];
+              if (rawUrl.slice(-4).toLowerCase() === '.csv') {
+                var lines = text.split('\n');
+                for (var idx = 1; idx < lines.length; idx++) {
+                  var line = lines[idx].trim();
+                  if (line.length > 0) {
+                    var cols = parseCsvLine(line);
+                    if (cols.length >= 2) {
+                      var rawAns = cols[2] ? cols[2].toUpperCase().trim() : '';
+                      var ans = (rawAns === "VERO" || rawAns === "TRUE" || rawAns === "1");
+                      var spiegazione = (cols[3] && cols[3].trim().length > 0) ? cols[3].trim() : (ans ? "L'affermazione e vera e corretta." : "L'affermazione e falsa ed errata.");
+                      questions.push({
+                        id: questions.length + 1,
+                        argomento: (cols[0] && cols[0].trim().length > 0) ? cols[0].trim() : "Generale",
+                        testo: (cols[1] && cols[1].trim().length > 0) ? cols[1].trim() : "",
+                        rispostaCorretta: ans,
+                        spiegazione: spiegazione
+                      });
+                    }
+                  }
+                }
+              } else {
+                var json = JSON.parse(text);
+                questions = Array.isArray(json) ? json : (json.questions || json.domande || []);
+              }
+
+              if (questions.length === 0) {
+                alert("Nessun quesito valido trovato nel repository.");
+                return;
+              }
+
+              var repoName = nomeCustom || rawUrl.split('/').slice(-2).join('/');
+              var newMateria = {
+                id: 'github_' + (new Date().getTime()),
+                nome: 'GitHub: ' + repoName,
+                descrizione: 'Banca dati remota collegata (' + questions.length + ' domande totali)',
+                tempoMinuti: 20,
+                sogliaSuperamento: 90,
+                domande: questions.length > 30 ? questions.slice(0, 30) : questions
+              };
+
+              BANCA_DATI_MATERIE.unshift(newMateria);
+              selectedMateria = newMateria;
+              renderMaterieSelector();
+              alert('Banca dati "' + newMateria.nome + '" associata con successo da GitHub! Scheda preparata con ' + newMateria.domande.length + ' quesiti.');
+            } catch (err) {
+              alert("Errore nella lettura dei dati da GitHub: " + err.message);
+            }
+          } else {
+            alert("Impossibile accedere al file GitHub (HTTP " + xhr.status + ").");
+          }
+        }
+      };
+      xhr.send();
     }
 
     function promptGitHubRepo() {
-      const defaultUrl = "https://raw.githubusercontent.com/fmorea/fmorea.github.io/main/template_domande.csv";
-      const userUrl = prompt(
+      var defaultUrl = "https://raw.githubusercontent.com/fmorea/fmorea.github.io/main/template_domande.csv";
+      var userUrl = prompt(
         "Inserisci l'URL GitHub del file quiz (JSON o CSV) da associare:\n(Puoi incollare il link da qualsiasi repository GitHub o raw.githubusercontent.com)",
         defaultUrl
       );
@@ -683,9 +841,9 @@
     }
 
     function startExam() {
-      const nome = document.getElementById('cand-nome').value.trim();
-      const cognome = document.getElementById('cand-cognome').value.trim();
-      const cf = document.getElementById('cand-cf').value.trim().toUpperCase();
+      var nome = document.getElementById('cand-nome').value.trim();
+      var cognome = document.getElementById('cand-cognome').value.trim();
+      var cf = document.getElementById('cand-cf').value.trim().toUpperCase();
 
       if (!nome || !cognome) {
         alert("Inserisci Nome e Cognome.");
@@ -696,13 +854,13 @@
         return;
       }
 
-      candidate = { nome, cognome, cf };
+      candidate = { nome: nome, cognome: cognome, cf: cf };
       userAnswers = {};
       currentQuestionIndex = 0;
       secondsRemaining = selectedMateria.tempoMinuti * 60;
       totalSecondsElapsed = 0;
 
-      document.getElementById('header-cand-name').textContent = `${candidate.nome} ${candidate.cognome}`;
+      document.getElementById('header-cand-name').textContent = candidate.nome + ' ' + candidate.cognome;
       document.getElementById('header-cand-cf').textContent = candidate.cf;
       document.getElementById('header-materia-title').textContent = selectedMateria.nome;
       document.getElementById('total-q-num').textContent = selectedMateria.domande.length;
@@ -719,28 +877,32 @@
     }
 
     function renderQuestionsGrid() {
-      const grid = document.getElementById('grid-questions');
+      var grid = document.getElementById('grid-questions');
       grid.innerHTML = '';
-      selectedMateria.domande.forEach((q, idx) => {
-        const btn = document.createElement('button');
-        btn.id = `q-grid-btn-${idx}`;
-        btn.className = 'btn-quiz-number w-9 h-9 rounded-lg font-bold text-xs bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center';
-        btn.textContent = idx + 1;
-        btn.onclick = () => displayQuestion(idx);
-        grid.appendChild(btn);
-      });
+      for (var idx = 0; idx < selectedMateria.domande.length; idx++) {
+        (function(i) {
+          var btn = document.createElement('button');
+          btn.id = 'q-grid-btn-' + i;
+          btn.className = 'btn-quiz-number w-9 h-9 rounded-lg font-bold text-xs bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center';
+          btn.textContent = i + 1;
+          btn.onclick = function() {
+            displayQuestion(i);
+          };
+          grid.appendChild(btn);
+        })(idx);
+      }
       updateGridButtons();
     }
 
     function displayQuestion(idx) {
       currentQuestionIndex = idx;
-      const q = selectedMateria.domande[idx];
+      var q = selectedMateria.domande[idx];
       document.getElementById('current-q-num').textContent = idx + 1;
       document.getElementById('badge-argomento').textContent = q.argomento || selectedMateria.nome;
       document.getElementById('q-text').textContent = q.testo;
 
-      const imgContainer = document.getElementById('q-image-container');
-      const imgEl = document.getElementById('q-image');
+      var imgContainer = document.getElementById('q-image-container');
+      var imgEl = document.getElementById('q-image');
       if (q.immagine) {
         imgEl.src = q.immagine;
         imgContainer.classList.remove('hidden');
@@ -748,8 +910,8 @@
         imgContainer.classList.add('hidden');
       }
 
-      const btnVero = document.getElementById('btn-vero');
-      const btnFalso = document.getElementById('btn-falso');
+      var btnVero = document.getElementById('btn-vero');
+      var btnFalso = document.getElementById('btn-falso');
       btnVero.className = "py-5 rounded-2xl border-2 border-emerald-500/40 hover:border-emerald-500 bg-emerald-50 hover:bg-emerald-100/60 text-emerald-800 font-black text-2xl transition flex items-center justify-center gap-3";
       btnFalso.className = "py-5 rounded-2xl border-2 border-red-500/40 hover:border-red-500 bg-red-50 hover:bg-red-100/60 text-red-800 font-black text-2xl transition flex items-center justify-center gap-3";
 
@@ -766,36 +928,42 @@
     }
 
     function setAnswer(ans) {
-      const q = selectedMateria.domande[currentQuestionIndex];
+      var q = selectedMateria.domande[currentQuestionIndex];
       userAnswers[q.id] = ans;
       updateGridButtons();
       displayQuestion(currentQuestionIndex);
 
       if (currentQuestionIndex < selectedMateria.domande.length - 1) {
-        setTimeout(() => {
+        setTimeout(function() {
           displayQuestion(currentQuestionIndex + 1);
         }, 220);
       }
     }
 
     function navQuestion(delta) {
-      const newIdx = currentQuestionIndex + delta;
+      var newIdx = currentQuestionIndex + delta;
       if (newIdx >= 0 && newIdx < selectedMateria.domande.length) {
         displayQuestion(newIdx);
       }
     }
 
     function updateGridButtons() {
-      const answeredCount = Object.keys(userAnswers).length;
+      var answeredCount = 0;
+      for (var k in userAnswers) {
+        if (Object.prototype.hasOwnProperty.call(userAnswers, k)) {
+          answeredCount++;
+        }
+      }
       document.getElementById('count-answered').textContent = answeredCount;
 
-      selectedMateria.domande.forEach((q, idx) => {
-        const btn = document.getElementById(`q-grid-btn-${idx}`);
-        if (!btn) return;
-        const isAnswered = userAnswers[q.id] !== undefined;
-        const isCurrent = idx === currentQuestionIndex;
+      for (var idx = 0; idx < selectedMateria.domande.length; idx++) {
+        var q = selectedMateria.domande[idx];
+        var btn = document.getElementById('q-grid-btn-' + idx);
+        if (!btn) continue;
+        var isAnswered = userAnswers[q.id] !== undefined;
+        var isCurrent = idx === currentQuestionIndex;
 
-        let baseClasses = 'btn-quiz-number w-9 h-9 rounded-lg font-bold text-xs flex items-center justify-center transition ';
+        var baseClasses = 'btn-quiz-number w-9 h-9 rounded-lg font-bold text-xs flex items-center justify-center transition ';
         if (isAnswered) {
           baseClasses += 'bg-emerald-600 text-white border-emerald-700 shadow-sm ';
         } else {
@@ -806,12 +974,12 @@
           baseClasses += 'ring-2 ring-blue-500 scale-110 font-black z-10';
         }
         btn.className = baseClasses;
-      });
+      }
     }
 
     function startTimer() {
       if (timerInterval) clearInterval(timerInterval);
-      timerInterval = setInterval(() => {
+      timerInterval = setInterval(function() {
         secondsRemaining--;
         totalSecondsElapsed++;
         if (secondsRemaining <= 0) {
@@ -820,17 +988,23 @@
           finishQuiz();
           return;
         }
-        const m = Math.floor(secondsRemaining / 60).toString().padStart(2, '0');
-        const s = (secondsRemaining % 60).toString().padStart(2, '0');
-        document.getElementById('quiz-timer').textContent = `${m}:${s}`;
+        var m = Math.floor(secondsRemaining / 60);
+        var s = (secondsRemaining % 60);
+        document.getElementById('quiz-timer').textContent = pad2(m) + ':' + pad2(s);
       }, 1000);
     }
 
     function confirmSubmitQuiz() {
-      const missing = selectedMateria.domande.length - Object.keys(userAnswers).length;
-      let promptText = "Vuoi procedere alla consegna della scheda d'esame?";
+      var answeredCount = 0;
+      for (var k in userAnswers) {
+        if (Object.prototype.hasOwnProperty.call(userAnswers, k)) {
+          answeredCount++;
+        }
+      }
+      var missing = selectedMateria.domande.length - answeredCount;
+      var promptText = "Vuoi procedere alla consegna della scheda d'esame?";
       if (missing > 0) {
-        promptText = `Attenzione: ci sono ancora ${missing} domande senza risposta.\nVerranno conteggiate come errate.\nConfermi la consegna?`;
+        promptText = "Attenzione: ci sono ancora " + missing + " domande senza risposta.\nVerranno conteggiate come errate.\nConfermi la consegna?";
       }
       if (confirm(promptText)) {
         clearInterval(timerInterval);
@@ -838,45 +1012,51 @@
       }
     }
 
-    /* COMPRESSIONE ED ESTRAZIONE STATO DELLE DOMANDE */
+    /* COMPRESSIONE ED ESTRAZIONE STATO DELLE DOMANDE (Compatibile con vecchi e nuovi browser) */
     function compressPayload(data) {
-      const json = JSON.stringify(data);
+      var json = JSON.stringify(data);
       if (window.LZString && typeof window.LZString.compressToEncodedURIComponent === 'function') {
         try {
           return 'lz_' + window.LZString.compressToEncodedURIComponent(json);
         } catch (e) {
-          console.warn("LZString compression error", e);
+          // fallback
         }
       }
-      return 'b64_' + encodeURIComponent(btoa(unescape(encodeURIComponent(json))));
+      try {
+        return 'b64_' + encodeURIComponent(btoa(unescape(encodeURIComponent(json))));
+      } catch (e2) {
+        return 'raw_' + encodeURIComponent(json);
+      }
     }
 
     function decompressPayload(str) {
       if (!str) return null;
-      if (str.startsWith('lz_')) {
-        const raw = str.substring(3);
+      if (str.indexOf('lz_') === 0) {
+        var rawLz = str.substring(3);
         if (window.LZString && typeof window.LZString.decompressFromEncodedURIComponent === 'function') {
-          const json = window.LZString.decompressFromEncodedURIComponent(raw);
-          if (json) return JSON.parse(json);
+          var decomp = window.LZString.decompressFromEncodedURIComponent(rawLz);
+          if (decomp) return JSON.parse(decomp);
         }
-      } else if (str.startsWith('b64_')) {
-        const raw = str.substring(4);
-        return JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(raw)))));
+      } else if (str.indexOf('b64_') === 0) {
+        var rawB64 = str.substring(4);
+        return JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(rawB64)))));
+      } else if (str.indexOf('raw_') === 0) {
+        return JSON.parse(decodeURIComponent(str.substring(4)));
       }
-      // Tentativi di fallback
+      
+      // Fallback
       if (window.LZString && typeof window.LZString.decompressFromEncodedURIComponent === 'function') {
         try {
-          const json = window.LZString.decompressFromEncodedURIComponent(str);
-          if (json) return JSON.parse(json);
+          var testLz = window.LZString.decompressFromEncodedURIComponent(str);
+          if (testLz) return JSON.parse(testLz);
         } catch (e) {}
       }
       try {
         return JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(str)))));
-      } catch (e) {
+      } catch (e2) {
         try {
           return JSON.parse(decodeURIComponent(str));
-        } catch (e2) {
-          console.error("Impossibile decomprimere i dati:", e2);
+        } catch (e3) {
           return null;
         }
       }
@@ -886,36 +1066,43 @@
       if (window.location.protocol === 'file:' || !window.location.origin || window.location.origin === 'null') {
         return 'https://fmorea.github.io/';
       }
-      return (window.location.origin + window.location.pathname).replace(/\/$/, '') + '/';
+      var origin = window.location.origin || (window.location.protocol + '//' + window.location.host);
+      return (origin + window.location.pathname).replace(/\/$/, '') + '/';
     }
 
     function buildReviewUrl(payload) {
-      const encoded = compressPayload(payload);
-      return `${getBaseAppUrl()}?review=${encoded}`;
+      var encoded = compressPayload(payload);
+      return getBaseAppUrl() + '?review=' + encoded;
     }
 
-    async function finishQuiz() {
-      let correct = 0;
-      let errors = 0;
-      selectedMateria.domande.forEach(q => {
+    function finishQuiz() {
+      var correct = 0;
+      var errors = 0;
+      for (var i = 0; i < selectedMateria.domande.length; i++) {
+        var q = selectedMateria.domande[i];
         if (userAnswers[q.id] === q.rispostaCorretta) {
           correct++;
         } else {
           errors++;
         }
-      });
+      }
 
-      const totalQ = selectedMateria.domande.length;
-      const scorePct = Math.round((correct / totalQ) * 100);
-      const passed = scorePct >= selectedMateria.sogliaSuperamento;
-      const idScheda = 'SCHEDA-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-      const now = new Date();
-      const dateFormatted = now.toLocaleDateString('it-IT') + ' ' + now.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+      var totalQ = selectedMateria.domande.length;
+      var scorePct = Math.round((correct / totalQ) * 100);
+      var passed = scorePct >= selectedMateria.sogliaSuperamento;
+      var idScheda = 'SCHEDA-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      var now = new Date();
+      var dateFormatted = pad2(now.getDate()) + '/' + pad2(now.getMonth() + 1) + '/' + now.getFullYear() + ' ' + pad2(now.getHours()) + ':' + pad2(now.getMinutes());
 
-      // Costruzione del payload con lo stato delle domande
-      const isBuiltin = BANCA_DATI_MATERIE.some(m => m.id === selectedMateria.id && !m.id.startsWith('custom_') && !m.id.startsWith('github_'));
+      var isBuiltin = false;
+      for (var b = 0; b < BANCA_DATI_MATERIE.length; b++) {
+        if (BANCA_DATI_MATERIE[b].id === selectedMateria.id && BANCA_DATI_MATERIE[b].id.indexOf('custom_') === -1 && BANCA_DATI_MATERIE[b].id.indexOf('github_') === -1) {
+          isBuiltin = true;
+          break;
+        }
+      }
       
-      const payload = {
+      var payload = {
         v: 1,
         id: idScheda,
         cand: candidate,
@@ -923,66 +1110,67 @@
         matNome: selectedMateria.nome,
         date: dateFormatted,
         score: scorePct,
-        correct,
-        errors,
+        correct: correct,
+        errors: errors,
         total: totalQ,
-        passed,
+        passed: passed,
         ans: userAnswers
       };
 
-      // Se la materia è personalizzata o caricata al volo, memorizziamo le domande e spiegazioni per consentire la spiegazione offline
       if (!isBuiltin) {
-        payload.q = selectedMateria.domande.map(q => [
-          q.id,
-          q.argomento || '',
-          q.testo,
-          q.rispostaCorretta ? 1 : 0,
-          q.spiegazione || ''
-        ]);
+        payload.q = [];
+        for (var qi = 0; qi < selectedMateria.domande.length; qi++) {
+          var quest = selectedMateria.domande[qi];
+          payload.q.push([
+            quest.id,
+            quest.argomento || '',
+            quest.testo,
+            quest.rispostaCorretta ? 1 : 0,
+            quest.spiegazione || ''
+          ]);
+        }
       }
 
-      const reviewUrl = buildReviewUrl(payload);
+      var reviewUrl = buildReviewUrl(payload);
 
-      examResultData = {
-        ...payload,
+      examResultData = Object.assign({}, payload, {
         materia: selectedMateria,
-        reviewUrl,
-        totalSecondsElapsed
-      };
+        reviewUrl: reviewUrl,
+        totalSecondsElapsed: totalSecondsElapsed
+      });
 
       document.getElementById('step-quiz').classList.add('hidden');
       document.getElementById('step-result').classList.remove('hidden');
 
-      const badgeBox = document.getElementById('result-badge-box');
-      const icon = document.getElementById('result-icon');
-      const title = document.getElementById('result-title');
-      const subtitle = document.getElementById('result-subtitle');
+      var badgeBox = document.getElementById('result-badge-box');
+      var icon = document.getElementById('result-icon');
+      var title = document.getElementById('result-title');
+      var subtitle = document.getElementById('result-subtitle');
 
       if (passed) {
         badgeBox.className = "text-center p-6 rounded-2xl mb-6 bg-emerald-50 border-2 border-emerald-500 text-emerald-900";
         icon.className = "w-16 h-16 mx-auto rounded-full flex items-center justify-center text-3xl mb-3 bg-emerald-600 text-white shadow-lg";
         icon.innerHTML = "✓";
         title.textContent = "ESAME SUPERATO: IDONEO";
-        subtitle.textContent = `Punteggio conseguito: ${scorePct}%. Soglia minima (${selectedMateria.sogliaSuperamento}%) raggiunta.`;
+        subtitle.textContent = "Punteggio conseguito: " + scorePct + "%. Soglia minima (" + selectedMateria.sogliaSuperamento + "%) raggiunta.";
       } else {
         badgeBox.className = "text-center p-6 rounded-2xl mb-6 bg-red-50 border-2 border-red-500 text-red-900";
         icon.className = "w-16 h-16 mx-auto rounded-full flex items-center justify-center text-3xl mb-3 bg-red-600 text-white shadow-lg";
         icon.innerHTML = "✗";
         title.textContent = "ESAME NON SUPERATO";
-        subtitle.textContent = `Punteggio: ${scorePct}% (${errors} errori). Minimo richiesto: ${selectedMateria.sogliaSuperamento}%.`;
+        subtitle.textContent = "Punteggio: " + scorePct + "% (" + errors + " errori). Minimo richiesto: " + selectedMateria.sogliaSuperamento + "%.";
       }
 
-      document.getElementById('res-score').textContent = `${scorePct}%`;
-      document.getElementById('res-correct').textContent = `${correct}/${totalQ}`;
+      document.getElementById('res-score').textContent = scorePct + '%';
+      document.getElementById('res-correct').textContent = correct + '/' + totalQ;
       document.getElementById('res-errors').textContent = errors;
 
-      const mTaken = Math.floor(totalSecondsElapsed / 60).toString().padStart(2, '0');
-      const sTaken = (totalSecondsElapsed % 60).toString().padStart(2, '0');
-      document.getElementById('res-time').textContent = `${mTaken}:${sTaken}`;
+      var mTaken = Math.floor(totalSecondsElapsed / 60);
+      var sTaken = (totalSecondsElapsed % 60);
+      document.getElementById('res-time').textContent = pad2(mTaken) + ':' + pad2(sTaken);
       document.getElementById('res-scheda-id').textContent = idScheda;
 
-      // Generazione visiva immediata del QR Code a schermo
-      const qrEl = document.getElementById('result-qrcode');
+      var qrEl = document.getElementById('result-qrcode');
       qrEl.innerHTML = '';
       new QRCode(qrEl, {
         text: reviewUrl,
@@ -1004,18 +1192,26 @@
       document.getElementById('step-result').classList.add('hidden');
       document.getElementById('step-review').classList.remove('hidden');
 
-      // Ricostruzione domande e spiegazioni
-      let questionsList = [];
+      var questionsList = [];
       if (data.q && Array.isArray(data.q)) {
-        questionsList = data.q.map(item => ({
-          id: item[0],
-          argomento: item[1] || 'Generale',
-          testo: item[2],
-          rispostaCorretta: Boolean(item[3]),
-          spiegazione: item[4] || (item[3] ? "L'affermazione è vera e corretta." : "L'affermazione è falsa ed errata.")
-        }));
+        for (var i = 0; i < data.q.length; i++) {
+          var item = data.q[i];
+          questionsList.push({
+            id: item[0],
+            argomento: item[1] || 'Generale',
+            testo: item[2],
+            rispostaCorretta: Boolean(item[3]),
+            spiegazione: item[4] || (item[3] ? "L'affermazione e vera e corretta." : "L'affermazione e falsa ed errata.")
+          });
+        }
       } else {
-        const foundMat = BANCA_DATI_MATERIE.find(m => m.id === data.matId);
+        var foundMat = null;
+        for (var m = 0; m < BANCA_DATI_MATERIE.length; m++) {
+          if (BANCA_DATI_MATERIE[m].id === data.matId) {
+            foundMat = BANCA_DATI_MATERIE[m];
+            break;
+          }
+        }
         if (foundMat) {
           questionsList = foundMat.domande;
         } else {
@@ -1025,39 +1221,37 @@
 
       data.reconstructedQuestions = questionsList;
 
-      // Render Card Riepilogo
-      const summaryCard = document.getElementById('review-summary-card');
-      const isPassed = data.passed;
-      summaryCard.innerHTML = `
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <div class="text-xs uppercase font-bold text-slate-500">Candidato</div>
-            <div class="text-base font-extrabold text-slate-900">${data.cand.nome} ${data.cand.cognome} <span class="font-mono text-xs font-semibold text-slate-600">(${data.cand.cf})</span></div>
-            <div class="text-xs text-slate-500 mt-0.5">Materia: <b class="text-slate-700">${data.matNome}</b> &bull; Data: ${data.date}</div>
-          </div>
-          <div class="flex items-center gap-3">
-            <div class="text-right">
-              <div class="text-xs uppercase font-bold text-slate-400">Punteggio</div>
-              <div class="text-2xl font-black ${isPassed ? 'text-emerald-600' : 'text-red-600'}">${data.score}%</div>
-            </div>
-            <span class="px-3 py-1.5 rounded-xl font-bold text-xs ${isPassed ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
-              ${isPassed ? 'SUPERATO' : 'NON SUPERATO'}
-            </span>
-          </div>
-        </div>
-      `;
+      var summaryCard = document.getElementById('review-summary-card');
+      var isPassed = data.passed;
+      summaryCard.innerHTML = 
+        '<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">' +
+          '<div>' +
+            '<div class="text-xs uppercase font-bold text-slate-500">Candidato</div>' +
+            '<div class="text-base font-extrabold text-slate-900">' + data.cand.nome + ' ' + data.cand.cognome + ' <span class="font-mono text-xs font-semibold text-slate-600">(' + data.cand.cf + ')</span></div>' +
+            '<div class="text-xs text-slate-500 mt-0.5">Materia: <b class="text-slate-700">' + data.matNome + '</b> &bull; Data: ' + data.date + '</div>' +
+          '</div>' +
+          '<div class="flex items-center gap-3">' +
+            '<div class="text-right">' +
+              '<div class="text-xs uppercase font-bold text-slate-400">Punteggio</div>' +
+              '<div class="text-2xl font-black ' + (isPassed ? 'text-emerald-600' : 'text-red-600') + '">' + data.score + '%</div>' +
+            '</div>' +
+            '<span class="px-3 py-1.5 rounded-xl font-bold text-xs ' + (isPassed ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800') + '">' +
+              (isPassed ? 'SUPERATO' : 'NON SUPERATO') +
+            '</span>' +
+          '</div>' +
+        '</div>';
 
-      // Conteggi filtri
-      let errCount = 0;
-      let corrCount = 0;
-      questionsList.forEach(q => {
-        const uAns = data.ans ? data.ans[q.id] : undefined;
-        if (uAns === q.rispostaCorretta) {
+      var errCount = 0;
+      var corrCount = 0;
+      for (var qIdx = 0; qIdx < questionsList.length; qIdx++) {
+        var ques = questionsList[qIdx];
+        var uAns = data.ans ? data.ans[ques.id] : undefined;
+        if (uAns === ques.rispostaCorretta) {
           corrCount++;
         } else {
           errCount++;
         }
-      });
+      }
 
       document.getElementById('count-rev-all').textContent = questionsList.length;
       document.getElementById('count-rev-errors').textContent = errCount;
@@ -1068,13 +1262,14 @@
 
     function filterReview(filterType) {
       currentReviewFilter = filterType;
-      const btnAll = document.getElementById('filter-all');
-      const btnErrors = document.getElementById('filter-errors');
-      const btnCorrect = document.getElementById('filter-correct');
+      var btnAll = document.getElementById('filter-all');
+      var btnErrors = document.getElementById('filter-errors');
+      var btnCorrect = document.getElementById('filter-correct');
 
-      [btnAll, btnErrors, btnCorrect].forEach(b => {
-        b.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition";
-      });
+      var buttons = [btnAll, btnErrors, btnCorrect];
+      for (var b = 0; b < buttons.length; b++) {
+        buttons[b].className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition";
+      }
 
       if (filterType === 'all') {
         btnAll.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white shadow-sm transition";
@@ -1088,75 +1283,75 @@
     }
 
     function renderReviewQuestions() {
-      const container = document.getElementById('review-questions-list');
+      var container = document.getElementById('review-questions-list');
       container.innerHTML = '';
 
       if (!currentReviewData || !currentReviewData.reconstructedQuestions) return;
 
-      const questions = currentReviewData.reconstructedQuestions;
-      const ansMap = currentReviewData.ans || {};
+      var questions = currentReviewData.reconstructedQuestions;
+      var ansMap = currentReviewData.ans || {};
 
-      questions.forEach((q, idx) => {
-        const userAns = ansMap[q.id];
-        const isAnswered = userAns !== undefined && userAns !== null;
-        const isCorrect = isAnswered && (userAns === q.rispostaCorretta);
+      for (var idx = 0; idx < questions.length; idx++) {
+        var q = questions[idx];
+        var userAns = ansMap[q.id];
+        var isAnswered = userAns !== undefined && userAns !== null;
+        var isCorrect = isAnswered && (userAns === q.rispostaCorretta);
 
-        if (currentReviewFilter === 'errors' && isCorrect) return;
-        if (currentReviewFilter === 'correct' && !isCorrect) return;
+        if (currentReviewFilter === 'errors' && isCorrect) continue;
+        if (currentReviewFilter === 'correct' && !isCorrect) continue;
 
-        const card = document.createElement('div');
-        card.className = `p-5 rounded-2xl border transition ${isCorrect ? 'border-emerald-200 bg-white' : 'border-red-200 bg-red-50/20'}`;
+        var card = document.createElement('div');
+        card.className = 'p-5 rounded-2xl border transition ' + (isCorrect ? 'border-emerald-200 bg-white' : 'border-red-200 bg-red-50/20');
 
-        const userAnsText = !isAnswered ? 'Non risposta' : (userAns ? 'VERO' : 'FALSO');
-        const correctAnsText = q.rispostaCorretta ? 'VERO' : 'FALSO';
+        var userAnsText = !isAnswered ? 'Non risposta' : (userAns ? 'VERO' : 'FALSO');
+        var correctAnsText = q.rispostaCorretta ? 'VERO' : 'FALSO';
 
-        card.innerHTML = `
-          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-            <div class="flex items-center gap-2">
-              <span class="w-7 h-7 rounded-lg ${isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'} font-black text-xs flex items-center justify-center">
-                ${idx + 1}
-              </span>
-              <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                ${q.argomento || 'Quesito'}
-              </span>
-            </div>
-            <span class="text-xs font-bold px-2.5 py-1 rounded-full ${isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
-              ${isCorrect ? '✓ Risposta Corretta' : (!isAnswered ? '⚠ Non data (considerata errata)' : '✗ Risposta Errata')}
-            </span>
-          </div>
+        card.innerHTML = 
+          '<div class="flex flex-wrap items-center justify-between gap-2 mb-3">' +
+            '<div class="flex items-center gap-2">' +
+              '<span class="w-7 h-7 rounded-lg ' + (isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800') + ' font-black text-xs flex items-center justify-center">' +
+                (idx + 1) +
+              '</span>' +
+              '<span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">' +
+                (q.argomento || 'Quesito') +
+              '</span>' +
+            '</div>' +
+            '<span class="text-xs font-bold px-2.5 py-1 rounded-full ' + (isCorrect ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800') + '">' +
+              (isCorrect ? '✓ Risposta Corretta' : (!isAnswered ? '⚠ Non data (considerata errata)' : '✗ Risposta Errata')) +
+            '</span>' +
+          '</div>' +
 
-          <div class="text-base font-semibold text-slate-900 mb-4 leading-relaxed">
-            ${q.testo}
-          </div>
+          '<div class="text-base font-semibold text-slate-900 mb-4 leading-relaxed">' +
+            q.testo +
+          '</div>' +
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 text-xs">
-            <div class="p-3 rounded-xl ${isCorrect ? 'bg-emerald-50 border border-emerald-200 text-emerald-950' : 'bg-red-50 border border-red-200 text-red-950'}">
-              <div class="text-[10px] uppercase font-bold text-slate-500 mb-0.5">La tua risposta</div>
-              <div class="text-sm font-black flex items-center gap-1.5">
-                <span>${userAnsText}</span>
-                ${isCorrect ? '<span class="text-emerald-600 text-xs font-normal">✓ Esatta</span>' : '<span class="text-red-500 text-xs font-normal">✗ Errata</span>'}
-              </div>
-            </div>
-            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900">
-              <div class="text-[10px] uppercase font-bold text-slate-500 mb-0.5">Risposta corretta ministeriale</div>
-              <div class="text-sm font-black text-blue-600">${correctAnsText}</div>
-            </div>
-          </div>
+          '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4 text-xs">' +
+            '<div class="p-3 rounded-xl ' + (isCorrect ? 'bg-emerald-50 border border-emerald-200 text-emerald-950' : 'bg-red-50 border border-red-200 text-red-950') + '">' +
+              '<div class="text-[10px] uppercase font-bold text-slate-500 mb-0.5">La tua risposta</div>' +
+              '<div class="text-sm font-black flex items-center gap-1.5">' +
+                '<span>' + userAnsText + '</span>' +
+                (isCorrect ? '<span class="text-emerald-600 text-xs font-normal">✓ Esatta</span>' : '<span class="text-red-500 text-xs font-normal">✗ Errata</span>') +
+              '</div>' +
+            '</div>' +
+            '<div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900">' +
+              '<div class="text-[10px] uppercase font-bold text-slate-500 mb-0.5">Risposta corretta ministeriale</div>' +
+              '<div class="text-sm font-black text-blue-600">' + correctAnsText + '</div>' +
+            '</div>' +
+          '</div>' +
 
-          <div class="p-4 rounded-xl bg-blue-50/80 border border-blue-200 text-xs text-blue-950">
-            <div class="font-bold mb-1 flex items-center gap-1.5 text-blue-900">
-              <svg class="w-4 h-4 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-              <span>Spiegazione del Quesito:</span>
-            </div>
-            <p class="text-slate-700 leading-relaxed font-normal">${q.spiegazione}</p>
-          </div>
-        `;
+          '<div class="p-4 rounded-xl bg-blue-50/80 border border-blue-200 text-xs text-blue-950">' +
+            '<div class="font-bold mb-1 flex items-center gap-1.5 text-blue-900">' +
+              '<svg class="w-4 h-4 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>' +
+              '<span>Spiegazione del Quesito:</span>' +
+            '</div>' +
+            '<p class="text-slate-700 leading-relaxed font-normal">' + q.spiegazione + '</p>' +
+          '</div>';
+
         container.appendChild(card);
-      });
+      }
     }
 
     function exitReview() {
-      // Pulizia eventuale parametro review dalla barra degli indirizzi
       if (window.history && window.history.pushState) {
         window.history.pushState({}, document.title, window.location.pathname);
       }
@@ -1169,28 +1364,59 @@
       }
     }
 
+    /* Copia sicura negli appunti con supporto a IE10/IE11 e vecchi browser P.A. */
     function copyReviewUrl() {
       if (!examResultData || !examResultData.reviewUrl) return;
-      navigator.clipboard.writeText(examResultData.reviewUrl).then(() => {
-        const textSpan = document.getElementById('text-copy-link');
+      var url = examResultData.reviewUrl;
+      var copied = false;
+
+      // Metodo 1: Internet Explorer window.clipboardData
+      if (window.clipboardData && window.clipboardData.setData) {
+        window.clipboardData.setData('Text', url);
+        copied = true;
+      }
+      // Metodo 2: document.execCommand('copy') per browser intermedi
+      else if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
+        var textarea = document.createElement('textarea');
+        textarea.value = url;
+        textarea.style.position = 'fixed';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        try {
+          copied = document.execCommand('copy');
+        } catch (e) {
+          copied = false;
+        }
+        document.body.removeChild(textarea);
+      }
+      // Metodo 3: navigator.clipboard per browser moderni
+      else if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url);
+        copied = true;
+      }
+
+      if (copied) {
+        var textSpan = document.getElementById('text-copy-link');
         textSpan.textContent = "✓ Link Copiato!";
-        setTimeout(() => {
+        setTimeout(function() {
           textSpan.textContent = "Copia Link Revisione";
         }, 2200);
-      }).catch(() => {
-        prompt("Copia questo link di revisione:", examResultData.reviewUrl);
-      });
+      } else {
+        prompt("Copia questo link di revisione:", url);
+      }
     }
 
     function promptPasteReviewLink() {
-      const link = prompt("Incolla l'URL o il codice della scheda di revisione per consultare le domande:");
+      var link = prompt("Incolla l'URL o il codice della scheda di revisione per consultare le domande:");
       if (!link) return;
       try {
-        let param = link.trim();
-        if (param.includes('review=')) {
+        var param = link.trim();
+        if (param.indexOf('review=') !== -1) {
           param = param.split('review=')[1].split('&')[0];
         }
-        const data = decompressPayload(param);
+        var data = decompressPayload(param);
         if (data && data.cand) {
           showReviewView(data);
         } else {
@@ -1208,8 +1434,13 @@
         return;
       }
 
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({
+      var jsPdfLib = window.jspdf ? window.jspdf.jsPDF : (window.jsPDF || null);
+      if (!jsPdfLib) {
+        alert("Libreria di esportazione PDF non supportata da questo browser.");
+        return;
+      }
+
+      var doc = new jsPdfLib({
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4'
@@ -1243,7 +1474,7 @@
       doc.setFont('Courier', 'bold');
       doc.setFontSize(11);
       doc.setTextColor(15, 23, 42);
-      doc.text(`IDENTIFICATIVO SCHEDA: ${examResultData.id}`, 105, 55.5, { align: 'center' });
+      doc.text("IDENTIFICATIVO SCHEDA: " + examResultData.id, 105, 55.5, { align: 'center' });
 
       // Tabella Dati Candidato
       doc.setFillColor(248, 250, 252);
@@ -1257,7 +1488,7 @@
       doc.text("Candidato:", 30, 75);
       doc.setFont('Helvetica', 'bold');
       doc.setTextColor(15, 23, 42);
-      doc.text(`${examResultData.cand.cognome.toUpperCase()} ${examResultData.cand.nome.toUpperCase()}`, 75, 75);
+      doc.text(examResultData.cand.cognome.toUpperCase() + ' ' + examResultData.cand.nome.toUpperCase(), 75, 75);
 
       doc.setFont('Helvetica', 'bold');
       doc.setTextColor(71, 85, 105);
@@ -1285,14 +1516,14 @@
       doc.text("Punteggio Finale:", 30, 111);
       doc.setFont('Helvetica', 'bold');
       doc.setTextColor(examResultData.passed ? 5 : 220, examResultData.passed ? 150 : 38, examResultData.passed ? 105 : 38);
-      doc.text(`${examResultData.score}% (${examResultData.passed ? 'SUPERATO' : 'NON SUPERATO'})`, 75, 111);
+      doc.text(examResultData.score + '% (' + (examResultData.passed ? 'SUPERATO' : 'NON SUPERATO') + ')', 75, 111);
 
       doc.setFont('Helvetica', 'bold');
       doc.setTextColor(71, 85, 105);
       doc.text("Esatte / Errori:", 30, 120);
       doc.setFont('Helvetica', 'normal');
       doc.setTextColor(15, 23, 42);
-      doc.text(`${examResultData.correct} esatte su ${examResultData.total} quesiti (${examResultData.errors} errori)`, 75, 120);
+      doc.text(examResultData.correct + ' esatte su ' + examResultData.total + ' quesiti (' + examResultData.errors + ' errori)', 75, 120);
 
       // Riepilogo schematico risposte
       doc.setFont('Helvetica', 'bold');
@@ -1300,45 +1531,46 @@
       doc.setTextColor(30, 41, 59);
       doc.text("Riepilogo Risposte Fornite:", 25, 144);
 
-      const questions = examResultData.materia.domande;
-      const startY = 150;
-      const lineHeight = 6.5;
+      var questions = examResultData.materia.domande;
+      var startY = 150;
+      var lineHeight = 6.5;
       doc.setFontSize(8);
 
-      questions.forEach((q, i) => {
-        if (i < 15) { // Visualizza fino a 15 quesiti nel foglio sintetico
-          const userAns = examResultData.ans[q.id];
-          const isAns = userAns !== undefined && userAns !== null;
-          const isCorr = isAns && (userAns === q.rispostaCorretta);
-          const y = startY + (i * lineHeight);
+      for (var qi = 0; qi < questions.length; qi++) {
+        if (qi < 15) {
+          var quest = questions[qi];
+          var userAns = examResultData.ans[quest.id];
+          var isAns = userAns !== undefined && userAns !== null;
+          var isCorr = isAns && (userAns === quest.rispostaCorretta);
+          var y = startY + (qi * lineHeight);
 
           doc.setFont('Helvetica', 'bold');
           doc.setTextColor(71, 85, 105);
-          doc.text(`D${i + 1}:`, 25, y);
+          doc.text("D" + (qi + 1) + ":", 25, y);
 
           doc.setFont('Helvetica', 'normal');
-          const shortText = q.testo.length > 55 ? q.testo.substring(0, 52) + '...' : q.testo;
+          var shortText = quest.testo.length > 55 ? quest.testo.substring(0, 52) + '...' : quest.testo;
           doc.text(shortText, 34, y);
 
           doc.setFont('Helvetica', 'bold');
           if (isCorr) {
             doc.setTextColor(5, 150, 105);
-            doc.text(`[${userAns ? 'V' : 'F'}] OK`, 140, y);
+            doc.text("[" + (userAns ? 'V' : 'F') + "] OK", 140, y);
           } else {
             doc.setTextColor(220, 38, 38);
-            const ansLabel = !isAns ? 'NON DATA' : (userAns ? 'V' : 'F');
-            doc.text(`[${ansLabel}] ERR (Corr: ${q.rispostaCorretta ? 'V' : 'F'})`, 140, y);
+            var ansLabel = !isAns ? 'NON DATA' : (userAns ? 'V' : 'F');
+            doc.text("[" + ansLabel + "] ERR (Corr: " + (quest.rispostaCorretta ? 'V' : 'F') + ")", 140, y);
           }
         }
-      });
+      }
 
       // Box QR Code di Spiegazione
-      const qrBoxY = 212;
+      var qrBoxY = 212;
       doc.setDrawColor(203, 213, 225);
       doc.setFillColor(248, 250, 252);
       doc.roundedRect(25, qrBoxY, 160, 48, 3, 3, 'FD');
 
-      const hiddenQrContainer = document.getElementById('hidden-pdf-qrcode');
+      var hiddenQrContainer = document.getElementById('hidden-pdf-qrcode');
       hiddenQrContainer.innerHTML = '';
       new QRCode(hiddenQrContainer, {
         text: examResultData.reviewUrl,
@@ -1347,10 +1579,10 @@
         correctLevel: QRCode.CorrectLevel.M
       });
 
-      setTimeout(() => {
-        const qrCanvas = hiddenQrContainer.querySelector('canvas');
+      setTimeout(function() {
+        var qrCanvas = hiddenQrContainer.querySelector('canvas');
         if (qrCanvas) {
-          const qrImgData = qrCanvas.toDataURL('image/png');
+          var qrImgData = qrCanvas.toDataURL('image/png');
           doc.addImage(qrImgData, 'PNG', 32, qrBoxY + 5, 36, 36);
         }
 
@@ -1378,7 +1610,7 @@
         doc.setTextColor(148, 163, 184);
         doc.text("Scheda informativa generata da Piattaforma Esami Telematici (fmorea.github.io)", 105, 272, { align: 'center' });
 
-        const nomeFile = `Scheda_${examResultData.cand.cognome}_${examResultData.cand.cf}_${examResultData.id}.pdf`;
+        var nomeFile = 'Scheda_' + examResultData.cand.cognome + '_' + examResultData.cand.cf + '_' + examResultData.id + '.pdf';
         doc.save(nomeFile);
       }, 200);
     }
@@ -1396,28 +1628,35 @@
       document.getElementById('cf-badge').textContent = "";
     }
 
-    // Inizializzazione e controllo parametri URL al caricamento
-    window.addEventListener('DOMContentLoaded', () => {
+    /* Inizializzazione compatibile con vecchi e nuovi browser */
+    function initApp() {
       renderMaterieSelector();
 
-      // Controllo se è stato aperto un link di revisione da QR Code
       try {
-        const urlParams = new URLSearchParams(window.location.search);
-        let reviewParam = urlParams.get('review') || urlParams.get('q');
-        if (!reviewParam && window.location.hash.startsWith('#review=')) {
+        var reviewParam = getQueryParameter('review') || getQueryParameter('q');
+        if (!reviewParam && window.location.hash && window.location.hash.indexOf('#review=') === 0) {
           reviewParam = window.location.hash.substring(8);
         }
 
         if (reviewParam) {
-          const revData = decompressPayload(reviewParam);
+          var revData = decompressPayload(reviewParam);
           if (revData && revData.cand) {
             showReviewView(revData);
           }
         }
       } catch (err) {
-        console.error("Errore nel caricamento del parametro di revisione:", err);
+        // Safe catch
       }
-    });
+    }
+
+    if (document.addEventListener) {
+      document.addEventListener('DOMContentLoaded', initApp, false);
+    } else if (window.attachEvent) {
+      // Per IE8 e inferiori
+      window.attachEvent('onload', initApp);
+    } else {
+      window.onload = initApp;
+    }
   </script>
 </body>
 </html>
