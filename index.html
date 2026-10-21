@@ -1,21 +1,909 @@
-<html>
+<!DOCTYPE html>
+<html lang="it">
 <head>
-<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
-<style>
-body { margin: 0; padding: 0; }
-@media (min-width: 728px) and (max-width: 1150px) {
-/* enter large tablet style overrides here */
-}
-@media (min-width: 420px) and (max-width: 727px) {
-/* enter medium tablet and large phone style overrides here */
-}
-@media (min-width: 1px) and (max-width: 419px) {
-/* enter small devices and phone style overrides here */
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulatore Quiz Ufficiale & Certificazione Digitale</title>
+  
+  <!-- Tailwind CSS per styling moderno e reattivo -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- jsPDF per generazione lato client dell'Attestato in PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  
+  <!-- QRCode.js per generare il codice QR di verifica sul certificato -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Cinzel:wght@700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .btn-quiz-number { transition: all 0.15s ease-in-out; }
+    .btn-quiz-number.active { ring: 3px solid #2563eb; transform: scale(1.08); font-weight: 800; }
+  </style>
 </head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen p-3 md:p-6 flex flex-col items-center justify-center">
 
-<body>
-<p><span style="font-size:28px">Testing, Testing, Testing</span></p>
+  <div id="app" class="w-full max-w-4xl bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden">
+    
+    <!-- 1. REGISTRAZIONE & SELEZIONE MATERIA -->
+    <div id="step-registration" class="p-6 md:p-10">
+      <div class="border-b border-slate-200 pb-5 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div>
+          <span class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
+            Piattaforma Statica Certificata
+          </span>
+          <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900">Simulatore d'Esame Ministeriale</h1>
+          <p class="text-sm text-slate-500 mt-0.5">Inserisci i tuoi dati anagrafici e scegli la materia d'esame</p>
+        </div>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-right hidden sm:block">
+          <div class="text-[10px] text-slate-400 font-bold tracking-widest uppercase">Protocollo Digitale</div>
+          <div class="text-xs font-extrabold text-emerald-600">CERTIFICAZIONE SHA-256</div>
+        </div>
+      </div>
+
+      <form id="reg-form" onsubmit="event.preventDefault(); startExam();" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Nome *</label>
+            <input type="text" id="cand-nome" required placeholder="Mario"
+                   class="w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Cognome *</label>
+            <input type="text" id="cand-cognome" required placeholder="Rossi"
+                   class="w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label class="block text-xs font-bold uppercase text-slate-600">Codice Fiscale Italiano *</label>
+            <span id="cf-badge" class="text-xs font-semibold"></span>
+          </div>
+          <input type="text" id="cand-cf" required maxlength="16" placeholder="RSSMRA85M01H501Z"
+                 oninput="this.value = this.value.toUpperCase(); validateCFInput();"
+                 class="w-full px-4 py-2.5 rounded-lg border border-slate-300 bg-white text-slate-900 font-mono text-base uppercase tracking-wider focus:ring-2 focus:ring-blue-500 outline-none">
+          <p id="cf-msg" class="text-xs text-slate-500 mt-1">
+            Il codice deve essere di 16 caratteri conforme all'algoritmo ministeriale AdE.
+          </p>
+        </div>
+
+        <!-- Scelta Materia & Connessione Repository GitHub -->
+        <div class="border-t border-slate-200 pt-5">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <label class="block text-xs font-bold uppercase text-slate-600">Materia d'Esame</label>
+            <div class="flex items-center gap-3 text-xs">
+              <button type="button" onclick="promptGitHubRepo()" class="text-slate-800 hover:text-black font-bold hover:underline flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-lg border border-slate-300 transition">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                <span>🔗 Associa Repo GitHub</span>
+              </button>
+              <label class="text-blue-600 hover:underline cursor-pointer flex items-center gap-1 font-semibold">
+                <input type="file" id="file-custom-quiz" accept=".json,.csv" class="hidden" onchange="handleCustomFileUpload(event)">
+                <span>📁 File locale</span>
+              </label>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="materie-selector"></div>
+        </div>
+
+        <div class="p-4 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-900 flex flex-wrap gap-4 items-center justify-between">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Quesiti: <b id="info-domande">10</b></span>
+          </div>
+          <div>Tempo d'esame: <b id="info-tempo">15 min</b></div>
+          <div>Idoneità: <b id="info-soglia">90%</b> (<span id="info-max-errori">max 1 errore</span>)</div>
+        </div>
+
+        <button type="submit" id="btn-start"
+                class="w-full py-4 px-6 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-base shadow-lg transition-all flex items-center justify-center gap-2">
+          <span>Inizia Prova d'Esame</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </button>
+      </form>
+    </div>
+
+    <!-- 2. SCHEDA D'ESAME -->
+    <div id="step-quiz" class="hidden flex flex-col">
+      <div class="bg-slate-900 text-white px-5 py-3 flex flex-wrap items-center justify-between gap-3 shadow-md">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center font-black text-xs">CF</div>
+          <div>
+            <div class="text-sm font-bold" id="header-cand-name">Mario Rossi</div>
+            <div class="text-xs text-slate-300 font-mono" id="header-cand-cf">RSSMRA85M01H501Z</div>
+          </div>
+        </div>
+
+        <div class="text-center px-3 py-1 bg-slate-800 rounded-lg border border-slate-700">
+          <div class="text-[10px] uppercase text-slate-400 font-bold" id="header-materia-title">Materia</div>
+          <div class="text-xs font-bold text-blue-300">Scheda di Verifica</div>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <div class="text-right">
+            <div class="text-[10px] uppercase text-slate-400 font-bold">Tempo Residuo</div>
+            <div class="text-xl font-mono font-black text-amber-400" id="quiz-timer">15:00</div>
+          </div>
+          <button onclick="confirmSubmitQuiz()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold shadow transition">
+            Consegna Scheda
+          </button>
+        </div>
+      </div>
+
+      <div class="p-6 md:p-10 flex-1 flex flex-col justify-between min-h-[380px]">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-200 pb-3 mb-6">
+            <span class="text-xs font-extrabold text-blue-600 uppercase tracking-widest">
+              Domanda <span id="current-q-num">1</span> di <span id="total-q-num">10</span>
+            </span>
+            <span id="badge-argomento" class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-semibold">Argomento</span>
+          </div>
+
+          <div id="q-image-container" class="hidden mb-6 text-center">
+            <img id="q-image" src="" alt="Figura domanda" class="max-h-48 mx-auto rounded-lg border border-slate-200 shadow-sm">
+          </div>
+
+          <div class="text-lg md:text-2xl font-semibold text-slate-900 leading-relaxed mb-8" id="q-text">
+            Testo della domanda...
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 max-w-md mx-auto w-full mb-6">
+          <button id="btn-vero" onclick="setAnswer(true)"
+                  class="py-5 rounded-2xl border-2 border-emerald-500/40 hover:border-emerald-500 bg-emerald-50 hover:bg-emerald-100/60 text-emerald-800 font-black text-2xl transition flex items-center justify-center gap-3">
+            <span class="w-8 h-8 rounded-full bg-emerald-600 text-white text-sm flex items-center justify-center font-black">V</span>
+            <span class="tracking-wider">VERO</span>
+          </button>
+          <button id="btn-falso" onclick="setAnswer(false)"
+                  class="py-5 rounded-2xl border-2 border-red-500/40 hover:border-red-500 bg-red-50 hover:bg-red-100/60 text-red-800 font-black text-2xl transition flex items-center justify-center gap-3">
+            <span class="w-8 h-8 rounded-full bg-red-600 text-white text-sm flex items-center justify-center font-black">F</span>
+            <span class="tracking-wider">FALSO</span>
+          </button>
+        </div>
+
+        <div class="flex items-center justify-between pt-6 border-t border-slate-200">
+          <button id="btn-prev" onclick="navQuestion(-1)"
+                  class="px-5 py-2.5 rounded-lg border border-slate-300 text-xs font-bold hover:bg-slate-50 transition flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            Precedente
+          </button>
+          <div class="text-xs text-slate-500 font-medium">
+            Risposte registrate: <span id="count-answered" class="font-bold text-slate-800">0</span> / <span id="count-total">10</span>
+          </div>
+          <button id="btn-next" onclick="navQuestion(1)"
+                  class="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition flex items-center gap-2">
+            Successiva
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-slate-50 p-4 border-t border-slate-200">
+        <div class="text-[11px] font-bold uppercase text-slate-500 mb-2.5 flex items-center justify-between">
+          <span>Mappa Domande Scheda</span>
+          <span class="text-[10px] font-normal text-slate-400">Verde = Risposta Inserita | Grigio = Non Risposta</span>
+        </div>
+        <div id="grid-questions" class="flex flex-wrap gap-2 justify-center"></div>
+      </div>
+    </div>
+
+    <!-- 3. ESITO E CERTIFICATO -->
+    <div id="step-result" class="hidden p-6 md:p-10">
+      <div id="result-badge-box" class="text-center p-6 rounded-2xl mb-6">
+        <div id="result-icon" class="w-16 h-16 mx-auto rounded-full flex items-center justify-center text-3xl mb-3 shadow-md"></div>
+        <h2 id="result-title" class="text-3xl font-black mb-1">ESAME SUPERATO</h2>
+        <p id="result-subtitle" class="text-sm font-medium">Valutazione completata con successo.</p>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-xl text-center">
+          <div class="text-[11px] text-slate-500 uppercase font-bold">Percentuale</div>
+          <div class="text-2xl font-black text-blue-600" id="res-score">100%</div>
+        </div>
+        <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-xl text-center">
+          <div class="text-[11px] text-slate-500 uppercase font-bold">Risposte Esatte</div>
+          <div class="text-2xl font-black text-emerald-600" id="res-correct">10/10</div>
+        </div>
+        <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-xl text-center">
+          <div class="text-[11px] text-slate-500 uppercase font-bold">Errori Commessi</div>
+          <div class="text-2xl font-black text-red-500" id="res-errors">0</div>
+        </div>
+        <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-xl text-center">
+          <div class="text-[11px] text-slate-500 uppercase font-bold">Tempo Utilizzato</div>
+          <div class="text-2xl font-black text-purple-600" id="res-time">03:45</div>
+        </div>
+      </div>
+
+      <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-5 mb-6">
+        <div class="flex items-center justify-between mb-3 border-b border-amber-200 pb-2">
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-amber-700" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1z" clip-rule="evenodd"/></svg>
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-900">Certificato e Protocollo di Superamento</span>
+          </div>
+          <span class="text-xs font-mono text-amber-800 font-bold" id="res-timestamp">2026-10-21 08:35:00</span>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white p-4 rounded-xl border border-amber-200">
+          <div>
+            <div class="text-[10px] text-slate-400 uppercase font-bold">Numero di Protocollo Rilasciato</div>
+            <div class="text-lg md:text-xl font-mono font-black text-slate-900 tracking-wider" id="res-protocollo">PROT-20261021-MRARSS-A89F-100</div>
+          </div>
+          <div class="text-left sm:text-right">
+            <div class="text-[10px] text-slate-400 uppercase font-bold">Impronta Digitale SHA-256</div>
+            <div class="text-[11px] font-mono text-emerald-700 font-bold truncate max-w-xs" id="res-hash">e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button id="btn-download-pdf" onclick="scaricaAttestatoPDF()"
+                class="flex-1 py-4 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-lg transition flex items-center justify-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <span>Scarica Attestato Ufficiale con Protocollo (PDF)</span>
+        </button>
+        <button onclick="resetExam()" class="py-4 px-6 rounded-xl border border-slate-300 text-xs font-bold hover:bg-slate-50 transition">
+          Sostieni Altra Prova
+        </button>
+      </div>
+
+      <div id="hidden-qrcode" class="hidden"></div>
+    </div>
+
+  </div>
+
+  <script>
+    const BANCA_DATI_MATERIE = [
+      {
+        id: "patente_b",
+        nome: "Patente B: Segnaletica e Norme",
+        descrizione: "Quesiti ministeriali su precedenze, segnali e limiti",
+        tempoMinuti: 15,
+        sogliaSuperamento: 90,
+        domande: [
+          { id: 1, argomento: "Segnali di pericolo", testo: "Il segnale raffigurato preannuncia un tratto di strada con superficie particolarmente scivolosa in caso di pioggia.", rispostaCorretta: true },
+          { id: 2, argomento: "Precedenze", testo: "Giungendo ad un incrocio in cui manchino segnali di precedenza, si ha l'obbligo di dare la precedenza a chi proviene da destra.", rispostaCorretta: true },
+          { id: 3, argomento: "Limiti di velocità", testo: "Sulle autostrade il limite massimo di velocità consentito per le autovetture è di 150 km/h in condizioni ottimali.", rispostaCorretta: false },
+          { id: 4, argomento: "Distanza di sicurezza", testo: "La distanza di sicurezza deve essere calcolata anche in base ai riflessi del conducente e alla velocità del veicolo.", rispostaCorretta: true },
+          { id: 5, argomento: "Sorpasso", testo: "È consentito il sorpasso di un veicolo che si sia fermato in prossimità delle strisce pedonali.", rispostaCorretta: false },
+          { id: 6, argomento: "Luci e visibilità", testo: "I fari anabbaglianti devono essere utilizzati anche durante il giorno quando si circola su autostrade e strade extraurbane.", rispostaCorretta: true },
+          { id: 7, argomento: "Fermata e sosta", testo: "La sosta e la fermata sono sempre consentite in curva purché si accendano le luci di emergenza.", rispostaCorretta: false },
+          { id: 8, argomento: "Guida sotto influenza alcol", testo: "Per i conducenti di età inferiore a 21 anni e per i primi tre anni dal conseguimento della patente B il tasso alcolemico deve essere zero.", rispostaCorretta: true },
+          { id: 9, argomento: "Pannelli integrativi", testo: "Il pannello integrativo con due frecce verticali verso l'alto indica l'inizio e la continuazione della prescrizione.", rispostaCorretta: true },
+          { id: 10, argomento: "Cinture di sicurezza", testo: "I passeggeri che viaggiano sui sedili posteriori possono non allacciare le cinture nei tragitti urbani brevi.", rispostaCorretta: false }
+        ]
+      },
+      {
+        id: "sicurezza_8108",
+        nome: "D.Lgs 81/08: Sicurezza Lavoro",
+        descrizione: "Test di abilitazione e formazione generale dei lavoratori",
+        tempoMinuti: 10,
+        sogliaSuperamento: 80,
+        domande: [
+          { id: 1, argomento: "Figure aziendali", testo: "Il RLS (Rappresentante dei Lavoratori per la Sicurezza) è nominato dal Datore di Lavoro.", rispostaCorretta: false },
+          { id: 2, argomento: "Doveri lavoratore", testo: "Ogni lavoratore deve prendersi cura della propria salute e sicurezza e di quella dei colleghi.", rispostaCorretta: true },
+          { id: 3, argomento: "DPI", testo: "I Dispositivi di Protezione Individuale devono essere conformi alle norme CE e mantenuti in buono stato.", rispostaCorretta: true },
+          { id: 4, argomento: "Emergenze", testo: "In caso di allarme antincendio il lavoratore deve terminare il proprio compito prima di evacuare.", rispostaCorretta: false },
+          { id: 5, argomento: "Formazione", testo: "La formazione in materia di sicurezza sul lavoro costituisce un obbligo di legge sia per l'azienda che per il dipendente.", rispostaCorretta: true }
+        ]
+      }
+    ];
+
+    function checkCodiceFiscale(cf) {
+      if (!cf || typeof cf !== 'string') return false;
+      cf = cf.toUpperCase().trim();
+      const regex = /^[A-Z]{6}[0-9LMNPQRSTUV]{2}[A-EHLMPR-T][0-9LMNPQRSTUV]{2}[A-Z][0-9LMNPQRSTUV]{3}[A-Z]$/;
+      if (!regex.test(cf)) return false;
+
+      const tabDispari = {
+        '0': 1, '1': 0, '2': 5, '3': 7, '4': 9, '5': 13, '6': 15, '7': 17, '8': 19, '9': 21,
+        'A': 1, 'B': 0, 'C': 5, 'D': 7, 'E': 9, 'F': 13, 'G': 15, 'H': 17, 'I': 19, 'J': 21,
+        'K': 2, 'L': 4, 'M': 18, 'N': 20, 'O': 11, 'P': 3, 'Q': 6, 'R': 8, 'S': 12, 'T': 14,
+        'U': 16, 'V': 10, 'W': 22, 'X': 25, 'Y': 24, 'Z': 23
+      };
+      
+      let somma = 0;
+      for (let i = 0; i < 15; i++) {
+        const c = cf[i];
+        if (i % 2 === 0) {
+          somma += tabDispari[c];
+        } else {
+          somma += (c >= '0' && c <= '9') ? (c.charCodeAt(0) - 48) : (c.charCodeAt(0) - 65);
+        }
+      }
+      return String.fromCharCode(65 + (somma % 26)) === cf[15];
+    }
+
+    function validateCFInput() {
+      const input = document.getElementById('cand-cf');
+      const val = input.value.trim().toUpperCase();
+      const msg = document.getElementById('cf-msg');
+      const badge = document.getElementById('cf-badge');
+
+      if (val.length === 16) {
+        if (checkCodiceFiscale(val)) {
+          msg.textContent = "✓ Codice Fiscale valido e formalmente corretto.";
+          msg.className = "text-xs text-emerald-600 font-semibold mt-1";
+          badge.textContent = "VALIDATO";
+          badge.className = "text-xs text-emerald-600 font-bold";
+          return true;
+        } else {
+          msg.textContent = "✗ Carattere di controllo non corrispondente (errore formale AdE).";
+          msg.className = "text-xs text-red-500 font-semibold mt-1";
+          badge.textContent = "NON VALIDO";
+          badge.className = "text-xs text-red-500 font-bold";
+          return false;
+        }
+      } else {
+        msg.textContent = `Caratteri: ${val.length}/16.`;
+        msg.className = "text-xs text-slate-400 mt-1";
+        badge.textContent = "";
+        return false;
+      }
+    }
+
+    let selectedMateria = BANCA_DATI_MATERIE[0];
+    let candidate = { nome: '', cognome: '', cf: '' };
+    let currentQuestionIndex = 0;
+    let userAnswers = {};
+    let timerInterval = null;
+    let secondsRemaining = 0;
+    let totalSecondsElapsed = 0;
+    let examResultData = null;
+
+    function renderMaterieSelector() {
+      const container = document.getElementById('materie-selector');
+      container.innerHTML = '';
+      BANCA_DATI_MATERIE.forEach((mat) => {
+        const isSelected = mat.id === selectedMateria.id;
+        const card = document.createElement('div');
+        card.id = `materia-card-${mat.id}`;
+        card.className = `cursor-pointer p-4 rounded-xl border-2 transition ${isSelected ? 'border-blue-600 bg-blue-50/70 shadow-sm' : 'border-slate-200 hover:border-slate-300 bg-white'}`;
+        card.onclick = () => selectMateria(mat.id);
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="font-bold text-sm text-slate-800">${mat.nome}</div>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">${mat.domande.length} Q</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-1">${mat.descrizione}</p>
+        `;
+        container.appendChild(card);
+      });
+      updateMateriaInfo();
+    }
+
+    function selectMateria(id) {
+      selectedMateria = BANCA_DATI_MATERIE.find(m => m.id === id);
+      renderMaterieSelector();
+    }
+
+    function updateMateriaInfo() {
+      document.getElementById('info-domande').textContent = selectedMateria.domande.length;
+      document.getElementById('info-tempo').textContent = `${selectedMateria.tempoMinuti} min`;
+      document.getElementById('info-soglia').textContent = `${selectedMateria.sogliaSuperamento}%`;
+      const maxErr = Math.floor(selectedMateria.domande.length * (1 - selectedMateria.sogliaSuperamento / 100));
+      document.getElementById('info-max-errori').textContent = `max ${maxErr} error${maxErr === 1 ? 'e' : 'i'}`;
+    }
+
+    function handleCustomFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const content = evt.target.result;
+          let newQuestions = [];
+          if (file.name.endsWith('.json')) {
+            newQuestions = JSON.parse(content);
+          } else if (file.name.endsWith('.csv')) {
+            const lines = content.split('\n').filter(l => l.trim().length > 0);
+            lines.slice(1).forEach((line, idx) => {
+              const cols = line.split(',');
+              if (cols.length >= 2) {
+                newQuestions.push({
+                  id: idx + 1,
+                  argomento: cols[0]?.trim() || "Generale",
+                  testo: cols[1]?.trim() || "",
+                  rispostaCorretta: cols[2]?.trim().toUpperCase() === "VERO" || cols[2]?.trim().toUpperCase() === "TRUE" || cols[2]?.trim() === "1"
+                });
+              }
+            });
+          }
+
+          if (newQuestions.length > 0) {
+            const customMat = {
+              id: `custom_${Date.now()}`,
+              nome: file.name.replace(/\.[^/.]+$/, ""),
+              descrizione: `Caricato da file locale (${newQuestions.length} domande)`,
+              tempoMinuti: Math.max(5, Math.round(newQuestions.length * 1.5)),
+              sogliaSuperamento: 80,
+              domande: newQuestions
+            };
+            BANCA_DATI_MATERIE.push(customMat);
+            selectedMateria = customMat;
+            renderMaterieSelector();
+            alert(`Materia "${customMat.nome}" caricata con successo (${newQuestions.length} quesiti).`);
+          } else {
+            alert("Il file caricato non contiene domande valide.");
+          }
+        } catch (err) {
+          alert("Errore nella lettura del file: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    /* Caricamento da GitHub */
+    async function caricaMateriaDaGitHub(url, nomeCustom = null) {
+      try {
+        let rawUrl = url.trim();
+        if (rawUrl.includes('github.com') && !rawUrl.includes('raw.githubusercontent.com')) {
+          rawUrl = rawUrl.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+        }
+
+        const resp = await fetch(rawUrl);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status} - Impossibile accedere al file su GitHub`);
+        
+        let questions = [];
+        if (rawUrl.endsWith('.csv')) {
+          const text = await resp.text();
+          const lines = text.split('\n').filter(l => l.trim().length > 0);
+          lines.slice(1).forEach((l, idx) => {
+            const cols = l.split(',');
+            if (cols.length >= 2) {
+              questions.push({
+                id: idx + 1,
+                argomento: cols[0]?.trim() || "Ministeriale",
+                testo: cols[1]?.trim() || "",
+                rispostaCorretta: cols[2]?.trim().toUpperCase() === "VERO" || cols[2]?.trim().toUpperCase() === "TRUE" || cols[2]?.trim() === "1"
+              });
+            }
+          });
+        } else {
+          const json = await resp.json();
+          questions = Array.isArray(json) ? json : (json.questions || json.domande || []);
+        }
+
+        if (questions.length === 0) throw new Error("Nessun quesito valido trovato nel repository.");
+
+        const repoName = nomeCustom || rawUrl.split('/').slice(-2).join('/');
+        const newMateria = {
+          id: `github_${Date.now()}`,
+          nome: `GitHub: ${repoName}`,
+          descrizione: `Banca dati remota collegata (${questions.length} domande totali)`,
+          tempoMinuti: 20,
+          sogliaSuperamento: 90,
+          domande: questions.length > 30 ? questions.sort(() => 0.5 - Math.random()).slice(0, 30) : questions
+        };
+
+        BANCA_DATI_MATERIE.unshift(newMateria);
+        selectedMateria = newMateria;
+        renderMaterieSelector();
+        alert(`Banca dati "${newMateria.nome}" associata con successo da GitHub! Scheda preparata con ${newMateria.domande.length} quesiti.`);
+      } catch (err) {
+        alert("Errore nel collegamento al repository GitHub: " + err.message);
+      }
+    }
+
+    function promptGitHubRepo() {
+      const defaultUrl = "https://raw.githubusercontent.com/fmorea/fmorea.github.io/main/template_domande.csv";
+      const userUrl = prompt(
+        "Inserisci l'URL GitHub del file quiz (JSON o CSV) da associare al simulatore:\n(Puoi incollare il link da qualsiasi repository GitHub o raw.githubusercontent.com)",
+        defaultUrl
+      );
+      if (userUrl) {
+        caricaMateriaDaGitHub(userUrl);
+      }
+    }
+
+    function startExam() {
+      const nome = document.getElementById('cand-nome').value.trim();
+      const cognome = document.getElementById('cand-cognome').value.trim();
+      const cf = document.getElementById('cand-cf').value.trim().toUpperCase();
+
+      if (!nome || !cognome) {
+        alert("Inserisci Nome e Cognome.");
+        return;
+      }
+      if (!checkCodiceFiscale(cf)) {
+        alert("Il Codice Fiscale inserito non risulta valido. Verificalo con attenzione.");
+        return;
+      }
+
+      candidate = { nome, cognome, cf };
+      userAnswers = {};
+      currentQuestionIndex = 0;
+      secondsRemaining = selectedMateria.tempoMinuti * 60;
+      totalSecondsElapsed = 0;
+
+      document.getElementById('header-cand-name').textContent = `${candidate.nome} ${candidate.cognome}`;
+      document.getElementById('header-cand-cf').textContent = candidate.cf;
+      document.getElementById('header-materia-title').textContent = selectedMateria.nome;
+      document.getElementById('total-q-num').textContent = selectedMateria.domande.length;
+      document.getElementById('count-total').textContent = selectedMateria.domande.length;
+
+      document.getElementById('step-registration').classList.add('hidden');
+      document.getElementById('step-quiz').classList.remove('hidden');
+
+      renderQuestionsGrid();
+      displayQuestion(0);
+      startTimer();
+    }
+
+    function renderQuestionsGrid() {
+      const grid = document.getElementById('grid-questions');
+      grid.innerHTML = '';
+      selectedMateria.domande.forEach((q, idx) => {
+        const btn = document.createElement('button');
+        btn.id = `q-grid-btn-${idx}`;
+        btn.className = 'btn-quiz-number w-9 h-9 rounded-lg font-bold text-xs bg-slate-200 text-slate-700 border border-slate-300 flex items-center justify-center';
+        btn.textContent = idx + 1;
+        btn.onclick = () => displayQuestion(idx);
+        grid.appendChild(btn);
+      });
+      updateGridButtons();
+    }
+
+    function displayQuestion(idx) {
+      currentQuestionIndex = idx;
+      const q = selectedMateria.domande[idx];
+      document.getElementById('current-q-num').textContent = idx + 1;
+      document.getElementById('badge-argomento').textContent = q.argomento || selectedMateria.nome;
+      document.getElementById('q-text').textContent = q.testo;
+
+      const imgContainer = document.getElementById('q-image-container');
+      const imgEl = document.getElementById('q-image');
+      if (q.immagine) {
+        imgEl.src = q.immagine;
+        imgContainer.classList.remove('hidden');
+      } else {
+        imgContainer.classList.add('hidden');
+      }
+
+      const btnVero = document.getElementById('btn-vero');
+      const btnFalso = document.getElementById('btn-falso');
+      btnVero.className = "py-5 rounded-2xl border-2 border-emerald-500/40 hover:border-emerald-500 bg-emerald-50 hover:bg-emerald-100/60 text-emerald-800 font-black text-2xl transition flex items-center justify-center gap-3";
+      btnFalso.className = "py-5 rounded-2xl border-2 border-red-500/40 hover:border-red-500 bg-red-50 hover:bg-red-100/60 text-red-800 font-black text-2xl transition flex items-center justify-center gap-3";
+
+      if (userAnswers[q.id] === true) {
+        btnVero.className = "py-5 rounded-2xl border-2 border-emerald-600 bg-emerald-600 text-white font-black text-2xl shadow-xl ring-4 ring-emerald-300 transition flex items-center justify-center gap-3";
+      } else if (userAnswers[q.id] === false) {
+        btnFalso.className = "py-5 rounded-2xl border-2 border-red-600 bg-red-600 text-white font-black text-2xl shadow-xl ring-4 ring-red-300 transition flex items-center justify-center gap-3";
+      }
+
+      document.getElementById('btn-prev').disabled = (idx === 0);
+      document.getElementById('btn-next').disabled = (idx === selectedMateria.domande.length - 1);
+
+      updateGridButtons();
+    }
+
+    function setAnswer(ans) {
+      const q = selectedMateria.domande[currentQuestionIndex];
+      userAnswers[q.id] = ans;
+      updateGridButtons();
+      displayQuestion(currentQuestionIndex);
+
+      if (currentQuestionIndex < selectedMateria.domande.length - 1) {
+        setTimeout(() => {
+          displayQuestion(currentQuestionIndex + 1);
+        }, 220);
+      }
+    }
+
+    function navQuestion(delta) {
+      const newIdx = currentQuestionIndex + delta;
+      if (newIdx >= 0 && newIdx < selectedMateria.domande.length) {
+        displayQuestion(newIdx);
+      }
+    }
+
+    function updateGridButtons() {
+      const answeredCount = Object.keys(userAnswers).length;
+      document.getElementById('count-answered').textContent = answeredCount;
+
+      selectedMateria.domande.forEach((q, idx) => {
+        const btn = document.getElementById(`q-grid-btn-${idx}`);
+        if (!btn) return;
+        const isAnswered = userAnswers[q.id] !== undefined;
+        const isCurrent = idx === currentQuestionIndex;
+
+        let baseClasses = 'btn-quiz-number w-9 h-9 rounded-lg font-bold text-xs flex items-center justify-center transition ';
+        if (isAnswered) {
+          baseClasses += 'bg-emerald-600 text-white border-emerald-700 shadow-sm ';
+        } else {
+          baseClasses += 'bg-slate-200 text-slate-700 border-slate-300 ';
+        }
+
+        if (isCurrent) {
+          baseClasses += 'ring-2 ring-blue-500 scale-110 font-black z-10';
+        }
+        btn.className = baseClasses;
+      });
+    }
+
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        secondsRemaining--;
+        totalSecondsElapsed++;
+        if (secondsRemaining <= 0) {
+          clearInterval(timerInterval);
+          alert("Tempo scaduto! Invio automatico della scheda.");
+          finishQuiz();
+          return;
+        }
+        const m = Math.floor(secondsRemaining / 60).toString().padStart(2, '0');
+        const s = (secondsRemaining % 60).toString().padStart(2, '0');
+        document.getElementById('quiz-timer').textContent = `${m}:${s}`;
+      }, 1000);
+    }
+
+    function confirmSubmitQuiz() {
+      const missing = selectedMateria.domande.length - Object.keys(userAnswers).length;
+      let promptText = "Vuoi procedere alla consegna della scheda d'esame?";
+      if (missing > 0) {
+        promptText = `Attenzione: ci sono ancora ${missing} domande senza risposta.\nVerranno conteggiate come errate.\nConfermi la consegna?`;
+      }
+      if (confirm(promptText)) {
+        clearInterval(timerInterval);
+        finishQuiz();
+      }
+    }
+
+    async function calculateProtocol(cand, mat, score, correct, total) {
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const dd = String(now.getDate()).padStart(2, '0');
+      const hh = String(now.getHours()).padStart(2, '0');
+      const min = String(now.getMinutes()).padStart(2, '0');
+      const ss = String(now.getSeconds()).padStart(2, '0');
+
+      const dateStr = `${yyyy}${mm}${dd}`;
+      const timestampCompleto = `${dd}/${mm}/${yyyy} ${hh}:${min}:${ss}`;
+
+      const payload = `${cand.cf}|${cand.cognome}|${cand.nome}|${mat.id}|${score}|${correct}/${total}|${dateStr}|FMOREA-QUIZ-PROTOCOL-2026`;
+      
+      const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(payload));
+      const hashArray = Array.from(new Uint8Array(buffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+      const cfPrefix = cand.cf.substring(0, 6);
+      const shortHash = hashHex.substring(0, 6).toUpperCase();
+      const protocollo = `PROT-${dateStr}-${cfPrefix}-${shortHash}-${Math.round(score)}`;
+
+      return {
+        protocollo,
+        hashCompleto: hashHex,
+        dataFormatted: `${dd}/${mm}/${yyyy}`,
+        timestampCompleto
+      };
+    }
+
+    async function finishQuiz() {
+      let correct = 0;
+      let errors = 0;
+      selectedMateria.domande.forEach(q => {
+        if (userAnswers[q.id] === q.rispostaCorretta) {
+          correct++;
+        } else {
+          errors++;
+        }
+      });
+
+      const totalQ = selectedMateria.domande.length;
+      const scorePct = Math.round((correct / totalQ) * 100);
+      const passed = scorePct >= selectedMateria.sogliaSuperamento;
+
+      const protData = await calculateProtocol(candidate, selectedMateria, scorePct, correct, totalQ);
+
+      examResultData = {
+        candidate,
+        materia: selectedMateria,
+        correct,
+        errors,
+        totalQ,
+        scorePct,
+        passed,
+        ...protData
+      };
+
+      document.getElementById('step-quiz').classList.add('hidden');
+      document.getElementById('step-result').classList.remove('hidden');
+
+      const badgeBox = document.getElementById('result-badge-box');
+      const icon = document.getElementById('result-icon');
+      const title = document.getElementById('result-title');
+      const subtitle = document.getElementById('result-subtitle');
+
+      if (passed) {
+        badgeBox.className = "text-center p-6 rounded-2xl mb-6 bg-emerald-50 border-2 border-emerald-500 text-emerald-900";
+        icon.className = "w-16 h-16 mx-auto rounded-full flex items-center justify-center text-3xl mb-3 bg-emerald-600 text-white shadow-lg";
+        icon.innerHTML = "✓";
+        title.textContent = "ESAME SUPERATO: IDONEO";
+        subtitle.textContent = `Punteggio conseguito: ${scorePct}%. Soglia minima di superamento (${selectedMateria.sogliaSuperamento}%) raggiunta.`;
+      } else {
+        badgeBox.className = "text-center p-6 rounded-2xl mb-6 bg-red-50 border-2 border-red-500 text-red-900";
+        icon.className = "w-16 h-16 mx-auto rounded-full flex items-center justify-center text-3xl mb-3 bg-red-600 text-white shadow-lg";
+        icon.innerHTML = "✗";
+        title.textContent = "ESAME NON SUPERATO: NON IDONEO";
+        subtitle.textContent = `Punteggio conseguito: ${scorePct}% (${errors} errori). Minimo richiesto: ${selectedMateria.sogliaSuperamento}%.`;
+      }
+
+      document.getElementById('res-score').textContent = `${scorePct}%`;
+      document.getElementById('res-correct').textContent = `${correct}/${totalQ}`;
+      document.getElementById('res-errors').textContent = errors;
+
+      const mTaken = Math.floor(totalSecondsElapsed / 60).toString().padStart(2, '0');
+      const sTaken = (totalSecondsElapsed % 60).toString().padStart(2, '0');
+      document.getElementById('res-time').textContent = `${mTaken}:${sTaken}`;
+
+      document.getElementById('res-timestamp').textContent = protData.timestampCompleto;
+      document.getElementById('res-protocollo').textContent = protData.protocollo;
+      document.getElementById('res-hash').textContent = protData.hashCompleto;
+
+      const btnPdf = document.getElementById('btn-download-pdf');
+      if (passed) {
+        btnPdf.classList.remove('opacity-50', 'cursor-not-allowed');
+        btnPdf.disabled = false;
+      } else {
+        btnPdf.classList.add('opacity-50', 'cursor-not-allowed');
+        btnPdf.disabled = true;
+      }
+    }
+
+    function scaricaAttestatoPDF() {
+      if (!examResultData || !examResultData.passed) {
+        alert("L'attestato ufficiale con numero di protocollo viene rilasciato solo in caso di esito positivo.");
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      doc.setDrawColor(30, 58, 138);
+      doc.setLineWidth(1.5);
+      doc.rect(10, 10, 190, 277);
+
+      doc.setLineWidth(0.4);
+      doc.rect(13, 13, 184, 271);
+
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(100, 116, 139);
+      doc.text("SISTEMA DI VALUTAZIONE E CERTIFICAZIONE STATICA DIGITALE", 105, 26, { align: 'center' });
+
+      doc.setFontSize(22);
+      doc.setTextColor(30, 58, 138);
+      doc.text("ATTESTATO DI IDONEITÀ", 105, 38, { align: 'center' });
+
+      doc.setFontSize(11);
+      doc.setTextColor(16, 185, 129);
+      doc.text("SUPERAMENTO PROVA D'ESAME", 105, 46, { align: 'center' });
+
+      doc.setDrawColor(203, 213, 225);
+      doc.setFillColor(248, 250, 252);
+      doc.roundedRect(25, 53, 160, 16, 3, 3, 'FD');
+      
+      doc.setFont('Courier', 'bold');
+      doc.setFontSize(13);
+      doc.setTextColor(15, 23, 42);
+      doc.text(`NUMERO DI PROTOCOLLO: ${examResultData.protocollo}`, 105, 63.5, { align: 'center' });
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(12);
+      doc.setTextColor(51, 65, 85);
+      doc.text("Si certifica formalmente che il/la candidato/a:", 25, 82);
+
+      doc.setFillColor(241, 245, 249);
+      doc.rect(25, 87, 160, 75, 'F');
+      doc.setDrawColor(203, 213, 225);
+      doc.rect(25, 87, 160, 75, 'D');
+
+      doc.setFont('Helvetica', 'bold');
+      doc.text("Cognome e Nome:", 30, 97);
+      doc.setFont('Helvetica', 'normal');
+      doc.text(`${examResultData.candidate.cognome.toUpperCase()} ${examResultData.candidate.nome.toUpperCase()}`, 75, 97);
+
+      doc.setFont('Helvetica', 'bold');
+      doc.text("Codice Fiscale:", 30, 107);
+      doc.setFont('Courier', 'bold');
+      doc.text(examResultData.candidate.cf, 75, 107);
+
+      doc.setFont('Helvetica', 'bold');
+      doc.text("Materia d'Esame:", 30, 117);
+      doc.setFont('Helvetica', 'normal');
+      doc.text(examResultData.materia.nome, 75, 117);
+
+      doc.setFont('Helvetica', 'bold');
+      doc.text("Data e Ora Prova:", 30, 127);
+      doc.setFont('Helvetica', 'normal');
+      doc.text(examResultData.timestampCompleto, 75, 127);
+
+      doc.setFont('Helvetica', 'bold');
+      doc.text("Valutazione Finale:", 30, 137);
+      doc.setFont('Helvetica', 'bold');
+      doc.setTextColor(5, 150, 105);
+      doc.text(`IDONEO - SUPERATO (${examResultData.scorePct}%)`, 75, 137);
+
+      doc.setTextColor(51, 65, 85);
+      doc.setFont('Helvetica', 'bold');
+      doc.text("Dettaglio Risultato:", 30, 147);
+      doc.setFont('Helvetica', 'normal');
+      doc.text(`${examResultData.correct} esatte su ${examResultData.totalQ} quesiti (errori: ${examResultData.errors})`, 75, 147);
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(10.5);
+      doc.text(
+        "Il presente documento costituisce attestazione ufficiale del superamento del test di verifica delle\ncompetenze, con registrazione automatica e marcatura temporale dell'esito conseguito.",
+        25, 175
+      );
+
+      const qrContainer = document.getElementById('hidden-qrcode');
+      qrContainer.innerHTML = '';
+      const qrData = `PROT:${examResultData.protocollo}|CF:${examResultData.candidate.cf}|SCORE:${examResultData.scorePct}%|HASH:${examResultData.hashCompleto.substring(0, 16)}`;
+      
+      new QRCode(qrContainer, {
+        text: qrData,
+        width: 120,
+        height: 120
+      });
+
+      setTimeout(() => {
+        const qrCanvas = qrContainer.querySelector('canvas');
+        if (qrCanvas) {
+          const qrImgData = qrCanvas.toDataURL('image/png');
+          doc.addImage(qrImgData, 'PNG', 28, 200, 35, 35);
+          doc.setFontSize(7.5);
+          doc.setFont('Helvetica', 'bold');
+          doc.setTextColor(100, 116, 139);
+          doc.text("SCANSIONA PER VERIFICA", 45, 239, { align: 'center' });
+        }
+
+        doc.setFontSize(10.5);
+        doc.setFont('Helvetica', 'bold');
+        doc.setTextColor(30, 41, 59);
+        doc.text("La Commissione Esaminatrice Digitale", 125, 210);
+        doc.setFont('Helvetica', 'italic');
+        doc.setFontSize(9);
+        doc.setTextColor(100, 116, 139);
+        doc.text("Documento firmato digitalmente ai sensi del CAD", 125, 218);
+        doc.text("Protocollo di convalida automatica fmorea.github.io", 125, 224);
+
+        doc.setDrawColor(226, 232, 240);
+        doc.setFillColor(248, 250, 252);
+        doc.rect(20, 250, 170, 15, 'FD');
+
+        doc.setFont('Courier', 'bold');
+        doc.setFontSize(7);
+        doc.setTextColor(71, 85, 105);
+        doc.text("IMPRONTA DIGITALE SHA-256 DI INTEGRITÀ E NON REPUDIO:", 24, 255);
+        doc.setFont('Courier', 'normal');
+        doc.text(examResultData.hashCompleto, 24, 260);
+
+        const nomeFile = `Attestato_${examResultData.candidate.cognome}_${examResultData.candidate.cf}_${examResultData.protocollo}.pdf`;
+        doc.save(nomeFile);
+      }, 200);
+    }
+
+    function resetExam() {
+      if (timerInterval) clearInterval(timerInterval);
+      document.getElementById('step-result').classList.add('hidden');
+      document.getElementById('step-registration').classList.remove('hidden');
+      document.getElementById('cand-nome').value = '';
+      document.getElementById('cand-cognome').value = '';
+      document.getElementById('cand-cf').value = '';
+      document.getElementById('cf-msg').textContent = "Inserisci il Codice Fiscale di 16 caratteri.";
+      document.getElementById('cf-msg').className = "text-xs text-slate-500 mt-1";
+      document.getElementById('cf-badge').textContent = "";
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderMaterieSelector();
+    });
+  </script>
 </body>
-
 </html>
