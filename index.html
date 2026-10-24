@@ -389,6 +389,65 @@
       margin-right: 12px;
     }
 
+    /* Schede Opzioni Scelta Multipla A, B, C, D... */
+    .btn-option-card {
+      padding: 16px 20px;
+      border-radius: 14px;
+      font-weight: 600;
+      font-size: 15px;
+      width: 100%;
+      border: 2px solid #e2e8f0;
+      background-color: #ffffff;
+      color: #1e293b;
+      cursor: pointer;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      margin-bottom: 12px;
+      text-align: left;
+      transition: all 0.15s ease-in-out;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .btn-option-card:hover {
+      border-color: #94a3b8;
+      background-color: #f8fafc;
+    }
+    .btn-option-card.selected {
+      border-color: #2563eb !important;
+      background-color: #eff6ff !important;
+      color: #1e40af !important;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.18) !important;
+    }
+    .badge-option-letter {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background-color: #f1f5f9;
+      color: #475569;
+      font-weight: 800;
+      font-size: 14px;
+      display: -webkit-inline-box;
+      display: -ms-inline-flexbox;
+      display: inline-flex;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      margin-right: 14px;
+      flex-shrink: 0;
+      border: 1px solid #cbd5e1;
+    }
+    .btn-option-card.selected .badge-option-letter {
+      background-color: #2563eb;
+      color: #ffffff;
+      border-color: #1d4ed8;
+    }
+
     /* Stili di stampa ottimizzati al 100% per vecchi browser (IE9, IE10, IE11) e browser moderni */
     @media print {
       body {
@@ -528,8 +587,19 @@
             <span id="badge-argomento" class="text-xs bg-slate-100 text-slate-600 rounded-full font-semibold" style="padding: 4px 12px;">Argomento</span>
           </div>
 
+          <!-- Multimodal: Immagine del quesito -->
           <div id="q-image-container" class="hidden mb-6 text-center">
             <img id="q-image" src="" alt="Figura domanda" style="max-height: 190px; margin: 0 auto; border-radius: 8px; border: 1px solid #cbd5e1;">
+          </div>
+
+          <!-- Multimodal: Audio player per listening/lingue -->
+          <div id="q-audio-container" class="hidden mb-6 text-center">
+            <audio id="q-audio" controls style="max-width: 480px; width: 100%; margin: 0 auto;"></audio>
+          </div>
+
+          <!-- Multimodal: Blocco Codice Monospace per informatica/sviluppo -->
+          <div id="q-code-container" class="hidden mb-6 text-left" style="max-width: 680px; margin-left: auto; margin-right: auto;">
+            <pre class="p-4 rounded-xl font-mono text-sm overflow-x-auto text-slate-100" style="background-color: #0f172a; border: 1px solid #334155; line-height: 1.5;"><code id="q-code"></code></pre>
           </div>
 
           <div class="text-xl md:text-2xl font-semibold text-slate-900 leading-relaxed mb-8" id="q-text">
@@ -537,20 +607,8 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-2 mb-6" style="max-width: 480px; margin-left: auto; margin-right: auto; width: 100%;">
-          <div>
-            <button id="btn-vero" onclick="setAnswer(true)" class="btn-choice" style="border: 2px solid rgba(16, 185, 129, 0.4); background-color: #ecfdf5; color: #065f46;">
-              <span class="badge-vf-circle" style="background-color: #059669;">V</span>
-              <span class="tracking-wider">VERO</span>
-            </button>
-          </div>
-          <div>
-            <button id="btn-falso" onclick="setAnswer(false)" class="btn-choice" style="border: 2px solid rgba(239, 68, 68, 0.4); background-color: #fef2f2; color: #991b1b;">
-              <span class="badge-vf-circle" style="background-color: #dc2626;">F</span>
-              <span class="tracking-wider">FALSO</span>
-            </button>
-          </div>
-        </div>
+        <!-- Blocco dinamico risposte (VERO/FALSO oppure SCELTA MULTIPLA A, B, C, D...) -->
+        <div id="answers-container" class="mb-6" style="width: 100%;"></div>
 
         <div class="flex items-center justify-between border-t pt-5">
           <button id="btn-prev" onclick="navQuestion(-1)" class="btn-secondary" style="padding: 10px 18px; border-radius: 8px; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center;">
@@ -857,7 +915,7 @@
       };
     }
 
-    /* PARSER TESTO QUESITI (.txt con tag [D], [R], [A], [S], [IMG] o formato CSV) */
+    /* PARSER TESTO QUESITI MULTIMODALI (.txt con tag [D], [R], [A], [S], [IMG], [AUDIO], [CODE], [A]..[E] o CSV) */
     function parseQuizTxt(content, baseFolder) {
       baseFolder = baseFolder || '';
       if (baseFolder && baseFolder.charAt(baseFolder.length - 1) !== '/') {
@@ -875,15 +933,29 @@
           continue;
         }
 
+        // Estrazione eventuale blocco di codice [CODE]...[/CODE] o [CODICE]...[/CODICE]
+        var codeContent = '';
+        var codeRegex = /\[(?:CODE|CODICE)\]([\s\S]*?)\[\/(?:CODE|CODICE)\]/i;
+        var codeMatch = block.match(codeRegex);
+        if (codeMatch) {
+          codeContent = codeMatch[1].trim();
+          block = block.replace(codeRegex, '');
+        }
+
         var lines = block.split('\n');
         var qObj = {
+          tipo: 'VERO_FALSO',
           argomento: 'Generale',
           testo: '',
           rispostaCorretta: null,
           spiegazione: '',
-          immagine: ''
+          immagine: '',
+          audio: '',
+          codice: codeContent,
+          opzioni: []
         };
         var isTagFormat = false;
+        var rawRisposta = '';
 
         for (var l = 0; l < lines.length; l++) {
           var line = lines[l].trim();
@@ -894,14 +966,22 @@
           var mArg = line.match(/^(?:\[(?:ARGOMENTO|A)\]|(?:ARGOMENTO|A):)\s*(.+)$/i);
           var mSpieg = line.match(/^(?:\[(?:SPIEGAZIONE|S)\]|(?:SPIEGAZIONE|S):)\s*(.+)$/i);
           var mImg = line.match(/^(?:\[(?:IMMAGINE|IMG)\]|(?:IMMAGINE|IMG):)\s*(.+)$/i);
+          var mAudio = line.match(/^(?:\[(?:AUDIO|VOCE)\]|(?:AUDIO|VOCE):)\s*(.+)$/i);
+          var mTipo = line.match(/^(?:\[(?:TIPO|TYPE)\]|(?:TIPO|TYPE):)\s*(.+)$/i);
+          var mOpt = line.match(/^\[([A-Ea-e])\]\s*(.+)$/);
 
           if (mDom) {
             isTagFormat = true;
             qObj.testo = mDom[1].trim();
+          } else if (mTipo) {
+            isTagFormat = true;
+            var tVal = mTipo[1].toUpperCase().trim();
+            if (tVal.indexOf('MULT') !== -1 || tVal.indexOf('SCELTA') !== -1) {
+              qObj.tipo = 'SCELTA_MULTIPLA';
+            }
           } else if (mRis) {
             isTagFormat = true;
-            var rVal = mRis[1].toUpperCase().trim();
-            qObj.rispostaCorretta = (rVal === 'VERO' || rVal === 'V' || rVal === 'TRUE' || rVal === '1' || rVal === 'SI' || rVal === 'S');
+            rawRisposta = mRis[1].trim();
           } else if (mArg) {
             isTagFormat = true;
             qObj.argomento = mArg[1].trim();
@@ -916,6 +996,39 @@
             } else {
               qObj.immagine = imgPath;
             }
+          } else if (mAudio) {
+            isTagFormat = true;
+            var aPath = mAudio[1].trim();
+            if (aPath.indexOf('://') === -1 && aPath.indexOf('data:') !== 0 && aPath.charAt(0) !== '/' && (!baseFolder || aPath.indexOf(baseFolder) !== 0)) {
+              qObj.audio = baseFolder + aPath;
+            } else {
+              qObj.audio = aPath;
+            }
+          } else if (mOpt) {
+            isTagFormat = true;
+            var optLetter = mOpt[1].toUpperCase();
+            var optRawText = mOpt[2].trim();
+            var optImg = '';
+            var optText = optRawText;
+
+            // Se l'opzione ha formato "immagine.svg | Descrizione"
+            if (optRawText.indexOf('|') !== -1) {
+              var optParts = optRawText.split('|');
+              var maybeImg = optParts[0].trim();
+              if (/\.(svg|png|jpg|jpeg|gif|webp)$/i.test(maybeImg)) {
+                optImg = (maybeImg.indexOf('://') === -1 && maybeImg.indexOf('data:') !== 0 && maybeImg.charAt(0) !== '/' && (!baseFolder || maybeImg.indexOf(baseFolder) !== 0)) ? baseFolder + maybeImg : maybeImg;
+                optText = optParts.slice(1).join('|').trim();
+              }
+            } else if (/\.(svg|png|jpg|jpeg|gif|webp)$/i.test(optRawText)) {
+              optImg = (optRawText.indexOf('://') === -1 && optRawText.indexOf('data:') !== 0 && optRawText.charAt(0) !== '/' && (!baseFolder || optRawText.indexOf(baseFolder) !== 0)) ? baseFolder + optRawText : optRawText;
+              optText = '';
+            }
+
+            qObj.opzioni.push({
+              id: optLetter,
+              testo: optText,
+              immagine: optImg
+            });
           } else if (!isTagFormat && line.indexOf(',') !== -1) {
             var cols = parseCsvLine(line);
             if (cols.length >= 2 && cols[0].toLowerCase() !== 'argomento') {
@@ -927,19 +1040,36 @@
               }
               questions.push({
                 id: questions.length + 1,
+                tipo: 'VERO_FALSO',
                 argomento: cols[0] || 'Generale',
                 testo: cols[1] || '',
                 rispostaCorretta: boolAns,
                 spiegazione: cols[3] || (boolAns ? "L'affermazione e vera e confermata." : "L'affermazione e falsa ed errata."),
-                immagine: imgP
+                immagine: imgP,
+                audio: '',
+                codice: '',
+                opzioni: []
               });
             }
           }
         }
 
-        if (isTagFormat && qObj.testo && qObj.rispostaCorretta !== null) {
+        if (isTagFormat && qObj.testo) {
+          if (qObj.opzioni.length > 0) {
+            qObj.tipo = 'SCELTA_MULTIPLA';
+            qObj.rispostaCorretta = rawRisposta ? rawRisposta.toUpperCase() : 'A';
+          } else {
+            qObj.tipo = 'VERO_FALSO';
+            var upperR = rawRisposta.toUpperCase();
+            qObj.rispostaCorretta = (upperR === 'VERO' || upperR === 'V' || upperR === 'TRUE' || upperR === '1' || upperR === 'SI' || upperR === 'S');
+          }
+
           if (!qObj.spiegazione) {
-            qObj.spiegazione = qObj.rispostaCorretta ? "L'affermazione e vera e confermata." : "L'affermazione e falsa ed errata.";
+            if (qObj.tipo === 'VERO_FALSO') {
+              qObj.spiegazione = qObj.rispostaCorretta ? "L'affermazione e vera e confermata." : "L'affermazione e falsa ed errata.";
+            } else {
+              qObj.spiegazione = "La risposta corretta è l'opzione [" + qObj.rispostaCorretta + "].";
+            }
           }
           qObj.id = questions.length + 1;
           questions.push(qObj);
@@ -1377,6 +1507,7 @@
       document.getElementById('badge-argomento').textContent = q.argomento || selectedMateria.nome;
       document.getElementById('q-text').textContent = q.testo;
 
+      // 1. Immagine del quesito
       var imgContainer = document.getElementById('q-image-container');
       var imgEl = document.getElementById('q-image');
       if (q.immagine) {
@@ -1386,28 +1517,101 @@
         imgContainer.classList.add('hidden');
       }
 
-      var btnVero = document.getElementById('btn-vero');
-      var btnFalso = document.getElementById('btn-falso');
-      btnVero.style.border = "2px solid rgba(16, 185, 129, 0.4)";
-      btnVero.style.backgroundColor = "#ecfdf5";
-      btnVero.style.color = "#065f46";
-      btnVero.style.boxShadow = "none";
+      // 2. Audio player (listening / lingue)
+      var audioContainer = document.getElementById('q-audio-container');
+      var audioEl = document.getElementById('q-audio');
+      if (q.audio) {
+        audioEl.src = q.audio;
+        audioContainer.classList.remove('hidden');
+      } else {
+        audioContainer.classList.add('hidden');
+        if (audioEl) audioEl.pause();
+      }
 
-      btnFalso.style.border = "2px solid rgba(239, 68, 68, 0.4)";
-      btnFalso.style.backgroundColor = "#fef2f2";
-      btnFalso.style.color = "#991b1b";
-      btnFalso.style.boxShadow = "none";
+      // 3. Codice sorgente monospace (informatica / dev)
+      var codeContainer = document.getElementById('q-code-container');
+      var codeEl = document.getElementById('q-code');
+      if (q.codice) {
+        codeEl.textContent = q.codice;
+        codeContainer.classList.remove('hidden');
+      } else {
+        codeContainer.classList.add('hidden');
+      }
 
-      if (userAnswers[q.id] === true) {
-        btnVero.style.backgroundColor = "#059669";
-        btnVero.style.borderColor = "#047857";
-        btnVero.style.color = "#ffffff";
-        btnVero.style.boxShadow = "0 4px 14px rgba(5, 150, 105, 0.4)";
-      } else if (userAnswers[q.id] === false) {
-        btnFalso.style.backgroundColor = "#dc2626";
-        btnFalso.style.borderColor = "#b91c1c";
-        btnFalso.style.color = "#ffffff";
-        btnFalso.style.boxShadow = "0 4px 14px rgba(220, 38, 38, 0.4)";
+      // 4. Rendering Dinamico Risposte (#answers-container)
+      var ansContainer = document.getElementById('answers-container');
+      ansContainer.innerHTML = '';
+      var userAns = userAnswers[q.id];
+
+      if (q.tipo === 'SCELTA_MULTIPLA' && q.opzioni && q.opzioni.length > 0) {
+        var optsBox = document.createElement('div');
+        optsBox.style.maxWidth = '680px';
+        optsBox.style.margin = '0 auto';
+
+        for (var oi = 0; oi < q.opzioni.length; oi++) {
+          (function(opt) {
+            var isSel = (userAns === opt.id);
+            var optBtn = document.createElement('button');
+            optBtn.type = 'button';
+            optBtn.className = 'btn-option-card ' + (isSel ? 'selected' : '');
+            optBtn.onclick = function() {
+              setAnswer(opt.id);
+            };
+
+            var innerHtml = '<span class="badge-option-letter">' + opt.id + '</span>';
+            if (opt.immagine) {
+              innerHtml += '<img src="' + opt.immagine + '" alt="Opzione ' + opt.id + '" style="max-height: 70px; margin-right: 12px; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; padding: 2px;">';
+            }
+            if (opt.testo) {
+              innerHtml += '<span style="flex: 1;">' + opt.testo + '</span>';
+            }
+            if (isSel) {
+              innerHtml += '<span style="font-weight: 800; font-size: 16px; margin-left: 8px;">✓</span>';
+            }
+
+            optBtn.innerHTML = innerHtml;
+            optsBox.appendChild(optBtn);
+          })(q.opzioni[oi]);
+        }
+        ansContainer.appendChild(optsBox);
+      } else {
+        // VERO / FALSO standard
+        var vfGrid = document.createElement('div');
+        vfGrid.className = 'grid grid-cols-2';
+        vfGrid.style.maxWidth = '480px';
+        vfGrid.style.margin = '0 auto';
+        vfGrid.style.width = '100%';
+
+        var isV = (userAns === true);
+        var isF = (userAns === false);
+
+        var colV = document.createElement('div');
+        var btnV = document.createElement('button');
+        btnV.id = 'btn-vero';
+        btnV.className = 'btn-choice';
+        btnV.style.border = isV ? '2px solid #047857' : '2px solid rgba(16, 185, 129, 0.4)';
+        btnV.style.backgroundColor = isV ? '#059669' : '#ecfdf5';
+        btnV.style.color = isV ? '#ffffff' : '#065f46';
+        btnV.style.boxShadow = isV ? '0 4px 14px rgba(5, 150, 105, 0.4)' : 'none';
+        btnV.onclick = function() { setAnswer(true); };
+        btnV.innerHTML = '<span class="badge-vf-circle" style="background-color: ' + (isV ? '#047857' : '#059669') + ';">V</span><span class="tracking-wider">VERO</span>';
+        colV.appendChild(btnV);
+
+        var colF = document.createElement('div');
+        var btnF = document.createElement('button');
+        btnF.id = 'btn-falso';
+        btnF.className = 'btn-choice';
+        btnF.style.border = isF ? '2px solid #b91c1c' : '2px solid rgba(239, 68, 68, 0.4)';
+        btnF.style.backgroundColor = isF ? '#dc2626' : '#fef2f2';
+        btnF.style.color = isF ? '#ffffff' : '#991b1b';
+        btnF.style.boxShadow = isF ? '0 4px 14px rgba(220, 38, 38, 0.4)' : 'none';
+        btnF.onclick = function() { setAnswer(false); };
+        btnF.innerHTML = '<span class="badge-vf-circle" style="background-color: ' + (isF ? '#b91c1c' : '#dc2626') + ';">F</span><span class="tracking-wider">FALSO</span>';
+        colF.appendChild(btnF);
+
+        vfGrid.appendChild(colV);
+        vfGrid.appendChild(colF);
+        ansContainer.appendChild(vfGrid);
       }
 
       document.getElementById('btn-prev').disabled = (idx === 0);
