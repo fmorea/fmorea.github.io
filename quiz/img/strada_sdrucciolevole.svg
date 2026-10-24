@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 175" width="200" height="175">
+  <!-- Segnale triangolare pericolo strada sdrucciolevole -->
+  <polygon points="100,10 190,165 10,165" fill="#ffffff" stroke="#dc2626" stroke-width="14" stroke-linejoin="round"/>
+  <!-- Sagoma auto che sbanda -->
+  <g fill="#1e293b" transform="translate(45, 65) scale(0.55)">
+    <!-- Sagoma stilizzata veicolo -->
+    <path d="M20 50 L35 30 L65 30 L80 50 L95 55 L95 70 L5 70 L5 55 Z" stroke="#1e293b" stroke-width="2" />
+    <circle cx="25" cy="72" r="8" fill="#1e293b"/>
+    <circle cx="75" cy="72" r="8" fill="#1e293b"/>
+    <!-- Finestrini -->
+    <polygon points="37,33 48,33 48,48 25,48" fill="#ffffff"/>
+    <polygon points="52,33 63,33 75,48 52,48" fill="#ffffff"/>
+    <!-- Tracce sbandamento -->
+    <path d="M-15 95 Q 10 80, 25 88 T 50 82" fill="none" stroke="#1e293b" stroke-width="4" stroke-linecap="round"/>
+    <path d="M35 95 Q 60 80, 75 88 T 100 82" fill="none" stroke="#1e293b" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</svg>
+

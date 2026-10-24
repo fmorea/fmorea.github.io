@@ -388,6 +388,48 @@
       justify-content: center;
       margin-right: 12px;
     }
+
+    /* Stili di stampa ottimizzati al 100% per vecchi browser (IE9, IE10, IE11) e browser moderni */
+    @media print {
+      body {
+        background-color: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        color: #000000 !important;
+      }
+      #app {
+        box-shadow: none !important;
+        border: none !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        width: 100% !important;
+      }
+      #step-registration,
+      #step-quiz,
+      #step-review,
+      .btn-action,
+      .btn-secondary,
+      #btn-download-pdf,
+      button,
+      input,
+      #filter-all,
+      #filter-errors,
+      #filter-correct {
+        display: none !important;
+      }
+      #step-result {
+        display: block !important;
+        padding: 0 !important;
+      }
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      @page {
+        size: A4 portrait;
+        margin: 10mm;
+      }
+    }
   </style>
 </head>
 <body>
@@ -438,13 +480,17 @@
           <div class="flex flex-wrap items-center justify-between mb-3" style="gap: 8px;">
             <label class="text-xs font-bold uppercase text-slate-600">Materia d'Esame</label>
             <div class="flex items-center" style="gap: 12px; font-size: 12px;">
+              <button type="button" onclick="scansionaRepository()" class="btn-secondary" style="padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center;" title="Ricarica file .txt dal repository">
+                <svg class="w-4" width="16" height="16" style="width: 16px; height: 16px; margin-right: 6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                <span>🔄 Scansiona Repo</span>
+              </button>
               <button type="button" onclick="promptGitHubRepo()" class="btn-secondary" style="padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center;">
                 <svg class="w-4" width="16" height="16" style="width: 16px; height: 16px; margin-right: 6px;" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
                 <span>🔗 Associa Repo GitHub</span>
               </button>
               <label class="text-blue-600 font-semibold" style="cursor: pointer; display: inline-flex; align-items: center;">
-                <input type="file" id="file-custom-quiz" accept=".json,.csv" class="hidden" onchange="handleCustomFileUpload(event)">
-                <span>📁 File locale</span>
+                <input type="file" id="file-custom-quiz" accept=".txt,.csv,.json" class="hidden" onchange="handleCustomFileUpload(event)">
+                <span>📁 File locale (.txt, .csv, .json)</span>
               </label>
             </div>
           </div>
@@ -625,7 +671,11 @@
       <div class="flex flex-wrap" style="gap: 12px;">
         <button id="btn-download-pdf" onclick="scaricaAttestatoPDF()" class="btn-action btn-success flex-1" style="padding: 16px; font-size: 15px; display: flex; align-items: center; justify-content: center;">
           <svg class="w-5" width="20" height="20" style="width: 20px; height: 20px; margin-right: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-          <span>Scarica Scheda Risultati con QR Code (PDF)</span>
+          <span>Scarica Scheda Risultati (PDF)</span>
+        </button>
+        <button onclick="window.print()" class="btn-secondary" style="padding: 16px 20px; border-radius: 12px; font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;" title="Stampa o Salva in PDF nativamente (ottimale per vecchi browser come Internet Explorer)">
+          <svg class="w-5" width="20" height="20" style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          <span>Stampa / PDF (IE)</span>
         </button>
         <button onclick="resetExam()" class="btn-secondary" style="padding: 16px 24px; border-radius: 12px; font-weight: 700; font-size: 13px;">
           Sostieni Altra Prova
@@ -749,132 +799,8 @@
       return null;
     }
 
-    /* BANCA DATI MATERIE D'ESAME INTEGRATE */
-    var BANCA_DATI_MATERIE = [
-      {
-        id: "patente_b",
-        nome: "Patente B: Segnaletica e Norme",
-        descrizione: "Quesiti ministeriali su precedenze, segnali, limiti e sicurezza",
-        tempoMinuti: 15,
-        sogliaSuperamento: 90,
-        domande: [
-          {
-            id: 1,
-            argomento: "Segnali di pericolo",
-            testo: "Il segnale di pericolo con veicolo che sbanda preannuncia un tratto di strada con superficie particolarmente scivolosa in caso di pioggia.",
-            rispostaCorretta: true,
-            spiegazione: "Vero: il segnale 'Strada sdrucciolevole' avverte di un tratto stradale che puo diventare particolarmente scivoloso specialmente in condizioni di bagnato, fango, neve o ghiaccio."
-          },
-          {
-            id: 2,
-            argomento: "Precedenze",
-            testo: "Giungendo ad un incrocio in cui manchino segnali di precedenza, si ha l'obbligo di dare la precedenza a chi proviene da destra.",
-            rispostaCorretta: true,
-            spiegazione: "Vero: l'art. 145 del Codice della Strada stabilisce la regola generale della precedenza ai veicoli provenienti da destra, a meno che diversa segnaletica non disponga altrimenti."
-          },
-          {
-            id: 3,
-            argomento: "Limiti di velocità",
-            testo: "Sulle autostrade il limite massimo di velocità consentito per le autovetture è di 150 km/h in condizioni ottimali.",
-            rispostaCorretta: false,
-            spiegazione: "Falso: il limite generale per le autovetture in autostrada è di 130 km/h (scende a 110 km/h in caso di pioggia o precipitazioni atmosferiche)."
-          },
-          {
-            id: 4,
-            argomento: "Distanza di sicurezza",
-            testo: "La distanza di sicurezza deve essere calcolata anche in base ai riflessi del conducente e alla velocità del veicolo.",
-            rispostaCorretta: true,
-            spiegazione: "Vero: lo spazio percorso durante il tempo di reazione cresce all'aumentare della velocità e varia secondo i riflessi e la concentrazione del conducente."
-          },
-          {
-            id: 5,
-            argomento: "Sorpasso",
-            testo: "È consentito il sorpasso di un veicolo che si sia fermato in prossimità delle strisce pedonali.",
-            rispostaCorretta: false,
-            spiegazione: "Falso: è tassativamente vietato sorpassare veicoli che abbiano rallentato o si siano fermati in corrispondenza di un attraversamento pedonale per consentire ai pedoni di attraversare la strada."
-          },
-          {
-            id: 6,
-            argomento: "Luci e visibilità",
-            testo: "I fari anabbaglianti devono essere utilizzati anche durante il giorno quando si circola su autostrade e strade extraurbane.",
-            rispostaCorretta: true,
-            spiegazione: "Vero: l'art. 152 del Codice della Strada impone l'accensione dei proiettori anabbaglianti o delle luci diurne di marcia (DRL) anche di giorno fuori dai centri abitati."
-          },
-          {
-            id: 7,
-            argomento: "Fermata e sosta",
-            testo: "La sosta e la fermata sono sempre consentite in curva purché si accendano le luci di emergenza.",
-            rispostaCorretta: false,
-            spiegazione: "Falso: in curva, nei raccordi e sui dossi la sosta e la fermata sono assolutamente vietate per motivi di sicurezza e scarsa visibilità, senza eccezioni legate alle 4 frecce."
-          },
-          {
-            id: 8,
-            argomento: "Guida sotto influenza alcol",
-            testo: "Per i conducenti di età inferiore a 21 anni e per i primi tre anni dal conseguimento della patente B il tasso alcolemico deve essere zero.",
-            rispostaCorretta: true,
-            spiegazione: "Vero: per i neopatentati (primi 3 anni dal rilascio) e conducenti under 21 la normativa applica la tolleranza zero (tasso alcolemico pari a 0,0 g/l)."
-          },
-          {
-            id: 9,
-            argomento: "Pannelli integrativi",
-            testo: "Il pannello integrativo con due frecce verticali verso l'alto indica l'inizio e la continuazione della prescrizione.",
-            rispostaCorretta: true,
-            spiegazione: "Vero: le due frecce rivolte verso l'alto indicano l'inizio e la continuazione dell'effetto del segnale a cui sono applicate lungo la tratta stradale."
-          },
-          {
-            id: 10,
-            argomento: "Cinture di sicurezza",
-            testo: "I passeggeri che viaggiano sui sedili posteriori possono non allacciare le cinture nei tragitti urbani brevi.",
-            rispostaCorretta: false,
-            spiegazione: "Falso: le cinture di sicurezza sono obbligatorie per tutti gli occupanti del veicolo (compresi i sedili posteriori) a prescindere dalla tipologia o dalla lunghezza del tragitto."
-          }
-        ]
-      },
-      {
-        id: "sicurezza_8108",
-        nome: "D.Lgs 81/08: Sicurezza Lavoro",
-        descrizione: "Test di formazione generale e sicurezza sul luogo di lavoro",
-        tempoMinuti: 10,
-        sogliaSuperamento: 80,
-        domande: [
-          {
-            id: 1,
-            argomento: "Figure aziendali",
-            testo: "Il RLS (Rappresentante dei Lavoratori per la Sicurezza) è nominato dal Datore di Lavoro.",
-            rispostaCorretta: false,
-            spiegazione: "Falso: il RLS è eletto o designato direttamente dai lavoratori (art. 47 D.Lgs 81/08) per rappresentarli in tutti gli aspetti che riguardano salute e sicurezza."
-          },
-          {
-            id: 2,
-            argomento: "Doveri lavoratore",
-            testo: "Ogni lavoratore deve prendersi cura della propria salute e sicurezza e di quella dei colleghi.",
-            rispostaCorretta: true,
-            spiegazione: "Vero: l'art. 20 del D.Lgs 81/08 stabilisce il dovere per ciascun lavoratore di prendersi cura della propria sicurezza e di quella delle altre persone presenti sul luogo di lavoro."
-          },
-          {
-            id: 3,
-            argomento: "DPI",
-            testo: "I Dispositivi di Protezione Individuale devono essere conformi alle norme CE e mantenuti in buono stato.",
-            rispostaCorretta: true,
-            spiegazione: "Vero: i DPI devono recare la marcatura CE, essere adeguati ai rischi specifici ed essere mantenuti in perfetta efficienza igienica e funzionale."
-          },
-          {
-            id: 4,
-            argomento: "Emergenze",
-            testo: "In caso di allarme antincendio il lavoratore deve terminare il proprio compito prima di evacuare.",
-            rispostaCorretta: false,
-            spiegazione: "Falso: all'attivazione dell'allarme di evacuazione, ogni attività deve essere interrotta immediatamente per raggiungere il punto di raccolta seguendo i percorsi di esodo."
-          },
-          {
-            id: 5,
-            argomento: "Formazione",
-            testo: "La formazione in materia di sicurezza sul lavoro costituisce un obbligo di legge sia per l'azienda che per il dipendente.",
-            rispostaCorretta: true,
-            spiegazione: "Vero: la formazione (art. 37) è un obbligo inderogabile per il datore di lavoro ed è dovere del lavoratore partecipare ai programmi formativi predisposti."
-          }
-        ]
-      }
-    ];
+    /* BANCA DATI MATERIE D'ESAME CARICATE DINAMICAMENTE DA REPOSITORY / FILE */
+    var BANCA_DATI_MATERIE = [];
 
     /* Algoritmo ministeriale formale del Codice Fiscale italiano */
     function checkCodiceFiscale(cf) {
@@ -955,7 +881,7 @@
       return result;
     }
 
-    var selectedMateria = BANCA_DATI_MATERIE[0];
+    var selectedMateria = null;
     var candidate = { nome: '', cognome: '', cf: '' };
     var currentQuestionIndex = 0;
     var userAnswers = {};
@@ -966,12 +892,312 @@
     var currentReviewData = null;
     var currentReviewFilter = 'all';
 
+    /* PARSER NOME FILE QUIZ METADATI: es. Patente_B-15min-90soglia.txt */
+    function parseQuizFilename(filename) {
+      var base = filename.replace(/\.[^/.]+$/, "");
+      var parts = base.split('-');
+      var nomeParts = [];
+      var tempoMinuti = 15;
+      var sogliaSuperamento = 90;
+
+      for (var i = 0; i < parts.length; i++) {
+        var p = parts[i].trim();
+        var minMatch = p.match(/^(\d+)\s*(?:min|m|minuti)?$/i);
+        var sogliaMatch = p.match(/^(\d+)\s*(?:soglia|%|p|perc)?$/i);
+
+        if (p.toLowerCase().indexOf('min') !== -1 && minMatch) {
+          tempoMinuti = parseInt(minMatch[1], 10);
+        } else if (p.toLowerCase().indexOf('soglia') !== -1 && sogliaMatch) {
+          sogliaSuperamento = parseInt(sogliaMatch[1], 10);
+        } else if (i === parts.length - 1 && /^\d+$/.test(p) && parts.length > 2) {
+          sogliaSuperamento = parseInt(p, 10);
+        } else if (i === parts.length - 2 && /^\d+$/.test(p) && parts.length > 2) {
+          tempoMinuti = parseInt(p, 10);
+        } else if (i === parts.length - 1 && /^\d+$/.test(p)) {
+          tempoMinuti = parseInt(p, 10);
+        } else {
+          nomeParts.push(p);
+        }
+      }
+
+      var nome = nomeParts.join(' ').replace(/_/g, ' ').trim();
+      if (!nome) nome = base.replace(/_/g, ' ');
+
+      return {
+        id: base.toLowerCase().replace(/[^a-z0-9_-]/g, '_'),
+        nome: nome,
+        tempoMinuti: (tempoMinuti > 0 && tempoMinuti <= 180) ? tempoMinuti : 15,
+        sogliaSuperamento: (sogliaSuperamento > 0 && sogliaSuperamento <= 100) ? sogliaSuperamento : 80,
+        filename: filename
+      };
+    }
+
+    /* PARSER TESTO QUESITI (.txt con tag [D], [R], [A], [S], [IMG] o formato CSV) */
+    function parseQuizTxt(content, baseFolder) {
+      baseFolder = baseFolder || '';
+      if (baseFolder && baseFolder.charAt(baseFolder.length - 1) !== '/') {
+        baseFolder += '/';
+      }
+
+      var questions = [];
+      var rawBlocks = (content.indexOf('---') !== -1) ? content.split('---') : content.split(/\n\s*\n/);
+
+      for (var b = 0; b < rawBlocks.length; b++) {
+        var block = rawBlocks[b].trim();
+        if (!block) continue;
+
+        if (block.charAt(0) === '#' && block.indexOf('[D') === -1 && block.indexOf('DOMANDA') === -1) {
+          continue;
+        }
+
+        var lines = block.split('\n');
+        var qObj = {
+          argomento: 'Generale',
+          testo: '',
+          rispostaCorretta: null,
+          spiegazione: '',
+          immagine: ''
+        };
+        var isTagFormat = false;
+
+        for (var l = 0; l < lines.length; l++) {
+          var line = lines[l].trim();
+          if (!line || line.charAt(0) === '#') continue;
+
+          var mDom = line.match(/^(?:\[(?:DOMANDA|D)\]|(?:DOMANDA|D):)\s*(.+)$/i);
+          var mRis = line.match(/^(?:\[(?:RISPOSTA|R)\]|(?:RISPOSTA|R):)\s*(.+)$/i);
+          var mArg = line.match(/^(?:\[(?:ARGOMENTO|A)\]|(?:ARGOMENTO|A):)\s*(.+)$/i);
+          var mSpieg = line.match(/^(?:\[(?:SPIEGAZIONE|S)\]|(?:SPIEGAZIONE|S):)\s*(.+)$/i);
+          var mImg = line.match(/^(?:\[(?:IMMAGINE|IMG)\]|(?:IMMAGINE|IMG):)\s*(.+)$/i);
+
+          if (mDom) {
+            isTagFormat = true;
+            qObj.testo = mDom[1].trim();
+          } else if (mRis) {
+            isTagFormat = true;
+            var rVal = mRis[1].toUpperCase().trim();
+            qObj.rispostaCorretta = (rVal === 'VERO' || rVal === 'V' || rVal === 'TRUE' || rVal === '1' || rVal === 'SI' || rVal === 'S');
+          } else if (mArg) {
+            isTagFormat = true;
+            qObj.argomento = mArg[1].trim();
+          } else if (mSpieg) {
+            isTagFormat = true;
+            qObj.spiegazione = mSpieg[1].trim();
+          } else if (mImg) {
+            isTagFormat = true;
+            var imgPath = mImg[1].trim();
+            if (imgPath.indexOf('://') === -1 && imgPath.indexOf('data:') !== 0 && imgPath.charAt(0) !== '/' && (!baseFolder || imgPath.indexOf(baseFolder) !== 0)) {
+              qObj.immagine = baseFolder + imgPath;
+            } else {
+              qObj.immagine = imgPath;
+            }
+          } else if (!isTagFormat && line.indexOf(',') !== -1) {
+            var cols = parseCsvLine(line);
+            if (cols.length >= 2 && cols[0].toLowerCase() !== 'argomento') {
+              var ansVal = cols[2] ? cols[2].toUpperCase().trim() : '';
+              var boolAns = (ansVal === 'VERO' || ansVal === 'V' || ansVal === 'TRUE' || ansVal === '1');
+              var imgP = cols[4] ? cols[4].trim() : '';
+              if (imgP && imgP.indexOf('://') === -1 && imgP.indexOf('data:') !== 0 && imgP.charAt(0) !== '/') {
+                imgP = baseFolder + imgP;
+              }
+              questions.push({
+                id: questions.length + 1,
+                argomento: cols[0] || 'Generale',
+                testo: cols[1] || '',
+                rispostaCorretta: boolAns,
+                spiegazione: cols[3] || (boolAns ? "L'affermazione e vera e confermata." : "L'affermazione e falsa ed errata."),
+                immagine: imgP
+              });
+            }
+          }
+        }
+
+        if (isTagFormat && qObj.testo && qObj.rispostaCorretta !== null) {
+          if (!qObj.spiegazione) {
+            qObj.spiegazione = qObj.rispostaCorretta ? "L'affermazione e vera e confermata." : "L'affermazione e falsa ed errata.";
+          }
+          qObj.id = questions.length + 1;
+          questions.push(qObj);
+        }
+      }
+
+      return questions;
+    }
+
+    /* Rilevamento dati repository GitHub correnti */
+    function ottieniDatiGitHubDefault() {
+      var owner = 'fmorea';
+      var repo = 'fmorea.github.io';
+      var hostname = window.location.hostname || '';
+      var pathname = window.location.pathname || '';
+
+      if (hostname.indexOf('.github.io') !== -1) {
+        owner = hostname.split('.')[0];
+        var segments = pathname.replace(/^\/|\/$/g, '').split('/');
+        if (segments.length > 0 && segments[0].length > 0 && segments[0] !== 'index.html') {
+          repo = segments[0];
+        } else {
+          repo = owner + '.github.io';
+        }
+      }
+      return { owner: owner, repo: repo };
+    }
+
+    /* SCANSIONE AUTOMATICA DELLA REPOSITORY PER FILE .txt */
+    function scansionaRepository() {
+      var gh = ottieniDatiGitHubDefault();
+      var container = document.getElementById('materie-selector');
+      if (container) {
+        container.innerHTML = 
+          '<div style="grid-column: 1 / -1; width: 100%; text-align: center; padding: 24px; color: #64748b; font-size: 13px;">' +
+            '<div style="font-weight: 700; color: #2563eb; margin-bottom: 4px;">Ricerca banche dati nel repository GitHub...</div>' +
+            '<div class="text-xs text-slate-400">Scansione automatica cartella quiz/ per file .txt</div>' +
+          '</div>';
+      }
+
+      // 1. Prova tramite GitHub Contents API
+      var apiUrl = 'https://api.github.com/repos/' + gh.owner + '/' + gh.repo + '/contents/quiz';
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', apiUrl, true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              var files = JSON.parse(xhr.responseText);
+              var txtFiles = [];
+              if (Array.isArray(files)) {
+                for (var f = 0; f < files.length; f++) {
+                  if (files[f].type === 'file' && files[f].name.slice(-4).toLowerCase() === '.txt') {
+                    txtFiles.push({
+                      name: files[f].name,
+                      url: files[f].download_url || ('quiz/' + files[f].name)
+                    });
+                  }
+                }
+              }
+              if (txtFiles.length > 0) {
+                scaricaQuizMultipli(txtFiles);
+                return;
+              }
+            } catch (e) {}
+          }
+          // 2. Se l'API restituisce 403 (limite rate 60 req/h) o fallisce, usiamo quiz/manifest.json come fallback garantito
+          caricaDaManifest();
+        }
+      };
+      xhr.onerror = function() {
+        caricaDaManifest();
+      };
+      xhr.send();
+    }
+
+    function caricaDaManifest() {
+      var manifestUrl = 'quiz/manifest.json';
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', manifestUrl, true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              var fileNames = JSON.parse(xhr.responseText);
+              if (Array.isArray(fileNames) && fileNames.length > 0) {
+                var list = [];
+                for (var i = 0; i < fileNames.length; i++) {
+                  list.push({
+                    name: fileNames[i],
+                    url: 'quiz/' + fileNames[i]
+                  });
+                }
+                scaricaQuizMultipli(list);
+                return;
+              }
+            } catch (err) {}
+          }
+          renderMaterieSelector();
+        }
+      };
+      xhr.onerror = function() {
+        renderMaterieSelector();
+      };
+      xhr.send();
+    }
+
+    function scaricaQuizMultipli(fileList) {
+      var remaining = fileList.length;
+      var loaded = [];
+
+      for (var i = 0; i < fileList.length; i++) {
+        (function(fileInfo) {
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', fileInfo.url, true);
+          xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+              remaining--;
+              if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                  var meta = parseQuizFilename(fileInfo.name);
+                  var questions = parseQuizTxt(xhr.responseText, 'quiz/');
+                  if (questions.length > 0) {
+                    loaded.push({
+                      id: meta.id,
+                      nome: meta.nome,
+                      descrizione: 'Banca dati: ' + meta.filename + ' (' + questions.length + ' quesiti)',
+                      tempoMinuti: meta.tempoMinuti,
+                      sogliaSuperamento: meta.sogliaSuperamento,
+                      domande: questions
+                    });
+                  }
+                } catch (e) {}
+              }
+
+              if (remaining <= 0) {
+                if (loaded.length > 0) {
+                  BANCA_DATI_MATERIE = loaded;
+                  selectedMateria = BANCA_DATI_MATERIE[0];
+                }
+                renderMaterieSelector();
+              }
+            }
+          };
+          xhr.onerror = function() {
+            remaining--;
+            if (remaining <= 0) {
+              if (loaded.length > 0) {
+                BANCA_DATI_MATERIE = loaded;
+                selectedMateria = BANCA_DATI_MATERIE[0];
+              }
+              renderMaterieSelector();
+            }
+          };
+          xhr.send();
+        })(fileList[i]);
+      }
+    }
+
     function renderMaterieSelector() {
       var container = document.getElementById('materie-selector');
       container.innerHTML = '';
+
+      if (BANCA_DATI_MATERIE.length === 0) {
+        var emptyCard = document.createElement('div');
+        emptyCard.className = 'p-5 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 text-center text-slate-500 text-xs';
+        emptyCard.style.gridColumn = '1 / -1';
+        emptyCard.style.width = '100%';
+        emptyCard.innerHTML = 
+          '<div class="font-bold text-slate-700 text-sm mb-1">Nessun file quiz trovato nel repository</div>' +
+          '<div class="text-slate-500">I developer possono caricare file <b>.txt</b> nella cartella <code>quiz/</code> con sintassi <code>nomemateria-minuti-soglia.txt</code> oppure caricare un file locale qui sopra.</div>';
+        container.appendChild(emptyCard);
+        updateMateriaInfo();
+        return;
+      }
+
+      if (!selectedMateria || !BANCA_DATI_MATERIE.some(function(m) { return m.id === selectedMateria.id; })) {
+        selectedMateria = BANCA_DATI_MATERIE[0];
+      }
+
       for (var i = 0; i < BANCA_DATI_MATERIE.length; i++) {
         (function(mat) {
-          var isSelected = mat.id === selectedMateria.id;
+          var isSelected = selectedMateria && (mat.id === selectedMateria.id);
           var card = document.createElement('div');
           card.id = 'materia-card-' + mat.id;
           card.className = 'cursor-pointer p-4 rounded-xl border-2 transition ' + (isSelected ? 'border-blue-600 bg-blue-50' : 'border-slate-200 bg-white');
@@ -985,7 +1211,7 @@
               '<div class="font-bold text-sm text-slate-800">' + mat.nome + '</div>' +
               '<span class="text-xs font-bold bg-slate-100 text-slate-700" style="padding: 2px 8px; border-radius: 6px;">' + mat.domande.length + ' Q</span>' +
             '</div>' +
-            '<p class="text-xs text-slate-500 mt-1" style="margin-bottom: 0;">' + mat.descrizione + '</p>';
+            '<p class="text-xs text-slate-500 mt-1" style="margin-bottom: 0;">' + (mat.descrizione || (mat.tempoMinuti + ' min &bull; soglia ' + mat.sogliaSuperamento + '%')) + '</p>';
           container.appendChild(card);
         })(BANCA_DATI_MATERIE[i]);
       }
@@ -1003,6 +1229,13 @@
     }
 
     function updateMateriaInfo() {
+      if (!selectedMateria) {
+        document.getElementById('info-domande').textContent = '0';
+        document.getElementById('info-tempo').textContent = '--';
+        document.getElementById('info-soglia').textContent = '--';
+        document.getElementById('info-max-errori').textContent = '0 errori';
+        return;
+      }
       document.getElementById('info-domande').textContent = selectedMateria.domande.length;
       document.getElementById('info-tempo').textContent = selectedMateria.tempoMinuti + ' min';
       document.getElementById('info-soglia').textContent = selectedMateria.sogliaSuperamento + '%';
@@ -1018,6 +1251,8 @@
         try {
           var content = evt.target.result;
           var newQuestions = [];
+          var meta = parseQuizFilename(file.name);
+
           if (file.name.slice(-5).toLowerCase() === '.json') {
             newQuestions = JSON.parse(content);
           } else if (file.name.slice(-4).toLowerCase() === '.csv') {
@@ -1035,20 +1270,24 @@
                     argomento: (cols[0] && cols[0].trim().length > 0) ? cols[0].trim() : "Generale",
                     testo: (cols[1] && cols[1].trim().length > 0) ? cols[1].trim() : "",
                     rispostaCorretta: ans,
-                    spiegazione: spiegazione
+                    spiegazione: spiegazione,
+                    immagine: cols[4] ? cols[4].trim() : ""
                   });
                 }
               }
             }
+          } else {
+            // File .txt
+            newQuestions = parseQuizTxt(content, '');
           }
 
           if (newQuestions.length > 0) {
             var customMat = {
               id: 'custom_' + (new Date().getTime()),
-              nome: file.name.replace(/\.[^/.]+$/, ""),
-              descrizione: 'Caricato da file locale (' + newQuestions.length + ' domande con spiegazione)',
-              tempoMinuti: Math.max(5, Math.round(newQuestions.length * 1.5)),
-              sogliaSuperamento: 80,
+              nome: meta.nome,
+              descrizione: 'File locale: ' + file.name + ' (' + newQuestions.length + ' quesiti)',
+              tempoMinuti: meta.tempoMinuti,
+              sogliaSuperamento: meta.sogliaSuperamento,
               domande: newQuestions
             };
             BANCA_DATI_MATERIE.push(customMat);
@@ -1056,7 +1295,7 @@
             renderMaterieSelector();
             alert('Materia "' + customMat.nome + '" caricata con successo (' + newQuestions.length + ' quesiti).');
           } else {
-            alert("Il file caricato non contiene domande valide.");
+            alert("Il file caricato non contiene domande valide. Verifica la sintassi.");
           }
         } catch (err) {
           alert("Errore nella lettura del file: " + err.message);
@@ -1081,6 +1320,9 @@
             try {
               var text = xhr.responseText;
               var questions = [];
+              var filenameFromUrl = rawUrl.split('/').pop();
+              var meta = parseQuizFilename(filenameFromUrl);
+
               if (rawUrl.slice(-4).toLowerCase() === '.csv') {
                 var lines = text.split('\n');
                 for (var idx = 1; idx < lines.length; idx++) {
@@ -1096,35 +1338,39 @@
                         argomento: (cols[0] && cols[0].trim().length > 0) ? cols[0].trim() : "Generale",
                         testo: (cols[1] && cols[1].trim().length > 0) ? cols[1].trim() : "",
                         rispostaCorretta: ans,
-                        spiegazione: spiegazione
+                        spiegazione: spiegazione,
+                        immagine: cols[4] ? cols[4].trim() : ""
                       });
                     }
                   }
                 }
-              } else {
+              } else if (rawUrl.slice(-5).toLowerCase() === '.json') {
                 var json = JSON.parse(text);
                 questions = Array.isArray(json) ? json : (json.questions || json.domande || []);
+              } else {
+                // File .txt
+                var baseF = rawUrl.substring(0, rawUrl.lastIndexOf('/') + 1);
+                questions = parseQuizTxt(text, baseF);
               }
 
               if (questions.length === 0) {
-                alert("Nessun quesito valido trovato nel repository.");
+                alert("Nessun quesito valido trovato nel file remoto.");
                 return;
               }
 
-              var repoName = nomeCustom || rawUrl.split('/').slice(-2).join('/');
               var newMateria = {
                 id: 'github_' + (new Date().getTime()),
-                nome: 'GitHub: ' + repoName,
-                descrizione: 'Banca dati remota collegata (' + questions.length + ' domande totali)',
-                tempoMinuti: 20,
-                sogliaSuperamento: 90,
-                domande: questions.length > 30 ? questions.slice(0, 30) : questions
+                nome: nomeCustom || meta.nome,
+                descrizione: 'Banca dati remota (' + questions.length + ' domande totali)',
+                tempoMinuti: meta.tempoMinuti,
+                sogliaSuperamento: meta.sogliaSuperamento,
+                domande: questions
               };
 
               BANCA_DATI_MATERIE.unshift(newMateria);
               selectedMateria = newMateria;
               renderMaterieSelector();
-              alert('Banca dati "' + newMateria.nome + '" associata con successo da GitHub! Scheda preparata con ' + newMateria.domande.length + ' quesiti.');
+              alert('Banca dati "' + newMateria.nome + '" associata con successo! Scheda preparata con ' + newMateria.domande.length + ' quesiti.');
             } catch (err) {
               alert("Errore nella lettura dei dati da GitHub: " + err.message);
             }
@@ -1137,9 +1383,9 @@
     }
 
     function promptGitHubRepo() {
-      var defaultUrl = "https://raw.githubusercontent.com/fmorea/fmorea.github.io/main/template_domande.csv";
+      var defaultUrl = "https://raw.githubusercontent.com/fmorea/fmorea.github.io/main/quiz/Patente_B-15min-90soglia.txt";
       var userUrl = prompt(
-        "Inserisci l'URL GitHub del file quiz (JSON o CSV) da associare:\n(Puoi incollare il link da qualsiasi repository GitHub o raw.githubusercontent.com)",
+        "Inserisci l'URL GitHub del file quiz (.txt, .csv o .json) da associare:\n(Puoi incollare il link da qualsiasi repository GitHub o raw.githubusercontent.com)",
         defaultUrl
       );
       if (userUrl) {
@@ -1158,6 +1404,10 @@
       }
       if (!checkCodiceFiscale(cf)) {
         alert("Il Codice Fiscale inserito non risulta valido. Verificalo con attenzione.");
+        return;
+      }
+      if (!selectedMateria || !selectedMateria.domande || selectedMateria.domande.length === 0) {
+        alert("Seleziona una materia valida con quiz prima di iniziare la prova.");
         return;
       }
 
@@ -1438,18 +1688,18 @@
         ans: userAnswers
       };
 
-      if (!isBuiltin) {
-        payload.q = [];
-        for (var qi = 0; qi < selectedMateria.domande.length; qi++) {
-          var quest = selectedMateria.domande[qi];
-          payload.q.push([
-            quest.id,
-            quest.argomento || '',
-            quest.testo,
-            quest.rispostaCorretta ? 1 : 0,
-            quest.spiegazione || ''
-          ]);
-        }
+      // Salva l'array didattico compresso per rendere il QR code 100% indipendente
+      payload.q = [];
+      for (var qi = 0; qi < selectedMateria.domande.length; qi++) {
+        var quest = selectedMateria.domande[qi];
+        payload.q.push([
+          quest.id,
+          quest.argomento || '',
+          quest.testo,
+          quest.rispostaCorretta ? 1 : 0,
+          quest.spiegazione || '',
+          quest.immagine || ''
+        ]);
       }
 
       var reviewUrl = buildReviewUrl(payload);
@@ -1526,7 +1776,8 @@
             argomento: item[1] || 'Generale',
             testo: item[2],
             rispostaCorretta: Boolean(item[3]),
-            spiegazione: item[4] || (item[3] ? "L'affermazione e vera e corretta." : "L'affermazione e falsa ed errata.")
+            spiegazione: item[4] || (item[3] ? "L'affermazione e vera e corretta." : "L'affermazione e falsa ed errata."),
+            immagine: item[5] || ''
           });
         }
       } else {
@@ -1638,6 +1889,14 @@
         var userAnsText = !isAnswered ? 'Non risposta' : (userAns ? 'VERO' : 'FALSO');
         var correctAnsText = q.rispostaCorretta ? 'VERO' : 'FALSO';
 
+        var imgHtml = '';
+        if (q.immagine) {
+          imgHtml = 
+            '<div style="text-align: center; margin-bottom: 14px;">' +
+              '<img src="' + q.immagine + '" alt="Figura quesito" style="max-height: 180px; max-width: 100%; border-radius: 8px; border: 1px solid #cbd5e1; background: #ffffff; padding: 4px;" onerror="this.parentElement.style.display=\'none\'">' +
+            '</div>';
+        }
+
         card.innerHTML = 
           '<div class="flex flex-wrap items-center justify-between mb-3" style="gap: 8px;">' +
             '<div class="flex items-center" style="gap: 8px;">' +
@@ -1652,7 +1911,7 @@
               (isCorrect ? '✓ Risposta Corretta' : (!isAnswered ? '⚠ Non data (considerata errata)' : '✗ Risposta Errata')) +
             '</span>' +
           '</div>' +
-
+          imgHtml +
           '<div class="text-base font-semibold text-slate-900 mb-4 leading-relaxed">' +
             q.testo +
           '</div>' +
@@ -1766,7 +2025,9 @@
 
       var jsPdfLib = window.jspdf ? window.jspdf.jsPDF : (window.jsPDF || null);
       if (!jsPdfLib) {
-        alert("Libreria di esportazione PDF non supportata da questo browser.");
+        // Fallback immediato a stampa nativa (compatibile al 100% con Internet Explorer 9/10/11)
+        alert("Libreria client jsPDF non supportata in questo browser. Apertura stampa nativa: seleziona 'Salva come PDF' o la stampante desiderata.");
+        window.print();
         return;
       }
 
@@ -1941,7 +2202,16 @@
         doc.text("Scheda informativa generata da Piattaforma Esami Telematici (fmorea.github.io)", 105, 272, { align: 'center' });
 
         var nomeFile = 'Scheda_' + examResultData.cand.cognome + '_' + examResultData.cand.cf + '_' + examResultData.id + '.pdf';
-        doc.save(nomeFile);
+        try {
+          if (window.navigator && window.navigator.msSaveBlob) {
+            var blob = doc.output('blob');
+            window.navigator.msSaveBlob(blob, nomeFile);
+          } else {
+            doc.save(nomeFile);
+          }
+        } catch (saveErr) {
+          window.print();
+        }
       }, 200);
     }
 
@@ -1960,7 +2230,7 @@
 
     /* Inizializzazione compatibile con vecchi e nuovi browser */
     function initApp() {
-      renderMaterieSelector();
+      scansionaRepository();
 
       try {
         var reviewParam = getQueryParameter('review') || getQueryParameter('q');

@@ -1,0 +1,41 @@
+# BANCA DATI: D.LGS 81/08 SICUREZZA SUL LAVORO
+# Sintassi del file:
+# [D] o [DOMANDA]     : Testo del quesito
+# [R] o [RISPOSTA]    : VERO oppure FALSO
+# [A] o [ARGOMENTO]   : Categoria o argomento
+# [S] o [SPIEGAZIONE] : Spiegazione didattica per la revisione
+# [IMG] o [IMMAGINE]  : Immagine opzionale
+
+[DOMANDA] Il RLS (Rappresentante dei Lavoratori per la Sicurezza) è nominato dal Datore di Lavoro.
+[RISPOSTA] FALSO
+[ARGOMENTO] Figure aziendali
+[SPIEGAZIONE] Falso: il RLS è eletto o designato direttamente dai lavoratori (art. 47 D.Lgs 81/08) per rappresentarli in tutti gli aspetti che riguardano salute e sicurezza.
+
+---
+
+[DOMANDA] Ogni lavoratore deve prendersi cura della propria salute e sicurezza e di quella dei colleghi.
+[RISPOSTA] VERO
+[ARGOMENTO] Doveri lavoratore
+[SPIEGAZIONE] Vero: l'art. 20 del D.Lgs 81/08 stabilisce il dovere per ciascun lavoratore di prendersi cura della propria sicurezza e di quella delle altre persone presenti sul luogo di lavoro.
+
+---
+
+[DOMANDA] I Dispositivi di Protezione Individuale devono essere conformi alle norme CE e mantenuti in buono stato.
+[RISPOSTA] VERO
+[ARGOMENTO] DPI
+[SPIEGAZIONE] Vero: i DPI devono recare la marcatura CE, essere adeguati ai rischi specifici ed essere mantenuti in perfetta efficienza igienica e funzionale.
+
+---
+
+[DOMANDA] In caso di allarme antincendio il lavoratore deve terminare il proprio compito prima di evacuare.
+[RISPOSTA] FALSO
+[ARGOMENTO] Emergenze
+[SPIEGAZIONE] Falso: all'attivazione dell'allarme di evacuazione, ogni attività deve essere interrotta immediatamente per raggiungere il punto di raccolta seguendo i percorsi di esodo.
+
+---
+
+[DOMANDA] La formazione in materia di sicurezza sul lavoro costituisce un obbligo di legge sia per l'azienda che per il dipendente.
+[RISPOSTA] VERO
+[ARGOMENTO] Formazione
+[SPIEGAZIONE] Vero: la formazione (art. 37) è un obbligo inderogabile per il datore di lavoro ed è dovere del lavoratore partecipare ai programmi formativi predisposti.
+
