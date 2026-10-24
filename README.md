@@ -8,7 +8,6 @@ Piattaforma telematica d'esame eseguibile direttamente da **GitHub Pages** (`fmo
 - **Scheda d'Esame Touch**: Mappa numerata delle domande, pulsanti VERO / FALSO, conto alla rovescia e controllo di sicurezza prima della consegna.
 - **QR Code di Verifica e Spiegazione**: Al termine della prova viene generato un QR Code (a video e nel PDF) che codifica lo stato delle risposte fornite. Inquadrandolo con lo smartphone si apre la scheda di revisione con la spiegazione didattica di ogni singolo quesito.
 - **Revisione Interattiva**: Schermata dedicata con filtri per visualizzare tutte le domande, solo gli errori commessi o le risposte corrette, con la motivazione di ciascuna soluzione.
-- **Validazione Formale Codice Fiscale**: Algoritmo ministeriale AdE con calcolo del carattere di controllo per evitare codici formalmente errati.
 - **Esportazione Scheda Risultati in PDF & Stampa Universale**: Generazione client-side del riepilogo con tabella esiti e QR Code (jsPDF su browser moderni + foglio stile `@media print` compatibile al 100% con Internet Explorer 9/10/11 per la stampa nativa in PDF).
 
 ## Convenzione Nomi File Quiz (`quiz/`)

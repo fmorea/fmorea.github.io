@@ -462,37 +462,14 @@
           </div>
         </div>
 
-        <div class="mb-6">
-          <div class="flex justify-between items-center mb-1">
-            <label class="text-xs font-bold uppercase text-slate-600">Codice Fiscale Italiano *</label>
-            <span id="cf-badge" class="text-xs font-semibold"></span>
-          </div>
-          <input type="text" id="cand-cf" required maxlength="16" placeholder="RSSMRA85M01H501Z"
-                 oninput="this.value = this.value.toUpperCase(); validateCFInput();"
-                 class="font-mono text-base uppercase tracking-wider">
-          <p id="cf-msg" class="text-xs text-slate-500 mt-1">
-            Il codice deve essere di 16 caratteri conforme all'algoritmo ministeriale AdE.
-          </p>
-        </div>
-
-        <!-- Scelta Materia & Connessione Repository GitHub -->
+        <!-- Scelta Materia d'Esame -->
         <div class="border-t pt-5 mb-6">
           <div class="flex flex-wrap items-center justify-between mb-3" style="gap: 8px;">
             <label class="text-xs font-bold uppercase text-slate-600">Materia d'Esame</label>
-            <div class="flex items-center" style="gap: 12px; font-size: 12px;">
-              <button type="button" onclick="scansionaRepository()" class="btn-secondary" style="padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center;" title="Ricarica file .txt dal repository">
-                <svg class="w-4" width="16" height="16" style="width: 16px; height: 16px; margin-right: 6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                <span>🔄 Scansiona Repo</span>
-              </button>
-              <button type="button" onclick="promptGitHubRepo()" class="btn-secondary" style="padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center;">
-                <svg class="w-4" width="16" height="16" style="width: 16px; height: 16px; margin-right: 6px;" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-                <span>🔗 Associa Repo GitHub</span>
-              </button>
-              <label class="text-blue-600 font-semibold" style="cursor: pointer; display: inline-flex; align-items: center;">
-                <input type="file" id="file-custom-quiz" accept=".txt,.csv,.json" class="hidden" onchange="handleCustomFileUpload(event)">
-                <span>📁 File locale (.txt, .csv, .json)</span>
-              </label>
-            </div>
+            <button type="button" onclick="scansionaRepository()" class="btn-secondary" style="padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center;" title="Ricarica i file .txt dal repository">
+              <svg class="w-4" width="16" height="16" style="width: 16px; height: 16px; margin-right: 6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              <span>🔄 Aggiorna Elenco</span>
+            </button>
           </div>
           <div class="grid grid-cols-2" id="materie-selector"></div>
         </div>
@@ -517,10 +494,12 @@
     <div id="step-quiz" class="hidden flex flex-col">
       <div class="bg-slate-900 text-white p-4 flex flex-wrap justify-between items-center" style="gap: 12px;">
         <div class="flex items-center" style="gap: 12px;">
-          <div class="bg-blue-600 rounded-full font-black text-xs text-white" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">CF</div>
+          <div class="bg-blue-600 rounded-full font-bold text-xs text-white" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+            <svg class="w-4" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          </div>
           <div>
             <div class="text-sm font-bold" id="header-cand-name">Mario Rossi</div>
-            <div class="text-xs text-slate-400 font-mono" id="header-cand-cf">RSSMRA85M01H501Z</div>
+            <div class="text-xs text-slate-400">Candidato</div>
           </div>
         </div>
 
@@ -802,60 +781,6 @@
     /* BANCA DATI MATERIE D'ESAME CARICATE DINAMICAMENTE DA REPOSITORY / FILE */
     var BANCA_DATI_MATERIE = [];
 
-    /* Algoritmo ministeriale formale del Codice Fiscale italiano */
-    function checkCodiceFiscale(cf) {
-      if (!cf || typeof cf !== 'string') return false;
-      cf = cf.toUpperCase().trim();
-      var regex = /^[A-Z]{6}[0-9LMNPQRSTUV]{2}[A-EHLMPR-T][0-9LMNPQRSTUV]{2}[A-Z][0-9LMNPQRSTUV]{3}[A-Z]$/;
-      if (!regex.test(cf)) return false;
-
-      var tabDispari = {
-        '0': 1, '1': 0, '2': 5, '3': 7, '4': 9, '5': 13, '6': 15, '7': 17, '8': 19, '9': 21,
-        'A': 1, 'B': 0, 'C': 5, 'D': 7, 'E': 9, 'F': 13, 'G': 15, 'H': 17, 'I': 19, 'J': 21,
-        'K': 2, 'L': 4, 'M': 18, 'N': 20, 'O': 11, 'P': 3, 'Q': 6, 'R': 8, 'S': 12, 'T': 14,
-        'U': 16, 'V': 10, 'W': 22, 'X': 25, 'Y': 24, 'Z': 23
-      };
-      
-      var somma = 0;
-      for (var i = 0; i < 15; i++) {
-        var c = cf.charAt(i);
-        if (i % 2 === 0) {
-          somma += tabDispari[c];
-        } else {
-          somma += (c >= '0' && c <= '9') ? (c.charCodeAt(0) - 48) : (c.charCodeAt(0) - 65);
-        }
-      }
-      return String.fromCharCode(65 + (somma % 26)) === cf.charAt(15);
-    }
-
-    function validateCFInput() {
-      var input = document.getElementById('cand-cf');
-      var val = input.value.trim().toUpperCase();
-      var msg = document.getElementById('cf-msg');
-      var badge = document.getElementById('cf-badge');
-
-      if (val.length === 16) {
-        if (checkCodiceFiscale(val)) {
-          msg.textContent = "✓ Codice Fiscale formalmente valido (algoritmo AdE).";
-          msg.className = "text-xs text-emerald-600 font-semibold mt-1";
-          badge.textContent = "VALIDO";
-          badge.className = "text-xs text-emerald-600 font-bold";
-          return true;
-        } else {
-          msg.textContent = "✗ Carattere di controllo non valido.";
-          msg.className = "text-xs text-red-500 font-semibold mt-1";
-          badge.textContent = "NON VALIDO";
-          badge.className = "text-xs text-red-500 font-bold";
-          return false;
-        }
-      } else {
-        msg.textContent = "Caratteri: " + val.length + "/16.";
-        msg.className = "text-xs text-slate-400 mt-1";
-        badge.textContent = "";
-        return false;
-      }
-    }
-
     /* Parser CSV compatibile con tutti i browser */
     function parseCsvLine(text) {
       var result = [];
@@ -882,7 +807,7 @@
     }
 
     var selectedMateria = null;
-    var candidate = { nome: '', cognome: '', cf: '' };
+    var candidate = { nome: '', cognome: '' };
     var currentQuestionIndex = 0;
     var userAnswers = {};
     var timerInterval = null;
@@ -1185,7 +1110,7 @@
         emptyCard.style.width = '100%';
         emptyCard.innerHTML = 
           '<div class="font-bold text-slate-700 text-sm mb-1">Nessun file quiz trovato nel repository</div>' +
-          '<div class="text-slate-500">I developer possono caricare file <b>.txt</b> nella cartella <code>quiz/</code> con sintassi <code>nomemateria-minuti-soglia.txt</code> oppure caricare un file locale qui sopra.</div>';
+          '<div class="text-slate-500">I developer possono caricare file <b>.txt</b> nella cartella <code>quiz/</code> della repository con la sintassi convenzionata <code>nomemateria-minuti-soglia.txt</code>.</div>';
         container.appendChild(emptyCard);
         updateMateriaInfo();
         return;
@@ -1396,14 +1321,9 @@
     function startExam() {
       var nome = document.getElementById('cand-nome').value.trim();
       var cognome = document.getElementById('cand-cognome').value.trim();
-      var cf = document.getElementById('cand-cf').value.trim().toUpperCase();
 
       if (!nome || !cognome) {
         alert("Inserisci Nome e Cognome.");
-        return;
-      }
-      if (!checkCodiceFiscale(cf)) {
-        alert("Il Codice Fiscale inserito non risulta valido. Verificalo con attenzione.");
         return;
       }
       if (!selectedMateria || !selectedMateria.domande || selectedMateria.domande.length === 0) {
@@ -1411,14 +1331,13 @@
         return;
       }
 
-      candidate = { nome: nome, cognome: cognome, cf: cf };
+      candidate = { nome: nome, cognome: cognome };
       userAnswers = {};
       currentQuestionIndex = 0;
       secondsRemaining = selectedMateria.tempoMinuti * 60;
       totalSecondsElapsed = 0;
 
       document.getElementById('header-cand-name').textContent = candidate.nome + ' ' + candidate.cognome;
-      document.getElementById('header-cand-cf').textContent = candidate.cf;
       document.getElementById('header-materia-title').textContent = selectedMateria.nome;
       document.getElementById('total-q-num').textContent = selectedMateria.domande.length;
       document.getElementById('count-total').textContent = selectedMateria.domande.length;
@@ -1803,7 +1722,7 @@
         '<div class="flex flex-wrap items-center justify-between" style="gap: 16px;">' +
           '<div>' +
             '<div class="text-xs uppercase font-bold text-slate-500">Candidato</div>' +
-            '<div class="text-base font-extrabold text-slate-900">' + data.cand.nome + ' ' + data.cand.cognome + ' <span class="font-mono text-xs font-semibold text-slate-600">(' + data.cand.cf + ')</span></div>' +
+            '<div class="text-base font-extrabold text-slate-900">' + data.cand.nome + ' ' + data.cand.cognome + '</div>' +
             '<div class="text-xs text-slate-500 mt-1">Materia: <b class="text-slate-700">' + data.matNome + '</b> &bull; Data: ' + data.date + '</div>' +
           '</div>' +
           '<div class="flex items-center" style="gap: 16px;">' +
@@ -2069,61 +1988,54 @@
 
       // Tabella Dati Candidato
       doc.setFillColor(248, 250, 252);
-      doc.rect(25, 66, 160, 68, 'F');
+      doc.rect(25, 66, 160, 58, 'F');
       doc.setDrawColor(203, 213, 225);
-      doc.rect(25, 66, 160, 68, 'D');
+      doc.rect(25, 66, 160, 58, 'D');
 
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(10.5);
       doc.setTextColor(71, 85, 105);
-      doc.text("Candidato:", 30, 75);
+      doc.text("Candidato:", 30, 76);
       doc.setFont('Helvetica', 'bold');
       doc.setTextColor(15, 23, 42);
-      doc.text(examResultData.cand.cognome.toUpperCase() + ' ' + examResultData.cand.nome.toUpperCase(), 75, 75);
+      doc.text(examResultData.cand.cognome.toUpperCase() + ' ' + examResultData.cand.nome.toUpperCase(), 75, 76);
 
       doc.setFont('Helvetica', 'bold');
       doc.setTextColor(71, 85, 105);
-      doc.text("Codice Fiscale:", 30, 84);
-      doc.setFont('Courier', 'bold');
-      doc.setTextColor(15, 23, 42);
-      doc.text(examResultData.cand.cf, 75, 84);
-
-      doc.setFont('Helvetica', 'bold');
-      doc.setTextColor(71, 85, 105);
-      doc.text("Materia:", 30, 93);
+      doc.text("Materia:", 30, 86);
       doc.setFont('Helvetica', 'normal');
       doc.setTextColor(15, 23, 42);
-      doc.text(examResultData.matNome, 75, 93);
+      doc.text(examResultData.matNome, 75, 86);
 
       doc.setFont('Helvetica', 'bold');
       doc.setTextColor(71, 85, 105);
-      doc.text("Data e Ora Prova:", 30, 102);
+      doc.text("Data e Ora Prova:", 30, 96);
       doc.setFont('Helvetica', 'normal');
       doc.setTextColor(15, 23, 42);
-      doc.text(examResultData.date, 75, 102);
+      doc.text(examResultData.date, 75, 96);
 
       doc.setFont('Helvetica', 'bold');
       doc.setTextColor(71, 85, 105);
-      doc.text("Punteggio Finale:", 30, 111);
+      doc.text("Punteggio Finale:", 30, 106);
       doc.setFont('Helvetica', 'bold');
       doc.setTextColor(examResultData.passed ? 5 : 220, examResultData.passed ? 150 : 38, examResultData.passed ? 105 : 38);
-      doc.text(examResultData.score + '% (' + (examResultData.passed ? 'SUPERATO' : 'NON SUPERATO') + ')', 75, 111);
+      doc.text(examResultData.score + '% (' + (examResultData.passed ? 'SUPERATO' : 'NON SUPERATO') + ')', 75, 106);
 
       doc.setFont('Helvetica', 'bold');
       doc.setTextColor(71, 85, 105);
-      doc.text("Esatte / Errori:", 30, 120);
+      doc.text("Esatte / Errori:", 30, 116);
       doc.setFont('Helvetica', 'normal');
       doc.setTextColor(15, 23, 42);
-      doc.text(examResultData.correct + ' esatte su ' + examResultData.total + ' quesiti (' + examResultData.errors + ' errori)', 75, 120);
+      doc.text(examResultData.correct + ' esatte su ' + examResultData.total + ' quesiti (' + examResultData.errors + ' errori)', 75, 116);
 
       // Riepilogo schematico risposte
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(10);
       doc.setTextColor(30, 41, 59);
-      doc.text("Riepilogo Risposte Fornite:", 25, 144);
+      doc.text("Riepilogo Risposte Fornite:", 25, 138);
 
       var questions = examResultData.materia.domande;
-      var startY = 150;
+      var startY = 145;
       var lineHeight = 6.5;
       doc.setFontSize(8);
 
@@ -2201,7 +2113,7 @@
         doc.setTextColor(148, 163, 184);
         doc.text("Scheda informativa generata da Piattaforma Esami Telematici (fmorea.github.io)", 105, 272, { align: 'center' });
 
-        var nomeFile = 'Scheda_' + examResultData.cand.cognome + '_' + examResultData.cand.cf + '_' + examResultData.id + '.pdf';
+        var nomeFile = 'Scheda_' + examResultData.cand.cognome + '_' + examResultData.id + '.pdf';
         try {
           if (window.navigator && window.navigator.msSaveBlob) {
             var blob = doc.output('blob');
@@ -2222,10 +2134,6 @@
       document.getElementById('step-registration').classList.remove('hidden');
       document.getElementById('cand-nome').value = '';
       document.getElementById('cand-cognome').value = '';
-      document.getElementById('cand-cf').value = '';
-      document.getElementById('cf-msg').textContent = "Il codice deve essere di 16 caratteri conforme all'algoritmo ministeriale AdE.";
-      document.getElementById('cf-msg').className = "text-xs text-slate-500 mt-1";
-      document.getElementById('cf-badge').textContent = "";
     }
 
     /* Inizializzazione compatibile con vecchi e nuovi browser */
