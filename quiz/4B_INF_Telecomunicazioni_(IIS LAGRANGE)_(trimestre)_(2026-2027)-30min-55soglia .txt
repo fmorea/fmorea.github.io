@@ -330,3 +330,101 @@ E
 [RISPOSTA] FALSO
 [ARGOMENTO] Caratteristiche delle antenne
 [SPIEGAZIONE] Falso: il pedice "i" in dBi indica che l antenna di riferimento e l antenna isotropica ideale; quando il riferimento e il dipolo a mezza onda il guadagno si esprime in dBd.
+
+---
+
+[DOMANDA] I segnali quasi periodici o inarmonici sono ottenibili sommando componenti sinusoidali distinte aventi frequenze che non sono multiple tra loro.
+[RISPOSTA] VERO
+[ARGOMENTO] Classificazione dei segnali
+[SPIEGAZIONE] Vero: a differenza dei segnali periodici composti, i segnali quasi periodici derivano dalla somma di sinusoidi con frequenze non multiple della fondamentale[cite: 3].
+
+---
+
+[DOMANDA] Lo spettro di ampiezza di una sinusoide pura a frequenza f0 presenta una serie infinita di righe spettrali equispaziate.
+[RISPOSTA] FALSO
+[ARGOMENTO] Analisi nel dominio della frequenza
+[SPIEGAZIONE] Falso: un segnale sinusoidale puro e monofrequenziale, per cui il suo spettro di ampiezza presenta una sola riga spettrale posizionata esattamente alla frequenza f0[cite: 2, 6].
+
+---
+
+[DOMANDA] Il tempo di bit (o tempo di simbolo) rappresenta la durata temporale predefinita assegnata a ciascun impulso in un segnale digitale.
+[RISPOSTA] VERO
+[ARGOMENTO] Segnali discreti e digitali
+[SPIEGAZIONE] Vero: nei segnali digitali i valori variano solo dopo un intervallo di tempo predefinito denominato tempo di bit o di simbolo[cite: 4, 46].
+
+---
+
+[DOMANDA] Per evitare distorsioni nella misurazione di impulsi, il tempo di salita dell oscilloscopio t_r_osc deve essere almeno 5 volte piu grande del tempo di salita effettivo del segnale.
+[RISPOSTA] FALSO
+[ARGOMENTO] Strumentazione di misura digitale
+[SPIEGAZIONE] Falso: affinche l oscilloscopio non distorca i fronti del segnale, il suo tempo di salita t_r_osc deve essere molto piu piccolo di quello del segnale (in particolare t_r_osc inferiore o uguale ad un quinto del tempo di salita del segnale)[cite: 17].
+
+---
+
+[DOMANDA] L intensita di un suono decresce in modo inversamente proporzionale al quadrato della distanza dalla sorgente sonora.
+[RISPOSTA] VERO
+[ARGOMENTO] Parametri del suono
+[SPIEGAZIONE] Vero: in assenza di ostacoli le onde sonore si diffondono sfericamente e la loro intensita diminuisce con il quadrato della distanza dalla sorgente[cite: 23].
+
+---
+
+[DOMANDA] La sensibilita di un microfono indica la massima pressione sonora che il dispositivo puo captare prima di andare in saturazione.
+[RISPOSTA] FALSO
+[ARGOMENTO] Trasduttori e microfoni
+[SPIEGAZIONE] Falso: la sensibilita indica la minima pressione sonora percepibile in grado di produrre una tensione utile in uscita[cite: 36]; la pressione massima tollerata prima della distorsione e indicata dal massimo livello SPL[cite: 36].
+
+---
+
+[DOMANDA] Nei telefoni analogici a tastiera impostati su selezione impulsiva, l invio del numero zero genera dieci interruzioni di corrente di linea.
+[RISPOSTA] VERO
+[ARGOMENTO] Segnalazione telefonica
+[SPIEGAZIONE] Vero: la selezione impulsiva interrompe la corrente di linea tante volte quanto la cifra selezionata, riservando dieci interruzioni per la cifra zero[cite: 39].
+
+---
+
+[DOMANDA] Nei sistemi televisivi analogici la definizione verticale DV indica il numero di immagini complete trasmesse al secondo.
+[RISPOSTA] FALSO
+[ARGOMENTO] Segnale video e televisione
+[SPIEGAZIONE] Falso: il numero di immagini al secondo indica la definizione temporale (DT)[cite: 44, 50]; la definizione verticale (DV) e invece data dal numero di righe che compongono il quadro (es. 625 righe in Europa)[cite: 44, 50].
+
+---
+
+[DOMANDA] La twistatura dei conduttori in una coppia simmetrica riduce i disturbi elettromagnetici captati dall esterno mediante l inversione periodica di polarita.
+[RISPOSTA] VERO
+[ARGOMENTO] Cavi e linee di trasmissione
+[SPIEGAZIONE] Vero: intrecciare i fili fa si che i campi esterni inducano su sezioni adiacenti correnti di disturbo con fase opposta che tendono ad elidersi[cite: 56, 57].
+
+---
+
+[DOMANDA] La costante di fase beta di una linea di trasmissione quantifica lo sfasamento in radianti per unita di lunghezza subito dal segnale.
+[RISPOSTA] VERO
+[ARGOMENTO] Teoria delle linee di trasmissione
+[SPIEGAZIONE] Vero: insieme alla costante di attenuazione alfa, la costante di fase beta e una costante secondaria che misura lo sfasamento per metro (rad/m) introdotto dalla linea[cite: 66].
+
+---
+
+[DOMANDA] Le onde elettromagnetiche TEM (Transverse ElectroMagnetic) sono caratterizzate da campi elettrico e magnetico paralleli tra loro e alla direzione di propagazione.
+[RISPOSTA] FALSO
+[ARGOMENTO] Onde elettromagnetiche
+[SPIEGAZIONE] Falso: nelle onde TEM i vettori campo elettrico E e campo magnetico H sono ortogonali tra loro e giacciono in un piano perpendicolare alla direzione di propagazione[cite: 70, 71].
+
+---
+
+[DOMANDA] L antenna isotropica ideale ha dimensioni puntiformi e trasforma tutta la potenza fornita in ingresso in potenza irradiata senza perdite interne.
+[RISPOSTA] VERO
+[ARGOMENTO] Propagazione radio
+[SPIEGAZIONE] Vero: l antenna isotropa e un modello ideale prive di dissipazioni interne (potenza irradiata pari alla potenza in ingresso) che irradia in modo uniforme in tutte le direzioni[cite: 74].
+
+---
+
+[DOMANDA] La propagazione per scattering troposferico si verifica quando l onda radio attraversa la ionosfera oltre i 50 km di altezza.
+[RISPOSTA] FALSO
+[ARGOMENTO] Propagazione radio
+[SPIEGAZIONE] Falso: lo scattering troposferico avviene nella troposfera (fino a circa 10 km dal suolo) a causa di disomogeneita locali dell aria e variazioni dell indice di rifrazione[cite: 84].
+
+---
+
+[DOMANDA] Un antenna direttiva presenta un diagramma di radiazione caratterizzato da un lobo principale nella direzione di massimo irraggiamento.
+[RISPOSTA] VERO
+[ARGOMENTO] Caratteristiche delle antenne
+[SPIEGAZIONE] Vero: le antenne direttive o unidirezionali concentrano l energia in una direzione preferenziale rappresentata graficamente dal lobo principale
