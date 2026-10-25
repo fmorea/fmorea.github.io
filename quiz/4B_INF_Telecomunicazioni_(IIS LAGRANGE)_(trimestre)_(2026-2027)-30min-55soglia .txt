@@ -190,3 +190,143 @@ E
 [ARGOMENTO] Tipi di antenne
 [SPIEGAZIONE] Vero: il dipolo 
 λ/2 instaura un'onda stazionaria di corrente con un ventre (valore massimo) nel punto di alimentazione centrale e nodi (valore nullo) ai capi estemi.
+
+---
+
+[DOMANDA] L operazione di quantizzazione in un segnale digitale rende discreto l asse delle ampiezze introducendo un errore irrecuperabile detto errore di quantizzazione.
+[RISPOSTA] VERO
+[ARGOMENTO] Segnali discreti e digitali
+[SPIEGAZIONE] Vero: la quantizzazione approssima l ampiezza continua del campione al livello discreto piu vicino, introducendo una discrepanza permanente nota come errore o rumore di quantizzazione.
+
+---
+
+[DOMANDA] La trasformata discreta di Fourier eseguita mediante algoritmi FFT richiede un numero di punti di campionamento N pari ad una potenza di due.
+[RISPOSTA] VERO
+[ARGOMENTO] Strumentazione di misura digitale
+[SPIEGAZIONE] Vero: gli algoritmi di trasformata veloce di Fourier (FFT) utilizzati negli oscilloscopi digitali e negli analizzatori di spettro richiedono che il numero N di campioni del record sia una potenza intera di 2 (es. 64, 1024, 2048).
+
+---
+
+[DOMANDA] L inserimento di una finestra di windowing (come Hanning o Blackman) durante l analisi FFT serve a smussare le discontinuita temporali ai bordi dei record.
+[RISPOSTA] VERO
+[ARGOMENTO] Strumentazione di misura digitale
+[SPIEGAZIONE] Vero: poiche la FFT analizza il segnale per segmenti di lunghezza finita (record), la finestratura riduce le discontinuita ai bordi prevenendo alterazioni indesiderate nello spettro.
+
+---
+
+[DOMANDA] Il livello di pressione sonora espresso in decibel dBSPL assume come valore di pressione di riferimento p0 il valore di 1 Pascal.
+[RISPOSTA] FALSO
+[ARGOMENTO] Parametri del suono
+[SPIEGAZIONE] Falso: la pressione sonora di riferimento p0 utilizzata per il calcolo del livello dBSPL e pari a 20 microPascal, corrispondente alla soglia media di udibilita alla frequenza di 1000 Hz.
+
+---
+
+[DOMANDA] La misura del livello di rumore acustico pesato secondo la curva A viene espressa in dBA ed emula la risposta in frequenza dell orecchio umano.
+[RISPOSTA] VERO
+[ARGOMENTO] Misura del rumore e fonometria
+[SPIEGAZIONE] Vero: nei fonometri il filtro di pesatura con curva A attenua le frequenze alle quali l orecchio umano e meno sensibile, fornendo un valore in dBA rappresentativo della sensazione sonora reale.
+
+---
+
+[DOMANDA] L intervallo di frequenze del segnale vocale umano compreso sopra i 4 kHz e indispensabile ai fini della comprensione del significato delle parole.
+[RISPOSTA] FALSO
+[ARGOMENTO] Segnale vocale e telefonia
+[SPIEGAZIONE] Falso: le componenti vocali oltre i 4 kHz contribuiscono a definire con precisione il timbro della voce ma non sono indispensabili per la comprensione del parlato.
+
+---
+
+[DOMANDA] Il circuito antilocale inserito nello speech network di un telefono serve a disaccoppiare il microfono dal ricevitore per evitare di udire la propria voce in cornetta.
+[RISPOSTA] VERO
+[ARGOMENTO] Apparecchio telefonico
+[SPIEGAZIONE] Vero: la funzione antilocale disaccoppia il segnale generato dal microfono locale rispetto al ricevitore della stessa cornetta, consentendo la trasmissione e ricezione contemporanea sul singolo doppino.
+
+---
+
+[DOMANDA] Nel segnale video analogico la luminanza trasporta le informazioni relative al colore dell immagine.
+[RISPOSTA] FALSO
+[ARGOMENTO] Segnale video e televisione
+[SPIEGAZIONE] Falso: la luminanza (segnale Y) trasporta l informazione sulla brillantezza e sui chiaroscuri (in bianco e nero); l informazione sul colore e invece trasportata dalla crominanza (segnali di chroma).
+
+---
+
+[DOMANDA] La schermatura di una singola coppia simmetrica mediante foglio di alluminio viene impiegata per ridurre la diafonia alle alte frequenze.
+[RISPOSTA] VERO
+[ARGOMENTO] Cavi e linee di trasmissione
+[SPIEGAZIONE] Vero: oltre all intrecciatura e al bilanciamento, l avvolgimento individuale delle coppie con un foglio metallico schermante isola i campi elettromagnetici riducendo drasticamente la diafonia.
+
+---
+
+[DOMANDA] La telediafonia o FEXT misura il segnale di disturbo presente sulla linea disturbata dal lato in cui e posizionato il generatore sulla linea disturbante.
+[RISPOSTA] FALSO
+[ARGOMENTO] Cavi e linee di trasmissione
+[SPIEGAZIONE] Falso: il disturbo rilevato sullo stesso lato del generatore e la paradiafonia (NEXT); la telediafonia (FEXT) e la misura del disturbo all estremita opposta della linea.
+
+---
+
+[DOMANDA] L effetto pelle fa si che all aumentare della frequenza la corrente tenda a distribuirsi uniformemente al centro della sezione del conduttore.
+[RISPOSTA] FALSO
+[ARGOMENTO] Cavi coassiali
+[SPIEGAZIONE] Falso: all aumentare della frequenza l effetto pelle spinge la corrente a circolare solo sulla superficie esterna del conduttore, riducendo la sezione utile di passaggio.
+
+---
+
+[DOMANDA] L impedenza caratteristica Z0 di una linea di trasmissione dipende direttamente dalla lunghezza complessiva del cavo.
+[RISPOSTA] FALSO
+[ARGOMENTO] Teoria delle linee di trasmissione
+[SPIEGAZIONE] Falso: l impedenza caratteristica e una proprieta intrinseca della linea determinata dalle sue caratteristiche geometriche e dai materiali dielettrici, indipendente dalla lunghezza del cavo.
+
+---
+
+[DOMANDA] La costante di attenuazione alfa di una linea adattata esprime la perdita di ampiezza del segnale per unita di lunghezza ed aumenta all aumentare della frequenza.
+[RISPOSTA] VERO
+[ARGOMENTO] Teoria delle linee di trasmissione
+[SPIEGAZIONE] Vero: la costante alfa (espressa in dB/m) quantifica le perdite resistive e nel dielettrico per ogni metro di linea, ed incrementa al crescere della frequenza del segnale.
+
+---
+
+[DOMANDA] La densita di potenza di un onda elettromagnetica e legata all intensita del campo elettrico E dalla relazione espressa dal rapporto tra E al quadrato e l impedenza dello spazio libero.
+[RISPOSTA] VERO
+[ARGOMENTO] Onde elettromagnetiche
+[SPIEGAZIONE] Vero: estendendo le leggi dei circuiti, la densita di potenza S in Watt al metro quadro si calcola dividendo il quadrato del valore efficace del campo elettrico E per l impedenza caratteristica dello spazio libero (377 Ohm).
+
+---
+
+[DOMANDA] L assorbimento atmosferico delle onde radio a frequenze superiori a 10 GHz e causato principalmente dalle molecole di ossigeno e dal vapore acqueo.
+[RISPOSTA] VERO
+[ARGOMENTO] Propagazione radio
+[SPIEGAZIONE] Vero: a frequenze molto elevate (sopra i 10 GHz) i gas atmosferici, le gocce di pioggia e il vapore acqueo interagiscono con l onda provocando un assorbimento molecolare ed un attenuazione supplementare.
+
+---
+
+[DOMANDA] Il fenomeno della diffrazione permette ad un onda elettromagnetica di superare un ostacolo diffondendo energia nella regione d ombra dietro al bordo.
+[RISPOSTA] VERO
+[ARGOMENTO] Propagazione radio
+[SPIEGAZIONE] Vero: secondo il principio di Huygens, quando un onda incide sul bordo di un ostacolo con dimensioni comparabili alla lunghezza d onda, il fronte si incurva propagando energia anche nella zona d ombra.
+
+---
+
+[DOMANDA] Le onde radio appartenenti alla banda VHF si propagano prevalentemente per riflessione ionosferica a lunghissima distanza.
+[RISPOSTA] FALSO
+[ARGOMENTO] Propagazione radio
+[SPIEGAZIONE] Falso: la riflessione ionosferica e tipica delle onde corte (banda HF); le onde VHF (30-300 MHz) trapassano la ionosfera e si propagano prevalentemente per onda diretta.
+
+---
+
+[DOMANDA] La tecnica del frequency hopping contrasta il multipath fading cambiando in modo ciclico la frequenza di trasmissione del segnale.
+[RISPOSTA] VERO
+[ARGOMENTO] Fading e tecniche di diversita
+[SPIEGAZIONE] Vero: poiche le interferenze distruttive del fading da percorsi multipli dipendono strettamente dalla frequenza, cambiare continuamente frequenza evita che il canale rimanga bloccato in un nullo di ricezione.
+
+---
+
+[DOMANDA] Il diagramma di radiazione rappresenta su un grafico polare la distribuzione della potenza emessa da un antenna nelle varie direzioni dello spazio.
+[RISPOSTA] VERO
+[ARGOMENTO] Caratteristiche delle antenne
+[SPIEGAZIONE] Vero: il diagramma di radiazione mostra graficamente l attitudine dell antenna a concentrare l energia irradiata in determinate direzioni (lobi principali e secondari).
+
+---
+
+[DOMANDA] Il guadagno di un antenna espresso in dBi indica il rapporto di potenza rispetto ad un antenna campione costituita da un dipolo a mezza onda.
+[RISPOSTA] FALSO
+[ARGOMENTO] Caratteristiche delle antenne
+[SPIEGAZIONE] Falso: il pedice "i" in dBi indica che l antenna di riferimento e l antenna isotropica ideale; quando il riferimento e il dipolo a mezza onda il guadagno si esprime in dBd.
