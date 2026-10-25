@@ -1,0 +1,192 @@
+# BANCA DATI: PATENTE B
+# Sintassi del file:
+# [D] o [DOMANDA]     : Testo del quesito
+# [R] o [RISPOSTA]    : VERO oppure FALSO
+# [A] o [ARGOMENTO]   : Categoria o argomento didattico
+# [S] o [SPIEGAZIONE] : Spiegazione didattica per la scheda di revisione
+# [IMG] o [IMMAGINE]  : Percorso o URL immagine collegata (opzionale)
+# Separatore tra quesiti: '---'
+
+[DOMANDA] Un segnale deterministico è caratterizzato da un andamento aleatorio descrivibile esclusivamente tramite metodi statistici e probabilistici.
+[RISPOSTA] FALSO
+[ARGOMENTO] Classificazione dei segnali
+[SPIEGAZIONE] Falso: i segnali deterministici hanno un andamento noto e descrivibile mediante un'opportuna funzione matematica; sono i segnali aleatori a dover essere analizzati con metodi statistici.
+
+---
+
+[DOMANDA] L'analisi nel dominio del tempo di un segnale consente di determinarne la forma d'onda e di individuarne direttamente il valore di picco e il periodo.
+[RISPOSTA] VERO
+[ARGOMENTO] Analisi nel dominio del tempo
+[SPIEGAZIONE] Vero: l'analisi temporale studia l'andamento della forma d'onda e permette di misurare parametri come il valore di picco, il periodo, il valor medio e il valore efficace.
+
+---
+
+[DOMANDA] I segnali campionati sono discreti sia nel tempo che nelle ampiezze.
+[RISPOSTA] FALSO
+[ARGOMENTO] Segnali discreti e digitali
+[SPIEGAZIONE] Falso: i segnali campionati sono discreti nel tempo ma continui nelle ampiezze. I segnali discreti sia nel tempo sia nelle ampiezze sono i segnali digitali.
+
+---
+
+[DOMANDA] Secondo il teorema di Fourier, qualsiasi segnale periodico composto può essere espresso come la somma di un valore medio e di infinite componenti sinusoidali dette armoniche.
+[RISPOSTA] VERO
+[ARGOMENTO] Analisi nel dominio della frequenza
+[SPIEGAZIONE] Vero: la serie di Fourier scompone un segnale periodico con periodo T in un termine costante (valor medio) e in una somma di armoniche aventi frequenze multiple della fondamentale.
+
+---
+
+[DOMANDA] Per ridurre gli errori di misura, è consigliabile che la banda analogica di un oscilloscopio sia almeno 5 volte superiore alla banda del segnale da misurare.
+[RISPOSTA] VERO
+[ARGOMENTO] Strumentazione di misura digitale
+[SPIEGAZIONE] Vero: la regola pratica 
+B 
+oscill
+​
+ ≥5⋅B 
+segnale
+​
+  garantisce che l'oscilloscopio acquisisca ed evidenzi correttamente le componenti armoniche significative del segnale senza attenuazioni indesiderate.
+
+---
+
+[DOMANDA] Un suono puro o semplice è generato da un'onda sonora di tipo rettangolare.
+[RISPOSTA] FALSO
+[ARGOMENTO] Segnali acustici e suono
+[SPIEGAZIONE] Falso: in acustica un suono è definito semplice o puro se l'onda sonora che lo causa è di tipo sinusoidale; se presenta altre forme d'onda è un suono composto.
+
+---
+
+[DOMANDA] L'altezza di un suono equivale alla frequenza dell'armonica fondamentale e il suo raddoppio corrisponde a un incremento di un'ottava.
+[RISPOSTA] VERO
+[ARGOMENTO] Parametri del suono
+[SPIEGAZIONE] Vero: l'altezza è determinata dalla frequenza fondamentale 
+f 
+0
+​
+ =1/T, e l'intervallo di un'ottava in musica ed acustica corrisponde esattamente al raddoppio di tale frequenza.
+
+---
+
+[DOMANDA] Il segnale telefonico analogico tradizionale ha una banda utile (lorda) convenzionalmente fissata a circa 4 kHz (300-3400 Hz netti).
+[RISPOSTA] VERO
+[ARGOMENTO] Segnale vocale e telefonia
+[SPIEGAZIONE] Vero: la banda utile per la trasmissione della voce in ambito telefonico analogico è ristretta nell'intervallo 300–3400 Hz (approssimata a 4 kHz lordi), garantendo una buona intelligibilità del parlato.
+
+---
+
+[DOMANDA] Il microfono a carbone opera sfruttando le variazioni di capacità elettrica causate dalla vibrazione delle sue armature.
+[RISPOSTA] FALSO
+[ARGOMENTO] Trasduttori e microfoni
+[SPIEGAZIONE] Falso: il microfono a carbone è un trasduttore a variazione di resistenza. Sono i microfoni a condensatore e ad elettrete a basare il proprio funzionamento sulle variazioni di capacità.
+
+---
+
+[DOMANDA] Nella selezione telefonica DTMF (Dual Tone MultiFrequency), la pressione di ciascun tasto genera la combinazione di due frequenze sinusoidali distinte.
+[RISPOSTA] VERO
+[ARGOMENTO] Segnalazione telefonica
+[SPIEGAZIONE] Vero: il sistema DTMF associa a ogni tasto della matrice (4 righe per 4 colonne) una combinazione unica di due toni (uno a frequenza bassa e uno a frequenza alta).
+
+---
+
+[DOMANDA] La definizione temporale europea per lo standard televisivo analogico prevede l'invio di 50 quadri completi al secondo.
+[RISPOSTA] FALSO
+[ARGOMENTO] Segnale video e televisione
+[SPIEGAZIONE] Falso: lo standard televisivo analogico europeo adotta 25 quadri al secondo. Grazie alla tecnica dell'interlacciamento si trasmettono 50 semiquadri (o campi) al secondo per eliminare lo sfarfallio.
+
+---
+
+[DOMANDA] La diafonia (crosstalk) indica il passaggio indesiderato di energia elettromagnetica da una linea o coppia simmetrica a un'altra adiacente.
+[RISPOSTA] VERO
+[ARGOMENTO] Cavi e linee di trasmissione
+[SPIEGAZIONE] Vero: la diafonia è l'interferenza causata dal campo elettromagnetico generato dalla corrente di una linea (disturbante) che si accoppia con una linea adiacente (disturbata).
+
+---
+
+[DOMANDA] Il fattore di velocità di una linea di trasmissione esprime il rapporto tra la velocità di propagazione nel cavo e la velocità della luce nel vuoto.
+[RISPOSTA] VERO
+[ARGOMENTO] Propagazione nei cavi coassiali
+[SPIEGAZIONE] Vero: il fattore di velocità 
+F 
+v
+​
+  è un parametro adimensionale (
+≤1) che moltiplicato per 
+c≈3⋅10 
+8
+  m/s fornisce la velocità reale 
+v 
+p
+​
+  del segnale all'interno del dielettrico del cavo.
+
+---
+
+[DOMANDA] Una linea di trasmissione si definisce adattata quando è chiusa su impedenze di valore diverso rispetto alla sua impedenza caratteristica.
+[RISPOSTA] FALSO
+[ARGOMENTO] Teoria delle linee di trasmissione
+[SPIEGAZIONE] Falso: una linea si definisce adattata quando sia l'impedenza del generatore sia l'impedenza del carico sono uguali all'impedenza caratteristica 
+Z 
+0
+​
+  della linea stessa, annullando così le riflessioni.
+---
+
+[DOMANDA] Il vettore di Poynting definisce la direzione di propagazione di un'onda elettromagnetica e il suo modulo rappresenta la densità di potenza.
+[RISPOSTA] VERO
+[ARGOMENTO] Onde elettromagnetiche
+[SPIEGAZIONE] Vero: il vettore di Poynting 
+S
+
+ = 
+E
+
+ ∧ 
+H
+
+  determina la direzione e il verso di propagazione dell'onda TEM, e il suo modulo misura la potenza per unità di superficie (
+W/m 
+2
+ ).
+
+---
+
+[DOMANDA] La polarizzazione orizzontale di un'onda elettromagnetica si ha quando il vettore campo elettrico oscilla mantenendosi perpendicolare al piano orizzontale.
+[RISPOSTA] FALSO
+[ARGOMENTO] Polarizzazione delle onde
+[SPIEGAZIONE] Falso: la polarizzazione viene definita dall'orientamento del vettore campo elettrico 
+E
+
+ . Si ha polarizzazione orizzontale quando 
+E
+
+  giace ed oscilla parallelamente al piano orizzontale.
+
+---
+
+[DOMANDA] L'attenuazione dello spazio libero è dovuta alla dissipazione di calore causata dall'attrito dell'aria sulle onde elettromagnetiche.
+[RISPOSTA] FALSO
+[ARGOMENTO] Propagazione radio
+[SPIEGAZIONE] Falso: l'attenuazione dello spazio libero non è dovuta a dissipazione o assorbimento, ma al fatto geometrico che la potenza irradiata si distribuisce su superfici sferiche man mano più ampie all'aumentare della distanza.
+
+---
+
+[DOMANDA] La ricezione in diversità di spazio prevede l'uso di più antenne riceventi distanziate tra loro per mitigare gli effetti del multipath fading.
+[RISPOSTA] VERO
+[ARGOMENTO] Fading e tecniche di diversità
+[SPIEGAZIONE] Vero: posizionando due o più antenne a distanza di qualche lunghezza d'onda, si riduce la probabilità che il segnale sia contemporaneamente in opposizione di fase (fading) su tutte le antenne.
+
+---
+
+[DOMANDA] Il principio di reciprocità delle antenne stabilisce che le caratteristiche radiative (come diagramma di radiazione e guadagno) cambiano radicalmente se l'antenna viene usata in ricezione anziché in trasmissione.
+[RISPOSTA] FALSO
+[ARGOMENTO] Caratteristiche delle antenne
+[SPIEGAZIONE] Falso: il principio di reciprocità afferma che le proprietà fondamentali di un'antenna rimangono identiche sia che essa operi come elemento trasmittente sia come elemento ricevente.
+
+---
+
+[DOMANDA] Un dipolo a mezz'onda (
+λ/2) è un'antenna lineare risonante che presenta una distribuzione di corrente massima al centro e minima alle estremità.
+[RISPOSTA] VERO
+[ARGOMENTO] Tipi di antenne
+[SPIEGAZIONE] Vero: il dipolo 
+λ/2 instaura un'onda stazionaria di corrente con un ventre (valore massimo) nel punto di alimentazione centrale e nodi (valore nullo) ai capi estemi.
