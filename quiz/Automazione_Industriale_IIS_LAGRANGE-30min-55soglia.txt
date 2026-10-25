@@ -1,0 +1,261 @@
+# BANCA DATI: PATENTE B
+# Sintassi del file:
+# [D] o [DOMANDA]     : Testo del quesito
+# [R] o [RISPOSTA]    : VERO oppure FALSO
+# [A] o [ARGOMENTO]   : Categoria o argomento didattico
+# [S] o [SPIEGAZIONE] : Spiegazione didattica per la scheda di revisione
+# [IMG] o [IMMAGINE]  : Percorso o URL immagine collegata (opzionale)
+# Separatore tra quesiti: '---'
+
+[DOMANDA] Un sistema viene definito come un insieme di più elementi singolarmente individuabili che interagiscono per raggiungere un obiettivo comune.
+[RISPOSTA] VERO
+[ARGOMENTO] Concetti introduttivi sui sistemi
+[SPIEGAZIONE] Vero: la teoria definisce un sistema proprio come un insieme di elementi individuabili che interagiscono tra loro per un fine unico comune.
+
+---
+
+[DOMANDA] I sistemi astratti hanno caratteristiche che possono essere misurate e individuate direttamente mediante strumentazioni di tipo tradizionale.
+[RISPOSTA] FALSO
+[ARGOMENTO] Classificazione dei sistemi
+[SPIEGAZIONE] Falso: i sistemi le cui caratteristiche si individuano con strumenti tradizionali sono i sistemi fisici; i sistemi astratti (come il sistema azienda) richiedono indagini diverse e non strumenti classici.
+
+---
+
+[DOMANDA] Un sistema si definisce chiuso se non è in comunicazione con l'ambiente circostante e quindi non ne subisce l'influenza sul proprio comportamento.
+[RISPOSTA] VERO
+[ARGOMENTO] Sistemi aperti e chiusi
+[SPIEGAZIONE] Vero: i sistemi chiusi non interagiscono con l'ambiente esterno rispetto a un determinato elemento di riferimento.
+
+---
+
+[DOMANDA] I disturbi sono ingressi desiderati che aiutano il sistema ad accelerare l'evoluzione verso lo stato finale.
+[RISPOSTA] FALSO
+[ARGOMENTO] Disturbi e ingressi
+[SPIEGAZIONE] Falso: i disturbi sono definiti come ingressi non desiderati che influenzano negativamente il comportamento del sistema causando evoluzioni impreviste.
+
+---
+
+[DOMANDA] Un sistema che risponde immediatamente alle sollecitazioni, come una rete resistiva, è dotato di memoria.
+[RISPOSTA] FALSO
+[ARGOMENTO] Stato del sistema e memoria
+[SPIEGAZIONE] Falso: un sistema dotato di memoria non ha una risposta immediata (es. carica di un condensatore). I sistemi a risposta immediata non hanno memoria e non permettono la definizione di variabili di stato.
+
+---
+
+[DOMANDA] Nei diagrammi a blocchi dei sistemi, i segmenti orientati verso l'esterno identificano le uscite del sistema.
+[RISPOSTA] VERO
+[ARGOMENTO] Rappresentazione grafica dei sistemi
+[SPIEGAZIONE] Vero: secondo le convenzioni grafiche, i vettori/segmenti uscenti rappresentano le variabili d'uscita, mentre quelli entranti rappresentano ingressi, parametri e disturbi.
+
+---
+
+[DOMANDA] I sistemi analogici sono continui sia nei valori assunti sia nel tempo.
+[RISPOSTA] VERO
+[ARGOMENTO] Classificazione sistemica
+[SPIEGAZIONE] Vero: per definizione, i sistemi analogici presentano continuità sia nel dominio dei valori che nel dominio del tempo.
+
+---
+
+[DOMANDA] Nei sistemi combinatori lo stato delle uscite in un dato istante dipende sia dagli ingressi attuali sia dallo stato precedentemente assunto dal sistema.
+[RISPOSTA] FALSO
+[ARGOMENTO] Sistemi discreti
+[SPIEGAZIONE] Falso: i sistemi combinatori sono privi di memoria e le uscite dipendono solo dagli ingressi nello stesso istante; sono i sistemi sequenziali a dipendere anche dallo stato precedente.
+
+---
+
+[DOMANDA] Ai sistemi non lineari è possibile applicare direttamente il principio di sovrapposizione degli effetti.
+[RISPOSTA] FALSO
+[ARGOMENTO] Sistemi lineari e non lineari
+[SPIEGAZIONE] Falso: il principio di sovrapposizione degli effetti vale esclusivamente per i sistemi lineari.
+
+---
+
+[DOMANDA] I sistemi stazionari (o tempo invarianti) mantengono costanti tutti i propri parametri nell'intervallo temporale di osservazione.
+[RISPOSTA] VERO
+[ARGOMENTO] Sistemi stazionari
+[SPIEGAZIONE] Vero: nei sistemi stazionari i parametri non variano nel tempo, garantendo che a pari sollecitazione corrisponda sempre la medesima risposta.
+
+---
+
+[DOMANDA] Nei sistemi probabilistici la traiettoria e il legame tra le variabili sono noti a priori.
+[RISPOSTA] FALSO
+[ARGOMENTO] Sistemi deterministici e probabilistici
+[SPIEGAZIONE] Falso: nei sistemi probabilistici la traiettoria non è nota a priori e la risposta a una sollecitazione è solo prevedibile in termini di probabilità.
+
+---
+
+[DOMANDA] La funzione di trasferimento (f.d.t.) rappresenta il rapporto tra la variabile d'uscita e la variabile d'ingresso di un sistema.
+[RISPOSTA] VERO
+[ARGOMENTO] Funzione di trasferimento
+[SPIEGAZIONE] Vero: la f.d.t. è definita come 
+G=Y/X, ovvero l'uscita diviso l'ingresso.
+
+---
+
+[DOMANDA] Nel collegamento in parallelo di due blocchi funzionali, la funzione di trasferimento complessiva è data dal prodotto delle f.d.t. dei singoli blocchi.
+[RISPOSTA] FALSO
+[ARGOMENTO] Algebra degli schemi a blocchi
+[SPIEGAZIONE] Falso: la f.d.t. complessiva di blocchi in parallelo si ottiene dalla somma delle singole f.d.t.; è nel collegamento in serie che si calcola il prodotto.
+
+---
+
+[DOMANDA] In uno schema a blocchi, i nodi derivatori eseguono la somma algebrica dei segnali in ingresso.
+[RISPOSTA] FALSO
+[ARGOMENTO] Schemi a blocchi
+[SPIEGAZIONE] Falso: la somma algebrica viene eseguita dai nodi sommatori; i nodi derivatori prelevano il segnale duplicandolo con le medesime caratteristiche.
+
+---
+
+[DOMANDA] Una struttura di controllo ad anello aperto è in grado di verificare costantemente il valore effettivo assunto dalla variabile controllata.
+[RISPOSTA] FALSO
+[ARGOMENTO] Sistemi di controllo
+[SPIEGAZIONE] Falso: l'anello aperto non ha percorso di ritorno e determina la variabile manipolabile senza effettuare alcuna verifica o misurazione sull'uscita.
+
+---
+
+[DOMANDA] L'elemento fondamentale del blocco di retroazione in una struttura ad anello chiuso è il trasduttore.
+[RISPOSTA] VERO
+[ARGOMENTO] Struttura ad anello chiuso
+[SPIEGAZIONE] Vero: il trasduttore converte la grandezza controllata in uscita per renderla omogenea e confrontabile con il segnale di riferimento.
+
+---
+
+[DOMANDA] La funzione di trasferimento di un sistema retroazionato negativamente con ramo di andata A e ramo di ritorno B (riferita alla variabile controllata) è 
+G=A/(1+AB).
+[RISPOSTA] VERO
+[ARGOMENTO] Retroazione negativa
+[SPIEGAZIONE] Vero: l'espressione corretta per la risposta della variabile controllata in retroazione negativa è 
+G=A/(1+AB).
+
+---
+
+[DOMANDA] Un sistema si definisce asintoticamente stabile se, a seguito di una sollecitazione limitata, assume una posizione di equilibrio diversa da quella iniziale.
+[RISPOSTA] FALSO
+[ARGOMENTO] Stabilità dei sistemi
+[SPIEGAZIONE] Falso: il sistema che si riporta alla posizione di equilibrio iniziale è asintoticamente stabile; quello che ne assume una diversa è semplicemente stabile.
+
+---
+
+[DOMANDA] La presenza di una retroazione positiva garantisce sempre la stabilità di un sistema di controllo.
+[RISPOSTA] FALSO
+[ARGOMENTO] Stabilità e retroazione
+[SPIEGAZIONE] Falso: solo la retroazione negativa contrasta le variazioni stabilizzando il sistema; la retroazione positiva tende ad esaltare le deviazioni portando all'instabilità.
+
+---
+
+[DOMANDA] La prontezza di risposta rappresenta la rapidità con cui un sistema reagisce a una sollecitazione per riportarsi in uno stato di quiete.
+[RISPOSTA] VERO
+[ARGOMENTO] Prestazioni dei sistemi
+[SPIEGAZIONE] Vero: la prontezza misura quanto velocemente si esaurisce il transitorio di un sistema a seguito di un ingresso.
+
+---
+
+[DOMANDA] Nei sistemi di controllo ON/OFF il regolatore fornisce un'uscita di tipo continuo proporzionale all'errore.
+[RISPOSTA] FALSO
+[ARGOMENTO] Tecniche di regolazione
+[SPIEGAZIONE] Falso: nei sistemi ON/OFF l'uscita del regolatore è di tipo discreto a due soli livelli (consenso ON o blocco OFF).
+
+---
+
+[DOMANDA] I sistemi di ordine zero non presentano variabili di stato e forniscono una risposta immediata alle sollecitazioni.
+[RISPOSTA] VERO
+[ARGOMENTO] Ordine dei sistemi
+[SPIEGAZIONE] Vero: i sistemi di ordine zero sono privi di memoria/variabili di stato e modificano solo l'ampiezza dell'ingresso senza introdurre ritardi.
+
+---
+
+[DOMANDA] Per un sistema del primo ordine sottoposto a gradino, la costante di tempo 
+τ rappresenta il tempo necessario per raggiungere il 99% del valore di regime.
+[RISPOSTA] FALSO
+[ARGOMENTO] Sistemi di ordine uno
+[SPIEGAZIONE] Falso: la costante di tempo 
+τ è il tempo necessario per raggiungere il 63% del valore di regime (il 99% si raggiunge convenzionalmente dopo 
+5τ).
+
+---
+
+[DOMANDA] In una risposta esponenziale decrescente del primo ordine, la costante di tempo 
+τ corrisponde al tempo necessario per scendere al 37% del valore iniziale.
+[RISPOSTA] VERO
+[ARGOMENTO] Sistemi di ordine uno
+[SPIEGAZIONE] Vero: per la curva decrescente 
+y(t)=e 
+−t/τ
+ , al tempo 
+t=τ il valore scende a 
+e 
+−1
+ ≈0,37 (ovvero il 37%).
+
+---
+
+[DOMANDA] Nei sistemi del secondo ordine, se il coefficiente di smorzamento 
+ξ è pari a zero, la risposta al gradino è una sinusoide pura priva di smorzamento.
+[RISPOSTA] VERO
+[ARGOMENTO] Sistemi di ordine due
+[SPIEGAZIONE] Vero: con 
+ξ=0 non c'è smorzamento e il sistema risponde con un'oscillazione sinusoidale/cosinusoidale permanente (funzione non smorzata).
+
+---
+
+[DOMANDA] Nei sistemi del secondo ordine con smorzamento minore di uno, la massima sovraelongazione aumenta all'aumentare del coefficiente di smorzamento 
+ξ.
+[RISPOSTA] FALSO
+[ARGOMENTO] Sistemi di ordine due
+[SPIEGAZIONE] Falso: la sovraelongazione diminuisce all'aumentare di 
+ξ. Al diminuire di 
+ξ verso lo zero, le oscillazioni e il picco di sovraelongazione diventano più pronunciati.
+
+---
+
+[DOMANDA] In un circuito elettrico RC serie, la costante di tempo è data dal prodotto tra la resistenza e la capacità (
+τ=RC).
+[RISPOSTA] VERO
+[ARGOMENTO] Applicazioni ai sistemi elettrici
+[SPIEGAZIONE] Vero: la costante di tempo fondamentale per la carica/scarica di un circuito RC è 
+τ=R⋅C.
+
+---
+
+[DOMANDA] In un circuito elettrico RL serie, la costante di tempo è data dal prodotto della resistenza per l'induttanza (
+τ=R⋅L).
+[RISPOSTA] FALSO
+[ARGOMENTO] Applicazioni ai sistemi elettrici
+[SPIEGAZIONE] Falso: per i circuiti RL la costante di tempo è definita come il rapporto tra induttanza e resistenza (
+τ=L/R).
+
+---
+
+[DOMANDA] Nel modello elettrico equivalente di un sistema termico del primo ordine, la temperatura corrisponde alla corrente elettrica e la potenza termica corrisponde alla tensione.
+[RISPOSTA] FALSO
+[ARGOMENTO] Applicazioni ai sistemi termici
+[SPIEGAZIONE] Falso: nelle analogie termiche la temperatura corrisponde alla tensione 
+V e la potenza termica riscaldante corrisponde alla corrente 
+I.
+
+---
+
+[DOMANDA] In un sistema idraulico costituito da un serbatoio con condotte d'ingresso e d'uscita, la costante di tempo idraulica è data dal prodotto della resistenza idraulica per la capacità idraulica (
+τ 
+L
+​
+ =R 
+L
+​
+ ⋅C 
+L
+​
+ ).
+[RISPOSTA] VERO
+[ARGOMENTO] Applicazioni ai sistemi idraulici
+[SPIEGAZIONE] Vero: per l'analogia con il circuito RC elettrico in parallelo, la costante di tempo idraulica vale 
+τ 
+L
+​
+ =R 
+L
+​
+ ⋅C 
+L
+​
+ .
