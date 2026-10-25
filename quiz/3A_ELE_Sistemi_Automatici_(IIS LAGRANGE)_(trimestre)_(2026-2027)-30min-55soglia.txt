@@ -172,22 +172,7 @@ G=A/(1+AB).
 τ è il tempo necessario per raggiungere il 63% del valore di regime (il 99% si raggiunge convenzionalmente dopo 
 5τ).
 
----
 
-[DOMANDA] In una risposta esponenziale decrescente del primo ordine, la costante di tempo 
-τ corrisponde al tempo necessario per scendere al 37% del valore iniziale.
-[RISPOSTA] VERO
-[ARGOMENTO] Sistemi di ordine uno
-[SPIEGAZIONE] Vero: per la curva decrescente 
-y(t)=e 
-−t/τ
- , al tempo 
-t=τ il valore scende a 
-e 
-−1
- ≈0,37 (ovvero il 37%).
-
----
 
 [DOMANDA] Nei sistemi del secondo ordine, se il coefficiente di smorzamento 
 ξ è pari a zero, la risposta al gradino è una sinusoide pura priva di smorzamento.
@@ -195,16 +180,6 @@ e
 [ARGOMENTO] Sistemi di ordine due
 [SPIEGAZIONE] Vero: con 
 ξ=0 non c'è smorzamento e il sistema risponde con un'oscillazione sinusoidale/cosinusoidale permanente (funzione non smorzata).
-
----
-
-[DOMANDA] Nei sistemi del secondo ordine con smorzamento minore di uno, la massima sovraelongazione aumenta all'aumentare del coefficiente di smorzamento 
-ξ.
-[RISPOSTA] FALSO
-[ARGOMENTO] Sistemi di ordine due
-[SPIEGAZIONE] Falso: la sovraelongazione diminuisce all'aumentare di 
-ξ. Al diminuire di 
-ξ verso lo zero, le oscillazioni e il picco di sovraelongazione diventano più pronunciati.
 
 ---
 
@@ -217,45 +192,210 @@ e
 
 ---
 
-[DOMANDA] In un circuito elettrico RL serie, la costante di tempo è data dal prodotto della resistenza per l'induttanza (
-τ=R⋅L).
+[DOMANDA] Il sistema solare e un esempio di sistema artificiale creato dall uomo.
+[RISPOSTA] FALSO
+[ARGOMENTO] Classificazione dei sistemi
+[SPIEGAZIONE] Falso: il sistema solare e classificato come un sistema naturale, in quanto esistente in natura e non creato dall uomo.
+
+---
+
+[DOMANDA] Un sistema misto e un sistema naturale sul quale si e verificato un intervento da parte dell uomo.
+[RISPOSTA] VERO
+[ARGOMENTO] Classificazione dei sistemi
+[SPIEGAZIONE] Vero: i sistemi misti sono definiti come sistemi naturali modificati o deviati dall uomo, ad esempio una centrale idroelettrica realizzata deviando un corso d acqua.
+
+---
+
+[DOMANDA] Le variabili d ingresso in un sistema rappresentano le risposte che conseguono alle sollecitazioni.
+[RISPOSTA] FALSO
+[ARGOMENTO] Variabili di un sistema
+[SPIEGAZIONE] Falso: le variabili d ingresso (o cause/sollecitazioni) rappresentano le sollecitazioni applicate al sistema; le risposte conseguenti sono le variabili d uscita (effetti).
+
+---
+
+[DOMANDA] Un sistema le cui variabili sono suddivise tra variabili d ingresso e variabili d uscita si definisce sistema orientato.
+[RISPOSTA] VERO
+[ARGOMENTO] Variabili di un sistema
+[SPIEGAZIONE] Vero: un sistema viene detto orientato quando e stata stabilita la suddivisione tra le sue variabili d ingresso e di uscita.
+
+---
+
+[DOMANDA] Le variabili manipolabili sono grandezze il cui andamento nel tempo non puo essere arbitrariamente imposto dall esterno.
+[RISPOSTA] FALSO
+[ARGOMENTO] Disturbi e variabili di controllo
+[SPIEGAZIONE] Falso: le variabili manipolabili sono proprio quelle variabili d ingresso il cui andamento nel tempo puo essere arbitrariamente imposto dal regolatore o dall operatore.
+
+---
+
+[DOMANDA] Lo stato di un sistema rappresenta l insieme dei valori assunti dalle sue variabili di stato in un determinato istante.
+[RISPOSTA] VERO
+[ARGOMENTO] Stato del sistema
+[SPIEGAZIONE] Vero: per definizione, lo stato di un sistema in un dato istante e l insieme puntuale dei valori che assumono le variabili di stato in quell istante.
+
+---
+
+[DOMANDA] I sistemi che hanno la capacita di accumulare energia, materia o informazione sono privi di memoria.
+[RISPOSTA] FALSO
+[ARGOMENTO] Stato del sistema e memoria
+[SPIEGAZIONE] Falso: la capacita di accumulare energia, materia o informazione (come in un condensatore o in un serbatoio) individua la presenza di variabili di stato e quindi la presenza di memoria nel sistema.
+
+---
+
+[DOMANDA] I sistemi tempo continui sono definiti tali se esistono intervalli temporali in cui non e possibile assegnare alcun valore alle variabili.
+[RISPOSTA] FALSO
+[ARGOMENTO] Classificazione sistemica
+[SPIEGAZIONE] Falso: nei sistemi tempo continui non esistono istanti di tempo all interno dell intervallo considerato in cui le variabili non siano definite.
+
+---
+
+[DOMANDA] Un interruttore elettrico (aperto/chiuso) puo essere modellato come un sistema discreto.
+[RISPOSTA] VERO
+[ARGOMENTO] Sistemi discreti
+[SPIEGAZIONE] Vero: le variabili di un interruttore possono assumere soltanto un numero finito di valori discreti (stato di aperto o chiuso).
+
+---
+
+[DOMANDA] Nei sistemi sequenziali l uscita in un dato istante dipende sia dagli ingressi attuali sia dallo stato precedentemente assunto.
+[RISPOSTA] VERO
+[ARGOMENTO] Sistemi discreti
+[SPIEGAZIONE] Vero: i sistemi sequenziali sono dotati di memoria, quindi lo stato delle uscite dipende dagli ingressi del momento e dalla storia/stato precedente del sistema.
+
+---
+
+[DOMANDA] Una relazione lineare tra ingresso e uscita viene rappresentata graficamente da una curva parabolica.
+[RISPOSTA] FALSO
+[ARGOMENTO] Sistemi lineari
+[SPIEGAZIONE] Falso: una relazione di tipo lineare si rappresenta graficamente con una retta a coefficiente angolare finito e diverso da zero.
+
+---
+
+[DOMANDA] La seconda legge di Newton (F = m * a) esprime una relazione lineare in cui la massa funge da coefficiente angolare.
+[RISPOSTA] VERO
+[ARGOMENTO] Sistemi lineari
+[SPIEGAZIONE] Vero: la seconda legge di Newton e un classico esempio di relazione di proporzionalita diretta (lineare) tra forza e accelerazione.
+
+---
+
+[DOMANDA] Con opportuni accorgimenti, una caratteristica non lineare puo essere linearizzata considerando piccole variazioni nell intorno di un punto di funzionamento.
+[RISPOSTA] VERO
+[ARGOMENTO] Sistemi non lineari
+[SPIEGAZIONE] Vero: all interno di un piccolo intorno attorno a un punto P, la relazione non lineare puo essere approssimata come lineare.
+
+---
+
+[DOMANDA] Nei sistemi statici la risposta alle sollecitazioni viene influenzata dallo stato del sistema preesistente alla sollecitazione stessa.
+[RISPOSTA] FALSO
+[ARGOMENTO] Sistemi statici e dinamici
+[SPIEGAZIONE] Falso: i sistemi statici sono privi di memoria e la loro risposta dipende esclusivamente dall entita della sollecitazione attuale, non da quanto accaduto in precedenza.
+
+---
+
+[DOMANDA] Nei sistemi deterministici il legame tra le variabili del sistema e l evoluzione degli stati sono noti a priori.
+[RISPOSTA] VERO
+[ARGOMENTO] Sistemi deterministici e probabilistici
+[SPIEGAZIONE] Vero: un sistema deterministico evolve secondo relazioni matematiche o logiche note a priori, rendendo la sua risposta perfettamente prevedibile.
+
+---
+
+[DOMANDA] Un modello e una rappresentazione esatta ed esaustiva di tutti gli aspetti della realta di un sistema.
+[RISPOSTA] FALSO
+[ARGOMENTO] Modelli di sistemi
+[SPIEGAZIONE] Falso: un modello e una rappresentazione approssimativa della realta che isola e considera solo gli aspetti di interesse, tralasciando gli altri.
+
+---
+
+[DOMANDA] Un teorema di De Morgan dell algebra booleana afferma che l operazione di negazione della somma logica (NOT (x OR y)) equivale al prodotto delle singole negazioni ((NOT x) AND (NOT y)).
+[RISPOSTA] VERO
+[ARGOMENTO] Algebra booleana
+[SPIEGAZIONE] Vero: secondo i teoremi di De Morgan, il complemento di una somma logica e pari al prodotto dei complementi dei singoli termini.
+
+---
+
+[DOMANDA] In un partitore di tensione resistivo a due resistori, la costante di guadagno G riferita al primo resistore vale G = R1 / (R1 + R2).
+[RISPOSTA] VERO
+[ARGOMENTO] Funzione di trasferimento
+[SPIEGAZIONE] Vero: la tensione d uscita sul resistore R1 e V1 = V * R1 / (R1 + R2), pertanto il rapporto V1 / V e pari a R1 / (R1 + R2).
+
+---
+
+[DOMANDA] Nel collegamento in serie di due blocchi funzionali, la funzione di trasferimento complessiva e data dal prodotto delle f.d.t. dei singoli blocchi.
+[RISPOSTA] VERO
+[ARGOMENTO] Algebra degli schemi a blocchi
+[SPIEGAZIONE] Vero: quando due o piu blocchi sono in serie, l uscita del primo e l ingresso del successivo e la f.d.t. totale e G = G1 * G2.
+
+---
+
+[DOMANDA] La retroazione viene definita positiva se i segnali che confluiscono nel nodo sommatore vengono sottratti l uno dall altro.
+[RISPOSTA] FALSO
+[ARGOMENTO] Algebra degli schemi a blocchi
+[SPIEGAZIONE] Falso: la retroazione e positiva se i segnali nel nodo si sommano; e invece definita negativa se ne viene effettuata la differenza.
+
+---
+
+[DOMANDA] Il termine automazione indica l insieme delle tecniche necessarie per rendere automatico un sistema.
+[RISPOSTA] VERO
+[ARGOMENTO] Sistemi automatici
+[SPIEGAZIONE] Vero: la letteratura tecnica definisce l automazione proprio come l insieme di tecniche utili a consentire a un sistema di operare automaticamente.
+
+---
+
+[DOMANDA] Un processo si definisce discreto se le operazioni che lo compongono avvengono contemporaneamente e con continuita nel tempo.
+[RISPOSTA] FALSO
+[ARGOMENTO] Processi
+[SPIEGAZIONE] Falso: i processi in cui le operazioni avvengono contemporaneamente e con continuita sono detti continui; nei processi discreti le operazioni avvengono in sequenza e hanno breve durata.
+
+---
+
+[DOMANDA] Se la grandezza controllata in un sistema di regolazione viene mantenuta costante nel tempo, si parla di regolazione a valore fisso.
+[RISPOSTA] VERO
+[ARGOMENTO] Tipi di regolazione
+[SPIEGAZIONE] Vero: la regolazione si dice a valore fisso quando lo scopo del regolatore e mantenere immobile la variabile controllata attorno a un valore stabilito.
+
+---
+
+[DOMANDA] In un sistema di controllo ad anello aperto, la compensazione dei disturbi e possibile anche se essi non sono prevedibili ne misurabili.
+[RISPOSTA] FALSO
+[ARGOMENTO] Compensazione dei disturbi
+[SPIEGAZIONE] Falso: in una struttura ad anello aperto l effetto dei disturbi puo essere compensato soltanto se tali disturbi sono sia prevedibili che misurabili.
+
+---
+
+[DOMANDA] Nelle strutture di controllo ad anello chiuso il segnale d errore e inviato al sistema controllante e calcolato come differenza tra segnale di riferimento e segnale di retroazione (e = r - h).
+[RISPOSTA] VERO
+[ARGOMENTO] Il regolatore
+[SPIEGAZIONE] Vero: il nodo di confronto genera il segnale d errore eseguendo la sottrazione tra il riferimento desiderato r e il segnale misurato di retroazione h.
+
+---
+
+[DOMANDA] Il regime dinamico di un sistema identifica lo stato di quiete o la posizione di equilibrio raggiunta al termine delle sollecitazioni.
+[RISPOSTA] FALSO
+[ARGOMENTO] Qualita dei sistemi di controllo
+[SPIEGAZIONE] Falso: lo studio in regime dinamico riguarda il comportamento del sistema durante il transitorio; lo stato di quiete finale riguarda invece il regime statico.
+
+---
+
+[DOMANDA] Un sistema si definisce semplicemente stabile se, a seguito di una sollecitazione, si riporta esattamente nella sua posizione di equilibrio iniziale.
+[RISPOSTA] FALSO
+[ARGOMENTO] Stabilita
+[SPIEGAZIONE] Falso: il sistema che torna alla posizione di equilibrio iniziale e asintoticamente stabile; se ne assume una nuova ma stabile e semplicemente stabile.
+
+---
+
+[DOMANDA] Nei sistemi di controllo digitali si rende necessario l uso di convertitori analogico-digitali (A/D) e digitale-analogici (D/A) quando si devono interfacciare circuiti digitali con componenti o processi analogici.
+[RISPOSTA] VERO
+[ARGOMENTO] Sistemi di controllo digitali
+[SPIEGAZIONE] Vero: poiche il microcontrollore lavora solo con segnali digitali e i sensori/attuatori sono spesso analogici, i convertitori A/D e D/A risultano indispensabili.
+
+---
+
+[DOMANDA] Nei sistemi del primo ordine la risposta al gradino di ampiezza unitaria ha un andamento descritto dalla funzione y(t) = 1 - exp(-t / tau).
+[RISPOSTA] VERO
+[ARGOMENTO] Sistemi di ordine uno
+[SPIEGAZIONE] Vero: la risposta nel tempo di un sistema del primo ordine sottoposto a un gradino unitario e descritta da una funzione esponenziale del tipo y(t) = 1 - exp(-t / tau).
+
+---
+
+[DOMANDA] In un circuito RL serie, la tensione ai capi del resistore in risposta a un gradino di tensione E segue la relazione vR(t) = E * exp(-t / tau).
 [RISPOSTA] FALSO
 [ARGOMENTO] Applicazioni ai sistemi elettrici
-[SPIEGAZIONE] Falso: per i circuiti RL la costante di tempo è definita come il rapporto tra induttanza e resistenza (
-τ=L/R).
-
----
-
-[DOMANDA] Nel modello elettrico equivalente di un sistema termico del primo ordine, la temperatura corrisponde alla corrente elettrica e la potenza termica corrisponde alla tensione.
-[RISPOSTA] FALSO
-[ARGOMENTO] Applicazioni ai sistemi termici
-[SPIEGAZIONE] Falso: nelle analogie termiche la temperatura corrisponde alla tensione 
-V e la potenza termica riscaldante corrisponde alla corrente 
-I.
-
----
-
-[DOMANDA] In un sistema idraulico costituito da un serbatoio con condotte d'ingresso e d'uscita, la costante di tempo idraulica è data dal prodotto della resistenza idraulica per la capacità idraulica (
-τ 
-L
-​
- =R 
-L
-​
- ⋅C 
-L
-​
- ).
-[RISPOSTA] VERO
-[ARGOMENTO] Applicazioni ai sistemi idraulici
-[SPIEGAZIONE] Vero: per l'analogia con il circuito RC elettrico in parallelo, la costante di tempo idraulica vale 
-τ 
-L
-​
- =R 
-L
-​
- ⋅C 
-L
-​
- .
+[SPIEGAZIONE] Falso: la tensione sul resistore in un circuito RL cresce secondo la relazione vR(t) = E * (1 - exp(-t / tau)); la relazione vL(t) = E * exp(-t / tau) descrive invece la tensione sull induttore.
