@@ -15,6 +15,11 @@
   <!-- LZ-String per compressione efficiente dello stato delle domande nel QR code -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
 
+  <!-- KaTeX per rendering formule matematiche e scientifiche (LaTeX) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+
   <!-- Fogli di stile completi compatibili al 100% con Internet Explorer (9, 10, 11) e browser moderni -->
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
@@ -414,12 +419,25 @@
     .btn-option-card:hover {
       border-color: #94a3b8;
       background-color: #f8fafc;
+      transform: translateY(-1px);
     }
     .btn-option-card.selected {
       border-color: #2563eb !important;
       background-color: #eff6ff !important;
       color: #1e40af !important;
       box-shadow: 0 4px 14px rgba(37, 99, 235, 0.18) !important;
+    }
+
+    /* KaTeX rendering e formule matematiche */
+    .katex-display {
+      margin: 10px 0 !important;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 4px 0;
+    }
+    .katex {
+      font-size: 1.1em;
+      font-weight: 500;
     }
     .badge-option-letter {
       width: 34px;
