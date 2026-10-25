@@ -2578,28 +2578,35 @@
         doc.text("Il punteggio conseguito e inferiore alla soglia minima richiesta dal regolamento d'esame.", 105, 128, { align: 'center' });
       }
 
-      // Quadro Sinottico Completo delle Risposte a Matrice (Y: 135-183)
+      // Quadro Sinottico Completo delle Risposte a Matrice (Y: 135-184)
       doc.setFillColor(248, 250, 252);
       doc.setDrawColor(226, 232, 240);
       doc.setLineWidth(0.4);
-      doc.roundedRect(20, 135, 170, 48, 2, 2, 'FD');
+      doc.roundedRect(20, 135, 170, 49, 2, 2, 'FD');
 
+      // Intestazione del box su riga dedicata
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(8);
-      doc.setTextColor(51, 65, 85);
-      doc.text("QUADRO SINOTTICO DELLE RISPOSTE (SINTESI GENERALE)", 25, 141.5);
+      doc.setTextColor(30, 41, 59);
+      doc.text("QUADRO SINOTTICO DELLE RISPOSTE (SINTESI)", 25, 140.5);
 
+      // Legenda separata verticalmente per evitare qualsiasi sovrapposizione
       doc.setFont('Helvetica', 'normal');
-      doc.setFontSize(6.8);
+      doc.setFontSize(6.5);
       doc.setTextColor(100, 116, 139);
-      doc.text("Verde [OK] = Corretta   |   Rosso [ERR] = Errata   |   Grigio [-] = Non data", 105, 141.5, { align: 'center' });
+      doc.text("Legenda:  Verde [OK] = Corretta   -   Rosso [ERR] = Errata   -   Grigio [-] = Non data", 25, 145);
+
+      // Sottile linea di divisione prima della matrice quesiti
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.2);
+      doc.line(24, 147.5, 186, 147.5);
 
       var questions = (data.materia && data.materia.domande) ? data.materia.domande : (data.reconstructedQuestions || []);
       var totalQ = questions.length;
       var numCols = 4;
       var rowsPerCol = Math.ceil(totalQ / numCols);
       if (rowsPerCol < 1) rowsPerCol = 1;
-      var rowH = Math.min(4.3, 37 / rowsPerCol);
+      var rowH = Math.min(3.8, 32 / rowsPerCol);
 
       for (var qi = 0; qi < totalQ; qi++) {
         var quest = questions[qi];
@@ -2610,7 +2617,7 @@
         var cIdx = Math.floor(qi / rowsPerCol);
         var rIdx = qi % rowsPerCol;
         var itemX = 24 + (cIdx * 41);
-        var itemY = 146.5 + (rIdx * rowH);
+        var itemY = 152 + (rIdx * rowH);
 
         doc.setFont('Helvetica', 'bold');
         doc.setFontSize(6.8);
