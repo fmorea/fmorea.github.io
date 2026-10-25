@@ -291,7 +291,7 @@ E
 
 ---
 
-[DOMANDA] L assorbimento atmosferico delle onde radio a frequenze superiori a 10 GHz e causato principalmente dalle molecole di ossigeno e dal vapore acqueo.
+[DOMANDA] L' assorbimento atmosferico delle onde radio a frequenze superiori a 10 GHz e causato principalmente dalle molecole di ossigeno e dal vapore acqueo.
 [RISPOSTA] VERO
 [ARGOMENTO] Propagazione radio
 [SPIEGAZIONE] Vero: a frequenze molto elevate (sopra i 10 GHz) i gas atmosferici, le gocce di pioggia e il vapore acqueo interagiscono con l onda provocando un assorbimento molecolare ed un attenuazione supplementare.
