@@ -708,7 +708,7 @@
       <div class="flex flex-wrap" style="gap: 12px;">
         <button id="btn-download-pdf" onclick="scaricaAttestatoPDF()" class="btn-action btn-success flex-1" style="padding: 16px; font-size: 15px; display: flex; align-items: center; justify-content: center;">
           <svg class="w-5" width="20" height="20" style="width: 20px; height: 20px; margin-right: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-          <span>Scarica Scheda Risultati (PDF)</span>
+          <span>Scarica Certificato Ufficiale (PDF)</span>
         </button>
         <button onclick="window.print()" class="btn-secondary" style="padding: 16px 20px; border-radius: 12px; font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;" title="Stampa o Salva in PDF nativamente (ottimale per vecchi browser come Internet Explorer)">
           <svg class="w-5" width="20" height="20" style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
@@ -956,39 +956,46 @@
         };
         var isTagFormat = false;
         var rawRisposta = '';
+        var currentTag = null;
 
         for (var l = 0; l < lines.length; l++) {
           var line = lines[l].trim();
           if (!line || line.charAt(0) === '#') continue;
 
-          var mDom = line.match(/^(?:\[(?:DOMANDA|D)\]|(?:DOMANDA|D):)\s*(.+)$/i);
-          var mRis = line.match(/^(?:\[(?:RISPOSTA|R)\]|(?:RISPOSTA|R):)\s*(.+)$/i);
-          var mArg = line.match(/^(?:\[(?:ARGOMENTO|A)\]|(?:ARGOMENTO|A):)\s*(.+)$/i);
-          var mSpieg = line.match(/^(?:\[(?:SPIEGAZIONE|S)\]|(?:SPIEGAZIONE|S):)\s*(.+)$/i);
-          var mImg = line.match(/^(?:\[(?:IMMAGINE|IMG)\]|(?:IMMAGINE|IMG):)\s*(.+)$/i);
-          var mAudio = line.match(/^(?:\[(?:AUDIO|VOCE)\]|(?:AUDIO|VOCE):)\s*(.+)$/i);
-          var mTipo = line.match(/^(?:\[(?:TIPO|TYPE)\]|(?:TIPO|TYPE):)\s*(.+)$/i);
-          var mOpt = line.match(/^\[([A-Ea-e])\]\s*(.+)$/);
+          var mDom = line.match(/^(?:\[(?:DOMANDA|D)\]|(?:DOMANDA|D):)\s*(.*)$/i);
+          var mRis = line.match(/^(?:\[(?:RISPOSTA|R)\]|(?:RISPOSTA|R):)\s*(.*)$/i);
+          var mArg = line.match(/^(?:\[(?:ARGOMENTO|A)\]|(?:ARGOMENTO|A):)\s*(.*)$/i);
+          var mSpieg = line.match(/^(?:\[(?:SPIEGAZIONE|S)\]|(?:SPIEGAZIONE|S):)\s*(.*)$/i);
+          var mImg = line.match(/^(?:\[(?:IMMAGINE|IMG)\]|(?:IMMAGINE|IMG):)\s*(.*)$/i);
+          var mAudio = line.match(/^(?:\[(?:AUDIO|VOCE)\]|(?:AUDIO|VOCE):)\s*(.*)$/i);
+          var mTipo = line.match(/^(?:\[(?:TIPO|TYPE)\]|(?:TIPO|TYPE):)\s*(.*)$/i);
+          var mOpt = line.match(/^\[([A-Ea-e])\]\s*(.*)$/);
 
           if (mDom) {
+            currentTag = 'DOMANDA';
             isTagFormat = true;
             qObj.testo = mDom[1].trim();
           } else if (mTipo) {
+            currentTag = 'TIPO';
             isTagFormat = true;
             var tVal = mTipo[1].toUpperCase().trim();
             if (tVal.indexOf('MULT') !== -1 || tVal.indexOf('SCELTA') !== -1) {
               qObj.tipo = 'SCELTA_MULTIPLA';
             }
           } else if (mRis) {
+            currentTag = 'RISPOSTA';
             isTagFormat = true;
             rawRisposta = mRis[1].trim();
           } else if (mArg) {
+            currentTag = 'ARGOMENTO';
             isTagFormat = true;
             qObj.argomento = mArg[1].trim();
           } else if (mSpieg) {
+            currentTag = 'SPIEGAZIONE';
             isTagFormat = true;
             qObj.spiegazione = mSpieg[1].trim();
           } else if (mImg) {
+            currentTag = 'IMMAGINE';
             isTagFormat = true;
             var imgPath = mImg[1].trim();
             if (imgPath.indexOf('://') === -1 && imgPath.indexOf('data:') !== 0 && imgPath.charAt(0) !== '/' && (!baseFolder || imgPath.indexOf(baseFolder) !== 0)) {
@@ -997,6 +1004,7 @@
               qObj.immagine = imgPath;
             }
           } else if (mAudio) {
+            currentTag = 'AUDIO';
             isTagFormat = true;
             var aPath = mAudio[1].trim();
             if (aPath.indexOf('://') === -1 && aPath.indexOf('data:') !== 0 && aPath.charAt(0) !== '/' && (!baseFolder || aPath.indexOf(baseFolder) !== 0)) {
@@ -1005,6 +1013,7 @@
               qObj.audio = aPath;
             }
           } else if (mOpt) {
+            currentTag = 'OPZIONE';
             isTagFormat = true;
             var optLetter = mOpt[1].toUpperCase();
             var optRawText = mOpt[2].trim();
@@ -1029,6 +1038,15 @@
               testo: optText,
               immagine: optImg
             });
+          } else if (isTagFormat && currentTag) {
+            // Supporto righe di continuazione per testo domanda, spiegazione didattica o argomento
+            if (currentTag === 'DOMANDA') {
+              qObj.testo = (qObj.testo ? qObj.testo + ' ' : '') + line;
+            } else if (currentTag === 'SPIEGAZIONE') {
+              qObj.spiegazione = (qObj.spiegazione ? qObj.spiegazione + ' ' : '') + line;
+            } else if (currentTag === 'ARGOMENTO') {
+              qObj.argomento = (qObj.argomento ? qObj.argomento + ' ' : '') + line;
+            }
           } else if (!isTagFormat && line.indexOf(',') !== -1) {
             var cols = parseCsvLine(line);
             if (cols.length >= 2 && cols[0].toLowerCase() !== 'argomento') {
@@ -1769,12 +1787,44 @@
       return getBaseAppUrl() + '?review=' + encoded;
     }
 
+    function formatShortAnswer(ans) {
+      if (ans === undefined || ans === null || ans === '') return '-';
+      if (typeof ans === 'boolean') return ans ? 'V' : 'F';
+      return String(ans).trim().toUpperCase();
+    }
+
+    function formatAnswerLabel(ans) {
+      if (ans === undefined || ans === null || ans === '') return 'Non data';
+      if (typeof ans === 'boolean') return ans ? 'VERO' : 'FALSO';
+      return 'Opzione ' + String(ans).trim().toUpperCase();
+    }
+
+    function isAnswerCorrect(userAns, correctAns) {
+      if (userAns === undefined || userAns === null || userAns === '') return false;
+      if (typeof correctAns === 'boolean') return userAns === correctAns;
+      return String(userAns).trim().toUpperCase() === String(correctAns).trim().toUpperCase();
+    }
+
+    function sanitizePdfText(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/[•]/g, '-')
+        .replace(/[τ]/g, 'tau')
+        .replace(/[ξ]/g, 'xi')
+        .replace(/[✓]/g, 'OK')
+        .replace(/[✗]/g, 'ERR')
+        .replace(/[“‘’”]/g, '"')
+        .replace(/[—–]/g, '-')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
     function finishQuiz() {
       var correct = 0;
       var errors = 0;
       for (var i = 0; i < selectedMateria.domande.length; i++) {
         var q = selectedMateria.domande[i];
-        if (userAnswers[q.id] === q.rispostaCorretta) {
+        if (isAnswerCorrect(userAnswers[q.id], q.rispostaCorretta)) {
           correct++;
         } else {
           errors++;
@@ -1788,20 +1838,16 @@
       var now = new Date();
       var dateFormatted = pad2(now.getDate()) + '/' + pad2(now.getMonth() + 1) + '/' + now.getFullYear() + ' ' + pad2(now.getHours()) + ':' + pad2(now.getMinutes());
 
-      var isBuiltin = false;
-      for (var b = 0; b < BANCA_DATI_MATERIE.length; b++) {
-        if (BANCA_DATI_MATERIE[b].id === selectedMateria.id && BANCA_DATI_MATERIE[b].id.indexOf('custom_') === -1 && BANCA_DATI_MATERIE[b].id.indexOf('github_') === -1) {
-          isBuiltin = true;
-          break;
-        }
-      }
-      
       var payload = {
-        v: 1,
+        v: 2,
         id: idScheda,
-        cand: candidate,
+        cand: {
+          nome: candidate.nome,
+          cognome: candidate.cognome
+        },
         matId: selectedMateria.id,
         matNome: selectedMateria.nome,
+        matFile: selectedMateria.filename || '',
         date: dateFormatted,
         score: scorePct,
         correct: correct,
@@ -1811,18 +1857,20 @@
         ans: userAnswers
       };
 
-      // Salva l'array didattico compresso per rendere il QR code 100% indipendente
-      payload.q = [];
-      for (var qi = 0; qi < selectedMateria.domande.length; qi++) {
-        var quest = selectedMateria.domande[qi];
-        payload.q.push([
-          quest.id,
-          quest.argomento || '',
-          quest.testo,
-          quest.rispostaCorretta ? 1 : 0,
-          quest.spiegazione || '',
-          quest.immagine || ''
-        ]);
+      // Se custom e ha <= 8 domande, possiamo includere i quesiti compatti
+      if (selectedMateria.id && selectedMateria.id.indexOf('custom_') === 0 && selectedMateria.domande.length <= 8) {
+        payload.q = [];
+        for (var qi = 0; qi < selectedMateria.domande.length; qi++) {
+          var quest = selectedMateria.domande[qi];
+          payload.q.push([
+            quest.id,
+            quest.argomento || '',
+            quest.testo,
+            quest.rispostaCorretta ? 1 : 0,
+            quest.spiegazione || '',
+            quest.immagine || ''
+          ]);
+        }
       }
 
       var reviewUrl = buildReviewUrl(payload);
@@ -1870,12 +1918,26 @@
 
       var qrEl = document.getElementById('result-qrcode');
       qrEl.innerHTML = '';
-      new QRCode(qrEl, {
-        text: reviewUrl,
-        width: 140,
-        height: 140,
-        correctLevel: QRCode.CorrectLevel.M
-      });
+      try {
+        new QRCode(qrEl, {
+          text: reviewUrl,
+          width: 140,
+          height: 140,
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      } catch (qrErr) {
+        console.warn("Generazione QRCode Level M non riuscita, tentativo a Level L:", qrErr);
+        try {
+          new QRCode(qrEl, {
+            text: reviewUrl,
+            width: 140,
+            height: 140,
+            correctLevel: QRCode.CorrectLevel.L
+          });
+        } catch (qrErr2) {
+          qrEl.innerHTML = '<div style="font-size:11px;color:#dc2626;padding:12px;text-align:center;">QRCode non disponibile a video</div>';
+        }
+      }
     }
 
     function openReviewScreen() {
@@ -1883,51 +1945,17 @@
       showReviewView(examResultData);
     }
 
-    function showReviewView(data) {
-      currentReviewData = data;
-      document.getElementById('step-registration').classList.add('hidden');
-      document.getElementById('step-quiz').classList.add('hidden');
-      document.getElementById('step-result').classList.add('hidden');
-      document.getElementById('step-review').classList.remove('hidden');
-
-      var questionsList = [];
-      if (data.q && Array.isArray(data.q)) {
-        for (var i = 0; i < data.q.length; i++) {
-          var item = data.q[i];
-          questionsList.push({
-            id: item[0],
-            argomento: item[1] || 'Generale',
-            testo: item[2],
-            rispostaCorretta: Boolean(item[3]),
-            spiegazione: item[4] || (item[3] ? "L'affermazione e vera e corretta." : "L'affermazione e falsa ed errata."),
-            immagine: item[5] || ''
-          });
-        }
-      } else {
-        var foundMat = null;
-        for (var m = 0; m < BANCA_DATI_MATERIE.length; m++) {
-          if (BANCA_DATI_MATERIE[m].id === data.matId) {
-            foundMat = BANCA_DATI_MATERIE[m];
-            break;
-          }
-        }
-        if (foundMat) {
-          questionsList = foundMat.domande;
-        } else {
-          questionsList = (data.materia && data.materia.domande) ? data.materia.domande : [];
-        }
-      }
-
-      data.reconstructedQuestions = questionsList;
-
+    function renderReviewSummaryCard(data) {
       var summaryCard = document.getElementById('review-summary-card');
       var isPassed = data.passed;
+      var cNome = (data.cand && data.cand.nome) ? data.cand.nome : '';
+      var cCognome = (data.cand && data.cand.cognome) ? data.cand.cognome : '';
       summaryCard.innerHTML = 
         '<div class="flex flex-wrap items-center justify-between" style="gap: 16px;">' +
           '<div>' +
             '<div class="text-xs uppercase font-bold text-slate-500">Candidato</div>' +
-            '<div class="text-base font-extrabold text-slate-900">' + data.cand.nome + ' ' + data.cand.cognome + '</div>' +
-            '<div class="text-xs text-slate-500 mt-1">Materia: <b class="text-slate-700">' + data.matNome + '</b> &bull; Data: ' + data.date + '</div>' +
+            '<div class="text-base font-extrabold text-slate-900">' + cNome + ' ' + cCognome + '</div>' +
+            '<div class="text-xs text-slate-500 mt-1">Materia: <b class="text-slate-700">' + (data.matNome || 'Scheda Esame') + '</b> &bull; Data: ' + (data.date || '--') + ' &bull; Scheda: <code class="font-mono text-slate-600">' + (data.id || '') + '</code></div>' +
           '</div>' +
           '<div class="flex items-center" style="gap: 16px;">' +
             '<div class="text-right">' +
@@ -1939,13 +1967,16 @@
             '</span>' +
           '</div>' +
         '</div>';
+    }
 
+    function finishRenderReview(data) {
+      var questionsList = data.reconstructedQuestions || [];
       var errCount = 0;
       var corrCount = 0;
       for (var qIdx = 0; qIdx < questionsList.length; qIdx++) {
         var ques = questionsList[qIdx];
         var uAns = data.ans ? data.ans[ques.id] : undefined;
-        if (uAns === ques.rispostaCorretta) {
+        if (isAnswerCorrect(uAns, ques.rispostaCorretta)) {
           corrCount++;
         } else {
           errCount++;
@@ -1957,6 +1988,125 @@
       document.getElementById('count-rev-correct').textContent = corrCount;
 
       filterReview('all');
+    }
+
+    function loadReviewQuestionsAsync(data) {
+      var container = document.getElementById('review-questions-list');
+      container.innerHTML = 
+        '<div style="text-align: center; padding: 48px 24px; color: #2563eb;">' +
+          '<div style="font-size: 16px; font-weight: 700; margin-bottom: 6px;">Caricamento quesiti e spiegazioni didattiche in corso...</div>' +
+          '<div style="font-size: 13px; color: #64748b;">Recupero banca dati da quiz/' + (data.matFile || data.matId) + '</div>' +
+        '</div>';
+
+      var filename = data.matFile || '';
+      if (!filename && data.matId) {
+        filename = data.matId + '.txt';
+      }
+
+      function onLoaded(questions) {
+        if (questions && questions.length > 0) {
+          data.reconstructedQuestions = questions;
+          finishRenderReview(data);
+        } else {
+          container.innerHTML = 
+            '<div class="p-6 text-center text-slate-700 bg-amber-50 border border-amber-200 rounded-2xl">' +
+              '<div class="font-bold text-amber-800 text-sm mb-1">Quesiti non reperibili sul server locale</div>' +
+              '<div class="text-xs text-slate-600">I dati identificativi della prova sono validati, ma il file quiz non e presente nella cartella quiz/ corrente.</div>' +
+            '</div>';
+        }
+      }
+
+      if (filename) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'quiz/' + filename, true);
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              try {
+                var qs = parseQuizTxt(xhr.responseText, 'quiz/');
+                if (qs.length > 0) {
+                  onLoaded(qs);
+                  return;
+                }
+              } catch(e) {}
+            }
+            pollForBancaDati(data, onLoaded);
+          }
+        };
+        xhr.onerror = function() {
+          pollForBancaDati(data, onLoaded);
+        };
+        xhr.send();
+      } else {
+        pollForBancaDati(data, onLoaded);
+      }
+    }
+
+    function pollForBancaDati(data, callback) {
+      var attempts = 0;
+      var interval = setInterval(function() {
+        attempts++;
+        for (var m = 0; m < BANCA_DATI_MATERIE.length; m++) {
+          if (BANCA_DATI_MATERIE[m].id === data.matId || (data.matFile && BANCA_DATI_MATERIE[m].filename === data.matFile)) {
+            clearInterval(interval);
+            callback(BANCA_DATI_MATERIE[m].domande);
+            return;
+          }
+        }
+        if (attempts >= 15) {
+          clearInterval(interval);
+          callback(null);
+        }
+      }, 200);
+    }
+
+    function showReviewView(data) {
+      currentReviewData = data;
+      document.getElementById('step-registration').classList.add('hidden');
+      document.getElementById('step-quiz').classList.add('hidden');
+      document.getElementById('step-result').classList.add('hidden');
+      document.getElementById('step-review').classList.remove('hidden');
+
+      renderReviewSummaryCard(data);
+
+      var questionsList = [];
+      if (data.reconstructedQuestions && data.reconstructedQuestions.length > 0) {
+        questionsList = data.reconstructedQuestions;
+      } else if (data.q && Array.isArray(data.q) && data.q.length > 0) {
+        for (var i = 0; i < data.q.length; i++) {
+          var item = data.q[i];
+          questionsList.push({
+            id: item[0],
+            argomento: item[1] || 'Generale',
+            testo: item[2],
+            rispostaCorretta: Boolean(item[3]),
+            spiegazione: item[4] || (item[3] ? "L'affermazione e vera e corretta." : "L'affermazione e falsa ed errata."),
+            immagine: item[5] || ''
+          });
+        }
+        data.reconstructedQuestions = questionsList;
+      } else {
+        var foundMat = null;
+        for (var m = 0; m < BANCA_DATI_MATERIE.length; m++) {
+          if (BANCA_DATI_MATERIE[m].id === data.matId || (data.matFile && BANCA_DATI_MATERIE[m].filename === data.matFile)) {
+            foundMat = BANCA_DATI_MATERIE[m];
+            break;
+          }
+        }
+        if (foundMat && foundMat.domande && foundMat.domande.length > 0) {
+          questionsList = foundMat.domande;
+          data.reconstructedQuestions = questionsList;
+        } else if (data.materia && data.materia.domande && data.materia.domande.length > 0) {
+          questionsList = data.materia.domande;
+          data.reconstructedQuestions = questionsList;
+        }
+      }
+
+      if (questionsList.length > 0) {
+        finishRenderReview(data);
+      } else {
+        loadReviewQuestionsAsync(data);
+      }
     }
 
     function filterReview(filterType) {
@@ -1998,8 +2148,8 @@
       for (var idx = 0; idx < questions.length; idx++) {
         var q = questions[idx];
         var userAns = ansMap[q.id];
-        var isAnswered = userAns !== undefined && userAns !== null;
-        var isCorrect = isAnswered && (userAns === q.rispostaCorretta);
+        var isAnswered = (userAns !== undefined && userAns !== null && userAns !== '');
+        var isCorrect = isAnswered && isAnswerCorrect(userAns, q.rispostaCorretta);
 
         if (currentReviewFilter === 'errors' && isCorrect) continue;
         if (currentReviewFilter === 'correct' && !isCorrect) continue;
@@ -2009,14 +2159,22 @@
         card.style.backgroundColor = isCorrect ? '#ffffff' : '#fff5f5';
         card.style.borderColor = isCorrect ? '#a7f3d0' : '#fecaca';
 
-        var userAnsText = !isAnswered ? 'Non risposta' : (userAns ? 'VERO' : 'FALSO');
-        var correctAnsText = q.rispostaCorretta ? 'VERO' : 'FALSO';
+        var userAnsText = !isAnswered ? 'Non risposta' : formatAnswerLabel(userAns);
+        var correctAnsText = formatAnswerLabel(q.rispostaCorretta);
 
         var imgHtml = '';
         if (q.immagine) {
           imgHtml = 
             '<div style="text-align: center; margin-bottom: 14px;">' +
               '<img src="' + q.immagine + '" alt="Figura quesito" style="max-height: 180px; max-width: 100%; border-radius: 8px; border: 1px solid #cbd5e1; background: #ffffff; padding: 4px;" onerror="this.parentElement.style.display=\'none\'">' +
+            '</div>';
+        }
+
+        var codeHtml = '';
+        if (q.codice) {
+          codeHtml = 
+            '<div class="mb-4 text-left" style="max-width: 680px; margin-left: auto; margin-right: auto;">' +
+              '<pre class="p-3 rounded-xl font-mono text-xs overflow-x-auto text-slate-100" style="background-color: #0f172a; border: 1px solid #334155; line-height: 1.4;"><code>' + q.codice + '</code></pre>' +
             '</div>';
         }
 
@@ -2035,6 +2193,7 @@
             '</span>' +
           '</div>' +
           imgHtml +
+          codeHtml +
           '<div class="text-base font-semibold text-slate-900 mb-4 leading-relaxed">' +
             q.testo +
           '</div>' +
@@ -2139,196 +2298,605 @@
       }
     }
 
-    /* GENERAZIONE PDF SCHEDA RISULTATI */
-    function scaricaAttestatoPDF() {
-      if (!examResultData) {
-        alert("Nessun dato d'esame disponibile per la generazione della scheda.");
-        return;
+    /* OTTENIMENTO SICURO E REATTIVO DELL'IMMAGINE DEL QR CODE */
+    function obtainQrCodeDataUrl(url, callback) {
+      // 1. Prova a estrarre direttamente dall'elemento a video #result-qrcode se già renderizzato
+      var qrContainer = document.getElementById('result-qrcode');
+      if (qrContainer) {
+        var canvas = qrContainer.querySelector('canvas');
+        if (canvas && canvas.width > 0) {
+          try {
+            var dUrl = canvas.toDataURL('image/png');
+            if (dUrl && dUrl.length > 50) {
+              callback(dUrl);
+              return;
+            }
+          } catch (e) {}
+        }
+        var img = qrContainer.querySelector('img');
+        if (img && img.src && img.src.indexOf('data:image') === 0) {
+          callback(img.src);
+          return;
+        }
       }
 
-      var jsPdfLib = window.jspdf ? window.jspdf.jsPDF : (window.jsPDF || null);
-      if (!jsPdfLib) {
-        // Fallback immediato a stampa nativa (compatibile al 100% con Internet Explorer 9/10/11)
-        alert("Libreria client jsPDF non supportata in questo browser. Apertura stampa nativa: seleziona 'Salva come PDF' o la stampante desiderata.");
-        window.print();
-        return;
-      }
+      // 2. Fallback: genera offscreen con dimensioni reali visibili al motore di rendering
+      var tempDiv = document.createElement('div');
+      tempDiv.style.position = 'absolute';
+      tempDiv.style.left = '-9999px';
+      tempDiv.style.top = '-9999px';
+      tempDiv.style.width = '160px';
+      tempDiv.style.height = '160px';
+      tempDiv.style.background = '#ffffff';
+      document.body.appendChild(tempDiv);
 
+      try {
+        new QRCode(tempDiv, {
+          text: url,
+          width: 140,
+          height: 140,
+          correctLevel: QRCode.CorrectLevel.M
+        });
+
+        setTimeout(function() {
+          var extracted = null;
+          var c = tempDiv.querySelector('canvas');
+          if (c && c.width > 0) {
+            try { extracted = c.toDataURL('image/png'); } catch (e) {}
+          }
+          if (!extracted) {
+            var im = tempDiv.querySelector('img');
+            if (im && im.src && im.src.indexOf('data:image') === 0) {
+              extracted = im.src;
+            }
+          }
+          if (tempDiv.parentNode) document.body.removeChild(tempDiv);
+          callback(extracted);
+        }, 80);
+      } catch (err) {
+        if (tempDiv.parentNode) document.body.removeChild(tempDiv);
+        callback(null);
+      }
+    }
+
+    /* GENERAZIONE CERTIFICATO UFFICIALE PDF MULTI-PAGINA */
+    function buildAndDownloadPdfCertificate(jsPdfLib, data, qrImgData) {
       var doc = new jsPdfLib({
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4'
       });
 
-      doc.setDrawColor(51, 65, 85);
-      doc.setLineWidth(1.2);
-      doc.rect(10, 10, 190, 277);
+      function drawPageFrames(d) {
+        // Cornice esterna istituzionale blu/ardesia scuro
+        d.setDrawColor(30, 41, 59);
+        d.setLineWidth(1.2);
+        d.rect(10, 10, 190, 277);
 
-      doc.setLineWidth(0.3);
-      doc.rect(13, 13, 184, 271);
+        // Cornice interna sottile d'accento
+        d.setDrawColor(203, 213, 225);
+        d.setLineWidth(0.35);
+        d.rect(13, 13, 184, 271);
 
-      // Intestazione
+        // Marcatori ornamentali agli angoli
+        d.setDrawColor(37, 99, 235);
+        d.setLineWidth(0.8);
+        d.line(14, 17, 19, 17);
+        d.line(17, 14, 17, 19);
+        d.line(191, 17, 196, 17);
+        d.line(193, 14, 193, 19);
+        d.line(14, 280, 19, 280);
+        d.line(17, 277, 17, 282);
+        d.line(191, 280, 196, 280);
+        d.line(193, 277, 193, 282);
+      }
+
+      // -------------------------------------------------------------
+      // PAGINA 1: CERTIFICATO UFFICIALE DI VALUTAZIONE E IDONEITA
+      // -------------------------------------------------------------
+      drawPageFrames(doc);
+
+      // Intestazione Istituzionale
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(100, 116, 139);
+      doc.text("REPUBBLICA ITALIANA   -   PIATTAFORMA ESAMI TELEMATICI", 105, 23, { align: 'center' });
+
+      doc.setFontSize(18);
+      doc.setTextColor(15, 23, 42);
+      var titleText = data.passed ? "ATTESTATO DI CERTIFICAZIONE E IDONEITA" : "SCHEDA DI VALUTAZIONE PROVA D'ESAME";
+      doc.text(titleText, 105, 32, { align: 'center' });
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(71, 85, 105);
+      doc.text("Verbale telematico individuale di verifica delle competenze con tracciamento digitale", 105, 38, { align: 'center' });
+
+      // Nastro Identificativo Protocollo
+      doc.setFillColor(241, 245, 249);
+      doc.setDrawColor(203, 213, 225);
+      doc.roundedRect(25, 42, 160, 8, 1.5, 1.5, 'FD');
+      doc.setFont('Courier', 'bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(30, 41, 59);
+      doc.text("PROTOCOLLO UNIVOCITA: " + data.id + "   -   SESSIONE DEL: " + data.date, 105, 47.5, { align: 'center' });
+
+      // Box Dati Candidato e Sessione (Y: 53-97)
+      doc.setFillColor(255, 255, 255);
+      doc.setDrawColor(203, 213, 225);
+      doc.setLineWidth(0.4);
+      doc.roundedRect(20, 53, 170, 44, 2, 2, 'FD');
+
+      doc.setFillColor(30, 41, 59);
+      doc.roundedRect(20, 53, 170, 3, 1.5, 1.5, 'F');
+      doc.rect(20, 54.5, 170, 1.5, 'F');
+
+      // Colonna sinistra: Candidato e Materia
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(100, 116, 139);
+      doc.text("CANDIDATO ESAMINANDO:", 25, 63);
+
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.setTextColor(15, 23, 42);
+      var fullName = (data.cand.cognome + ' ' + data.cand.nome).toUpperCase();
+      doc.text(fullName, 25, 69);
+
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(100, 116, 139);
+      doc.text("MATERIA / DISCIPLINA D'ESAME:", 25, 77);
+
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(9.5);
-      doc.setTextColor(100, 116, 139);
-      doc.text("PIATTAFORMA ESAMI TELEMATICI - RIEPILOGO PROVA", 105, 24, { align: 'center' });
-
-      doc.setFontSize(20);
       doc.setTextColor(30, 41, 59);
-      doc.text("SCHEDA RISULTATI E VALUTAZIONE", 105, 34, { align: 'center' });
+      var matLines = doc.splitTextToSize(sanitizePdfText(data.matNome), 84);
+      doc.text(matLines, 25, 82.5);
 
-      doc.setFontSize(10);
-      doc.setTextColor(examResultData.passed ? 16 : 220, examResultData.passed ? 185 : 38, examResultData.passed ? 129 : 38);
-      doc.text(examResultData.passed ? "ESITO: IDONEO / SUPERATO" : "ESITO: NON SUPERATO", 105, 42, { align: 'center' });
-
+      // Separatore verticale interno
       doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.3);
+      doc.line(112, 59, 112, 93);
+
+      // Colonna destra: Dettagli Tecnici Prova
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(100, 116, 139);
+      doc.text("DATA E ORA DI SVOLGIMENTO:", 117, 63);
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(15, 23, 42);
+      doc.text(data.date, 117, 68);
+
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(100, 116, 139);
+      doc.text("TEMPO EFFETTIVO IMPIEGATO:", 117, 75);
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(15, 23, 42);
+      var mElapsed = Math.floor(data.totalSecondsElapsed / 60);
+      var sElapsed = data.totalSecondsElapsed % 60;
+      var maxMin = (data.materia && data.materia.tempoMinuti) ? data.materia.tempoMinuti : 15;
+      doc.text(pad2(mElapsed) + "m " + pad2(sElapsed) + "s (su " + maxMin + " min previsti)", 117, 80);
+
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(100, 116, 139);
+      doc.text("SOGLIA MINIMA RICHIESTA:", 117, 87);
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(15, 23, 42);
+      var sogliaPerc = (data.materia && data.materia.sogliaSuperamento) ? data.materia.sogliaSuperamento : 80;
+      doc.text(sogliaPerc + "% di risposte corrette", 117, 92);
+
+      // Box Esito e Valutazione Ufficiale (Y: 100-132)
+      if (data.passed) {
+        doc.setFillColor(236, 253, 245);
+        doc.setDrawColor(5, 150, 105);
+        doc.setLineWidth(0.8);
+        doc.roundedRect(20, 100, 170, 32, 2, 2, 'FD');
+
+        doc.setFont('Helvetica', 'bold');
+        doc.setFontSize(12);
+        doc.setTextColor(6, 78, 59);
+        doc.text("ESITO FINALE: PROVA SUPERATA - CANDIDATO IDONEO", 105, 107.5, { align: 'center' });
+
+        doc.setFont('Helvetica', 'bold');
+        doc.setFontSize(16);
+        doc.setTextColor(5, 150, 105);
+        doc.text(data.score + "%", 48, 117, { align: 'center' });
+        doc.setFont('Helvetica', 'normal');
+        doc.setFontSize(7.5);
+        doc.setTextColor(6, 95, 70);
+        doc.text("Punteggio Conseguito", 48, 121.5, { align: 'center' });
+
+        doc.setFont('Helvetica', 'bold');
+        doc.setFontSize(13);
+        doc.setTextColor(15, 23, 42);
+        doc.text(data.correct + " su " + data.total, 105, 116.5, { align: 'center' });
+        doc.setFont('Helvetica', 'normal');
+        doc.setFontSize(7.5);
+        doc.setTextColor(71, 85, 105);
+        doc.text("Risposte Esatte", 105, 121.5, { align: 'center' });
+
+        doc.setFont('Helvetica', 'bold');
+        doc.setFontSize(13);
+        doc.setTextColor(data.errors > 0 ? 220 : 5, data.errors > 0 ? 38 : 150, data.errors > 0 ? 38 : 105);
+        doc.text(String(data.errors), 162, 116.5, { align: 'center' });
+        doc.setFont('Helvetica', 'normal');
+        doc.setFontSize(7.5);
+        doc.setTextColor(71, 85, 105);
+        doc.text("Errori Commessi", 162, 121.5, { align: 'center' });
+
+        doc.setFont('Helvetica', 'italic');
+        doc.setFontSize(7.5);
+        doc.setTextColor(6, 95, 70);
+        doc.text("Si certifica il conseguimento degli standard di idoneita previsti per la sessione d'esame.", 105, 128, { align: 'center' });
+      } else {
+        doc.setFillColor(254, 242, 242);
+        doc.setDrawColor(220, 38, 38);
+        doc.setLineWidth(0.8);
+        doc.roundedRect(20, 100, 170, 32, 2, 2, 'FD');
+
+        doc.setFont('Helvetica', 'bold');
+        doc.setFontSize(12);
+        doc.setTextColor(153, 27, 27);
+        doc.text("ESITO FINALE: NON SUPERATO - SOGLIA NON RAGGIUNTA", 105, 107.5, { align: 'center' });
+
+        doc.setFont('Helvetica', 'bold');
+        doc.setFontSize(16);
+        doc.setTextColor(220, 38, 38);
+        doc.text(data.score + "%", 48, 117, { align: 'center' });
+        doc.setFont('Helvetica', 'normal');
+        doc.setFontSize(7.5);
+        doc.setTextColor(153, 27, 27);
+        doc.text("Punteggio (Min " + sogliaPerc + "%)", 48, 121.5, { align: 'center' });
+
+        doc.setFont('Helvetica', 'bold');
+        doc.setFontSize(13);
+        doc.setTextColor(15, 23, 42);
+        doc.text(data.correct + " su " + data.total, 105, 116.5, { align: 'center' });
+        doc.setFont('Helvetica', 'normal');
+        doc.setFontSize(7.5);
+        doc.setTextColor(71, 85, 105);
+        doc.text("Risposte Esatte", 105, 121.5, { align: 'center' });
+
+        doc.setFont('Helvetica', 'bold');
+        doc.setFontSize(13);
+        doc.setTextColor(220, 38, 38);
+        doc.text(String(data.errors), 162, 116.5, { align: 'center' });
+        doc.setFont('Helvetica', 'normal');
+        doc.setFontSize(7.5);
+        doc.setTextColor(71, 85, 105);
+        doc.text("Errori Commessi", 162, 121.5, { align: 'center' });
+
+        doc.setFont('Helvetica', 'italic');
+        doc.setFontSize(7.5);
+        doc.setTextColor(153, 27, 27);
+        doc.text("Il punteggio conseguito e inferiore alla soglia minima richiesta dal regolamento d'esame.", 105, 128, { align: 'center' });
+      }
+
+      // Quadro Sinottico Completo delle Risposte a Matrice (Y: 135-183)
       doc.setFillColor(248, 250, 252);
-      doc.roundedRect(25, 48, 160, 12, 2, 2, 'FD');
-      
-      doc.setFont('Courier', 'bold');
-      doc.setFontSize(11);
-      doc.setTextColor(15, 23, 42);
-      doc.text("IDENTIFICATIVO SCHEDA: " + examResultData.id, 105, 55.5, { align: 'center' });
-
-      // Tabella Dati Candidato
-      doc.setFillColor(248, 250, 252);
-      doc.rect(25, 66, 160, 58, 'F');
-      doc.setDrawColor(203, 213, 225);
-      doc.rect(25, 66, 160, 58, 'D');
+      doc.setDrawColor(226, 232, 240);
+      doc.setLineWidth(0.4);
+      doc.roundedRect(20, 135, 170, 48, 2, 2, 'FD');
 
       doc.setFont('Helvetica', 'bold');
-      doc.setFontSize(10.5);
-      doc.setTextColor(71, 85, 105);
-      doc.text("Candidato:", 30, 76);
-      doc.setFont('Helvetica', 'bold');
-      doc.setTextColor(15, 23, 42);
-      doc.text(examResultData.cand.cognome.toUpperCase() + ' ' + examResultData.cand.nome.toUpperCase(), 75, 76);
-
-      doc.setFont('Helvetica', 'bold');
-      doc.setTextColor(71, 85, 105);
-      doc.text("Materia:", 30, 86);
-      doc.setFont('Helvetica', 'normal');
-      doc.setTextColor(15, 23, 42);
-      doc.text(examResultData.matNome, 75, 86);
-
-      doc.setFont('Helvetica', 'bold');
-      doc.setTextColor(71, 85, 105);
-      doc.text("Data e Ora Prova:", 30, 96);
-      doc.setFont('Helvetica', 'normal');
-      doc.setTextColor(15, 23, 42);
-      doc.text(examResultData.date, 75, 96);
-
-      doc.setFont('Helvetica', 'bold');
-      doc.setTextColor(71, 85, 105);
-      doc.text("Punteggio Finale:", 30, 106);
-      doc.setFont('Helvetica', 'bold');
-      doc.setTextColor(examResultData.passed ? 5 : 220, examResultData.passed ? 150 : 38, examResultData.passed ? 105 : 38);
-      doc.text(examResultData.score + '% (' + (examResultData.passed ? 'SUPERATO' : 'NON SUPERATO') + ')', 75, 106);
-
-      doc.setFont('Helvetica', 'bold');
-      doc.setTextColor(71, 85, 105);
-      doc.text("Esatte / Errori:", 30, 116);
-      doc.setFont('Helvetica', 'normal');
-      doc.setTextColor(15, 23, 42);
-      doc.text(examResultData.correct + ' esatte su ' + examResultData.total + ' quesiti (' + examResultData.errors + ' errori)', 75, 116);
-
-      // Riepilogo schematico risposte
-      doc.setFont('Helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.setTextColor(30, 41, 59);
-      doc.text("Riepilogo Risposte Fornite:", 25, 138);
-
-      var questions = examResultData.materia.domande;
-      var startY = 145;
-      var lineHeight = 6.5;
       doc.setFontSize(8);
+      doc.setTextColor(51, 65, 85);
+      doc.text("QUADRO SINOTTICO DELLE RISPOSTE (SINTESI GENERALE)", 25, 141.5);
 
-      for (var qi = 0; qi < questions.length; qi++) {
-        if (qi < 15) {
-          var quest = questions[qi];
-          var userAns = examResultData.ans[quest.id];
-          var isAns = userAns !== undefined && userAns !== null;
-          var isCorr = isAns && (userAns === quest.rispostaCorretta);
-          var y = startY + (qi * lineHeight);
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(6.8);
+      doc.setTextColor(100, 116, 139);
+      doc.text("Verde [OK] = Corretta   |   Rosso [ERR] = Errata   |   Grigio [-] = Non data", 105, 141.5, { align: 'center' });
 
-          doc.setFont('Helvetica', 'bold');
-          doc.setTextColor(71, 85, 105);
-          doc.text("D" + (qi + 1) + ":", 25, y);
+      var questions = (data.materia && data.materia.domande) ? data.materia.domande : (data.reconstructedQuestions || []);
+      var totalQ = questions.length;
+      var numCols = 4;
+      var rowsPerCol = Math.ceil(totalQ / numCols);
+      if (rowsPerCol < 1) rowsPerCol = 1;
+      var rowH = Math.min(4.3, 37 / rowsPerCol);
 
-          doc.setFont('Helvetica', 'normal');
-          var shortText = quest.testo.length > 55 ? quest.testo.substring(0, 52) + '...' : quest.testo;
-          doc.text(shortText, 34, y);
+      for (var qi = 0; qi < totalQ; qi++) {
+        var quest = questions[qi];
+        var uAns = data.ans ? data.ans[quest.id] : undefined;
+        var isAns = (uAns !== undefined && uAns !== null && uAns !== '');
+        var isCorr = isAns && isAnswerCorrect(uAns, quest.rispostaCorretta);
 
-          doc.setFont('Helvetica', 'bold');
-          if (isCorr) {
-            doc.setTextColor(5, 150, 105);
-            doc.text("[" + (userAns ? 'V' : 'F') + "] OK", 140, y);
-          } else {
-            doc.setTextColor(220, 38, 38);
-            var ansLabel = !isAns ? 'NON DATA' : (userAns ? 'V' : 'F');
-            doc.text("[" + ansLabel + "] ERR (Corr: " + (quest.rispostaCorretta ? 'V' : 'F') + ")", 140, y);
-          }
+        var cIdx = Math.floor(qi / rowsPerCol);
+        var rIdx = qi % rowsPerCol;
+        var itemX = 24 + (cIdx * 41);
+        var itemY = 146.5 + (rIdx * rowH);
+
+        doc.setFont('Helvetica', 'bold');
+        doc.setFontSize(6.8);
+        doc.setTextColor(71, 85, 105);
+        doc.text("D" + (qi < 9 ? "0" : "") + (qi + 1) + ":", itemX, itemY);
+
+        var ansDisplay = formatShortAnswer(uAns);
+        if (isCorr) {
+          doc.setTextColor(5, 150, 105);
+          doc.text("[" + ansDisplay + "] OK", itemX + 12, itemY);
+        } else if (isAns) {
+          doc.setTextColor(220, 38, 38);
+          doc.text("[" + ansDisplay + "] ERR", itemX + 12, itemY);
+        } else {
+          doc.setTextColor(148, 163, 184);
+          doc.text("[-] NON DATA", itemX + 12, itemY);
         }
       }
 
-      // Box QR Code di Spiegazione
-      var qrBoxY = 212;
+      // Box Verifica Digitale & QR Code (Y: 186-234)
+      doc.setFillColor(255, 255, 255);
       doc.setDrawColor(203, 213, 225);
-      doc.setFillColor(248, 250, 252);
-      doc.roundedRect(25, qrBoxY, 160, 48, 3, 3, 'FD');
+      doc.setLineWidth(0.4);
+      doc.roundedRect(20, 186, 170, 48, 2, 2, 'FD');
 
-      var hiddenQrContainer = document.getElementById('hidden-pdf-qrcode');
-      hiddenQrContainer.innerHTML = '';
-      new QRCode(hiddenQrContainer, {
-        text: examResultData.reviewUrl,
-        width: 130,
-        height: 130,
-        correctLevel: QRCode.CorrectLevel.M
-      });
-
-      setTimeout(function() {
-        var qrCanvas = hiddenQrContainer.querySelector('canvas');
-        if (qrCanvas) {
-          var qrImgData = qrCanvas.toDataURL('image/png');
-          doc.addImage(qrImgData, 'PNG', 32, qrBoxY + 5, 36, 36);
+      if (qrImgData) {
+        try {
+          doc.addImage(qrImgData, 'PNG', 24, 190, 40, 40);
+        } catch (imgErr) {
+          console.warn("Impossibile incorporare immagine QR nel PDF:", imgErr);
         }
+      } else {
+        doc.setFillColor(241, 245, 249);
+        doc.rect(24, 190, 40, 40, 'F');
+        doc.setFont('Helvetica', 'bold');
+        doc.setFontSize(8);
+        doc.setTextColor(100, 116, 139);
+        doc.text("QR CODE", 44, 210, { align: 'center' });
+      }
+
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(15, 23, 42);
+      doc.text("VERIFICA DIGITALE & REVISIONE INTERATTIVA", 69, 196);
+
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(71, 85, 105);
+      var descText = "Inquadra questo codice QR con la fotocamera del tuo smartphone o tablet per validare l'autenticita della certificazione e consultare in tempo reale il fascicolo di revisione con le motivazioni didattiche di ciascun quesito.";
+      var descLines = doc.splitTextToSize(descText, 116);
+      doc.text(descLines, 69, 202);
+
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.setTextColor(37, 99, 235);
+      doc.text("Link di consultazione online: https://fmorea.github.io", 69, 221);
+
+      doc.setFont('Courier', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(100, 116, 139);
+      doc.text("Codice Univoco Scheda: " + data.id, 69, 227);
+
+      // Firme e Convalida del Sistema (Y: 238-266)
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(71, 85, 105);
+      doc.text("Firma del Candidato per presa visione", 25, 242);
+
+      doc.setDrawColor(148, 163, 184);
+      doc.setLineWidth(0.3);
+      doc.line(25, 256, 88, 256);
+
+      doc.setFont('Helvetica', 'italic');
+      doc.setFontSize(7);
+      doc.setTextColor(148, 163, 184);
+      doc.text("( " + fullName + " )", 25, 261);
+
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(71, 85, 105);
+      doc.text("Validazione Elettronica Automatizzata", 115, 242);
+
+      doc.setFillColor(248, 250, 252);
+      doc.setDrawColor(203, 213, 225);
+      doc.setLineWidth(0.4);
+      doc.roundedRect(115, 246, 75, 18, 1.5, 1.5, 'FD');
+
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(5, 150, 105);
+      doc.text("[OK] ATTESTATO REGISTRATO DIGITALMENTE", 119, 252);
+
+      doc.setFont('Courier', 'normal');
+      doc.setFontSize(6.5);
+      doc.setTextColor(100, 116, 139);
+      doc.text("PROTOCOLLO: " + data.id, 119, 256.5);
+      doc.text("EMISSIONE: " + data.date + " • CERTIFICATA", 119, 260.5);
+
+      // -------------------------------------------------------------
+      // PAGINA 2: ALLEGATO TECNICO - PROSPETTO ANALITICO DEI QUESITI
+      // -------------------------------------------------------------
+      if (questions.length > 0) {
+        doc.addPage();
+        drawPageFrames(doc);
 
         doc.setFont('Helvetica', 'bold');
-        doc.setFontSize(10.5);
-        doc.setTextColor(30, 41, 59);
-        doc.text("SCANSIONA PER LA SPIEGAZIONE DELLE RISPOSTE", 75, qrBoxY + 14);
-
-        doc.setFont('Helvetica', 'normal');
         doc.setFontSize(8.5);
-        doc.setTextColor(71, 85, 105);
-        doc.text(
-          "Inquadra questo codice QR con la fotocamera del tuo smartphone per aprire\nla schermata di revisione interattiva con il commento e la spiegazione\ndidattica dettagliata di ogni singolo quesito.",
-          75, qrBoxY + 22
-        );
+        doc.setTextColor(100, 116, 139);
+        doc.text("ALLEGATO TECNICO   -   PROSPETTO ANALITICO DEI QUESITI", 105, 23, { align: 'center' });
 
-        doc.setFont('Courier', 'bold');
-        doc.setFontSize(7.5);
-        doc.setTextColor(37, 99, 235);
-        doc.text("Link di consultazione: fmorea.github.io", 75, qrBoxY + 38);
+        doc.setFontSize(14);
+        doc.setTextColor(15, 23, 42);
+        doc.text("DETTAGLIO RISPOSTE E VALUTAZIONE SINGOLI QUESITI", 105, 31, { align: 'center' });
 
-        // Footer pulito
         doc.setFont('Helvetica', 'normal');
         doc.setFontSize(8);
-        doc.setTextColor(148, 163, 184);
-        doc.text("Scheda informativa generata da Piattaforma Esami Telematici (fmorea.github.io)", 105, 272, { align: 'center' });
+        doc.setTextColor(71, 85, 105);
+        doc.text("Candidato: " + fullName + "    Materia: " + sanitizePdfText(data.matNome) + "    Scheda: " + data.id, 105, 37, { align: 'center' });
 
-        var nomeFile = 'Scheda_' + examResultData.cand.cognome + '_' + examResultData.id + '.pdf';
-        try {
-          if (window.navigator && window.navigator.msSaveBlob) {
-            var blob = doc.output('blob');
-            window.navigator.msSaveBlob(blob, nomeFile);
-          } else {
-            doc.save(nomeFile);
-          }
-        } catch (saveErr) {
-          window.print();
+        function drawTableHeader(y) {
+          doc.setFillColor(30, 41, 59);
+          doc.rect(18, y, 174, 7, 'F');
+          doc.setFont('Helvetica', 'bold');
+          doc.setFontSize(7);
+          doc.setTextColor(255, 255, 255);
+          doc.text("N.", 20, y + 4.8);
+          doc.text("ARGOMENTO", 28, y + 4.8);
+          doc.text("TESTO DEL QUESITO", 68, y + 4.8);
+          doc.text("RISPOSTA", 143, y + 4.8);
+          doc.text("CORRETTA", 161, y + 4.8);
+          doc.text("ESITO", 178, y + 4.8);
         }
-      }, 200);
+
+        var tableStartY = 42;
+        drawTableHeader(tableStartY);
+
+        var curY = tableStartY + 7;
+
+        for (var qi = 0; qi < questions.length; qi++) {
+          var qItem = questions[qi];
+          var userAns = data.ans ? data.ans[qItem.id] : undefined;
+          var isAns = (userAns !== undefined && userAns !== null && userAns !== '');
+          var isCorr = isAns && isAnswerCorrect(userAns, qItem.rispostaCorretta);
+
+          var qText = sanitizePdfText(qItem.testo);
+          var qLines = doc.splitTextToSize(qText, 72);
+          var qArg = sanitizePdfText(qItem.argomento || 'Generale');
+          if (qArg.length > 20) qArg = qArg.substring(0, 18) + '...';
+
+          var lineCount = Math.max(1, qLines.length);
+          var rHeight = Math.max(6.2, 2.4 + (lineCount * 3.1));
+
+          if (curY + rHeight > 265) {
+            doc.addPage();
+            drawPageFrames(doc);
+            doc.setFont('Helvetica', 'bold');
+            doc.setFontSize(8);
+            doc.setTextColor(100, 116, 139);
+            doc.text("ALLEGATO TECNICO (CONTINUAZIONE)", 105, 23, { align: 'center' });
+            tableStartY = 28;
+            drawTableHeader(tableStartY);
+            curY = tableStartY + 7;
+          }
+
+          if (qi % 2 === 1) {
+            doc.setFillColor(248, 250, 252);
+            doc.rect(18, curY, 174, rHeight, 'F');
+          }
+
+          doc.setDrawColor(226, 232, 240);
+          doc.setLineWidth(0.2);
+          doc.line(18, curY + rHeight, 192, curY + rHeight);
+
+          doc.setFont('Helvetica', 'bold');
+          doc.setFontSize(7);
+          doc.setTextColor(71, 85, 105);
+          doc.text(String(qi + 1), 20, curY + 4.2);
+
+          doc.setFont('Helvetica', 'normal');
+          doc.setFontSize(6.5);
+          doc.setTextColor(100, 116, 139);
+          doc.text(qArg, 28, curY + 4.2);
+
+          doc.setFont('Helvetica', 'normal');
+          doc.setFontSize(6.8);
+          doc.setTextColor(15, 23, 42);
+          doc.text(qLines, 68, curY + 3.8);
+
+          doc.setFont('Helvetica', 'bold');
+          doc.setFontSize(7);
+          var uAnsStr = formatShortAnswer(userAns);
+          if (!isAns) {
+            doc.setTextColor(148, 163, 184);
+            doc.text("-", 146, curY + 4.2);
+          } else if (isCorr) {
+            doc.setTextColor(5, 150, 105);
+            doc.text(uAnsStr, 146, curY + 4.2);
+          } else {
+            doc.setTextColor(220, 38, 38);
+            doc.text(uAnsStr, 146, curY + 4.2);
+          }
+
+          doc.setFont('Helvetica', 'bold');
+          doc.setFontSize(7);
+          doc.setTextColor(37, 99, 235);
+          doc.text(formatShortAnswer(qItem.rispostaCorretta), 164, curY + 4.2);
+
+          doc.setFont('Helvetica', 'bold');
+          doc.setFontSize(6.5);
+          if (isCorr) {
+            doc.setTextColor(5, 150, 105);
+            doc.text("ESATTA", 178, curY + 4.2);
+          } else if (isAns) {
+            doc.setTextColor(220, 38, 38);
+            doc.text("ERRATA", 178, curY + 4.2);
+          } else {
+            doc.setTextColor(148, 163, 184);
+            doc.text("OMESSA", 178, curY + 4.2);
+          }
+
+          curY += rHeight;
+        }
+      }
+
+      // Numerazione coordinata su tutte le pagine
+      var totalPages = doc.getNumberOfPages();
+      for (var p = 1; p <= totalPages; p++) {
+        doc.setPage(p);
+        doc.setFont('Helvetica', 'normal');
+        doc.setFontSize(7.5);
+        doc.setTextColor(148, 163, 184);
+        doc.text("Documento rilasciato da Piattaforma Esami Telematici (fmorea.github.io)   -   Pagina " + p + " di " + totalPages, 105, 276, { align: 'center' });
+      }
+
+      // Download del file PDF
+      var cognomePulito = (data.cand && data.cand.cognome ? data.cand.cognome : 'Candidato').replace(/[^a-zA-Z0-9_-]/g, '_');
+      var nomeFile = 'Certificato_' + cognomePulito + '_' + data.id + '.pdf';
+      try {
+        if (window.navigator && window.navigator.msSaveBlob) {
+          var blob = doc.output('blob');
+          window.navigator.msSaveBlob(blob, nomeFile);
+        } else {
+          doc.save(nomeFile);
+        }
+      } catch (saveErr) {
+        console.warn("doc.save fallback su stampa nativa:", saveErr);
+        window.print();
+      }
+    }
+
+    /* GENERAZIONE PDF SCHEDA RISULTATI */
+    function scaricaAttestatoPDF() {
+      if (!examResultData) {
+        alert("Nessun dato d'esame disponibile per la generazione del certificato.");
+        return;
+      }
+
+      var jsPdfLib = window.jspdf ? window.jspdf.jsPDF : (window.jsPDF || null);
+      if (!jsPdfLib) {
+        alert("Libreria client jsPDF non supportata in questo browser. Apertura stampa nativa: seleziona 'Salva come PDF' o la stampante desiderata.");
+        window.print();
+        return;
+      }
+
+      var btn = document.getElementById('btn-download-pdf');
+      var oldContent = '';
+      if (btn) {
+        oldContent = btn.innerHTML;
+        btn.innerHTML = '<span style="font-weight:700;">Generazione Certificato PDF in corso...</span>';
+        btn.disabled = true;
+      }
+
+      obtainQrCodeDataUrl(examResultData.reviewUrl, function(qrImgData) {
+        try {
+          buildAndDownloadPdfCertificate(jsPdfLib, examResultData, qrImgData);
+        } catch (pdfErr) {
+          console.error("Errore durante la creazione del PDF:", pdfErr);
+          alert("Si e verificato un errore durante la generazione automatica del PDF. Apertura stampa nativa.");
+          window.print();
+        } finally {
+          if (btn) {
+            btn.innerHTML = oldContent;
+            btn.disabled = false;
+          }
+        }
+      });
     }
 
     function resetExam() {
