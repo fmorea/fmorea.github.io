@@ -206,14 +206,14 @@ G=A/(1+AB).
 
 ---
 
-[DOMANDA] Le variabili d ingresso in un sistema rappresentano le risposte che conseguono alle sollecitazioni.
+[DOMANDA] Le variabili d'ingresso in un sistema rappresentano le risposte che conseguono alle sollecitazioni.
 [RISPOSTA] FALSO
 [ARGOMENTO] Variabili di un sistema
-[SPIEGAZIONE] Falso: le variabili d ingresso (o cause/sollecitazioni) rappresentano le sollecitazioni applicate al sistema; le risposte conseguenti sono le variabili d uscita (effetti).
+[SPIEGAZIONE] Falso: le variabili d'ingresso (o cause/sollecitazioni) rappresentano le sollecitazioni applicate al sistema; le risposte conseguenti sono le variabili d uscita (effetti).
 
 ---
 
-[DOMANDA] Un sistema le cui variabili sono suddivise tra variabili d ingresso e variabili d uscita si definisce sistema orientato.
+[DOMANDA] Un sistema le cui variabili sono suddivise tra variabili d'ingresso e variabili d'uscita si definisce sistema orientato.
 [RISPOSTA] VERO
 [ARGOMENTO] Variabili di un sistema
 [SPIEGAZIONE] Vero: un sistema viene detto orientato quando e stata stabilita la suddivisione tra le sue variabili d ingresso e di uscita.
