@@ -192,7 +192,7 @@ G=A/(1+AB).
 
 ---
 
-[DOMANDA] Il sistema solare e un esempio di sistema artificiale creato dall uomo.
+[DOMANDA] Il sistema solare è un esempio di sistema artificiale creato dall'uomo.
 [RISPOSTA] FALSO
 [ARGOMENTO] Classificazione dei sistemi
 [SPIEGAZIONE] Falso: il sistema solare e classificato come un sistema naturale, in quanto esistente in natura e non creato dall uomo.
