@@ -199,7 +199,7 @@ G=A/(1+AB).
 
 ---
 
-[DOMANDA] Un sistema misto è un sistema naturale sul quale si e verificato un intervento da parte dell uomo.
+[DOMANDA] Un sistema misto è un sistema naturale sul quale si è verificato un intervento da parte dell'uomo.
 [RISPOSTA] VERO
 [ARGOMENTO] Classificazione dei sistemi
 [SPIEGAZIONE] Vero: i sistemi misti sono definiti come sistemi naturali modificati o deviati dall uomo, ad esempio una centrale idroelettrica realizzata deviando un corso d acqua.
