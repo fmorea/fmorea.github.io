@@ -227,7 +227,7 @@ G=A/(1+AB).
 
 ---
 
-[DOMANDA] Lo stato di un sistema rappresenta l insieme dei valori assunti dalle sue variabili di stato in un determinato istante.
+[DOMANDA] Lo stato di un sistema rappresenta l'insieme dei valori assunti dalle sue variabili di stato in un determinato istante.
 [RISPOSTA] VERO
 [ARGOMENTO] Stato del sistema
 [SPIEGAZIONE] Vero: per definizione, lo stato di un sistema in un dato istante e l insieme puntuale dei valori che assumono le variabili di stato in quell istante.
@@ -241,7 +241,7 @@ G=A/(1+AB).
 
 ---
 
-[DOMANDA] I sistemi tempo continui sono definiti tali se esistono intervalli temporali in cui non e possibile assegnare alcun valore alle variabili.
+[DOMANDA] I sistemi tempo continui sono definiti tali se esistono intervalli temporali in cui non è possibile assegnare alcun valore alle variabili.
 [RISPOSTA] FALSO
 [ARGOMENTO] Classificazione sistemica
 [SPIEGAZIONE] Falso: nei sistemi tempo continui non esistono istanti di tempo all interno dell intervallo considerato in cui le variabili non siano definite.
@@ -255,7 +255,7 @@ G=A/(1+AB).
 
 ---
 
-[DOMANDA] Nei sistemi sequenziali l uscita in un dato istante dipende sia dagli ingressi attuali sia dallo stato precedentemente assunto.
+[DOMANDA] Nei sistemi sequenziali l'uscita in un dato istante dipende sia dagli ingressi attuali sia dallo stato precedentemente assunto.
 [RISPOSTA] VERO
 [ARGOMENTO] Sistemi discreti
 [SPIEGAZIONE] Vero: i sistemi sequenziali sono dotati di memoria, quindi lo stato delle uscite dipende dagli ingressi del momento e dalla storia/stato precedente del sistema.
@@ -290,21 +290,21 @@ G=A/(1+AB).
 
 ---
 
-[DOMANDA] Nei sistemi deterministici il legame tra le variabili del sistema e l evoluzione degli stati sono noti a priori.
+[DOMANDA] Nei sistemi deterministici il legame tra le variabili del sistema e l'evoluzione degli stati sono noti a priori.
 [RISPOSTA] VERO
 [ARGOMENTO] Sistemi deterministici e probabilistici
 [SPIEGAZIONE] Vero: un sistema deterministico evolve secondo relazioni matematiche o logiche note a priori, rendendo la sua risposta perfettamente prevedibile.
 
 ---
 
-[DOMANDA] Un modello e una rappresentazione esatta ed esaustiva di tutti gli aspetti della realta di un sistema.
+[DOMANDA] Un modello è una rappresentazione esatta ed esaustiva di tutti gli aspetti della realta di un sistema.
 [RISPOSTA] FALSO
 [ARGOMENTO] Modelli di sistemi
 [SPIEGAZIONE] Falso: un modello e una rappresentazione approssimativa della realta che isola e considera solo gli aspetti di interesse, tralasciando gli altri.
 
 ---
 
-[DOMANDA] Un teorema di De Morgan dell algebra booleana afferma che l operazione di negazione della somma logica (NOT (x OR y)) equivale al prodotto delle singole negazioni ((NOT x) AND (NOT y)).
+[DOMANDA] Il teorema di De Morgan dell'algebra booleana afferma che l'operazione di negazione della somma logica (NOT (x OR y)) equivale al prodotto delle singole negazioni ((NOT x) AND (NOT y)).
 [RISPOSTA] VERO
 [ARGOMENTO] Algebra booleana
 [SPIEGAZIONE] Vero: secondo i teoremi di De Morgan, il complemento di una somma logica e pari al prodotto dei complementi dei singoli termini.
@@ -353,7 +353,7 @@ G=A/(1+AB).
 
 ---
 
-[DOMANDA] In un sistema di controllo ad anello aperto, la compensazione dei disturbi e possibile anche se essi non sono prevedibili ne misurabili.
+[DOMANDA] In un sistema di controllo ad anello aperto, la compensazione dei disturbi è possibile anche se essi non sono prevedibili ne misurabili.
 [RISPOSTA] FALSO
 [ARGOMENTO] Compensazione dei disturbi
 [SPIEGAZIONE] Falso: in una struttura ad anello aperto l effetto dei disturbi puo essere compensato soltanto se tali disturbi sono sia prevedibili che misurabili.
