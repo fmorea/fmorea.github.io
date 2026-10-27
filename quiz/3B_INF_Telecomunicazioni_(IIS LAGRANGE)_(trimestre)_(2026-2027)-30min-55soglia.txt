@@ -1,0 +1,384 @@
+# BANCA DATI: PATENTE B
+# Sintassi del file:
+# [D] o [DOMANDA]     : Testo del quesito
+# [R] o [RISPOSTA]    : VERO oppure FALSO
+# [A] o [ARGOMENTO]   : Categoria o argomento didattico
+# [S] o [SPIEGAZIONE] : Spiegazione didattica per la scheda di revisione
+# [IMG] o [IMMAGINE]  : Percorso o URL immagine collegata (opzionale)
+# Separatore tra quesiti: '---'
+
+[DOMANDA] L'atomo è la più piccola parte in cui si possa dividere un elemento mantenendone inalterate le caratteristiche fisiche e chimiche.
+[RISPOSTA] VERO
+[ARGOMENTO] Cenni di fisica atomica
+[SPIEGAZIONE] Vero: l'atomo è definito come la più piccola parte di un elemento che ne conserva inalterate le caratteristiche.
+
+---
+
+[DOMANDA] Il nucleo di un atomo è costituito esclusivamente da elettroni e neutroni.
+[RISPOSTA] FALSO
+[ARGOMENTO] Cenni di fisica atomica
+[SPIEGAZIONE] Falso: il nucleo è costituito da neutroni e protoni; gli elettroni ruotano attorno ad esso in orbite concentriche.
+
+---
+
+[DOMANDA] La forza elettrostatica tiene vincolato l'elettrone alla sua orbita bilanciando la sua energia di movimento.
+[RISPOSTA] VERO
+[ARGOMENTO] Cenni di fisica atomica
+[SPIEGAZIONE] Vero: l'attrazione elettrostatica tra nucleo ed elettrone impedisce a quest'ultimo di schizzare via per la tangente a causa dell'alta velocità.
+
+---
+
+[DOMANDA] Gli elettroni possiedono carica elettrica positiva, mentre i protoni hanno carica negativa.
+[RISPOSTA] FALSO
+[ARGOMENTO] Campi elettrici e cariche
+[SPIEGAZIONE] Falso: gli elettroni possiedono carica negativa e i protoni carica positiva.
+
+---
+
+[DOMANDA] Cariche elettriche del medesimo segno si attraggono reciprocamente.
+[RISPOSTA] FALSO
+[ARGOMENTO] Campi elettrici e cariche
+[SPIEGAZIONE] Falso: cariche dello stesso segno si respingono, mentre cariche di segno opposto si attraggono.
+
+---
+
+[DOMANDA] Per convenzione, le linee di forza del campo elettrostatico escono dai corpi carichi positivamente ed entrano in quelli carichi negativamente.
+[RISPOSTA] VERO
+[ARGOMENTO] Campi elettrici e cariche
+[SPIEGAZIONE] Vero: la convenzione stabilisce che le linee di forza partano dalle cariche positive e terminino su quelle negative.
+
+---
+
+[DOMANDA] L'unità di misura della carica elettrica Q è il Coulomb (C).
+[RISPOSTA] VERO
+[ARGOMENTO] Grandezze elettriche fondamentali
+[SPIEGAZIONE] Vero: la quantità di carica si misura in Coulomb, la cui abbreviazione è C.
+
+---
+
+[DOMANDA] I materiali isolanti sono caratterizzati da una grande quantità di elettroni liberi nelle loro orbite esterne.
+[RISPOSTA] FALSO
+[ARGOMENTO] Conduttori e isolanti
+[SPIEGAZIONE] Falso: gli isolanti hanno atomi molto stabili privi di elettroni liberi, mentre i conduttori ne possiedono in abbondanza.
+
+---
+
+[DOMANDA] L'argento, il rame e l'alluminio sono considerati dei buoni conduttori elettrici.
+[RISPOSTA] VERO
+[ARGOMENTO] Conduttori e isolanti
+[SPIEGAZIONE] Vero: rame, argento e alluminio appartengono alla categoria dei materiali conduttori.
+
+---
+
+[DOMANDA] Quando un atomo perde un elettrone libero, si trasforma in uno ione negativo.
+[RISPOSTA] FALSO
+[ARGOMENTO] Conduttori e isolanti
+[SPIEGAZIONE] Falso: la perdita di un elettrone spezza l'equilibrio a favore del protone, originando uno ione positivo.
+
+---
+
+[DOMANDA] L'intensità di corrente elettrica indica la quantità di carica che attraversa la sezione di un conduttore nell'unità di tempo.
+[RISPOSTA] VERO
+[ARGOMENTO] La corrente elettrica
+[SPIEGAZIONE] Vero: 1 Ampere corrisponde al passaggio di 1 Coulomb al secondo (1 A = 1 C / 1 s).
+
+---
+
+[DOMANDA] Le cause esterne in grado di spezzare i legami degli elettroni liberi in un conduttore sono il calore, la luce e il campo elettrico.
+[RISPOSTA] VERO
+[ARGOMENTO] La corrente elettrica
+[SPIEGAZIONE] Vero: calore, luce e campo elettrico possono cedere energia sufficiente da liberare gli elettroni dalle loro orbite precarie.
+
+---
+
+[DOMANDA] In un circuito elettrico, il flusso reale degli elettroni va dal polo positivo verso quello negativo.
+[RISPOSTA] FALSO
+[ARGOMENTO] La corrente elettrica
+[SPIEGAZIONE] Falso: essendo cariche negative, gli elettroni vengono respinti dal polo negativo e attratti da quello positivo.
+
+---
+
+[DOMANDA] L'effetto termico o Joule consiste nella trasformazione dell'energia elettrica in energia termica a causa degli urti degli elettroni.
+[RISPOSTA] VERO
+[ARGOMENTO] Effetti della corrente
+[SPIEGAZIONE] Vero: il passaggio di corrente in un materiale resistivo provoca una dissipazione di energia sotto forma di calore.
+
+---
+
+[DOMANDA] L'effetto chimico della corrente si manifesta con la deviazione dell'ago di una bussola posta in prossimità del conduttore.
+[RISPOSTA] FALSO
+[ARGOMENTO] Effetti della corrente
+[SPIEGAZIONE] Falso: la deviazione dell'ago magnetico è dovuta all'effetto magnetico; l'effetto chimico riguarda la decomposizione di soluzioni elettrolitiche.
+
+---
+
+[DOMANDA] Per avere un flusso di corrente elettrica tra due punti, è strettamente necessario che una carica sia positiva e l'altra sia negativa.
+[RISPOSTA] FALSO
+[ARGOMENTO] Tensione e differenza di potenziale
+[SPIEGAZIONE] Falso: è sufficiente che esista una differenza di potenziale (d.d.p.) tra i due punti, anche se sono entrambi positivi o entrambi negativi a livelli diversi.
+
+---
+
+[DOMANDA] L'intensità del campo elettrico viene misurata in Volt per metro (V/m).
+[RISPOSTA] VERO
+[ARGOMENTO] Tensione e differenza di potenziale
+[SPIEGAZIONE] Vero: la tensione divisa per la distanza esprime l'intensità del campo elettrico in V/m.
+
+---
+
+[DOMANDA] Una schermatura metallica viene impiegata per proteggere una porzione di spazio dalla presenza di un campo elettrico.
+[RISPOSTA] VERO
+[ARGOMENTO] Tensione e differenza di potenziale
+[SPIEGAZIONE] Vero: le strutture metalliche di schermatura servono a ridurre o eliminare il campo elettrico interno.
+
+---
+
+[DOMANDA] Nelle pile elettrochimiche, la corrente nel circuito esterno è data dal moto degli ioni, mentre all'interno si muovono gli elettroni.
+[RISPOSTA] FALSO
+[ARGOMENTO] Generatori elettrochimici
+[SPIEGAZIONE] Falso: nel circuito esterno scorrono elettroni liberi, mentre all'interno dell'elettrolito si ha il moto degli ioni.
+
+---
+
+[DOMANDA] La polarizzazione di una pila consiste in una progressiva diminuzione della sua forza elettromotrice a causa di reazioni chimiche interne.
+[RISPOSTA] VERO
+[ARGOMENTO] Generatori elettrochimici
+[SPIEGAZIONE] Vero: la modifica chimica delle superfici degli elettrodi altera il funzionamento della pila provocandone lo scaricamento.
+
+---
+
+[DOMANDA] Le pile a secco sono dispositivi ricaricabili e reversibili.
+[RISPOSTA] FALSO
+[ARGOMENTO] Tipologie di pile
+[SPIEGAZIONE] Falso: le tradizionali pile a secco sono irreversibili (usa e getta); gli accumulatori al piombo sono invece reversibili.
+
+---
+
+[DOMANDA] Una cella carica di un accumulatore al piombo presenta una tensione nominale di circa 2,1 V.
+[RISPOSTA] VERO
+[ARGOMENTO] Tipologie di pile
+[SPIEGAZIONE] Vero: la tensione nominale dell'elemento al piombo carico è 2,1 V, con limite minimo di scarica a circa 1,8 V.
+
+---
+
+[DOMANDA] La capacità di erogazione di un accumulatore si misura in Ampere/ora (Ah).
+[RISPOSTA] VERO
+[ARGOMENTO] Tipologie di pile
+[SPIEGAZIONE] Vero: il prodotto $A \times h$ indica la quantità indicativa di corrente che la batteria può erogare nel tempo.
+
+---
+
+[DOMANDA] Collegando più pile in serie, la tensione totale equivale alla somma delle singole tensioni dei vari elementi.
+[RISPOSTA] VERO
+[ARGOMENTO] Collegamento batterie
+[SPIEGAZIONE] Vero: nella connessione in serie le tensioni si sommano, mantenendo invariata la corrente che attraversa consecutivamente le celle.
+
+---
+
+[DOMANDA] Per collegare in parallelo più generatori di tensione, è fondamentale che essi abbiano tensioni rigorosamente uguali.
+[RISPOSTA] VERO
+[ARGOMENTO] Collegamento batterie
+[SPIEGAZIONE] Vero: se le tensioni fossero diverse, l'elemento a potenziale maggiore si scaricherebbe direttamente su quello a potenziale minore.
+
+---
+
+[DOMANDA] La resistenza elettrica rappresenta l'opposizione che il materiale offre al flusso continuo ed ordinato di elettroni.
+[RISPOSTA] VERO
+[ARGOMENTO] La Resistenza elettrica
+[SPIEGAZIONE] Vero: collisioni ed ostacoli atomici creano una resistenza (R) misurata in Ohm ($\Omega$).
+
+---
+
+[DOMANDA] Un Kiloohm ($k\Omega$) equivale a 1.000.000 di Ohm.
+[RISPOSTA] FALSO
+[ARGOMENTO] La Resistenza elettrica
+[SPIEGAZIONE] Falso: $1\text{ }k\Omega = 1.000\text{ }\Omega$; è il Megaohm ($M\Omega$) che corrisponde a $1.000.000\text{ }\Omega$.
+
+---
+
+[DOMANDA] La resistenza di un conduttore è direttamente proporzionale alla sua sezione trasversale.
+[RISPOSTA] FALSO
+[ARGOMENTO] Fattori della resistenza
+[SPIEGAZIONE] Falso: la resistenza è inversamente proporzionale alla sezione (superficie) e direttamente proporzionale alla lunghezza del conduttore ($R = \rho \cdot L / S$).
+
+---
+
+[DOMANDA] Per la maggior parte dei conduttori metallici, un aumento di temperatura comporta un aumento della resistenza elettrica.
+[RISPOSTA] VERO
+[ARGOMENTO] Effetto della temperatura
+[SPIEGAZIONE] Vero: l'aumento di temperatura incrementa l'agitazione termica e gli urti degli elettroni, alzando il valore resistivo (coefficiente di temperatura positivo).
+
+---
+
+[DOMANDA] Il carbone presenta un coefficiente di temperatura di resistenza positivo.
+[RISPOSTA] FALSO
+[ARGOMENTO] Effetto della temperatura
+[SPIEGAZIONE] Falso: il carbone e alcune leghe hanno un coefficiente negativo, vale a dire che la resistenza diminuisce all'aumentare della temperatura.
+
+---
+
+[DOMANDA] Secondo la prima forma della Legge di Ohm, la tensione V applicata ai capi di un carico è uguale al rapporto tra corrente e resistenza ($V = I / R$).
+[RISPOSTA] FALSO
+[ARGOMENTO] Legge di Ohm
+[SPIEGAZIONE] Falso: la relazione fondamentale della legge di Ohm esprime la tensione come prodotto tra corrente e resistenza ($V = I \cdot R$).
+
+---
+
+[DOMANDA] Se una tensione di 12 V è applicata a un resistore da 100 $\Omega$, la corrente circolante risulta pari a 0,12 A.
+[RISPOSTA] VERO
+[ARGOMENTO] Legge di Ohm
+[SPIEGAZIONE] Vero: applicando la formula $I = V / R$, si ottiene $12 / 100 = 0,12\text{ }A$.
+
+---
+
+[DOMANDA] La prima legge di Kirchhoff stabilisce che la somma algebrica delle correnti convergenti in un nodo è pari a zero.
+[RISPOSTA] VERO
+[ARGOMENTO] Leggi di Kirchhoff
+[SPIEGAZIONE] Vero: in ogni nodo la somma delle correnti entranti deve bilanciare esattamente la somma delle correnti uscenti.
+
+---
+
+[DOMANDA] La seconda legge di Kirchhoff stabilisce che la somma algebrica delle forze elettromotrici in una maglia è pari alla somma delle cadute di tensione nella stessa.
+[RISPOSTA] VERO
+[ARGOMENTO] Leggi di Kirchhoff
+[SPIEGAZIONE] Vero: la legge delle maglie conferma il principio di conservazione dell'energia lungo un percorso chiuso.
+
+---
+
+[DOMANDA] Tre resistori da $1\text{ }k\Omega$, $2\text{ }k\Omega$ e $3\text{ }k\Omega$ collegati in serie offrono una resistenza totale di $6\text{ }k\Omega$.
+[RISPOSTA] VERO
+[ARGOMENTO] Resistori in serie
+[SPIEGAZIONE] Vero: nei circuiti serie le resistenze si sommano direttamente ($R_T = R_1 + R_2 + R_3 = 1 + 2 + 3 = 6\text{ }k\Omega$).
+
+---
+
+[DOMANDA] Se due batterie uguali da 6 V ciascuna vengono collegate in serie con polarità opposte (discordanti), la tensione totale ai capi è di 12 V.
+[RISPOSTA] FALSO
+[ARGOMENTO] Generatori in serie
+[SPIEGAZIONE] Falso: quando i segni sono opposti o discordanti le tensioni si sottraggono ($6\text{ }V - 6\text{ }V = 0\text{ }V$).
+
+---
+
+[DOMANDA] In un circuito con rami resistivi in parallelo, la tensione ai capi di ciascun ramo è differente.
+[RISPOSTA] FALSO
+[ARGOMENTO] Resistori in parallelo
+[SPIEGAZIONE] Falso: il collegamento in parallelo garantisce che la tensione applicata a ciascun elemento sia identica.
+
+---
+
+[DOMANDA] La resistenza totale di più resistori in parallelo è sempre inferiore al valore del resistore più piccolo presente nel gruppo.
+[RISPOSTA] VERO
+[ARGOMENTO] Resistori in parallelo
+[SPIEGAZIONE] Vero: la formula degli inversi determina sempre un valore di resistenza equivalente inferiore a quello della minima resistenza del parallelo.
+
+---
+
+[DOMANDA] Per due resistenze $R_1$ ed $R_2$ connesse in parallelo, la resistenza equivalente si calcola come $R_T = (R_1 \cdot R_2) / (R_1 + R_2)$.
+[RISPOSTA] VERO
+[ARGOMENTO] Resistori in parallelo
+[SPIEGAZIONE] Vero: la formula semplificata per due soli rami in parallelo è data dal prodotto diviso per la somma delle resistenze.
+
+---
+
+[DOMANDA] L'unità di misura della potenza elettrica è il Watt (W).
+[RISPOSTA] VERO
+[ARGOMENTO] Energia e potenza
+[SPIEGAZIONE] Vero: la potenza esprime il lavoro compiuto nell'unità di tempo ed è misurata in Watt ($W$).
+
+---
+
+[DOMANDA] La potenza dissipata per effetto Joule su un resistore si determina esclusivamente mediante la formula $P = V / I$.
+[RISPOSTA] FALSO
+[ARGOMENTO] Energia e potenza
+[SPIEGAZIONE] Falso: le formule corrette per la potenza sono $P = V \cdot I$, $P = I^2 \cdot R$ oppure $P = V^2 / R$.
+
+---
+
+[DOMANDA] L'energia elettrica consumata si calcola moltiplicando la potenza per il tempo di utilizzo ($W = P \cdot t$).
+[RISPOSTA] VERO
+[ARGOMENTO] Energia e potenza
+[SPIEGAZIONE] Vero: l'energia esprime la quantità di potenza assorbita o erogata durante un periodo di tempo $t$.
+
+---
+
+[DOMANDA] Il rendimento $\eta$ di un sistema elettrico o di un dispositivo è espresso dal rapporto tra potenza assorbita e potenza utile.
+[RISPOSTA] FALSO
+[ARGOMENTO] Rendimento energetico
+[SPIEGAZIONE] Falso: il rendimento è il rapporto tra la potenza utile sfruttata ($P_U$) e la potenza totale fornita in ingresso ($P_I$).
+
+---
+
+[DOMANDA] Poiché non vi sono perdite, il rendimento $\eta$ delle lampade ad incandescenza è vicino al 100%.
+[RISPOSTA] FALSO
+[ARGOMENTO] Rendimento energetico
+[SPIEGAZIONE] Falso: il rendimento delle lampade è basso (attorno al 25% o meno) poiché una quota rilevante di potenza viene convertita in calore indesiderato.
+
+---
+
+[DOMANDA] La tensione ai capi di una pila a vuoto (senza carico collegato) coincide con la sua forza elettromotrice (f.e.m.).
+[RISPOSTA] VERO
+[ARGOMENTO] F.E.M. e tensione interna
+[SPIEGAZIONE] Vero: a circuito aperto la corrente I è nulla, annullando la caduta sulla resistenza interna r ($V_{AB} = E$).
+
+---
+
+[DOMANDA] La resistenza interna r di un generatore provoca una caduta di tensione che riduce la tensione disponibile ai morsetti quando eroga corrente.
+[RISPOSTA] VERO
+[ARGOMENTO] F.E.M. e tensione interna
+[SPIEGAZIONE] Vero: erogando corrente, si manifesta la caduta di tensione interna $r \cdot I$, rendendo $V_{AB} = E - r \cdot I$.
+
+---
+
+[DOMANDA] La conduttanza (G) è definita come il reciproco della resistenza ed è misurata in Siemens (S).
+[RISPOSTA] VERO
+[ARGOMENTO] Conduttanza elettrica
+[SPIEGAZIONE] Vero: $G = 1 / R$, e rappresenta la facilità con cui un componente si lascia attraversare dalla corrente elettrica.
+
+---
+
+[DOMANDA] Nel codice a colori dei resistori a 4 anelli, l'ultimo anello a destra indica la tolleranza del componente.
+[RISPOSTA] VERO
+[ARGOMENTO] Codice colori resistori
+[SPIEGAZIONE] Vero: la tacca staccata posizionata a destra rappresenta la percentuale di tolleranza sul valore nominale (es. Oro = 5%).
+
+---
+
+[DOMANDA] In un partitore di tensione a due resistenze in serie, la tensione parziale su $R_2$ è direttamente proporzionale alla somma $R_1 + R_2$.
+[RISPOSTA] FALSO
+[ARGOMENTO] Partitore di tensione
+[SPIEGAZIONE] Falso: la tensione su $R_2$ è data da $V = E \cdot R_2 / (R_1 + R_2)$, cioè direttamente proporzionale alla singola resistenza $R_2$.
+
+---
+
+[DOMANDA] In un partitore di corrente formato da due resistenze in parallelo, la corrente che fluisce in $R_2$ è proporzionale a $R_1$.
+[RISPOSTA] VERO
+[ARGOMENTO] Partitore di corrente
+[SPIEGAZIONE] Vero: la formula del partitore di corrente determina $I_2 = I \cdot R_1 / (R_1 + R_2)$.
+
+---
+
+[DOMANDA] Per spegnere un generatore di tensione ideale durante il calcolo della resistenza equivalente, occorre sostituirlo con un circuito aperto.
+[RISPOSTA] FALSO
+[ARGOMENTO] Teoremi e reti elettriche
+[SPIEGAZIONE] Falso: spegnere un generatore di tensione significa imporre $V = 0$, ovvero sostituirlo con un cortocircuito (un semplice filo).
+
+---
+
+[DOMANDA] Spegnere un generatore ideale di corrente corrisponde a sostituirlo con un circuito aperto (interruzione).
+[RISPOSTA] VERO
+[ARGOMENTO] Teoremi e reti elettriche
+[SPIEGAZIONE] Vero: imporre corrente nulla ($I = 0$) equivale a tagliare il ramo lasciandolo a circuito aperto.
+
+---
+
+[DOMANDA] Sulla piastra di montaggio sperimentale "breadboard", i fori disposti lungo la medesima colonna centrale sono collegati internamente tra loro.
+[RISPOSTA] VERO
+[ARGOMENTO] Strumentazione e Laboratorio
+[SPIEGAZIONE] Vero: ciascuna colonna di 5 fori presenta una barretta metallica sottostante che li collegano elettricamente.
+
+---
+
+[DOMANDA] La tensione a vuoto $V_0$ misurata ai morsetti equivale alla tensione del generatore equivalente di Thévenin.
+[RISPOSTA] VERO
+[ARGOMENTO] Teoremi e reti elettriche
+[SPIEGAZIONE] Vero: la tensione $V_0$ a morsetti aperti coincide precisamente con la tensione $V_{Th}$ della schematizzazione di Thévenin.
