@@ -5,6 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Piattaforma Didattica Morea</title>
+	<div class="container"><div class="row align-items-center"><div class="nav-logo"><a href="https://fmorea.github.io/" target="_blank"><span style="font-family: Averta, Inter, sans-serif; font-size: 16px; font-weight: 800; color: #fff; letter-spacing: -0.3px; white-space: nowrap;">Piattaforma Didattica Morea</span></a></div> <div class="nav-lingua dropdown"><button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Cambia lingua" class="dropdown-toggle">Italia - IT</button> <!----></div></div></div>
   
   <!-- jsPDF per generazione lato client della scheda riepilogativa PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -507,6 +508,90 @@
         margin: 10mm;
       }
     }
+/* ==================================================
+   TEMA SPAGGIARI — PIATTAFORMA DIDATTICA MOREA
+   ================================================== */
+
+/* Colori istituzionali */
+:root {
+    --cvv-accent: #b00000;
+    --sdg-accent: #0F8548;
+    --pvb-accent: #173040;
+    --oas-accent: #B6B6B6;
+    --sct-accent: #7d123d;
+    --acd-accent: #2E3771;
+    --sps-accent: #0069b4;
+    --ngs-accent: #537881;
+    --etb-accent: #303030;
+    --white-accent: #ffffff;
+}
+
+/* Font Averta */
+@font-face {
+    font-family: "Averta";
+    src: url("https://cdn-image.spaggiari.eu/fonts/averta/Averta-Regular.ttf")
+         format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* Tipografia generale */
+body {
+    font-family: "Averta", "Inter", -apple-system, BlinkMacSystemFont,
+                 "Segoe UI", Arial, sans-serif !important;
+    margin: 0;
+}
+
+/* Navigazione: contenitore */
+nav > .container {
+    width: 60%;
+    min-width: 1000px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+/* Navigazione: riga */
+nav .row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    position: relative;
+    align-items: center;
+    min-height: 50px;
+}
+
+/* Logo della navigazione */
+nav .nav-logo {
+    margin-right: auto;
+}
+
+/* Contenitori: tablet e schermi medi */
+@media screen and (max-width: 1024px) {
+    nav > .container,
+    .main-container,
+    .footer-container {
+        width: 90%;
+        min-width: inherit;
+    }
+}
+
+/* Contenitori e navigazione: smartphone */
+@media screen and (max-width: 768px) {
+    nav > .container,
+    .footer-container {
+        width: 95%;
+    }
+
+    nav .row {
+        justify-content: center;
+    }
+
+    nav .nav-logo {
+        height: 30px;
+        padding: 10px 0;
+    }
+}
   </style>
 </head>
 <body>
