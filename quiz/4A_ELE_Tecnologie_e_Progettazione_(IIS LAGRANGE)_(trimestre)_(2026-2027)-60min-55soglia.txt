@@ -1,0 +1,384 @@
+# BANCA DATI: PATENTE B
+# Sintassi del file:
+# [D] o [DOMANDA]     : Testo del quesito
+# [R] o [RISPOSTA]    : VERO oppure FALSO
+# [A] o [ARGOMENTO]   : Categoria o argomento didattico
+# [S] o [SPIEGAZIONE] : Spiegazione didattica per la scheda di revisione
+# [IMG] o [IMMAGINE]  : Percorso o URL immagine collegata (opzionale)
+# Separatore tra quesiti: '---'
+
+[DOMANDA] L'automazione industriale identifica le tecnologie che impiegano sistemi di controllo per gestire i processi produttivi di beni o servizi.
+[RISPOSTA] VERO
+[ARGOMENTO] Concetti introduttivi di automazione
+[SPIEGAZIONE] Vero: l'automazione industriale applica i sistemi di controllo alla gestione dei processi di produzione partendo dalla materia prima.
+
+---
+
+[DOMANDA] Prima dell'avvento dell'elettronica industriale, a chi progettava impianti di automazione era richiesta una cultura prevalentemente informatica.
+[RISPOSTA] FALSO
+[ARGOMENTO] Concetti introduttivi di automazione
+[SPIEGAZIONE] Falso: prima dell'avvento dell'elettronica industriale veniva richiesta una cultura essenzialmente meccanica.
+
+---
+
+[DOMANDA] Nel livello di comando del grado di automazione, l'uomo interviene continuamente per confermare le azioni di regolazione.
+[RISPOSTA] FALSO
+[ARGOMENTO] Grado e tipologie di automazione
+[SPIEGAZIONE] Falso: nel livello di comando l'automatizzazione è completa e l'uomo interviene manualmente solo a causa di anomalie o interruzioni.
+
+---
+
+[DOMANDA] L'automazione integrata riguarda un intero reparto o l'intera fabbrica e connette i comandi con i dati di lavorazione e gestionali.
+[RISPOSTA] VERO
+[ARGOMENTO] Grado e tipologie di automazione
+[SPIEGAZIONE] Vero: l'automazione integrata estende il controllo a livello di reparto o di intera fabbrica connettendo i vari flussi di dati.
+
+---
+
+[DOMANDA] Gli azionamenti industriali hanno il compito di eseguire azioni meccaniche come spostamenti, sollevamenti o rotazioni.
+[RISPOSTA] VERO
+[ARGOMENTO] Azionamenti industriali
+[SPIEGAZIONE] Vero: gli azionamenti costituiscono il complesso di organi dedicati ad attuare movimenti fisici come rotazioni e trazioni.
+
+---
+
+[DOMANDA] L'impianto di potenza in un sistema automatico ha il compito di produrre i segnali utili al funzionamento logico a bassissima tensione.
+[RISPOSTA] FALSO
+[ARGOMENTO] Impianti per l'automazione
+[SPIEGAZIONE] Falso: l'impianto di potenza costituisce la parte attuativa dedicata al lavoro meccanico vero e proprio; è l'impianto di comando che genera i segnali logici.
+
+---
+
+[DOMANDA] L'impianto di segnalazione rappresenta la situazione del sistema controllato tramite elementi visivi o acustici come lampade o LED.
+[RISPOSTA] VERO
+[ARGOMENTO] Impianti per l'automazione
+[SPIEGAZIONE] Vero: l'impianto di segnalazione utilizza avvisatori ottici o acustici per mostrare lo stato operativo dell'impianto.
+
+---
+
+[DOMANDA] La logica elettromeccanica viene denominata anche logica cablata perché i collegamenti tra gli elementi sono realizzati mediante fili conduttori.
+[RISPOSTA] VERO
+[ARGOMENTO] Logiche di comando
+[SPIEGAZIONE] Vero: la logica elettromeccanica prevede il collegamento materiale (cablaggio) dei vari componenti mediante fili.
+
+---
+
+[DOMANDA] La logica pneumatica è particolarmente svantaggiosa negli ambienti a rischio di esplosione a causa dell'uso di elevate tensioni elettriche.
+[RISPOSTA] FALSO
+[ARGOMENTO] Logiche di comando
+[SPIEGAZIONE] Falso: la logica pneumatica ad aria compressa è vantaggiosa proprio negli ambienti a rischio esplosione perché evita la formazione di scintille elettriche.
+
+---
+
+[DOMANDA] I motori elettrici passo-passo e brushless appartengono alla categoria dei motori a commutazione elettronica.
+[RISPOSTA] VERO
+[ARGOMENTO] Azionamenti elettromeccanici
+[SPIEGAZIONE] Vero: i motori brushless, passo-passo e a riluttanza variabile impiegano la commutazione elettronica per controlli di precisione.
+
+---
+
+[DOMANDA] L'impiego dei solenoidi per spostamenti lineari consente di gestire elevate potenze meccaniche con grande facilità di controllo.
+[RISPOSTA] FALSO
+[ARGOMENTO] Azionamenti elettromeccanici
+[SPIEGAZIONE] Falso: l'uso dei solenoidi è limitato dalla scarsa potenza in gioco e dalla difficoltà di controllarne precisamente lo spostamento.
+
+---
+
+[DOMANDA] In un attuatore elettromeccanico lineare, il gruppo vite-madrevite a ricircolazione di sfere è adatto per posizionamenti precisi ad alte velocità.
+[RISPOSTA] VERO
+[ARGOMENTO] Azionamenti elettromeccanici
+[SPIEGAZIONE] Vero: il sistema a ricircolazione di sfere si impiega per ottenere posizionamenti precisi, elevate velocità e bassi consumi.
+
+---
+
+[DOMANDA] Negli impianti pneumatici industriali, la centrale di compressione impiega un compressore azionato da un motore elettrico.
+[RISPOSTA] VERO
+[ARGOMENTO] Azionamenti pneumatici
+[SPIEGAZIONE] Vero: l'aria compressa viene prodotta mediante un compressore messo in rotazione da un motore elettrico.
+
+---
+
+[DOMANDA] L'essiccatore presente in una centrale di compressione serve a eliminare l'olio lubrificante presente nell'aria.
+[RISPOSTA] FALSO
+[ARGOMENTO] Azionamenti pneumatici
+[SPIEGAZIONE] Falso: l'essiccatore riduce l'umidità per evitare la condensa; è il filtro disoleatore che trattiene le tracce di olio.
+
+---
+
+[DOMANDA] Le valvole distributrici in un impianto pneumatico servono a regolare esclusivamente la pressione dell'aria inviata al serbatoio.
+[RISPOSTA] FALSO
+[ARGOMENTO] Azionamenti pneumatici
+[SPIEGAZIONE] Falso: le valvole distributrici servono ad aprire, chiudere o indirizzare il flusso d'aria verso le varie utenze.
+
+---
+
+[DOMANDA] I quadri elettrici di comando industriali sono solitamente realizzati in materiale metallico e ospitano profilati a barra DIN.
+[RISPOSTA] VERO
+[ARGOMENTO] Schemi e quadri elettrici
+[SPIEGAZIONE] Vero: i quadri industriali sono in metallo e contengono le barre DIN per l'aggancio a scatto dei componenti modulari.
+
+---
+
+[DOMANDA] Il blocco collegato all'asse di prolunga di un interruttore-sezionatore consente di aprire il portello del quadro anche con interruttore chiuso.
+[RISPOSTA] FALSO
+[ARGOMENTO] Schemi e quadri elettrici
+[SPIEGAZIONE] Falso: per ragioni di sicurezza, il meccansimo impedisce l'apertura della portella quando l'interruttore si trova in posizione di chiuso.
+
+---
+
+[DOMANDA] Per la norma CEI, nei circuiti di comando un morsetto del secondario del trasformatore deve essere connesso a terra.
+[RISPOSTA] VERO
+[ARGOMENTO] Normativa CEI e sicurezza
+[SPIEGAZIONE] Vero: la connessione a terra del comune del secondario impedisce avviamenti accidentali della macchina in caso di guasto a terra.
+
+---
+
+[DOMANDA] Secondo le sigle alfanumeriche CEI, la lettera K identifica i motori elettrici di potenza.
+[RISPOSTA] FALSO
+[ARGOMENTO] Normativa e codici
+[SPIEGAZIONE] Falso: la lettera M identifica i motori, mentre la lettera K identifica i contattori (KM) e relè ausiliari (KA).
+
+---
+
+[DOMANDA] La sigla FU negli schemi elettrici indica la presenza di un relè termico di protezione dal sovraccarico.
+[RISPOSTA] FALSO
+[ARGOMENTO] Normativa e codici
+[SPIEGAZIONE] Falso: la sigla FU indica un fusibile; il relè termico viene indicato con la sigla FR.
+
+---
+
+[DOMANDA] I comandi di avviamento dei motori devono essere realizzati mediante l'apertura di un contatto elettrico.
+[RISPOSTA] FALSO
+[ARGOMENTO] Comandi funzionali
+[SPIEGAZIONE] Falso: l'avviamento deve avvenire forzatamente tramite la chiusura di un contatto; è l'arresto che deve avvenire per apertura.
+
+---
+
+[DOMANDA] Un arresto di emergenza di categoria 0 comporta l'interruzione immediata dell'alimentazione di potenza degli attuatori.
+[RISPOSTA] VERO
+[ARGOMENTO] Comandi di arresto
+[SPIEGAZIONE] Vero: l'arresto di categoria 0 disalimenta immediatamente ed in modo sicuro la parte di potenza della macchina.
+
+---
+
+[DOMANDA] I dispositivi di arresto di emergenza devono disporre di un meccanismo di autoritenuta meccanica.
+[RISPOSTA] VERO
+[ARGOMENTO] Comandi di arresto
+[SPIEGAZIONE] Vero: una volta azionati, i pulsanti di emergenza devono restare bloccati fino al ripristino o sblocco manuale.
+
+---
+
+[DOMANDA] Lo sblocco manuale di un pulsante di emergenza a fungo deve provocare il riavvio automatico immediato del motore.
+[RISPOSTA] FALSO
+[ARGOMENTO] Comandi di arresto
+[SPIEGAZIONE] Falso: per sicurezza, l'operazione di sblocco dell'emergenza non deve mai causare il riavvio del motore.
+
+---
+
+[DOMANDA] Il colore verde è ammesso per la colorazione del pulsante con funzione di arresto generale.
+[RISPOSTA] FALSO
+[ARGOMENTO] Colori degli attuatori
+[SPIEGAZIONE] Falso: la normativa esclude categoricamente il colore verde per il pulsante di arresto (riservato solitamente all'avvio).
+
+---
+
+[DOMANDA] Nei relè ausiliari, il contatto di autoritenuta serve a mantenere la bobina eccitata anche dopo il rilascio del pulsante di avvio.
+[RISPOSTA] VERO
+[ARGOMENTO] Componenti elettromeccanici
+[SPIEGAZIONE] Vero: il contatto NO collegato in parallelo al pulsante di START (avvio) mantiene alimentata la bobina del relè.
+
+---
+
+[DOMANDA] I relè temporizzati ritardati all'eccitazione commutano i propri contatti immediatamente al momento dell'alimentazione della bobina.
+[RISPOSTA] FALSO
+[ARGOMENTO] Componenti elettromeccanici
+[SPIEGAZIONE] Falso: nei relè ritardati all'eccitazione, i contatti commutano solo dopo che è trascorso il tempo di taratura impostato.
+
+---
+
+[DOMANDA] Il motore asincrono trifase con rotore a gabbia viene impiegato principalmente per potenze molto elevate.
+[RISPOSTA] FALSO
+[ARGOMENTO] Motori asincroni trifase
+[SPIEGAZIONE] Falso: i motori a gabbia sono usati per basse potenze; per elevate potenze si usano i motori con rotore ad anelli.
+
+---
+
+[DOMANDA] Nei circuiti dei motori, il relè termico svolge la funzione di protezione contro i cortocircuiti.
+[RISPOSTA] FALSO
+[ARGOMENTO] Motori asincroni trifase
+[SPIEGAZIONE] Falso: il relè termico protegge il motore dal sovraccarico; la protezione da cortocircuito è affidata ai fusibili o agli interruttori magnetici.
+
+---
+
+[DOMANDA] Il PLC è un elaboratore industriale in grado di acquisire segnali da sensori e pilotare direttamente o indirettamente gli attuatori.
+[RISPOSTA] VERO
+[ARGOMENTO] Controllori logici programmabili (PLC)
+[SPIEGAZIONE] Vero: il PLC elabora segnali di ingresso per gestire attuatori in base ad un programma residente in memoria.
+
+---
+
+[DOMANDA] Una variazione della sequenza logica in un sistema gestito da PLC richiede la modifica fisica del cablaggio.
+[RISPOSTA] FALSO
+[ARGOMENTO] Controllori logici programmabili (PLC)
+[SPIEGAZIONE] Falso: la flessibilità del PLC permette di cambiare la sequenza logica modificando semplicemente il programma software.
+
+---
+
+[DOMANDA] I PLC compatti di tipo fisso non offrono alcuna possibilità di espansione dei moduli di ingresso e uscita.
+[RISPOSTA] VERO
+[ARGOMENTO] Classificazione PLC
+[SPIEGAZIONE] Vero: i PLC compatti fissi hanno una struttura chiusa priva di connettori per moduli aggiuntivi.
+
+---
+
+[DOMANDA] L'assemblaggio di un PLC modulare si effettua inserendo l'alimentatore, la CPU e le schede I/O in un telaio vuoto detto rack.
+[RISPOSTA] VERO
+[ARGOMENTO] Classificazione PLC
+[SPIEGAZIONE] Vero: i PLC modulari si configurano liberamente inserendo le varie schede negli slot di un telaio rack.
+
+---
+
+[DOMANDA] Il bus indirizzi all'interno del PLC trasporta le informazioni di comando e i segnali di clock per la sincronizzazione.
+[RISPOSTA] FALSO
+[ARGOMENTO] Struttura interna del PLC
+[SPIEGAZIONE] Falso: il bus indirizzi trasporta gli indirizzi delle memorie; i segnali di comando viaggiano sul bus controlli.
+
+---
+
+[DOMANDA] Durante la fase di avviamento, la CPU del PLC esegue un autotest di diagnosi del sistema.
+[RISPOSTA] VERO
+[ARGOMENTO] Funzionamento della CPU
+[SPIEGAZIONE] Vero: all'avvio la CPU esegue dei test per rilevare eventuali anomalie hardware o cadute di tensione.
+
+---
+
+[DOMANDA] Il tempo necessario alla CPU per eseguire un singolo ciclo completo di programma viene definito tempo di scansione.
+[RISPOSTA] VERO
+[ARGOMENTO] Funzionamento della CPU
+[SPIEGAZIONE] Vero: il tempo di scansione o di ciclo è la durata impiegata dalla CPU per svolgere le operazioni della logica utente.
+
+---
+
+[DOMANDA] La memoria RAM nel PLC viene impiegata come memoria di sistema inalterabile di sola lettura.
+[RISPOSTA] FALSO
+[ARGOMENTO] Memorie del PLC
+[SPIEGAZIONE] Falso: la RAM è una memoria di lettura/scrittura usata come memoria utente; le impostazioni di sistema risiedono in memorie ROM o EPROM.
+
+---
+
+[DOMANDA] I moduli di ingresso e uscita collegano direttamente e senza alcun isolamento la CPU con le periferiche esterne.
+[RISPOSTA] FALSO
+[ARGOMENTO] Moduli I/O
+[SPIEGAZIONE] Falso: le schede I/O impiegano optoisolatori per garantire la separazione galvanica a protezione dei circuiti interni del PLC.
+
+---
+
+[DOMANDA] I moduli d'ingresso analogici convertono un segnale elettrico continuo in valori digitali discreti tramite convertitore A/D.
+[RISPOSTA] VERO
+[ARGOMENTO] Moduli d'ingresso analogici
+[SPIEGAZIONE] Vero: le grandezze continue (es. 0-10 V) vengono campionate e convertite in dati numerici discreti tramite convertitori A/D.
+
+---
+
+[DOMANDA] Un convertitore A/D con risoluzione a 8 bit offre un totale di 1024 combinazioni digitali possibili.
+[RISPOSTA] FALSO
+[ARGOMENTO] Moduli d'ingresso analogici
+[SPIEGAZIONE] Falso: 8 bit generano 256 combinazioni possibili; sono i convertitori a 10 bit ad offrire 1024 combinazioni.
+
+---
+
+[DOMANDA] Il multiplexer in una scheda d'ingresso analogica consente di acquisire più segnali analogici condivisi su un unico convertitore A/D.
+[RISPOSTA] VERO
+[ARGOMENTO] Moduli d'ingresso analogici
+[SPIEGAZIONE] Vero: il multiplexer commuta sequenzialmente i diversi ingressi sull'unico convertitore A/D della scheda.
+
+---
+
+[DOMANDA] Il pilotaggio delle uscite in connessione Darlington prevede il collegamento in serie di due transistor per amplificare la corrente.
+[RISPOSTA] VERO
+[ARGOMENTO] Moduli d'uscita digitali
+[SPIEGAZIONE] Vero: accoppiando due transistor in configurazione Darlington si ottiene una corrente di pilotaggio nettamente maggiore.
+
+---
+
+[DOMANDA] Per proteggere un transistor che comanda un carico induttivo come una bobina di relè, si inserisce un diodo polarizzato direttamente.
+[RISPOSTA] FALSO
+[ARGOMENTO] Moduli d'uscita digitali
+[SPIEGAZIONE] Falso: il diodo di ricircolo deve essere polarizzato inversamente in parallelo alla bobina per assorbire le sovratensioni induttive.
+
+---
+
+[DOMANDA] I moduli funzionali o periferiche intelligenti sono provvisti di un proprio microprocessore che elabora dati in autonomia rispetto al PLC.
+[RISPOSTA] VERO
+[ARGOMENTO] Moduli funzionali
+[SPIEGAZIONE] Vero: le schede intelligenti (es. posizionamento assi o PID) svolgono compiti complessi sgravando il processore principale.
+
+---
+
+[DOMANDA] Secondo la norma EN 60204-1, la gestione delle funzioni di sicurezza di un impianto può essere interamente affidata al software del PLC.
+[RISPOSTA] FALSO
+[ARGOMENTO] Sicurezza e normative
+[SPIEGAZIONE] Falso: la norma richiede obbligatoriamente che la sicurezza fisica (es. arresto di cat. 0) sia gestita da componenti elettromeccanici in logica cablata.
+
+---
+
+[DOMANDA] Nella pratica di collegamento a un PLC, per i pulsanti fisici di arresto si utilizza normalmente un contatto elettrico normalmente chiuso (NC).
+[RISPOSTA] VERO
+[ARGOMENTO] Considerazioni pratiche di cablaggio
+[SPIEGAZIONE] Vero: si impiega un contatto NC affinché una rottura del cavo venga interpretata dal sistema come un comando di arresto immediato.
+
+---
+
+[DOMANDA] Quando un dispositivo di sicurezza (come un relè termico) invia un segnale informativo al PLC, si impiega il suo contatto normalmente aperto (NA).
+[RISPOSTA] VERO
+[ARGOMENTO] Considerazioni pratiche di cablaggio
+[SPIEGAZIONE] Vero: per portare al PLC la sola segnalazione di scatto del termico (mentre la sicurezza taglia l'hardware) si usa il contatto NA del dispositivo.
+
+---
+
+[DOMANDA] Nel modello di riferimento ISO-OSI per i sistemi di comunicazione, l'architettura è suddivisa in 5 livelli funzionali.
+[RISPOSTA] FALSO
+[ARGOMENTO] Sistemi di comunicazione
+[SPIEGAZIONE] Falso: il modello ISO-OSI è articolato su 7 livelli o strati funzionali.
+
+---
+
+[DOMANDA] La sigla CIM identifica l'architettura aziendale di produzione integrata assistita da computer (Computer Integrated Manufacturing).
+[RISPOSTA] VERO
+[ARGOMENTO] Sistemi di comunicazione
+[SPIEGAZIONE] Vero: CIM rappresenta la gestione automatizzata globale della fabbrica integrando progettazione, produzione e gestione.
+
+---
+
+[DOMANDA] All'inizio di ciascun ciclo di scansione sincrono, lo stato degli ingressi fisici viene salvato nel registro denominato IPI.
+[RISPOSTA] VERO
+[ARGOMENTO] Principio di funzionamento del PLC
+[SPIEGAZIONE] Vero: il PLC legge gli ingressi all'inizio del ciclo e ne memorizza lo stato nella memoria IPI (Immagine Processo Ingressi).
+
+---
+
+[DOMANDA] Nel ciclo del PLC, lo stato delle uscite fisiche viene aggiornato continuamente man mano che ogni singola riga di programma viene elaborata.
+[RISPOSTA] FALSO
+[ARGOMENTO] Principio di funzionamento del PLC
+[SPIEGAZIONE] Falso: i risultati delle uscite vengono prima scritti nel registro IPU e trasferiti ai morsetti fisici solo al termine del ciclo di elaborazione.
+
+---
+
+[DOMANDA] Il linguaggio di programmazione KOP (LADDER Diagram) è un linguaggio di tipo grafico a contatti.
+[RISPOSTA] VERO
+[ARGOMENTO] Linguaggi di programmazione PLC
+[SPIEGAZIONE] Vero: il KOP o Ladder è un linguaggio grafico basato sulla rappresentazione di contatti e bobine di stile elettrotecnico.
+
+---
+
+[DOMANDA] Nell'ambiente di programmazione LADDER, una bobina di tipo SET disattiva immediatamente l'uscita quando le condizioni d'ingresso cessano.
+[RISPOSTA] FALSO
+[ARGOMENTO] Programmazione in LADDER
+[SPIEGAZIONE] Falso: l'istruzione SET è una funzione di memoria che mantiene l'uscita allo stato 1 anche dopo che le condizioni di attivazione sono venute meno.
+
+---
+
+[DOMANDA] La combinazione logica di due contatti d'ingresso inseriti in parallelo nella stessa riga LADDER realizza l'operazione booleana AND.
+[RISPOSTA] FALSO
+[ARGOMENTO] Programmazione in LADDER
+[SPIEGAZIONE] Falso: due o più contatti collegati in parallelo realizzano la funzione logica OR; la funzione AND richiede il collegamento in serie.
