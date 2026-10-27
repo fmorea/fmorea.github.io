@@ -164,7 +164,7 @@
 [DOMANDA] La capacità di erogazione di un accumulatore si misura in Ampere/ora (Ah).
 [RISPOSTA] VERO
 [ARGOMENTO] Tipologie di pile
-[SPIEGAZIONE] Vero: il prodotto $A \times h$ indica la quantità indicativa di corrente che la batteria può erogare nel tempo.
+[SPIEGAZIONE] Vero: il prodotto A*h indica la quantità indicativa di corrente che la batteria può erogare nel tempo.
 
 ---
 
@@ -185,21 +185,21 @@
 [DOMANDA] La resistenza elettrica rappresenta l'opposizione che il materiale offre al flusso continuo ed ordinato di elettroni.
 [RISPOSTA] VERO
 [ARGOMENTO] La Resistenza elettrica
-[SPIEGAZIONE] Vero: collisioni ed ostacoli atomici creano una resistenza (R) misurata in Ohm ($\Omega$).
+[SPIEGAZIONE] Vero: collisioni ed ostacoli atomici creano una resistenza (R) misurata in Ohm (Ω).
 
 ---
 
-[DOMANDA] Un Kiloohm ($k\Omega$) equivale a 1.000.000 di Ohm.
+[DOMANDA] Un Kiloohm (kΩ) equivale a 1.000.000 di Ohm.
 [RISPOSTA] FALSO
 [ARGOMENTO] La Resistenza elettrica
-[SPIEGAZIONE] Falso: $1\text{ }k\Omega = 1.000\text{ }\Omega$; è il Megaohm ($M\Omega$) che corrisponde a $1.000.000\text{ }\Omega$.
+[SPIEGAZIONE] Falso: kΩ = 1.000Ω; è il Megaohm (MΩ) che corrisponde a 1.000.000Ω.
 
 ---
 
 [DOMANDA] La resistenza di un conduttore è direttamente proporzionale alla sua sezione trasversale.
 [RISPOSTA] FALSO
 [ARGOMENTO] Fattori della resistenza
-[SPIEGAZIONE] Falso: la resistenza è inversamente proporzionale alla sezione (superficie) e direttamente proporzionale alla lunghezza del conduttore ($R = \rho \cdot L / S$).
+[SPIEGAZIONE] Falso: la resistenza è inversamente proporzionale alla sezione (superficie) e direttamente proporzionale alla lunghezza del conduttore (R = (rho * L) / S).
 
 ---
 
@@ -217,17 +217,17 @@
 
 ---
 
-[DOMANDA] Secondo la prima forma della Legge di Ohm, la tensione V applicata ai capi di un carico è uguale al rapporto tra corrente e resistenza ($V = I / R$).
+[DOMANDA] Secondo la prima forma della Legge di Ohm, la tensione V applicata ai capi di un carico è uguale al rapporto tra corrente e resistenza (V = I / R).
 [RISPOSTA] FALSO
 [ARGOMENTO] Legge di Ohm
-[SPIEGAZIONE] Falso: la relazione fondamentale della legge di Ohm esprime la tensione come prodotto tra corrente e resistenza ($V = I \cdot R$).
+[SPIEGAZIONE] Falso: la relazione fondamentale della legge di Ohm esprime la tensione come prodotto tra corrente e resistenza (V = I * R).
 
 ---
 
-[DOMANDA] Se una tensione di 12 V è applicata a un resistore da 100 $\Omega$, la corrente circolante risulta pari a 0,12 A.
+[DOMANDA] Se una tensione di 12 V è applicata a un resistore da 100 Ω, la corrente circolante risulta pari a 0,12 A.
 [RISPOSTA] VERO
 [ARGOMENTO] Legge di Ohm
-[SPIEGAZIONE] Vero: applicando la formula $I = V / R$, si ottiene $12 / 100 = 0,12\text{ }A$.
+[SPIEGAZIONE] Vero: applicando la formula I = V / R, si ottiene 12 / 100 = 0,12 A.
 
 ---
 
@@ -245,17 +245,17 @@
 
 ---
 
-[DOMANDA] Tre resistori da $1\text{ }k\Omega$, $2\text{ }k\Omega$ e $3\text{ }k\Omega$ collegati in serie offrono una resistenza totale di $6\text{ }k\Omega$.
+[DOMANDA] Tre resistori da 1kΩ, 2kΩ e 3kΩ collegati in serie offrono una resistenza totale di 6kΩ.
 [RISPOSTA] VERO
 [ARGOMENTO] Resistori in serie
-[SPIEGAZIONE] Vero: nei circuiti serie le resistenze si sommano direttamente ($R_T = R_1 + R_2 + R_3 = 1 + 2 + 3 = 6\text{ }k\Omega$).
+[SPIEGAZIONE] Vero: nei circuiti serie le resistenze si sommano direttamente (R_T = R_1 + R_2 + R_3 = 1 + 2 + 3 = 6kΩ.
 
 ---
 
 [DOMANDA] Se due batterie uguali da 6 V ciascuna vengono collegate in serie con polarità opposte (discordanti), la tensione totale ai capi è di 12 V.
 [RISPOSTA] FALSO
 [ARGOMENTO] Generatori in serie
-[SPIEGAZIONE] Falso: quando i segni sono opposti o discordanti le tensioni si sottraggono ($6\text{ }V - 6\text{ }V = 0\text{ }V$).
+[SPIEGAZIONE] Falso: quando i segni sono opposti o discordanti le tensioni si sottraggono (6V - 6V = 0V).
 
 ---
 
@@ -273,7 +273,7 @@
 
 ---
 
-[DOMANDA] Per due resistenze $R_1$ ed $R_2$ connesse in parallelo, la resistenza equivalente si calcola come $R_T = (R_1 \cdot R_2) / (R_1 + R_2)$.
+[DOMANDA] Per due resistenze R_1 ed R_2 connesse in parallelo, la resistenza equivalente si calcola come R_T = (R_1 * R_2) / (R_1 + R_2).
 [RISPOSTA] VERO
 [ARGOMENTO] Resistori in parallelo
 [SPIEGAZIONE] Vero: la formula semplificata per due soli rami in parallelo è data dal prodotto diviso per la somma delle resistenze.
@@ -283,32 +283,32 @@
 [DOMANDA] L'unità di misura della potenza elettrica è il Watt (W).
 [RISPOSTA] VERO
 [ARGOMENTO] Energia e potenza
-[SPIEGAZIONE] Vero: la potenza esprime il lavoro compiuto nell'unità di tempo ed è misurata in Watt ($W$).
+[SPIEGAZIONE] Vero: la potenza esprime il lavoro compiuto nell'unità di tempo ed è misurata in Watt (W).
 
 ---
 
-[DOMANDA] La potenza dissipata per effetto Joule su un resistore si determina esclusivamente mediante la formula $P = V / I$.
+[DOMANDA] La potenza dissipata per effetto Joule su un resistore si determina esclusivamente mediante la formula P = V / I.
 [RISPOSTA] FALSO
 [ARGOMENTO] Energia e potenza
-[SPIEGAZIONE] Falso: le formule corrette per la potenza sono $P = V \cdot I$, $P = I^2 \cdot R$ oppure $P = V^2 / R$.
+[SPIEGAZIONE] Falso: le formule corrette per la potenza sono P = V * I, P = I^2 * R oppure P = V^2 / R.
 
 ---
 
-[DOMANDA] L'energia elettrica consumata si calcola moltiplicando la potenza per il tempo di utilizzo ($W = P \cdot t$).
+[DOMANDA] L'energia elettrica consumata si calcola moltiplicando la potenza per il tempo di utilizzo (W = P * t).
 [RISPOSTA] VERO
 [ARGOMENTO] Energia e potenza
-[SPIEGAZIONE] Vero: l'energia esprime la quantità di potenza assorbita o erogata durante un periodo di tempo $t$.
+[SPIEGAZIONE] Vero: l'energia esprime la quantità di potenza assorbita o erogata durante un periodo di tempo t.
 
 ---
 
-[DOMANDA] Il rendimento $\eta$ di un sistema elettrico o di un dispositivo è espresso dal rapporto tra potenza assorbita e potenza utile.
+[DOMANDA] Il rendimento di un sistema elettrico o di un dispositivo è espresso dal rapporto tra potenza assorbita e potenza utile.
 [RISPOSTA] FALSO
 [ARGOMENTO] Rendimento energetico
-[SPIEGAZIONE] Falso: il rendimento è il rapporto tra la potenza utile sfruttata ($P_U$) e la potenza totale fornita in ingresso ($P_I$).
+[SPIEGAZIONE] Falso: il rendimento è il rapporto tra la potenza utile sfruttata (P_U) e la potenza totale fornita in ingresso (P_I).
 
 ---
 
-[DOMANDA] Poiché non vi sono perdite, il rendimento $\eta$ delle lampade ad incandescenza è vicino al 100%.
+[DOMANDA] Poiché non vi sono perdite, il rendimento delle lampade ad incandescenza è vicino al 100%.
 [RISPOSTA] FALSO
 [ARGOMENTO] Rendimento energetico
 [SPIEGAZIONE] Falso: il rendimento delle lampade è basso (attorno al 25% o meno) poiché una quota rilevante di potenza viene convertita in calore indesiderato.
@@ -318,21 +318,21 @@
 [DOMANDA] La tensione ai capi di una pila a vuoto (senza carico collegato) coincide con la sua forza elettromotrice (f.e.m.).
 [RISPOSTA] VERO
 [ARGOMENTO] F.E.M. e tensione interna
-[SPIEGAZIONE] Vero: a circuito aperto la corrente I è nulla, annullando la caduta sulla resistenza interna r ($V_{AB} = E$).
+[SPIEGAZIONE] Vero: a circuito aperto la corrente I è nulla, annullando la caduta sulla resistenza interna r (V_{AB} = E).
 
 ---
 
 [DOMANDA] La resistenza interna r di un generatore provoca una caduta di tensione che riduce la tensione disponibile ai morsetti quando eroga corrente.
 [RISPOSTA] VERO
 [ARGOMENTO] F.E.M. e tensione interna
-[SPIEGAZIONE] Vero: erogando corrente, si manifesta la caduta di tensione interna $r \cdot I$, rendendo $V_{AB} = E - r \cdot I$.
+[SPIEGAZIONE] Vero: erogando corrente, si manifesta la caduta di tensione interna r * I, rendendo V_{AB} = E - r * I.
 
 ---
 
 [DOMANDA] La conduttanza (G) è definita come il reciproco della resistenza ed è misurata in Siemens (S).
 [RISPOSTA] VERO
 [ARGOMENTO] Conduttanza elettrica
-[SPIEGAZIONE] Vero: $G = 1 / R$, e rappresenta la facilità con cui un componente si lascia attraversare dalla corrente elettrica.
+[SPIEGAZIONE] Vero: G = 1 / R, e rappresenta la facilità con cui un componente si lascia attraversare dalla corrente elettrica.
 
 ---
 
@@ -343,31 +343,31 @@
 
 ---
 
-[DOMANDA] In un partitore di tensione a due resistenze in serie, la tensione parziale su $R_2$ è direttamente proporzionale alla somma $R_1 + R_2$.
+[DOMANDA] In un partitore di tensione a due resistenze in serie, la tensione parziale su R_2 è direttamente proporzionale alla somma R_1 + R_2.
 [RISPOSTA] FALSO
 [ARGOMENTO] Partitore di tensione
-[SPIEGAZIONE] Falso: la tensione su $R_2$ è data da $V = E \cdot R_2 / (R_1 + R_2)$, cioè direttamente proporzionale alla singola resistenza $R_2$.
+[SPIEGAZIONE] Falso: la tensione su R_2 è data da V = E * R_2 / (R_1 + R_2), cioè direttamente proporzionale alla singola resistenza R_2.
 
 ---
 
-[DOMANDA] In un partitore di corrente formato da due resistenze in parallelo, la corrente che fluisce in $R_2$ è proporzionale a $R_1$.
+[DOMANDA] In un partitore di corrente formato da due resistenze in parallelo, la corrente che fluisce in R_2 è proporzionale a R_1.
 [RISPOSTA] VERO
 [ARGOMENTO] Partitore di corrente
-[SPIEGAZIONE] Vero: la formula del partitore di corrente determina $I_2 = I \cdot R_1 / (R_1 + R_2)$.
+[SPIEGAZIONE] Vero: la formula del partitore di corrente determina I_2 = I * R_1 / (R_1 + R_2).
 
 ---
 
 [DOMANDA] Per spegnere un generatore di tensione ideale durante il calcolo della resistenza equivalente, occorre sostituirlo con un circuito aperto.
 [RISPOSTA] FALSO
 [ARGOMENTO] Teoremi e reti elettriche
-[SPIEGAZIONE] Falso: spegnere un generatore di tensione significa imporre $V = 0$, ovvero sostituirlo con un cortocircuito (un semplice filo).
+[SPIEGAZIONE] Falso: spegnere un generatore di tensione significa imporre V = 0, ovvero sostituirlo con un cortocircuito (un semplice filo).
 
 ---
 
 [DOMANDA] Spegnere un generatore ideale di corrente corrisponde a sostituirlo con un circuito aperto (interruzione).
 [RISPOSTA] VERO
 [ARGOMENTO] Teoremi e reti elettriche
-[SPIEGAZIONE] Vero: imporre corrente nulla ($I = 0$) equivale a tagliare il ramo lasciandolo a circuito aperto.
+[SPIEGAZIONE] Vero: imporre corrente nulla (I = 0) equivale a tagliare il ramo lasciandolo a circuito aperto.
 
 ---
 
@@ -378,7 +378,7 @@
 
 ---
 
-[DOMANDA] La tensione a vuoto $V_0$ misurata ai morsetti equivale alla tensione del generatore equivalente di Thévenin.
+[DOMANDA] La tensione a vuoto V_0 misurata ai morsetti equivale alla tensione del generatore equivalente di Thévenin.
 [RISPOSTA] VERO
 [ARGOMENTO] Teoremi e reti elettriche
-[SPIEGAZIONE] Vero: la tensione $V_0$ a morsetti aperti coincide precisamente con la tensione $V_{Th}$ della schematizzazione di Thévenin.
+[SPIEGAZIONE] Vero: la tensione V_0 a morsetti aperti coincide precisamente con la tensione V_{Th} della schematizzazione di Thévenin.
