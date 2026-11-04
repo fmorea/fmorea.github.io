@@ -822,6 +822,10 @@ nav .nav-logo {
     .learning-header-time span { display: block; color: #64748b; font-size: 10px; font-weight: 700; text-transform: uppercase; }
     .learning-header-time strong { color: #1d4ed8; font-size: 13px; }
     .learning-header-actions > button { padding: 7px 12px !important; font-size: 12px !important; }
+    .learning-section-heading { min-width: 0; flex: 1 1 auto; }
+    .learning-slide-counter { flex: 0 0 auto; white-space: nowrap; }
+    .learning-help { margin: 2px 0 0; font-size: 11px; line-height: 1.2; white-space: nowrap; }
+    .learning-pdf-frame { display: block; width: 100%; height: min(78vh, 900px); min-height: 420px; border: 0; background: #e2e8f0; }
     .lesson-audio-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 14px 0; padding: 12px; border: 1px solid #dbeafe; border-radius: 14px; background: linear-gradient(110deg, #eff6ff, #f8fafc); }
     .lesson-audio-player { width: min(100%, 440px); min-height: 42px; }
     .lesson-audio-status { flex: 1; min-width: 130px; color: #475569; font-size: 12px; }
@@ -867,6 +871,8 @@ nav .nav-logo {
       .platform-time-indicator .platform-time-note { width: 100%; margin-left: 27px; }
       .learning-header-actions { width: 100%; }
       .learning-header-time { margin-right: auto; }
+      .learning-help { font-size: 10px; }
+      .learning-pdf-frame { height: 70vh; min-height: 360px; }
       .student-fields { gap: 8px; padding: 12px; }
       .student-fields input { padding: 10px; font-size: 13px; }
       .course-grid, .mode-grid { grid-template-columns: 1fr; }
@@ -880,7 +886,6 @@ nav .nav-logo {
       #learning-zoom-in { grid-column: 3; grid-row: 1; }
       #learning-zoom-reset { grid-column: 4; grid-row: 1; }
       #learning-slide-fullscreen { grid-column: 1 / -1; grid-row: 3; width: 100%; }
-      .lesson-zoom-hint { display: none; }
       .lesson-audio-controls { gap: 8px; padding: 10px; }
       .lesson-audio-status { flex-basis: 100%; order: 1; }
       .lesson-audio-player { width: 100%; }
@@ -1354,15 +1359,16 @@ nav .nav-logo {
 
       <div id="learning-pdf-section" class="mb-8">
         <div class="flex flex-wrap items-center justify-between mb-3" style="gap: 8px;">
-          <div>
+          <div class="learning-section-heading">
             <h3 class="text-lg font-bold text-slate-800">Schede della lezione</h3>
-            <p class="text-xs text-slate-500">Leggi, ascolta e ingrandisci gli appunti. Usa le frecce o scegli una scheda.</p>
+            <p class="learning-help text-slate-500" title="Naviga con ←/→ o scegli una scheda · ingrandisci con pinch, cursore o +/− · ascolta dai controlli audio · ⛶ apre la scheda a tutto schermo.">
+              ←/→ scheda · zoom pinch/+/− · audio · ⛶ tutto schermo
+            </p>
           </div>
-          <span id="learning-slide-counter" class="text-sm font-bold text-slate-600" aria-live="polite">Caricamento delle slide...</span>
+          <span id="learning-slide-counter" class="learning-slide-counter text-sm font-bold text-slate-600" aria-live="polite">Caricamento delle slide...</span>
         </div>
         <article class="lesson-card" id="learning-lesson-card" aria-busy="true">
           <div class="lesson-zoom-controls" aria-label="Controlli zoom">
-            <span class="lesson-zoom-hint text-xs text-slate-500 mr-auto">Zoom · pinch o tasti + / −</span>
             <button type="button" id="learning-zoom-out" aria-label="Riduci zoom" title="Riduci zoom">−</button>
             <span id="learning-zoom-level" class="lesson-zoom-level" aria-live="polite">100%</span>
             <input id="learning-zoom-slider" class="lesson-zoom-slider" type="range" min="1" max="4" step="0.1" value="1" aria-label="Livello di zoom">
@@ -1409,6 +1415,7 @@ nav .nav-logo {
       </div>
       <div id="learning-pdf-unavailable" class="hidden mb-8 rounded-xl border p-4 text-sm text-slate-700" style="border-color: #cbd5e1; background: #f8fafc;">
         <p id="learning-pdf-unavailable-text">Per questa materia non è associato un PDF. Puoi comunque usare le spiegazioni testuali qui sotto.</p>
+        <iframe id="learning-native-pdf" class="learning-pdf-frame hidden" title="PDF originale degli appunti" loading="eager"></iframe>
         <a id="learning-fallback-pdf-link" class="hidden mt-3 inline-block font-bold text-blue-700" target="_blank" rel="noopener">Apri il PDF originale degli appunti</a>
       </div>
 
@@ -2457,11 +2464,15 @@ nav .nav-logo {
       var pdfSection = document.getElementById('learning-pdf-section');
       var pdfUnavailable = document.getElementById('learning-pdf-unavailable');
       var fallbackPdfLink = document.getElementById('learning-fallback-pdf-link');
+      var nativePdfFrame = document.getElementById('learning-native-pdf');
       var pdfUnavailableText = document.getElementById('learning-pdf-unavailable-text');
       var browserBanner = document.getElementById('browser-update-banner');
       var isLegacy = isLegacyLessonBrowser();
+      var pdfUrl = '';
+      nativePdfFrame.removeAttribute('src');
+      nativePdfFrame.classList.add('hidden');
       if (pdfPath) {
-        var pdfUrl = 'appunti/' + encodeURI(pdfPath);
+        pdfUrl = 'appunti/' + encodeURI(pdfPath);
         document.getElementById('learning-pdf-link').href = pdfUrl;
         fallbackPdfLink.href = pdfUrl;
         document.getElementById('browser-update-pdf-link').href = pdfUrl;
@@ -2477,10 +2488,15 @@ nav .nav-logo {
         pdfSection.classList.add('hidden');
         pdfUnavailable.classList.remove('hidden');
         pdfUnavailableText.textContent = pdfPath
-          ? 'Per garantire la compatibilità con questo browser, le schede interattive sono state sostituite dal documento originale.'
+          ? 'Schede interattive non supportate: visualizzazione del PDF originale nel browser. Se non compare, aprilo in una nuova scheda.'
           : 'Questo browser non supporta le schede interattive e per questa materia non è disponibile un PDF originale.';
-        if (pdfPath) fallbackPdfLink.classList.remove('hidden');
-        else fallbackPdfLink.classList.add('hidden');
+        if (pdfPath) {
+          nativePdfFrame.src = pdfUrl;
+          nativePdfFrame.classList.remove('hidden');
+          fallbackPdfLink.classList.remove('hidden');
+        } else {
+          fallbackPdfLink.classList.add('hidden');
+        }
         clearStudySlides();
       } else if (slidesPath) {
         pdfSection.classList.remove('hidden');
@@ -2492,10 +2508,15 @@ nav .nav-logo {
         pdfSection.classList.add('hidden');
         pdfUnavailable.classList.remove('hidden');
         pdfUnavailableText.textContent = pdfPath
-          ? 'Le schede estratte non sono disponibili per questa materia. Puoi aprire il PDF originale.'
+          ? 'Schede illustrate non disponibili: visualizzazione del PDF originale nel browser. Se non compare, aprilo in una nuova scheda.'
           : 'Per questa materia non è associato un PDF. Puoi comunque usare le spiegazioni testuali qui sotto.';
-        if (pdfPath) fallbackPdfLink.classList.remove('hidden');
-        else fallbackPdfLink.classList.add('hidden');
+        if (pdfPath) {
+          nativePdfFrame.src = pdfUrl;
+          nativePdfFrame.classList.remove('hidden');
+          fallbackPdfLink.classList.remove('hidden');
+        } else {
+          fallbackPdfLink.classList.add('hidden');
+        }
         clearStudySlides();
       }
       renderLearningExplanations(selectedMateria);
