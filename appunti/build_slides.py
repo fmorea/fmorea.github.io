@@ -1,3 +1,4 @@
+import argparse
 import json
 import re
 import shutil
@@ -20,6 +21,12 @@ COURSE_ALIASES = {
 IMAGE_MAX_DIMENSION = "1500"
 WEBP_QUALITY = "72"
 PAGE_FOOTER = re.compile(r"^(?:.+\s+)?(?:page|pagina)\s+\d+\s*$", re.IGNORECASE)
+REPEATED_HEADER = re.compile(
+    r"(?:giuseppe luigi lagrange|istituto istruzione superiore|"
+    r"g\.?\s*l\.?\s*lagrange)",
+    re.IGNORECASE,
+)
+REPEATED_HEADER_TEXT = ("giuseppeluigilagrange", "istitutoistruzionesuperiore")
 
 
 def find_tool(name):
@@ -57,7 +64,36 @@ def get_page_title_and_text(contents):
     return title, text
 
 
-def build_course(course_key, pdf_name):
+def extract_ocr_text(image_path, ocr):
+    results, _ = ocr(str(image_path))
+    if not results:
+        return "", ""
+
+    text_rows = []
+    for box, text, confidence in results:
+        cleaned_text = text.strip()
+        if cleaned_text and float(confidence) >= 0.35:
+            center_y = sum(point[1] for point in box) / len(box)
+            center_x = sum(point[0] for point in box) / len(box)
+            text_rows.append((center_y, center_x, cleaned_text))
+    text_rows.sort(key=lambda row: (row[0], row[1]))
+
+    lines = []
+    for _, _, text in text_rows:
+        normalized_text = re.sub(r"[^a-z]", "", text.casefold())
+        is_repeated_header = (
+            REPEATED_HEADER.search(text)
+            or any(header in normalized_text for header in REPEATED_HEADER_TEXT)
+        )
+        if PAGE_FOOTER.match(text) or is_repeated_header:
+            continue
+        lines.append(text)
+    if not lines:
+        return "", ""
+    return get_page_title_and_text("\n".join(lines))
+
+
+def build_course(course_key, pdf_name, ocr, reuse_images=False):
     pdf_path = ROOT / pdf_name
     output_dir = SLIDE_ROOT / course_key
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -65,50 +101,72 @@ def build_course(course_key, pdf_name):
     while page_texts and not page_texts[-1].strip():
         page_texts.pop()
 
-    with tempfile.TemporaryDirectory(prefix="fmorea-slides-") as temp_dir:
-        image_prefix = Path(temp_dir) / "page"
-        run_tool(
-            "pdftoppm",
-            "-scale-to",
-            IMAGE_MAX_DIMENSION,
-            "-jpeg",
-            "-jpegopt",
-            "quality=86",
-            pdf_path,
-            image_prefix,
+    existing_images = [
+        output_dir / f"slide-{page_number:03}.webp"
+        for page_number in range(1, len(page_texts) + 1)
+    ]
+    use_existing_images = reuse_images and all(image.is_file() for image in existing_images)
+    pages = []
+
+    def process_page(page_number, image_path, extracted_text):
+        image_name = f"slide-{page_number:03}.webp"
+        title, text = get_page_title_and_text(extracted_text)
+        text_source = "pdf"
+        ocr_title, ocr_text = extract_ocr_text(image_path, ocr)
+        if ocr_title and len(ocr_text) > len(text):
+            title = ocr_title
+            text = ocr_text
+            text_source = "ocr"
+        pages.append(
+            {
+                "number": page_number,
+                "title": title or f"Slide {page_number}",
+                "text": text,
+                "image": image_name,
+                "textSource": text_source,
+            }
         )
 
-        pages = []
-        generated_images = sorted(Path(temp_dir).glob("page-*.jpg"))
-        if len(generated_images) != len(page_texts):
-            raise RuntimeError(
-                f"{pdf_name}: attese {len(page_texts)} pagine, "
-                f"generate {len(generated_images)} immagini."
-            )
-
-        for page_number, (source_image, extracted_text) in enumerate(
-            zip(generated_images, page_texts), start=1
+    if use_existing_images:
+        for page_number, (image_path, extracted_text) in enumerate(
+            zip(existing_images, page_texts), start=1
         ):
-            image_name = f"slide-{page_number:03}.webp"
-            image_path = output_dir / image_name
+            process_page(page_number, image_path, extracted_text)
+    else:
+        with tempfile.TemporaryDirectory(prefix="fmorea-slides-") as temp_dir:
+            image_prefix = Path(temp_dir) / "page"
             run_tool(
-                "magick",
-                source_image,
-                "-define",
-                "webp:method=5",
-                "-quality",
-                WEBP_QUALITY,
-                image_path,
+                "pdftoppm",
+                "-scale-to",
+                IMAGE_MAX_DIMENSION,
+                "-jpeg",
+                "-jpegopt",
+                "quality=86",
+                pdf_path,
+                image_prefix,
             )
-            title, text = get_page_title_and_text(extracted_text)
-            pages.append(
-                {
-                    "number": page_number,
-                    "title": title or f"Slide {page_number}",
-                    "text": text,
-                    "image": image_name,
-                }
-            )
+            generated_images = sorted(Path(temp_dir).glob("page-*.jpg"))
+            if len(generated_images) != len(page_texts):
+                raise RuntimeError(
+                    f"{pdf_name}: attese {len(page_texts)} pagine, "
+                    f"generate {len(generated_images)} immagini."
+                )
+
+            for page_number, (source_image, extracted_text) in enumerate(
+                zip(generated_images, page_texts), start=1
+            ):
+                image_name = f"slide-{page_number:03}.webp"
+                image_path = output_dir / image_name
+                run_tool(
+                    "magick",
+                    source_image,
+                    "-define",
+                    "webp:method=5",
+                    "-quality",
+                    WEBP_QUALITY,
+                    image_path,
+                )
+                process_page(page_number, image_path, extracted_text)
 
     manifest_path = output_dir / "slides.json"
     manifest_path.write_text(
@@ -123,8 +181,19 @@ def build_course(course_key, pdf_name):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Estrae testo e immagini dalle slide PDF.")
+    parser.add_argument(
+        "--reuse-images",
+        action="store_true",
+        help="Riconosce il testo senza rigenerare immagini WebP già presenti.",
+    )
+    args = parser.parse_args()
+
+    from rapidocr_onnxruntime import RapidOCR
+
+    ocr = RapidOCR()
     for course_key, pdf_name in COURSES.items():
-        build_course(course_key, pdf_name)
+        build_course(course_key, pdf_name, ocr, reuse_images=args.reuse_images)
 
     course_manifest = {
         course_key: f"{course_key}/slides.json" for course_key in COURSES

@@ -752,18 +752,21 @@ nav .nav-logo {
     }
 
     .lesson-image-wrap {
+      position: relative;
       display: flex;
       min-height: 320px;
       max-height: min(65vh, 760px);
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      overflow: auto;
       padding: 16px;
       background: linear-gradient(145deg, #f1f5f9, #e2e8f0);
+      overscroll-behavior: contain;
     }
 
     .lesson-image {
       display: block;
+      flex: none;
       width: 100%;
       height: auto;
       max-height: calc(min(65vh, 760px) - 32px);
@@ -772,6 +775,13 @@ nav .nav-logo {
       object-fit: contain;
       box-shadow: 0 8px 28px rgba(15, 23, 42, .14);
     }
+
+    .lesson-image-wrap.is-zoomed { align-items: flex-start; justify-content: flex-start; }
+    .lesson-image-wrap.is-zoomed .lesson-image { max-height: none; }
+    .lesson-zoom-controls { display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding: 10px 14px; border-bottom: 1px solid #e2e8f0; background: #f8fafc; }
+    .lesson-zoom-controls button { min-width: 42px; min-height: 40px; padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 10px; background: #fff; color: #0f172a; font-size: 18px; font-weight: 700; }
+    .lesson-zoom-controls button:disabled { opacity: .45; }
+    .lesson-zoom-level { min-width: 54px; text-align: center; color: #475569; font-size: 13px; font-weight: 700; }
 
     .lesson-card-copy { padding: 20px 24px 24px; }
     .lesson-extracted-text { white-space: pre-line; line-height: 1.75; }
@@ -787,6 +797,8 @@ nav .nav-logo {
       .course-grid, .mode-grid { grid-template-columns: 1fr; }
       .lesson-image-wrap { min-height: 240px; padding: 8px; }
       .lesson-image { max-height: calc(60vh - 16px); }
+      .lesson-zoom-controls { padding: 8px; }
+      .lesson-zoom-controls button { min-width: 44px; min-height: 44px; }
       .lesson-card-copy { padding: 16px; }
       .lesson-thumbnail { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
       .lesson-thumbnail img { height: 64px; }
@@ -908,6 +920,13 @@ nav .nav-logo {
           <span id="learning-slide-counter" class="text-sm font-bold text-slate-600" aria-live="polite">Caricamento delle slide...</span>
         </div>
         <article class="lesson-card" id="learning-lesson-card" aria-busy="true">
+          <div class="lesson-zoom-controls" aria-label="Controlli zoom">
+            <span class="text-xs text-slate-500 mr-auto">Zoom · pinch o tasti + / −</span>
+            <button type="button" id="learning-zoom-out" aria-label="Riduci zoom" title="Riduci zoom">−</button>
+            <span id="learning-zoom-level" class="lesson-zoom-level" aria-live="polite">100%</span>
+            <button type="button" id="learning-zoom-in" aria-label="Aumenta zoom" title="Aumenta zoom">+</button>
+            <button type="button" id="learning-zoom-reset" aria-label="Reimposta zoom" title="Reimposta zoom">↺</button>
+          </div>
           <div class="lesson-image-wrap">
             <img class="lesson-image" id="learning-slide-image" src="" alt="Immagine della scheda didattica" loading="eager">
           </div>
@@ -1276,6 +1295,7 @@ nav .nav-logo {
     var teachingSlidesLoadFailed = false;
     var studyDeck = null;
     var studyDeckLoadToken = 0;
+    var studyZoom = 1;
     var platformElapsedSeconds = 0;
     var platformStorageKey = '';
     var platformStorageAvailable = true;
@@ -2087,6 +2107,107 @@ nav .nav-logo {
       renderStudyThumbnails();
     }
 
+    function setStudyZoom(requestedZoom, focalClientX, focalClientY) {
+      var viewport = document.querySelector('.lesson-image-wrap');
+      var image = document.getElementById('learning-slide-image');
+      if (!viewport || !image || !image.naturalWidth) return;
+
+      var nextZoom = Math.max(1, Math.min(4, Math.round(requestedZoom * 4) / 4));
+      var viewportRect = viewport.getBoundingClientRect();
+      var imageRect = image.getBoundingClientRect();
+      var focusX = typeof focalClientX === 'number' ? focalClientX : viewportRect.left + viewport.clientWidth / 2;
+      var focusY = typeof focalClientY === 'number' ? focalClientY : viewportRect.top + viewport.clientHeight / 2;
+      var ratioX = Math.max(0, Math.min(1, (focusX - imageRect.left) / imageRect.width));
+      var ratioY = Math.max(0, Math.min(1, (focusY - imageRect.top) / imageRect.height));
+      studyZoom = nextZoom;
+
+      var level = document.getElementById('learning-zoom-level');
+      var zoomOut = document.getElementById('learning-zoom-out');
+      var zoomIn = document.getElementById('learning-zoom-in');
+      level.textContent = Math.round(nextZoom * 100) + '%';
+      zoomOut.disabled = nextZoom <= 1;
+      zoomIn.disabled = nextZoom >= 4;
+
+      if (nextZoom === 1) {
+        viewport.classList.remove('is-zoomed');
+        image.style.width = '';
+        viewport.scrollLeft = 0;
+        viewport.scrollTop = 0;
+        return;
+      }
+
+      viewport.classList.add('is-zoomed');
+      image.style.width = (nextZoom * 100) + '%';
+      var localX = focusX - viewportRect.left - viewport.clientLeft;
+      var localY = focusY - viewportRect.top - viewport.clientTop;
+      viewport.scrollLeft = image.offsetLeft + ratioX * image.offsetWidth - localX;
+      viewport.scrollTop = image.offsetTop + ratioY * image.offsetHeight - localY;
+    }
+
+    function initStudyZoomControls() {
+      var viewport = document.querySelector('.lesson-image-wrap');
+      document.getElementById('learning-zoom-in').onclick = function() {
+        setStudyZoom(studyZoom + 0.25);
+      };
+      document.getElementById('learning-zoom-out').onclick = function() {
+        setStudyZoom(studyZoom - 0.25);
+      };
+      document.getElementById('learning-zoom-reset').onclick = function() {
+        setStudyZoom(1);
+      };
+
+      if (!viewport) return;
+      viewport.addEventListener('wheel', function(event) {
+        if (!event.ctrlKey || !studyDeck) return;
+        event.preventDefault();
+        setStudyZoom(studyZoom + (event.deltaY < 0 ? 0.25 : -0.25), event.clientX, event.clientY);
+      }, { passive: false });
+
+      var pinchStartDistance = 0;
+      var pinchStartZoom = 1;
+      var touchStartX = 0;
+      var touchStartY = 0;
+      var touchStartScrollLeft = 0;
+      var touchStartScrollTop = 0;
+      function touchDistance(touches) {
+        var dx = touches[0].clientX - touches[1].clientX;
+        var dy = touches[0].clientY - touches[1].clientY;
+        return Math.sqrt(dx * dx + dy * dy);
+      }
+      function beginTouchPan(touch) {
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        touchStartScrollLeft = viewport.scrollLeft;
+        touchStartScrollTop = viewport.scrollTop;
+      }
+
+      viewport.addEventListener('touchstart', function(event) {
+        if (event.touches.length >= 2) {
+          event.preventDefault();
+          pinchStartDistance = touchDistance(event.touches);
+          pinchStartZoom = studyZoom;
+        } else if (studyZoom > 1 && event.touches.length === 1) {
+          beginTouchPan(event.touches[0]);
+        }
+      }, { passive: false });
+      viewport.addEventListener('touchmove', function(event) {
+        if (event.touches.length >= 2 && pinchStartDistance > 0) {
+          event.preventDefault();
+          var midpointX = (event.touches[0].clientX + event.touches[1].clientX) / 2;
+          var midpointY = (event.touches[0].clientY + event.touches[1].clientY) / 2;
+          setStudyZoom(pinchStartZoom * touchDistance(event.touches) / pinchStartDistance, midpointX, midpointY);
+        } else if (studyZoom > 1 && event.touches.length === 1) {
+          event.preventDefault();
+          viewport.scrollLeft = touchStartScrollLeft + touchStartX - event.touches[0].clientX;
+          viewport.scrollTop = touchStartScrollTop + touchStartY - event.touches[0].clientY;
+        }
+      }, { passive: false });
+      viewport.addEventListener('touchend', function(event) {
+        if (event.touches.length < 2) pinchStartDistance = 0;
+        if (event.touches.length === 1 && studyZoom > 1) beginTouchPan(event.touches[0]);
+      });
+    }
+
     function renderStudyThumbnails() {
       if (!studyDeck) return;
       var container = document.getElementById('learning-slide-thumbnails');
@@ -2132,7 +2253,16 @@ nav .nav-logo {
       document.addEventListener('keydown', function(event) {
         if (document.getElementById('step-learning').classList.contains('hidden') || !studyDeck) return;
         if (event.target && /^(INPUT|TEXTAREA|SELECT)$/.test(event.target.tagName)) return;
-        if (event.key === 'ArrowLeft' && studyDeck.currentPage > 1) {
+        if (event.key === '+' || event.key === '=') {
+          event.preventDefault();
+          setStudyZoom(studyZoom + 0.25);
+        } else if (event.key === '-' || event.key === '_') {
+          event.preventDefault();
+          setStudyZoom(studyZoom - 0.25);
+        } else if (event.key === '0') {
+          event.preventDefault();
+          setStudyZoom(1);
+        } else if (event.key === 'ArrowLeft' && studyDeck.currentPage > 1) {
           event.preventDefault();
           displayStudySlide(studyDeck.currentPage - 1);
         } else if (event.key === 'ArrowRight' && studyDeck.currentPage < studyDeck.slides.length) {
@@ -3857,6 +3987,7 @@ nav .nav-logo {
       loadTeachingMaterials();
       loadTeachingSlidesCatalog();
       initStudySlideshowControls();
+      initStudyZoomControls();
 
       try {
         var reviewParam = getQueryParameter('review') || getQueryParameter('q');
