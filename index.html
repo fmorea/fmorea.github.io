@@ -824,8 +824,7 @@ nav .nav-logo {
     .learning-header-actions > button { padding: 7px 12px !important; font-size: 12px !important; }
     .learning-section-heading { min-width: 0; flex: 1 1 auto; }
     .learning-slide-counter { flex: 0 0 auto; white-space: nowrap; }
-    .learning-help { margin: 2px 0 0; font-size: 11px; line-height: 1.2; white-space: nowrap; }
-    .learning-pdf-frame { display: block; width: 100%; height: min(78vh, 900px); min-height: 420px; border: 0; background: #e2e8f0; }
+    .learning-pdf-frame { display: block; width: 100%; height: 78vh; max-height: 900px; min-height: 420px; border: 0; background: #e2e8f0; }
     .lesson-audio-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 14px 0; padding: 12px; border: 1px solid #dbeafe; border-radius: 14px; background: linear-gradient(110deg, #eff6ff, #f8fafc); }
     .lesson-audio-player { width: min(100%, 440px); min-height: 42px; }
     .lesson-audio-status { flex: 1; min-width: 130px; color: #475569; font-size: 12px; }
@@ -833,7 +832,7 @@ nav .nav-logo {
     .platform-time-indicator svg { width: 20px; height: 20px; color: #2563eb; }
     .platform-time-indicator strong { font-size: 15px; font-variant-numeric: tabular-nums; }
     .platform-time-indicator .platform-time-note { margin-left: auto; color: #64748b; font-size: 11px; }
-    .browser-update-banner { margin: 0 0 16px; padding: 14px 18px; border: 1px solid #fcd34d; border-radius: 14px; background: #fffbeb; color: #78350f; }
+    .browser-update-banner { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin: 0 0 8px; padding: 7px 12px; border: 1px solid #fcd34d; border-radius: 9px; background: #fffbeb; color: #78350f; font-size: 12px; line-height: 1.25; }
     .browser-update-banner a { color: #1d4ed8; font-weight: 700; text-decoration: underline; }
     .lesson-thumbnail { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
     .lesson-thumbnail button { padding: 6px; overflow: hidden; border: 1px solid #dbe3ee; border-radius: 12px; background: #fff; text-align: left; }
@@ -871,7 +870,6 @@ nav .nav-logo {
       .platform-time-indicator .platform-time-note { width: 100%; margin-left: 27px; }
       .learning-header-actions { width: 100%; }
       .learning-header-time { margin-right: auto; }
-      .learning-help { font-size: 10px; }
       .learning-pdf-frame { height: 70vh; min-height: 360px; }
       .student-fields { gap: 8px; padding: 12px; }
       .student-fields input { padding: 10px; font-size: 13px; }
@@ -1267,9 +1265,9 @@ nav .nav-logo {
       <span id="platform-time-note" class="platform-time-note">Salvato su questo dispositivo</span>
     </div>
     <div id="browser-update-banner" class="browser-update-banner hidden" role="status">
-      <strong>Browser non aggiornato.</strong>
-      Per visualizzare le schede interattive e ascoltare la lettura, aggiorna a una versione recente di Edge, Chrome o Firefox.
-      Nel frattempo puoi aprire il <a id="browser-update-pdf-link" target="_blank" rel="noopener">PDF originale</a>.
+      <strong>Modalità PDF nativa.</strong>
+      Alcune funzioni interattive non sono disponibili in questo browser.
+      <a id="browser-update-pdf-link" target="_blank" rel="noopener">Apri il PDF originale</a>
     </div>
     
     <!-- 1. SELEZIONE CLASSE -->
@@ -1358,12 +1356,9 @@ nav .nav-logo {
       </div>
 
       <div id="learning-pdf-section" class="mb-8">
-        <div class="flex flex-wrap items-center justify-between mb-3" style="gap: 8px;">
+        <div class="flex flex-wrap items-center justify-between" style="gap: 6px; margin-bottom: 2px;">
           <div class="learning-section-heading">
-            <h3 class="text-lg font-bold text-slate-800">Schede della lezione</h3>
-            <p class="learning-help text-slate-500" title="Naviga con ←/→ o scegli una scheda · ingrandisci con pinch, cursore o +/− · ascolta dai controlli audio · ⛶ apre la scheda a tutto schermo.">
-              ←/→ scheda · zoom pinch/+/− · audio · ⛶ tutto schermo
-            </p>
+            <h3 class="text-lg font-bold text-slate-800" style="margin: 0; line-height: 1.2;" title="Naviga con ←/→ o scegli una scheda · ingrandisci con pinch, cursore o +/− · ascolta dai controlli audio · ⛶ apre la scheda a tutto schermo.">Schede della lezione</h3>
           </div>
           <span id="learning-slide-counter" class="learning-slide-counter text-sm font-bold text-slate-600" aria-live="polite">Caricamento delle slide...</span>
         </div>
@@ -2481,7 +2476,7 @@ nav .nav-logo {
         fallbackPdfLink.removeAttribute('href');
         document.getElementById('browser-update-pdf-link').removeAttribute('href');
       }
-      if (isLegacy) browserBanner.classList.remove('hidden');
+      if (isLegacy && pdfPath) browserBanner.classList.remove('hidden');
       else browserBanner.classList.add('hidden');
       if (isLegacy) {
         stopStudyAudio(true);
