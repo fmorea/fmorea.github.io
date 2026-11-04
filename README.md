@@ -4,7 +4,7 @@ Piattaforma telematica d'esame eseguibile direttamente da **GitHub Pages** (`fmo
 
 ## Caratteristiche Principali
 - **Scansione Automatica Repository**: `index.html` scansiona automaticamente la cartella `quiz/` del repository GitHub alla ricerca dei file di verifica e legge classe, specializzazione, materia, scuola, periodo, anno, durata e soglia dal nome.
-- **Ripasso con Materiali Didattici**: testo e pagine illustrate dei PDF vengono estratti in schede indipendenti, con miniature, navigazione e spiegazioni dei quesiti per argomento. Le pagine si possono ingrandire con il pinch touch, i pulsanti o i tasti `+`/`-` (rotellina con `Ctrl`); `0` ripristina la dimensione iniziale.
+- **Ripasso con Materiali Didattici**: testo e pagine illustrate dei PDF vengono estratti in schede indipendenti, con miniature, navigazione, spiegazioni dei quesiti e lettura vocale in italiano con pausa, ripresa e controllo della velocità. Le pagine si possono ingrandire con il pinch touch, lo slider, i pulsanti o i tasti `+`/`-` (rotellina con `Ctrl`); `0` ripristina la dimensione iniziale.
 - **Percorso guidato**: prima si sceglie la classe, poi si sceglie se seguire una lezione o fare una simulazione d'esame.
 - **Tempo Attivo in Piattaforma**: il tempo viene conteggiato solo mentre la pagina è visibile e attiva, salvato nel browser per il candidato e riportato nel certificato PDF.
 - **Prova in anonimo**: nome e cognome sono facoltativi; lascia entrambi i campi vuoti per svolgere la prova e ottenere un certificato indicato come “Anonimo”. Se inserisci un solo dato, la piattaforma chiede di completare entrambi i campi.
