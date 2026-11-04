@@ -4,9 +4,8 @@ Piattaforma telematica d'esame eseguibile direttamente da **GitHub Pages** (`fmo
 
 ## Caratteristiche Principali
 - **Scansione Automatica Repository**: `index.html` scansiona automaticamente la cartella `quiz/` del repository GitHub alla ricerca dei file di verifica e legge classe, specializzazione, materia, scuola, periodo, anno, durata e soglia dal nome.
-- **Ripasso con Materiali Didattici**: testo e pagine illustrate dei PDF vengono estratti in schede indipendenti, con miniature, navigazione, spiegazioni dei quesiti e lettura vocale in italiano con preferenza per una voce maschile installata, selezione della voce, pausa e controllo della velocità. La qualità dipende dalle voci disponibili nel browser o nel sistema. Le pagine si possono ingrandire con il pinch touch, lo slider, i pulsanti o i tasti `+`/`-` (rotellina con `Ctrl`); `0` ripristina la dimensione iniziale.
+- **Ripasso con Materiali Didattici**: testo e pagine illustrate dei PDF vengono estratti in schede indipendenti, con miniature, navigazione, spiegazioni dei quesiti e audio preregistrato con voce maschile neurale. Le pagine si possono ingrandire con il pinch touch, lo slider, i pulsanti o i tasti `+`/`-` (rotellina con `Ctrl`); `0` ripristina la dimensione iniziale.
 - **Compatibilità dei materiali**: browser obsoleti o privi del supporto WebP (come Internet Explorer) ricevono un avviso di aggiornamento e un collegamento diretto al PDF originale; se le schede statiche non sono disponibili, è mostrato il medesimo fallback al documento originale.
-- **Voci di lettura**: la piattaforma preferisce una voce italiana maschile disponibile, dando priorità alle voci contrassegnate come naturali/neural. Per migliorare la resa, installa una voce italiana maschile naturale nelle impostazioni vocali di Windows o del dispositivo e ricarica la pagina. La sintesi è gestita dal browser/sistema operativo e può dipendere dalla sua configurazione e connettività.
 - **Percorso guidato**: prima si sceglie la classe, poi si sceglie se seguire una lezione o fare una simulazione d'esame.
 - **Tempo Attivo in Piattaforma**: il tempo viene conteggiato solo mentre la pagina è visibile e attiva, salvato nel browser per il candidato e riportato nel certificato PDF.
 - **Ripristino della simulazione**: risposte, domanda corrente e tempo residuo vengono salvati localmente durante la prova; dopo un refresh la simulazione si riapre dal punto raggiunto e il conto alla rovescia considera anche il tempo trascorso.
@@ -29,6 +28,16 @@ Esempi:
 Il catalogo `appunti/manifest.json` collega la chiave classe-specializzazione-materia (in minuscolo, con `_` come separatore) al PDF originale. La 3B e la 3C utilizzano lo stesso PDF di telecomunicazioni. Il catalogo `appunti/slides/manifest.json` collega gli stessi corsi ai testi estratti e alle immagini WebP delle singole pagine.
 
 Per rigenerare le schede dopo aver aggiornato un PDF, eseguire `python appunti/build_slides.py` con Poppler (`pdftotext` e `pdftoppm`), ImageMagick (`magick`) e il pacchetto Python `rapidocr_onnxruntime` installati. L'OCR integra il testo delle pagine scansionate quando è più completo del testo incorporato nel PDF. Per aggiornare solo i testi e riutilizzare le immagini WebP già generate, eseguire `python appunti/build_slides.py --reuse-images`. La piattaforma pubblicata utilizza i file statici generati, senza elaborare i PDF nel browser.
+
+Le tracce audio vengono generate **localmente**, senza inviare il testo OCR a servizi esterni, con Kokoro ONNX e la voce italiana maschile `im_nicola`. Installare `kokoro-onnx` e `soundfile`, quindi scaricare dal [rilascio ufficiale Kokoro](https://github.com/thewh1teagle/kokoro-onnx/releases/tag/model-files-v1.1) `kokoro-v1.0.fp16.onnx` e `voices-v1.0.bin` in `%USERPROFILE%\.cache\kokoro-onnx\`. Per provare una singola scheda prima di generare tutti gli audio:
+```powershell
+python appunti/build_speech.py --course 3a_ele_sistemi --page 1
+```
+Per generare in seguito le tracce delle schede con testo OCR in tutte le raccolte:
+```powershell
+python appunti/build_speech.py
+```
+Il generatore salva audio OGG e aggiorna il relativo `slides.json`; le pagine senza testo OCR restano senza traccia.
 
 Il conteggio delle ore è locale al browser e al dispositivo: non è sincronizzato tra dispositivi né verificato da un server. Il tempo viene conteggiato a piattaforma aperta, in primo piano e con la finestra attiva.
 

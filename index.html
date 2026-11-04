@@ -787,14 +787,8 @@ nav .nav-logo {
     .lesson-card-copy { padding: 20px 24px 24px; }
     .lesson-extracted-text { white-space: pre-line; line-height: 1.85; font-size: 15px; }
     .lesson-audio-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 14px 0; padding: 12px; border: 1px solid #dbeafe; border-radius: 14px; background: linear-gradient(110deg, #eff6ff, #f8fafc); }
-    .lesson-audio-controls button { min-height: 42px; padding: 8px 14px; border: 1px solid #bfdbfe; border-radius: 10px; background: #fff; color: #1d4ed8; font-weight: 700; }
-    .lesson-audio-controls button:disabled { opacity: .5; }
-    .lesson-audio-controls .lesson-audio-play { border-color: #1d4ed8; background: #2563eb; color: #fff; }
+    .lesson-audio-player { width: min(100%, 440px); min-height: 42px; }
     .lesson-audio-status { flex: 1; min-width: 130px; color: #475569; font-size: 12px; }
-    .lesson-speed-control { display: flex; align-items: center; gap: 6px; color: #475569; font-size: 12px; font-weight: 700; }
-    .lesson-speed-control select { min-height: 38px; padding: 4px 8px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; color: #0f172a; }
-    .lesson-voice-control { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: #475569; font-size: 12px; font-weight: 700; }
-    .lesson-voice-control select { max-width: min(280px, 55vw); min-height: 38px; padding: 4px 8px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; color: #0f172a; }
     .browser-update-banner { margin: 0 0 16px; padding: 14px 18px; border: 1px solid #fcd34d; border-radius: 14px; background: #fffbeb; color: #78350f; }
     .browser-update-banner a { color: #1d4ed8; font-weight: 700; text-decoration: underline; }
     .lesson-thumbnail { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
@@ -814,8 +808,7 @@ nav .nav-logo {
       .lesson-zoom-hint { display: none; }
       .lesson-audio-controls { gap: 8px; padding: 10px; }
       .lesson-audio-status { flex-basis: 100%; order: 1; }
-      .lesson-voice-control { flex-basis: 100%; }
-      .lesson-voice-control select { max-width: 100%; flex: 1; }
+      .lesson-audio-player { width: 100%; }
       .lesson-card-copy { padding: 16px; }
       .lesson-thumbnail { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
       .lesson-thumbnail img { height: 64px; }
@@ -957,23 +950,9 @@ nav .nav-logo {
             <div class="lesson-card-copy" style="min-width: 0; flex: 1;">
               <span id="learning-slide-label" class="text-xs font-bold uppercase tracking-wider text-blue-700"></span>
               <h3 id="learning-slide-title" class="font-bold text-xl text-slate-900 mt-1">Preparazione delle schede...</h3>
-              <div class="lesson-audio-controls" role="group" aria-label="Lettura ad alta voce">
-                <button type="button" id="learning-audio-play" class="lesson-audio-play" aria-label="Leggi la scheda" title="Leggi la scheda">▶ Ascolta</button>
-                <button type="button" id="learning-audio-stop" aria-label="Ferma la lettura" title="Ferma la lettura" disabled>■ Ferma</button>
-                <label class="lesson-voice-control" for="learning-audio-voice">Voce
-                  <select id="learning-audio-voice" aria-label="Voce di lettura">
-                    <option value="">Voce italiana maschile consigliata</option>
-                  </select>
-                </label>
-                <label class="lesson-speed-control" for="learning-audio-speed">Velocità
-                  <select id="learning-audio-speed" aria-label="Velocità di lettura">
-                    <option value="0.85">Lenta</option>
-                    <option value="0.92" selected>Normale</option>
-                    <option value="1">Veloce</option>
-                  </select>
-                </label>
-                <span id="learning-audio-status" class="lesson-audio-status" aria-live="polite">Premi Ascolta per ascoltare il testo della scheda.</span>
-                <span id="learning-audio-voice-hint" class="lesson-audio-status">La naturalezza dipende dalle voci installate nel browser o nel sistema.</span>
+              <div class="lesson-audio-controls" role="group" aria-label="Audio della lezione">
+                <audio id="learning-audio-player" class="lesson-audio-player hidden" controls preload="none" aria-label="Audio della spiegazione"></audio>
+                <span id="learning-audio-status" class="lesson-audio-status" aria-live="polite">Audio non ancora disponibile per questa scheda.</span>
               </div>
               <div id="learning-slide-excerpt" class="lesson-extracted-text text-sm text-slate-600 mt-2"></div>
             </div>
@@ -1348,11 +1327,6 @@ nav .nav-logo {
     var studyDeck = null;
     var studyDeckLoadToken = 0;
     var studyZoom = 1;
-    var studySpeechGeneration = 0;
-    var studySpeechChunks = [];
-    var studySpeechChunkIndex = 0;
-    var studySpeechActive = false;
-    var studyAvailableVoices = [];
     var platformElapsedSeconds = 0;
     var platformStorageKey = '';
     var platformStorageAvailable = true;
@@ -2038,7 +2012,7 @@ nav .nav-logo {
       if (isLegacy) browserBanner.classList.remove('hidden');
       else browserBanner.classList.add('hidden');
       if (isLegacy) {
-        stopStudyReading(true);
+        stopStudyAudio(true);
         pdfSection.classList.add('hidden');
         pdfUnavailable.classList.remove('hidden');
         pdfUnavailableText.textContent = pdfPath
@@ -2088,6 +2062,7 @@ nav .nav-logo {
 
     function clearStudySlides() {
       studyDeckLoadToken++;
+      stopStudyAudio(true);
       studyDeck = null;
       var image = document.getElementById('learning-slide-image');
       image.removeAttribute('src');
@@ -2104,6 +2079,7 @@ nav .nav-logo {
     }
 
     function showStudySlideError(message) {
+      stopStudyAudio(true);
       var error = document.getElementById('learning-slide-error');
       error.textContent = message;
       error.classList.remove('hidden');
@@ -2158,7 +2134,6 @@ nav .nav-logo {
 
     function displayStudySlide(pageNumber) {
       if (!studyDeck) return;
-      stopStudyReading(false);
       var slides = studyDeck.slides;
       var number = Math.max(1, Math.min(slides.length, parseInt(pageNumber, 10) || 1));
       var slide = slides[number - 1];
@@ -2168,6 +2143,7 @@ nav .nav-logo {
       document.getElementById('learning-slide-title').textContent = slide.title || 'Scheda ' + number;
       document.getElementById('learning-slide-excerpt').textContent =
         slide.text || 'Il testo OCR non è disponibile per questa scheda. Puoi leggere l’immagine ingrandendola.';
+      loadStudyAudio(slide);
       document.getElementById('learning-slide-previous').disabled = number <= 1;
       document.getElementById('learning-slide-next').disabled = number >= slides.length;
 
@@ -2366,238 +2342,57 @@ nav .nav-logo {
       });
     }
 
-    function setStudySpeechControls(state, message) {
-      var playButton = document.getElementById('learning-audio-play');
-      var stopButton = document.getElementById('learning-audio-stop');
+    function stopStudyAudio(reset) {
+      var player = document.getElementById('learning-audio-player');
+      if (!player) return;
+      player.pause();
+      if (reset) {
+        player.removeAttribute('src');
+        player.load();
+        player.classList.add('hidden');
+      }
+    }
+
+    function loadStudyAudio(slide) {
+      var player = document.getElementById('learning-audio-player');
       var status = document.getElementById('learning-audio-status');
-      if (!playButton || !stopButton || !status) return;
+      stopStudyAudio(true);
 
-      status.textContent = message;
-      playButton.textContent = state === 'speaking' ? 'Ⅱ Pausa' : state === 'paused' ? '▶ Riprendi' : '▶ Ascolta';
-      playButton.setAttribute('aria-label', state === 'speaking' ? 'Metti in pausa la lettura' : state === 'paused' ? 'Riprendi la lettura' : 'Leggi la scheda');
-      stopButton.disabled = state !== 'speaking' && state !== 'paused';
-    }
-
-    function splitStudyTextForSpeech(text) {
-      var sentences = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [text];
-      var chunks = [];
-      var chunk = '';
-      for (var i = 0; i < sentences.length; i++) {
-        var sentence = sentences[i].replace(/\s+/g, ' ').trim();
-        if (!sentence) continue;
-        if (chunk && (chunk.length + sentence.length > 240)) {
-          chunks.push(chunk);
-          chunk = '';
-        }
-        while (sentence.length > 240) {
-          if (chunk) {
-            chunks.push(chunk);
-            chunk = '';
-          }
-          var splitAt = sentence.lastIndexOf(' ', 240);
-          if (splitAt < 1) splitAt = 240;
-          chunks.push(sentence.slice(0, splitAt).trim());
-          sentence = sentence.slice(splitAt).trim();
-        }
-        chunk = chunk ? chunk + ' ' + sentence : sentence;
+      var audioPath = slide && typeof slide.audio === 'string' ? slide.audio : '';
+      if (!audioPath) {
+        status.textContent = 'Audio non ancora disponibile per questa scheda. Puoi leggere il testo o ingrandire l’immagine.';
+        return;
       }
-      if (chunk) chunks.push(chunk);
-      return chunks;
-    }
-
-    function isLikelyMaleItalianVoice(voice) {
-      return /(?:^|[\s_-])(cosimo|diego|luca|paolo|matteo|alessandro|francesco|giorgio|marco|stefano|roberto|davide|andrea)(?:$|[\s_-])/i.test(voice.name) ||
-        /\b(?:male|maschile|man)\b/i.test(voice.name);
-    }
-
-    function scoreItalianStudyVoice(voice) {
-      var name = voice.name || '';
-      var score = isLikelyMaleItalianVoice(voice) ? 100 : 0;
-      if (/\b(?:neural|natural|online)\b/i.test(name)) score += 20;
-      if (/\b(?:female|femmina|woman)\b/i.test(name)) score -= 100;
-      if (voice.localService === false) score += 2;
-      return score;
-    }
-
-    function getPreferredItalianStudyVoice() {
-      if (!studyAvailableVoices.length) return null;
-      var sorted = studyAvailableVoices.slice().sort(function(first, second) {
-        return scoreItalianStudyVoice(second) - scoreItalianStudyVoice(first);
-      });
-      return sorted[0];
-    }
-
-    function refreshStudyVoices() {
-      if (!('speechSynthesis' in window)) return;
-      var voiceSelect = document.getElementById('learning-audio-voice');
-      if (!voiceSelect) return;
-      var previousUri = '';
-      var previousIndex = parseInt(voiceSelect.value, 10);
-      if (!isNaN(previousIndex) && studyAvailableVoices[previousIndex]) {
-        previousUri = studyAvailableVoices[previousIndex].voiceURI;
+      if (!/^audio\/slide-\d{3}\.ogg$/i.test(audioPath)) {
+        console.error('Percorso audio della scheda non valido:', audioPath);
+        status.textContent = 'Il file audio di questa scheda non è valido.';
+        return;
       }
-
-      var available = window.speechSynthesis.getVoices();
-      studyAvailableVoices = [];
-      for (var i = 0; i < available.length; i++) {
-        if (/^it(?:-|_)/i.test(available[i].lang)) studyAvailableVoices.push(available[i]);
-      }
-
-      while (voiceSelect.firstChild) voiceSelect.removeChild(voiceSelect.firstChild);
-      var preferredVoice = getPreferredItalianStudyVoice();
-      var automaticOption = document.createElement('option');
-      automaticOption.value = '';
-      automaticOption.textContent = preferredVoice && isLikelyMaleItalianVoice(preferredVoice)
-        ? 'Automatica · ' + preferredVoice.name
-        : 'Automatica · seleziona una voce maschile';
-      voiceSelect.appendChild(automaticOption);
-
-      var preferredIndex = -1;
-      for (var voiceIndex = 0; voiceIndex < studyAvailableVoices.length; voiceIndex++) {
-        var voice = studyAvailableVoices[voiceIndex];
-        var option = document.createElement('option');
-        option.value = String(voiceIndex);
-        option.textContent = voice.name + (isLikelyMaleItalianVoice(voice) ? ' · maschile' : '');
-        voiceSelect.appendChild(option);
-        if (voice.voiceURI === previousUri) voiceSelect.value = String(voiceIndex);
-        if (voice === preferredVoice) preferredIndex = voiceIndex;
-      }
-      if (!previousUri && preferredIndex >= 0 && isLikelyMaleItalianVoice(preferredVoice)) {
-        voiceSelect.value = String(preferredIndex);
-      }
-
-      var hint = document.getElementById('learning-audio-voice-hint');
-      if (!studyAvailableVoices.length) {
-        hint.textContent = 'Nessuna voce italiana rilevata. Installa una voce italiana maschile naturale nelle impostazioni vocali del sistema e ricarica la pagina.';
-      } else if (!preferredVoice || !isLikelyMaleItalianVoice(preferredVoice)) {
-        hint.textContent = 'Non è stata rilevata una voce maschile italiana: scegli una voce dall’elenco oppure installane una nelle impostazioni vocali del sistema.';
-      } else {
-        hint.textContent = 'Voce maschile preferita: ' + preferredVoice.name + '. Per una resa più naturale puoi installare altre voci italiane nelle impostazioni vocali del sistema.';
-      }
-    }
-
-    function speakNextStudyChunk(generation) {
-      if (generation !== studySpeechGeneration || !studySpeechActive) return;
-      if (studySpeechChunkIndex >= studySpeechChunks.length) {
-        studySpeechActive = false;
-        setStudySpeechControls('ready', 'Lettura completata.');
+      if (typeof player.canPlayType !== 'function' || !player.canPlayType('audio/ogg; codecs="vorbis"')) {
+        status.textContent = 'Questo browser non riproduce l’audio OGG. Puoi leggere la scheda o aprire il PDF originale.';
+        document.getElementById('learning-pdf-link').classList.remove('hidden');
         return;
       }
 
-      var utterance = new SpeechSynthesisUtterance(studySpeechChunks[studySpeechChunkIndex]);
-      utterance.lang = 'it-IT';
-      utterance.rate = parseFloat(document.getElementById('learning-audio-speed').value) || 1;
-      var voiceSelect = document.getElementById('learning-audio-voice');
-      var selectedVoiceIndex = parseInt(voiceSelect.value, 10);
-      var italianVoice = !isNaN(selectedVoiceIndex)
-        ? studyAvailableVoices[selectedVoiceIndex]
-        : getPreferredItalianStudyVoice();
-      if (italianVoice) utterance.voice = italianVoice;
-      utterance.onend = function() {
-        if (generation !== studySpeechGeneration || !studySpeechActive) return;
-        studySpeechChunkIndex++;
-        speakNextStudyChunk(generation);
-      };
-      utterance.onerror = function(event) {
-        if (generation !== studySpeechGeneration || event.error === 'canceled' || event.error === 'interrupted') return;
-        studySpeechActive = false;
-        console.error('Lettura vocale non riuscita:', event.error);
-        setStudySpeechControls('ready', 'La lettura vocale non è riuscita. Riprova o verifica le voci disponibili nel browser.');
-      };
-      window.speechSynthesis.speak(utterance);
+      player.src = 'appunti/slides/' + studyDeck.courseKey + '/' + encodeURI(audioPath);
+      player.classList.remove('hidden');
+      player.load();
+      status.textContent = 'Audio pronto · voce maschile neurale generata localmente.';
     }
 
-    function startOrToggleStudyReading() {
-      if (!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) {
-        setStudySpeechControls('ready', 'La lettura vocale non è supportata da questo browser.');
-        return;
-      }
-      if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
-        window.speechSynthesis.pause();
-        setStudySpeechControls('paused', 'Lettura in pausa.');
-        return;
-      }
-      if (window.speechSynthesis.paused) {
-        window.speechSynthesis.resume();
-        setStudySpeechControls('speaking', 'Lettura in corso…');
-        return;
-      }
-
-      var title = document.getElementById('learning-slide-title').textContent.trim();
-      var currentSlide = studyDeck && studyDeck.slides[studyDeck.currentPage - 1];
-      var text = currentSlide && currentSlide.text ? currentSlide.text.trim() : '';
-      var firstTextLine = text.split(/\r?\n/)[0].trim();
-      var normalizedTitle = title.toLowerCase().replace(/[^a-z0-9]/g, '');
-      var normalizedFirstLine = firstTextLine.toLowerCase().replace(/[^a-z0-9]/g, '');
-      if (normalizedTitle && normalizedTitle === normalizedFirstLine) {
-        text = text.slice(firstTextLine.length).replace(/^\s+/, '');
-      }
-      text = text.replace(/-\s*\r?\n\s*/g, '').replace(/\r?\n\s*\r?\n/g, '. ').replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
-      studySpeechChunks = splitStudyTextForSpeech([title, text].filter(Boolean).join('. '));
-      if (!studySpeechChunks.length) {
-        setStudySpeechControls('ready', 'Questa scheda non contiene testo da leggere.');
-        return;
-      }
-      var selectedVoiceIndex = parseInt(document.getElementById('learning-audio-voice').value, 10);
-      var selectedVoice = !isNaN(selectedVoiceIndex)
-        ? studyAvailableVoices[selectedVoiceIndex]
-        : getPreferredItalianStudyVoice();
-      if (!selectedVoice || (!isLikelyMaleItalianVoice(selectedVoice) && isNaN(selectedVoiceIndex))) {
-        setStudySpeechControls(
-          'ready',
-          'Nessuna voce italiana maschile rilevata. Seleziona una voce maschile dall’elenco oppure installane una nelle impostazioni vocali del sistema.'
-        );
-        return;
-      }
-      studySpeechGeneration++;
-      studySpeechChunkIndex = 0;
-      studySpeechActive = true;
-      window.speechSynthesis.cancel();
-      setStudySpeechControls(
-        'speaking',
-        isLikelyMaleItalianVoice(selectedVoice)
-          ? (text ? 'Lettura con voce maschile: ' : 'Testo OCR assente; leggo il titolo con la voce maschile: ') + selectedVoice.name + '.'
-          : 'Lettura con la voce selezionata: ' + selectedVoice.name + '.'
-      );
-      speakNextStudyChunk(studySpeechGeneration);
-    }
-
-    function stopStudyReading(showMessage) {
-      studySpeechGeneration++;
-      studySpeechActive = false;
-      studySpeechChunks = [];
-      studySpeechChunkIndex = 0;
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-      setStudySpeechControls(
-        'ready',
-        showMessage === false ? 'Premi Ascolta per ascoltare il testo della scheda.' : 'Lettura fermata.'
-      );
-    }
-
-    function initStudySpeechControls() {
-      var playButton = document.getElementById('learning-audio-play');
-      var stopButton = document.getElementById('learning-audio-stop');
-      if (!('speechSynthesis' in window) || !('SpeechSynthesisUtterance' in window)) {
-        playButton.disabled = true;
-        stopButton.disabled = true;
-        setStudySpeechControls('ready', 'La lettura vocale non è supportata da questo browser.');
-        return;
-      }
-      playButton.onclick = startOrToggleStudyReading;
-      stopButton.onclick = function() {
-        stopStudyReading(true);
-      };
-      document.getElementById('learning-audio-voice').onchange = function() {
-        if (studySpeechActive) stopStudyReading(true);
-      };
-      refreshStudyVoices();
-      window.speechSynthesis.onvoiceschanged = function() {
-        refreshStudyVoices();
+    function initStudyAudioControls() {
+      var player = document.getElementById('learning-audio-player');
+      player.onerror = function() {
+        if (player.classList.contains('hidden')) return;
+        player.classList.add('hidden');
+        document.getElementById('learning-audio-status').textContent =
+          'Audio non disponibile. Puoi leggere la scheda o aprire il PDF originale.';
+        document.getElementById('learning-pdf-link').classList.remove('hidden');
       };
     }
 
     function exitLearning() {
-      stopStudyReading(true);
+      stopStudyAudio(true);
       document.getElementById('step-learning').classList.add('hidden');
       document.getElementById('step-mode').classList.remove('hidden');
     }
@@ -4501,7 +4296,7 @@ nav .nav-logo {
       loadTeachingSlidesCatalog();
       initStudySlideshowControls();
       initStudyZoomControls();
-      initStudySpeechControls();
+      initStudyAudioControls();
       window.addEventListener('beforeunload', persistActiveExam);
       window.addEventListener('pagehide', persistActiveExam);
 
