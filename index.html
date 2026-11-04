@@ -785,8 +785,9 @@ nav .nav-logo {
     .lesson-image {
       display: block;
       flex: none;
-      width: 100%;
+      width: auto;
       height: auto;
+      max-width: 100%;
       max-height: calc(min(82vh, 1050px) - 32px);
       border-radius: 10px;
       background: #fff;
@@ -795,7 +796,7 @@ nav .nav-logo {
     }
 
     .lesson-image-wrap.is-zoomed { align-items: flex-start; justify-content: flex-start; }
-    .lesson-image-wrap.is-zoomed .lesson-image { max-height: none; }
+    .lesson-image-wrap.is-zoomed .lesson-image { max-width: none; max-height: none; }
     .lesson-zoom-controls { display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding: 10px 14px; border-bottom: 1px solid #e2e8f0; background: #f8fafc; }
     .lesson-zoom-controls button { min-width: 42px; min-height: 40px; padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 10px; background: #fff; color: #0f172a; font-size: 18px; font-weight: 700; }
     .lesson-zoom-controls button:disabled { opacity: .45; }
@@ -2382,6 +2383,27 @@ nav .nav-logo {
         .split(/\s+/);
     }
 
+    function segmentStudyConceptWord(word, vocabulary, stopWords) {
+      if (vocabulary[word] >= 2 || word.length < 7) return [word];
+      var best = [];
+      var bestScores = [];
+      bestScores[0] = 0;
+      for (var start = 0; start < word.length; start++) {
+        if (typeof bestScores[start] !== 'number') continue;
+        for (var end = start + 1; end <= word.length; end++) {
+          var part = word.substring(start, end);
+          if (!vocabulary[part] || (part.length < 3 && !stopWords[part])) continue;
+          var partScore = part.length * part.length + Math.min(vocabulary[part], 5) * 2 - 8;
+          var score = bestScores[start] + partScore;
+          if (typeof bestScores[end] !== 'number' || score > bestScores[end]) {
+            bestScores[end] = score;
+            best[end] = (best[start] || []).concat([part]);
+          }
+        }
+      }
+      return best[word.length] && best[word.length].length > 1 ? best[word.length] : [word];
+    }
+
     function buildStudyConceptMap(slides) {
       var stopWords = {};
       var stopWordList = studyConceptStopWords.split(/\s+/);
@@ -2389,11 +2411,33 @@ nav .nav-logo {
         stopWords[stopWordList[stopIndex]] = true;
       }
 
+      var vocabulary = {};
+      for (var vocabularySlide = 0; vocabularySlide < slides.length; vocabularySlide++) {
+        var vocabularyTokens = tokenizeStudyConcepts(slides[vocabularySlide].title);
+        for (var vocabularyIndex = 0; vocabularyIndex < vocabularyTokens.length; vocabularyIndex++) {
+          var vocabularyWord = vocabularyTokens[vocabularyIndex];
+          vocabulary[vocabularyWord] = (vocabulary[vocabularyWord] || 0) + 1;
+        }
+      }
+
       var topicTitles = {};
       for (var slideIndex = 0; slideIndex < slides.length; slideIndex++) {
         var slide = slides[slideIndex];
-        var label = String(slide.title || '').replace(/\s+/g, ' ').replace(/^\s+|\s+$/g, '');
-        var tokens = tokenizeStudyConcepts(label);
+        var rawTitle = String(slide.title || '').replace(/\s+/g, ' ').replace(/^\s+|\s+$/g, '');
+        var rawWords = rawTitle.split(/\s+/);
+        var tokens = [];
+        for (var rawWordIndex = 0; rawWordIndex < rawWords.length; rawWordIndex++) {
+          var rawWordTokens = tokenizeStudyConcepts(rawWords[rawWordIndex]);
+          for (var rawTokenIndex = 0; rawTokenIndex < rawWordTokens.length; rawTokenIndex++) {
+            var rawToken = rawWordTokens[rawTokenIndex];
+            var segments = segmentStudyConceptWord(rawToken, vocabulary, stopWords);
+            for (var segmentIndex = 0; segmentIndex < segments.length; segmentIndex++) {
+              tokens.push(segments[segmentIndex]);
+            }
+          }
+        }
+        var label = tokens.join(' ');
+        if (label) label = label.charAt(0).toUpperCase() + label.substring(1);
         var meaningfulTokens = [];
         for (var tokenIndex = 0; tokenIndex < tokens.length; tokenIndex++) {
           if (tokens[tokenIndex].length > 2 && !stopWords[tokens[tokenIndex]] && !/^\d+$/.test(tokens[tokenIndex])) {
@@ -2403,15 +2447,19 @@ nav .nav-logo {
         if (meaningfulTokens.length < 2 || /^(esercizi|esercizio|eserciziario|domande|quesiti)(\s|$)/i.test(label)) continue;
         var key = tokens.join(' ');
         if (!topicTitles[key]) {
-          topicTitles[key] = { label: label, score: 0, pages: [] };
+          topicTitles[key] = { label: label, pages: [] };
         }
-        topicTitles[key].score += 10 + Math.min(meaningfulTokens.length, 6);
         topicTitles[key].pages.push(slide);
       }
 
       var topics = [];
       for (var key in topicTitles) {
-        if (Object.prototype.hasOwnProperty.call(topicTitles, key)) topics.push(topicTitles[key]);
+        if (Object.prototype.hasOwnProperty.call(topicTitles, key)) {
+          var topic = topicTitles[key];
+          var wordCount = tokenizeStudyConcepts(topic.label).length;
+          topic.score = topic.pages.length * 10 + Math.min(wordCount, 6);
+          topics.push(topic);
+        }
       }
       topics.sort(function(left, right) {
         return right.score - left.score || left.label.localeCompare(right.label);
