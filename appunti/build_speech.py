@@ -19,7 +19,7 @@ COURSES = (
     "4a_ele_tpsee",
     "4b_inf_telecomunicazioni",
 )
-MAX_CHUNK_CHARACTERS = 120
+MAX_CHUNK_CHARACTERS = 320
 CHUNK_PAUSE_SECONDS = 0.18
 
 
@@ -128,6 +128,24 @@ def write_audio(output_path, samples, sample_rate):
         temporary_path.unlink(missing_ok=True)
 
 
+def save_manifest(manifest_path, data):
+    serialized = json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n"
+    with tempfile.NamedTemporaryFile(
+        mode="w",
+        encoding="utf-8",
+        newline="\n",
+        dir=manifest_path.parent,
+        suffix=".json",
+        delete=False,
+    ) as temporary_file:
+        temporary_file.write(serialized)
+        temporary_path = Path(temporary_file.name)
+    try:
+        temporary_path.replace(manifest_path)
+    finally:
+        temporary_path.unlink(missing_ok=True)
+
+
 def build_course(kokoro, course, pages, voice, speed, overwrite):
     manifest_path = SLIDE_ROOT / course / "slides.json"
     data = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -152,30 +170,22 @@ def build_course(kokoro, course, pages, voice, speed, overwrite):
                 slide["audio"] = audio_reference
                 changed = True
             print(f"{course} pagina {page_number}: audio già presente")
+            if changed:
+                save_manifest(manifest_path, data)
+                changed = False
+            continue
+        if kokoro is None:
+            print(f"{course} pagina {page_number}: audio non presente")
             continue
 
         samples, sample_rate = synthesize_slide(kokoro, slide, voice, speed)
         write_audio(audio_path, samples, sample_rate)
         slide["audio"] = f"audio/{audio_name}"
-        changed = True
+        save_manifest(manifest_path, data)
         print(f"{course} pagina {page_number}: creato {audio_path.name}")
 
     if changed:
-        serialized = json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n"
-        with tempfile.NamedTemporaryFile(
-            mode="w",
-            encoding="utf-8",
-            newline="\n",
-            dir=manifest_path.parent,
-            suffix=".json",
-            delete=False,
-        ) as temporary_file:
-            temporary_file.write(serialized)
-            temporary_path = Path(temporary_file.name)
-        try:
-            temporary_path.replace(manifest_path)
-        finally:
-            temporary_path.unlink(missing_ok=True)
+        save_manifest(manifest_path, data)
 
 
 def main():
@@ -208,20 +218,29 @@ def main():
         action="store_true",
         help="Rigenera anche gli audio già presenti.",
     )
+    parser.add_argument(
+        "--link-existing-only",
+        action="store_true",
+        help="Collega al manifest gli audio esistenti senza sintetizzare tracce nuove.",
+    )
     args = parser.parse_args()
     if args.page and not args.course:
         parser.error("--page richiede --course.")
     if not 1 <= args.speed <= 2:
         parser.error("--speed deve essere compreso tra 1 e 2 per questo modello.")
-    for model_path in (args.model, args.voices):
-        if not model_path.is_file():
-            raise FileNotFoundError(
-                f"File del modello non trovato: {model_path}. "
-                "Scarica i pesi ufficiali Kokoro e specifica i percorsi con --model e --voices."
-            )
+    if args.link_existing_only and args.overwrite:
+        parser.error("--link-existing-only non può essere usato con --overwrite.")
+    kokoro = None
+    if not args.link_existing_only:
+        for model_path in (args.model, args.voices):
+            if not model_path.is_file():
+                raise FileNotFoundError(
+                    f"File del modello non trovato: {model_path}. "
+                    "Scarica i pesi ufficiali Kokoro e specifica i percorsi con --model e --voices."
+                )
 
-    kokoro = Kokoro(str(args.model), str(args.voices))
-    kokoro.sess = SpeedInputCompatibilitySession(kokoro.sess)
+        kokoro = Kokoro(str(args.model), str(args.voices))
+        kokoro.sess = SpeedInputCompatibilitySession(kokoro.sess)
     courses = (args.course,) if args.course else COURSES
     for course in courses:
         build_course(kokoro, course, args.page, args.voice, args.speed, args.overwrite)
