@@ -889,6 +889,209 @@ nav .nav-logo {
       border-top: 1px solid #e2e8f0;
       color: #475569;
     }
+
+    .learning-explanations-disclosure {
+      margin-top: 8px;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .learning-explanations-disclosure > summary {
+      padding: 9px 14px;
+      cursor: pointer;
+      color: #1e293b;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .learning-explanations-disclosure > div {
+      padding: 0 14px 12px;
+    }
+
+    @media screen and (min-width: 1200px) and (min-height: 850px) {
+      #app.lesson-mode {
+        display: flex;
+        width: calc(100% - 32px);
+        max-width: 1920px;
+        height: calc(100vh - 130px);
+        min-height: 0;
+        margin: 12px auto;
+        flex-direction: column;
+      }
+
+      #app.lesson-mode > #platform-time-indicator {
+        flex: none;
+      }
+
+      #app.lesson-mode #step-learning {
+        display: flex;
+        min-height: 0;
+        flex: 1;
+        flex-direction: column;
+        padding: 18px 24px;
+      }
+
+      #app.lesson-mode #step-learning > div:first-child {
+        flex: none;
+        margin-bottom: 12px !important;
+        padding-bottom: 12px !important;
+      }
+
+      #app.lesson-mode #step-learning > div:nth-child(2) {
+        flex: none;
+        margin-bottom: 12px !important;
+      }
+
+      #app.lesson-mode #learning-pdf-section {
+        display: flex;
+        min-height: 0;
+        margin-bottom: 0 !important;
+        flex: 1;
+        flex-direction: column;
+      }
+
+      #app.lesson-mode #learning-pdf-section > .flex {
+        flex: none;
+        margin-bottom: 8px !important;
+      }
+
+      #app.lesson-mode .lesson-card {
+        display: grid;
+        min-height: 0;
+        flex: 1;
+        grid-template-columns: minmax(0, 1fr) minmax(270px, 30%);
+        grid-template-rows: auto auto minmax(0, 1fr);
+      }
+
+      #app.lesson-mode .lesson-zoom-controls {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        padding-top: 7px;
+        padding-bottom: 7px;
+      }
+
+      #app.lesson-mode .lesson-audio-controls {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        min-height: 58px;
+        margin: 0;
+        padding: 8px 14px;
+        border: 0;
+        border-bottom: 1px solid #dbeafe;
+        border-radius: 0;
+      }
+
+      #app.lesson-mode .lesson-audio-player {
+        width: min(100%, 560px);
+      }
+
+      #app.lesson-mode .lesson-image-wrap {
+        min-height: 0;
+        max-height: none;
+        height: 100%;
+        grid-column: 1;
+        grid-row: 3;
+        padding: 12px;
+      }
+
+      #app.lesson-mode .lesson-image {
+        width: auto;
+        max-width: 100%;
+        max-height: 100%;
+        margin: auto;
+      }
+
+      #app.lesson-mode .lesson-card > #learning-slide-details {
+        display: flex;
+        min-width: 0;
+        min-height: 0;
+        margin-top: 0 !important;
+        padding: 18px;
+        grid-column: 2;
+        grid-row: 3;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: space-between;
+        border-left: 1px solid #e2e8f0;
+      }
+
+      #app.lesson-mode .lesson-card-copy {
+        padding: 0;
+      }
+
+      #app.lesson-mode #learning-slide-title {
+        margin-bottom: 12px;
+        font-size: 18px;
+      }
+
+      #app.lesson-mode .lesson-card > #learning-slide-details > .flex {
+        justify-content: flex-start;
+      }
+
+      #app.lesson-mode .lesson-thumbnail {
+        min-height: 0;
+        margin-top: 8px;
+        flex: none;
+        gap: 8px;
+      }
+
+      #app.lesson-mode .lesson-thumbnail button {
+        padding: 4px;
+      }
+
+      #app.lesson-mode .lesson-thumbnail button.active {
+        padding: 3px;
+      }
+
+      #app.lesson-mode .lesson-thumbnail img {
+        height: 48px;
+      }
+
+      #app.lesson-mode .lesson-thumbnail span {
+        margin-top: 3px;
+        font-size: 10px;
+      }
+
+      #app.lesson-mode .concept-map-actions {
+        min-height: 0;
+        margin-top: 8px;
+        flex: none;
+      }
+
+      #app.lesson-mode .concept-map-actions p {
+        display: none;
+      }
+
+      #app.lesson-mode .learning-explanations-disclosure {
+        flex: none;
+      }
+
+      #app.lesson-mode .learning-explanations-disclosure[open] {
+        max-height: 22vh;
+        overflow-y: auto;
+      }
+
+      #app.lesson-mode .concept-map-panel {
+        position: fixed;
+        z-index: 20;
+        inset: 10vh 8vw;
+        margin: 0;
+        overflow: auto;
+        background: #fff;
+        box-shadow: 0 20px 60px rgba(15, 23, 42, .3);
+      }
+    }
+
+    @media screen and (max-width: 1199px), screen and (max-height: 849px) {
+      #app.lesson-mode {
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        max-width: 1280px;
+        margin: 20px auto;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1010,17 +1213,17 @@ nav .nav-logo {
             <button type="button" id="learning-zoom-in" aria-label="Aumenta zoom" title="Aumenta zoom">+</button>
             <button type="button" id="learning-zoom-reset" aria-label="Reimposta zoom" title="Reimposta zoom">↺</button>
           </div>
+          <div class="lesson-audio-controls" role="group" aria-label="Audio della lezione">
+            <audio id="learning-audio-player" class="lesson-audio-player hidden" controls preload="none" aria-label="Audio della spiegazione"></audio>
+            <span id="learning-audio-status" class="lesson-audio-status" aria-live="polite">Audio non ancora disponibile per questa scheda.</span>
+          </div>
           <div class="lesson-image-wrap">
             <img class="lesson-image" id="learning-slide-image" src="" alt="Immagine della scheda didattica" loading="eager">
           </div>
-          <div class="flex flex-wrap items-center justify-between mt-4" style="gap: 10px;">
+          <div id="learning-slide-details" class="flex flex-wrap items-center justify-between mt-4" style="gap: 10px;">
             <div class="lesson-card-copy" style="min-width: 0; flex: 1;">
               <span id="learning-slide-label" class="text-xs font-bold uppercase tracking-wider text-blue-700"></span>
               <h3 id="learning-slide-title" class="font-bold text-xl text-slate-900 mt-1">Preparazione delle schede...</h3>
-              <div class="lesson-audio-controls" role="group" aria-label="Audio della lezione">
-                <audio id="learning-audio-player" class="lesson-audio-player hidden" controls preload="none" aria-label="Audio della spiegazione"></audio>
-                <span id="learning-audio-status" class="lesson-audio-status" aria-live="polite">Audio non ancora disponibile per questa scheda.</span>
-              </div>
             </div>
             <div class="flex items-center" style="gap: 8px;">
               <button type="button" id="learning-slide-previous" class="btn-secondary" aria-label="Slide precedente" style="padding: 9px 13px; border-radius: 10px; font-size: 18px;" disabled>←</button>
@@ -1052,11 +1255,13 @@ nav .nav-logo {
         <a id="learning-fallback-pdf-link" class="hidden mt-3 inline-block font-bold text-blue-700" target="_blank" rel="noopener">Apri il PDF originale degli appunti</a>
       </div>
 
-      <section>
-        <h3 class="text-lg font-bold text-slate-800 mb-2">Spiegazioni per argomento</h3>
-        <p class="text-sm text-slate-500 mb-3">Le spiegazioni dei quesiti sono raccolte per argomento per facilitare il ripasso prima della prova.</p>
-        <div id="learning-explanations" class="learning-explanations"></div>
-      </section>
+      <details class="learning-explanations-disclosure">
+        <summary>Spiegazioni per argomento</summary>
+        <div>
+          <p class="text-sm text-slate-500 mb-3">Le spiegazioni dei quesiti sono raccolte per argomento per facilitare il ripasso prima della prova.</p>
+          <div id="learning-explanations" class="learning-explanations"></div>
+        </div>
+      </details>
       <p class="platform-storage-notice hidden mt-4 rounded-lg border p-3 text-xs text-amber-900" role="status" style="border-color: #fcd34d; background: #fffbeb;"></p>
     </div>
 
@@ -1946,6 +2151,7 @@ nav .nav-logo {
       document.getElementById('mode-course-subtitle').textContent =
         selectedMateria.descrizione || selectedMateria.tempoMinuti + ' minuti · ' +
         selectedMateria.domande.length + ' quesiti';
+      document.getElementById('app').classList.remove('lesson-mode');
       document.getElementById('step-registration').classList.add('hidden');
       document.getElementById('step-learning').classList.add('hidden');
       document.getElementById('step-mode').classList.remove('hidden');
@@ -1978,6 +2184,7 @@ nav .nav-logo {
     }
 
     function backToClassSelection() {
+      document.getElementById('app').classList.remove('lesson-mode');
       document.getElementById('step-mode').classList.add('hidden');
       document.getElementById('step-registration').classList.remove('hidden');
     }
@@ -2125,6 +2332,7 @@ nav .nav-logo {
       document.getElementById('step-quiz').classList.add('hidden');
       document.getElementById('step-result').classList.add('hidden');
       document.getElementById('step-review').classList.add('hidden');
+      document.getElementById('app').classList.toggle('lesson-mode', !!slidesPath && !isLegacy);
       document.getElementById('step-learning').classList.remove('hidden');
       updatePlatformTimeDisplays();
     }
@@ -2785,6 +2993,7 @@ nav .nav-logo {
 
     function exitLearning() {
       stopStudyAudio(true);
+      document.getElementById('app').classList.remove('lesson-mode');
       document.getElementById('step-learning').classList.add('hidden');
       document.getElementById('step-mode').classList.remove('hidden');
     }
@@ -3257,6 +3466,7 @@ nav .nav-logo {
       document.getElementById('step-result').classList.add('hidden');
       document.getElementById('step-review').classList.add('hidden');
       document.getElementById('step-learning').classList.add('hidden');
+      document.getElementById('app').classList.remove('lesson-mode');
       document.getElementById('step-quiz').classList.remove('hidden');
 
       renderQuestionsGrid();
