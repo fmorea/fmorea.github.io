@@ -2298,7 +2298,7 @@ nav .nav-logo {
       }
     }
 
-    function openStudyMaterial(initialPage) {
+    function openStudyMaterial(initialPage, initialZoom) {
       var candidateData = getCandidateFromForm();
       if (!candidateData) return;
       if (!selectedMateria) {
@@ -2346,7 +2346,7 @@ nav .nav-logo {
         pdfUnavailable.classList.add('hidden');
         document.getElementById('learning-pdf-link').classList.add('hidden');
         fallbackPdfLink.classList.add('hidden');
-        loadStudySlides(slidesPath, initialPage);
+        loadStudySlides(slidesPath, initialPage, initialZoom);
       } else {
         pdfSection.classList.add('hidden');
         pdfUnavailable.classList.remove('hidden');
@@ -2366,7 +2366,7 @@ nav .nav-logo {
       document.getElementById('app').classList.toggle('lesson-mode', !!slidesPath && !isLegacy);
       document.getElementById('step-learning').classList.remove('hidden');
       updatePlatformTimeDisplays();
-      persistActiveLesson(initialPage || 1);
+      persistActiveLesson(initialPage || 1, initialZoom);
     }
 
     function isLegacyLessonBrowser() {
@@ -2413,7 +2413,7 @@ nav .nav-logo {
       document.getElementById('learning-slide-next').disabled = true;
     }
 
-    function loadStudySlides(path, initialPage) {
+    function loadStudySlides(path, initialPage, initialZoom) {
       clearStudySlides();
       var token = ++studyDeckLoadToken;
       var xhr = new XMLHttpRequest();
@@ -2438,7 +2438,7 @@ nav .nav-logo {
             conceptMap: null
           };
           document.getElementById('learning-concept-map-toggle').disabled = false;
-          displayStudySlide(initialPage || 1);
+          displayStudySlide(initialPage || 1, initialZoom);
         } catch (err) {
           console.error('Impossibile leggere il contenuto estratto degli appunti:', err);
           showStudySlideError('Il materiale estratto non è leggibile. Puoi aprire il PDF originale.');
@@ -2455,7 +2455,7 @@ nav .nav-logo {
       document.getElementById('learning-lesson-card').setAttribute('aria-busy', 'true');
     }
 
-    function displayStudySlide(pageNumber) {
+    function displayStudySlide(pageNumber, initialZoom) {
       if (!studyDeck) return;
       var slides = studyDeck.slides;
       var number = Math.max(1, Math.min(slides.length, parseInt(pageNumber, 10) || 1));
@@ -2478,18 +2478,21 @@ nav .nav-logo {
       var token = studyDeckLoadToken;
       var imageUrl = 'appunti/slides/' + studyDeck.courseKey + '/' + encodeURI(imageName);
       setStudyZoom(1);
-      persistActiveLesson(number);
+      persistActiveLesson(number, initialZoom);
       document.getElementById('learning-lesson-card').setAttribute('aria-busy', 'true');
       image.alt = (slide.title || 'Scheda didattica') + ', pagina ' + number;
-      image.onload = function() {
-        if (token === studyDeckLoadToken) {
-          document.getElementById('learning-lesson-card').setAttribute('aria-busy', 'false');
-        }
-      };
       image.onerror = function() {
         if (token !== studyDeckLoadToken) return;
         console.error('Impossibile caricare l’immagine della scheda ' + number + ': ' + imageUrl);
         showStudySlideError('Immagine della scheda non disponibile. Puoi aprire il PDF originale.');
+      };
+      image.onload = function() {
+        if (token !== studyDeckLoadToken) return;
+        document.getElementById('learning-lesson-card').setAttribute('aria-busy', 'false');
+        var zoom = typeof initialZoom === 'number'
+          ? initialZoom
+          : (window.innerWidth >= 1200 && window.innerHeight >= 850 ? 1.5 : 1);
+        if (zoom > 1) setStudyZoom(zoom);
       };
       image.src = imageUrl;
       renderStudyThumbnails();
@@ -2523,6 +2526,7 @@ nav .nav-logo {
         image.style.width = '';
         viewport.scrollLeft = 0;
         viewport.scrollTop = 0;
+        persistActiveLesson(studyDeck ? studyDeck.currentPage : 1, nextZoom);
         return;
       }
 
@@ -2545,15 +2549,17 @@ nav .nav-logo {
       var localY = focusY - viewportRect.top - viewport.clientTop;
       viewport.scrollLeft = image.offsetLeft + ratioX * image.offsetWidth - localX;
       viewport.scrollTop = image.offsetTop + ratioY * image.offsetHeight - localY;
+      persistActiveLesson(studyDeck ? studyDeck.currentPage : 1, nextZoom);
     }
 
     function initStudyZoomControls() {
       var viewport = document.querySelector('.lesson-image-wrap');
+      var desktopLayout = window.innerWidth >= 1200 && window.innerHeight >= 850;
       document.getElementById('learning-zoom-in').onclick = function() {
-        setStudyZoom(studyZoom + 0.1);
+        setStudyZoom(studyZoom + 0.25);
       };
       document.getElementById('learning-zoom-out').onclick = function() {
-        setStudyZoom(studyZoom - 0.1);
+        setStudyZoom(studyZoom - 0.25);
       };
       document.getElementById('learning-zoom-reset').onclick = function() {
         setStudyZoom(1);
@@ -2561,6 +2567,11 @@ nav .nav-logo {
       document.getElementById('learning-zoom-slider').oninput = function() {
         setStudyZoom(parseFloat(this.value));
       };
+      window.addEventListener('resize', function() {
+        var nextDesktopLayout = window.innerWidth >= 1200 && window.innerHeight >= 850;
+        if (desktopLayout && !nextDesktopLayout && studyDeck) setStudyZoom(1);
+        desktopLayout = nextDesktopLayout;
+      });
 
       if (!viewport) return;
       viewport.addEventListener('wheel', function(event) {
@@ -3040,6 +3051,7 @@ nav .nav-logo {
 
     function exitLearning() {
       stopStudyAudio(true);
+      setStudyZoom(1);
       clearActiveLesson();
       document.getElementById('app').classList.remove('lesson-mode');
       document.getElementById('step-learning').classList.add('hidden');
@@ -3054,12 +3066,14 @@ nav .nav-logo {
       }
     }
 
-    function persistActiveLesson(pageNumber) {
+    function persistActiveLesson(pageNumber, zoom) {
       if (!selectedMateria || document.getElementById('step-learning').classList.contains('hidden')) return;
+      var zoomLevel = typeof zoom === 'number' && isFinite(zoom) ? zoom : studyZoom;
       var state = {
         version: 1,
         materiaId: selectedMateria.id,
-        page: parseInt(pageNumber, 10) || (studyDeck ? studyDeck.currentPage : 1)
+        page: parseInt(pageNumber, 10) || (studyDeck ? studyDeck.currentPage : 1),
+        zoom: Math.max(1, Math.min(4, zoomLevel))
       };
       try {
         window.localStorage.setItem(activeLessonStorageKey, JSON.stringify(state));
@@ -3130,7 +3144,15 @@ nav .nav-logo {
       lessonRestoreAttempted = true;
       selectedMateria = materia;
       candidate = { nome: '', cognome: '' };
-      openStudyMaterial(state.page);
+      document.getElementById('mode-course-title').textContent =
+        (materia.corso ? materia.corso.classe + ' classe' : 'Corso') + ' · ' + materia.nome;
+      document.getElementById('mode-course-subtitle').textContent =
+        materia.descrizione || materia.tempoMinuti + ' minuti · ' + materia.domande.length + ' quesiti';
+      updateMateriaInfo();
+      var zoom = typeof state.zoom === 'number' && isFinite(state.zoom)
+        ? Math.max(1, Math.min(4, state.zoom))
+        : 1;
+      openStudyMaterial(state.page, zoom);
     }
 
     function getCandidateFromForm() {
@@ -3352,6 +3374,7 @@ nav .nav-logo {
       } catch (err) {
         console.error('La prova salvata non è un JSON valido:', err);
         clearActiveExam();
+        if (!document.getElementById('step-learning').classList.contains('hidden')) setStudyZoom(1);
         clearActiveLesson();
         examRestoreAttempted = true;
         return;
