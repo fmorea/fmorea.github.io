@@ -8,6 +8,7 @@
 	<nav>
 	<div class="container"><div class="row align-items-center"><div class="nav-logo"><a href="https://fmorea.github.io/" target="_blank"><span style="font-family: Averta, Inter, sans-serif; font-size: 34px; font-weight: 800; color: #fff; letter-spacing: -0.3px; white-space: nowrap;">FMOREA</span></a></div> <div class="nav-lingua dropdown"><button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Cambia lingua" class="dropdown-toggle">Italia - IT</button> <!----></div></div></div>
   	</nav>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <!-- jsPDF per generazione lato client della scheda riepilogativa PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   
@@ -486,6 +487,7 @@
       #step-registration,
       #step-quiz,
       #step-review,
+      #step-learning,
       .btn-action,
       .btn-secondary,
       #btn-download-pdf,
@@ -625,6 +627,111 @@ nav .nav-logo {
     border-right: 6px solid transparent;
     border-top: 7px solid #FFFFFF;
 }
+
+    .slide-deck {
+      padding: 18px;
+      border: 1px solid #dbe3ee;
+      border-radius: 20px;
+      background: linear-gradient(145deg, #f8fafc, #eef2f8);
+      box-shadow: 0 16px 40px rgba(15, 23, 42, .08);
+    }
+
+    .slide-stage {
+      display: flex;
+      height: min(68vh, 780px);
+      min-height: 320px;
+      max-height: 780px;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 18px;
+      border-radius: 14px;
+      background: #172033;
+    }
+
+    .slide-stage canvas {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 3px;
+      background: #fff;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, .35);
+    }
+
+    .slide-thumbnail-list {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .slide-thumbnail {
+      min-width: 0;
+      padding: 8px;
+      overflow: hidden;
+      border: 1px solid #dbe3ee;
+      border-radius: 12px;
+      background: #fff;
+      color: #475569;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .slide-thumbnail.active {
+      border: 2px solid #2563eb;
+      padding: 7px;
+      color: #1d4ed8;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+    }
+
+    .slide-thumbnail canvas {
+      display: block;
+      width: 100%;
+      height: 86px;
+      object-fit: contain;
+      border-radius: 5px;
+      background: #f1f5f9;
+    }
+
+    .slide-thumbnail-title {
+      display: -webkit-box;
+      min-height: 34px;
+      margin-top: 6px;
+      overflow: hidden;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.4;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    @media screen and (max-width: 600px) {
+      .slide-deck { padding: 10px; }
+      .slide-stage { height: 58vh; min-height: 220px; max-height: 640px; padding: 8px; }
+      .slide-thumbnail-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+      .slide-thumbnail canvas { height: 68px; }
+    }
+
+    .learning-explanations details {
+      margin: 8px 0;
+      padding: 12px 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .learning-explanations summary {
+      cursor: pointer;
+      color: #1e293b;
+      font-weight: 700;
+    }
+
+    .learning-explanation {
+      margin: 12px 0 0;
+      padding-top: 10px;
+      border-top: 1px solid #e2e8f0;
+      color: #475569;
+    }
   </style>
 </head>
 <body>
@@ -665,6 +772,14 @@ nav .nav-logo {
           <div class="grid grid-cols-2" id="materie-selector"></div>
         </div>
 
+        <div class="mb-6 rounded-xl border p-4" style="border-color: #bfdbfe; background: #eff6ff;">
+          <div class="font-bold text-sm text-slate-800 mb-1">Materiale didattico e ripasso</div>
+          <p id="material-status" class="text-xs text-slate-600 mb-3" role="status">Caricamento dei materiali in corso...</p>
+          <button type="button" id="btn-open-material" onclick="openStudyMaterial()" class="btn-secondary" style="padding: 10px 16px; border-radius: 10px; font-weight: 700;" disabled>
+            Apri slide e spiegazioni
+          </button>
+        </div>
+
         <div class="p-4 rounded-xl bg-blue-50 border-blue-200 text-xs text-blue-900 flex flex-wrap justify-between items-center mb-6" style="gap: 12px; border: 1px solid #bfdbfe;">
           <div class="flex items-center">
             <svg class="w-4" width="16" height="16" style="width: 16px; height: 16px; margin-right: 6px;" fill="none" stroke="#2563eb" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -679,6 +794,70 @@ nav .nav-logo {
           <svg class="w-5" width="20" height="20" style="width: 20px; height: 20px; margin-left: 6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
         </button>
       </form>
+    </div>
+
+    <!-- MATERIALI DIDATTICI E RIPASSO -->
+    <div id="step-learning" class="hidden p-6 md:p-10">
+      <div class="border-b pb-5 mb-6 flex flex-wrap items-center justify-between" style="gap: 12px;">
+        <div>
+          <span class="rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-800" style="padding: 2px 10px; display: inline-block; margin-bottom: 4px;">Lezione e ripasso</span>
+          <h2 id="learning-title">Materiale didattico</h2>
+          <p id="learning-course-info" class="text-sm text-slate-500"></p>
+        </div>
+        <div class="text-right">
+          <div class="text-xs text-slate-500 uppercase font-bold">Tempo attivo totale</div>
+          <div id="learning-platform-time" class="font-bold text-blue-700">0 h 0 min</div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap mb-5" style="gap: 10px;">
+        <button type="button" id="btn-take-exam" onclick="startExam()" class="btn-action btn-primary" style="padding: 10px 18px; font-size: 13px;">
+          Vai alla prova d'esame
+        </button>
+        <button type="button" onclick="exitLearning()" class="btn-secondary" style="padding: 10px 18px; border-radius: 10px; font-weight: 700;">
+          Torna alla selezione
+        </button>
+      </div>
+
+      <div id="learning-pdf-section" class="mb-8">
+        <div class="flex flex-wrap items-center justify-between mb-3" style="gap: 8px;">
+          <div>
+            <h3 class="text-lg font-bold text-slate-800">Slide di ripasso</h3>
+            <p class="text-xs text-slate-500">Sfoglia le schede o scegli una miniatura; usa anche le frecce della tastiera.</p>
+          </div>
+          <span id="learning-slide-counter" class="text-sm font-bold text-slate-600" aria-live="polite">Caricamento delle slide...</span>
+        </div>
+        <div class="slide-deck">
+          <div class="slide-stage" id="learning-slide-stage" aria-busy="true">
+            <canvas id="learning-slide-canvas" aria-label="Pagina della presentazione didattica"></canvas>
+          </div>
+          <div class="flex flex-wrap items-center justify-between mt-4" style="gap: 10px;">
+            <div style="min-width: 0; flex: 1;">
+              <div id="learning-slide-title" class="font-bold text-lg text-slate-900">Preparazione delle slide...</div>
+              <p id="learning-slide-excerpt" class="text-sm text-slate-600 mt-1" style="margin-bottom: 0;"></p>
+            </div>
+            <div class="flex items-center" style="gap: 8px;">
+              <button type="button" id="learning-slide-previous" class="btn-secondary" aria-label="Slide precedente" style="padding: 9px 13px; border-radius: 10px; font-size: 18px;" disabled>←</button>
+              <label for="learning-slide-number" class="text-xs text-slate-500">Slide</label>
+              <input id="learning-slide-number" type="number" min="1" value="1" aria-label="Numero slide" style="width: 68px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 8px;">
+              <button type="button" id="learning-slide-next" class="btn-secondary" aria-label="Slide successiva" style="padding: 9px 13px; border-radius: 10px; font-size: 18px;" disabled>→</button>
+            </div>
+          </div>
+          <div id="learning-slide-thumbnails" class="slide-thumbnail-list" aria-label="Anteprime delle slide vicine"></div>
+        </div>
+        <p id="learning-slide-error" class="hidden mt-3 rounded-xl border p-4 text-sm text-red-800" role="alert" style="border-color: #fecaca; background: #fef2f2;"></p>
+        <a id="learning-pdf-link" class="hidden mt-3 text-sm font-bold text-blue-700" target="_blank" rel="noopener">Apri il PDF originale</a>
+      </div>
+      <div id="learning-pdf-unavailable" class="hidden mb-8 rounded-xl border p-4 text-sm text-slate-700" style="border-color: #cbd5e1; background: #f8fafc;">
+        Per questa materia non è associato un PDF. Puoi comunque usare le spiegazioni testuali qui sotto.
+      </div>
+
+      <section>
+        <h3 class="text-lg font-bold text-slate-800 mb-2">Spiegazioni per argomento</h3>
+        <p class="text-sm text-slate-500 mb-3">Le spiegazioni dei quesiti sono raccolte per argomento per facilitare il ripasso prima della prova.</p>
+        <div id="learning-explanations" class="learning-explanations"></div>
+      </section>
+      <p class="platform-storage-notice hidden mt-4 rounded-lg border p-3 text-xs text-amber-900" role="status" style="border-color: #fcd34d; background: #fffbeb;"></p>
     </div>
 
     <!-- 2. SCHEDA D'ESAME -->
@@ -797,6 +976,13 @@ nav .nav-logo {
             <div class="text-2xl font-black text-purple-600" id="res-time">03:45</div>
           </div>
         </div>
+      </div>
+
+      <div class="rounded-xl border p-4 mb-6 text-sm" style="border-color: #bfdbfe; background: #eff6ff;">
+        <span class="font-bold text-slate-700">Tempo attivo totale in piattaforma:</span>
+        <span id="result-platform-time" class="font-black text-blue-700">0 h 0 min</span>
+        <span class="text-xs text-slate-600"> (ore e minuti)</span>
+        <p class="platform-storage-notice hidden mt-2 rounded-lg border p-3 text-xs text-amber-900" role="status" style="border-color: #fcd34d; background: #fffbeb;"></p>
       </div>
 
       <!-- SEZIONE QR CODE STATO DOMANDE & SPIEGAZIONE -->
@@ -1004,16 +1190,47 @@ nav .nav-logo {
     var examResultData = null;
     var currentReviewData = null;
     var currentReviewFilter = 'all';
+    var teachingMaterials = {};
+    var teachingMaterialsLoadFailed = false;
+    var studyDeck = null;
+    var studyDeckLoadToken = 0;
+    var studySlideRenderToken = 0;
+    var studyThumbnailRenderToken = 0;
+    var studyThumbnailTasks = [];
+    var platformElapsedSeconds = 0;
+    var platformStorageKey = '';
+    var platformStorageAvailable = true;
+    var platformTimerInterval = null;
 
-    /* PARSER NOME FILE QUIZ METADATI: es. Patente_B-15min-90soglia.txt */
+    /* PARSER NOME FILE QUIZ: classe_specializzazione_materia_scuola_periodo_anno */
     function parseQuizFilename(filename) {
-      var base = filename.replace(/\.[^/.]+$/, "");
+      var base = filename.replace(/\.[^/.]+$/, "").trim();
+      var standardMatch = base.match(/^([^_]+)_([^_]+)_(.+?)_([^_]+)_([^_]+)_(\d{4}-\d{4})-(\d+)\s*min-(\d+)\s*soglia$/i);
       var parts = base.split('-');
       var nomeParts = [];
       var tempoMinuti = 15;
       var sogliaSuperamento = 90;
+      var corso = null;
+      var corsoKey = '';
 
-      for (var i = 0; i < parts.length; i++) {
+      if (standardMatch) {
+        corso = {
+          classe: standardMatch[1],
+          specializzazione: standardMatch[2],
+          materia: standardMatch[3].replace(/_/g, ' '),
+          scuola: standardMatch[4],
+          periodo: standardMatch[5],
+          anno: standardMatch[6]
+        };
+        corsoKey = (standardMatch[1] + '_' + standardMatch[2] + '_' + standardMatch[3])
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '_')
+          .replace(/^_+|_+$/g, '');
+        tempoMinuti = parseInt(standardMatch[7], 10);
+        sogliaSuperamento = parseInt(standardMatch[8], 10);
+      }
+
+      for (var i = 0; !standardMatch && i < parts.length; i++) {
         var p = parts[i].trim();
         var minMatch = p.match(/^(\d+)\s*(?:min|m|minuti)?$/i);
         var sogliaMatch = p.match(/^(\d+)\s*(?:soglia|%|p|perc)?$/i);
@@ -1033,7 +1250,7 @@ nav .nav-logo {
         }
       }
 
-      var nome = nomeParts.join(' ').replace(/_/g, ' ').trim();
+      var nome = corso ? corso.materia : nomeParts.join(' ').replace(/_/g, ' ').trim();
       if (!nome) nome = base.replace(/_/g, ' ');
 
       return {
@@ -1041,7 +1258,9 @@ nav .nav-logo {
         nome: nome,
         tempoMinuti: (tempoMinuti > 0 && tempoMinuti <= 180) ? tempoMinuti : 15,
         sogliaSuperamento: (sogliaSuperamento > 0 && sogliaSuperamento <= 100) ? sogliaSuperamento : 80,
-        filename: filename
+        filename: filename,
+        corso: corso,
+        corsoKey: corsoKey
       };
     }
 
@@ -1246,6 +1465,37 @@ nav .nav-logo {
       return { owner: owner, repo: repo };
     }
 
+    function loadTeachingMaterials() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'appunti/manifest.json', true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState !== 4) return;
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            var manifest = JSON.parse(xhr.responseText);
+            if (!manifest || typeof manifest !== 'object' || Array.isArray(manifest)) {
+              throw new Error('Il catalogo dei materiali non ha un formato valido.');
+            }
+            teachingMaterials = manifest;
+            teachingMaterialsLoadFailed = false;
+          } catch (err) {
+            teachingMaterialsLoadFailed = true;
+            console.error('Impossibile leggere appunti/manifest.json:', err);
+          }
+        } else {
+          teachingMaterialsLoadFailed = true;
+          console.error('Impossibile caricare appunti/manifest.json (HTTP ' + xhr.status + ').');
+        }
+        updateMateriaInfo();
+      };
+      xhr.onerror = function() {
+        teachingMaterialsLoadFailed = true;
+        console.error('Errore di rete durante il caricamento di appunti/manifest.json.');
+        updateMateriaInfo();
+      };
+      xhr.send();
+    }
+
     /* SCANSIONE AUTOMATICA DELLA REPOSITORY PER FILE .txt */
     function scansionaRepository() {
       var gh = ottieniDatiGitHubDefault();
@@ -1344,9 +1594,14 @@ nav .nav-logo {
                     loaded.push({
                       id: meta.id,
                       nome: meta.nome,
-                      descrizione: 'Banca dati: ' + meta.filename + ' (' + questions.length + ' quesiti)',
+                      descrizione: meta.corso ?
+                        meta.corso.classe + ' • ' + meta.corso.specializzazione + ' • ' + meta.corso.scuola + ' • ' + meta.corso.periodo + ' ' + meta.corso.anno :
+                        'Banca dati: ' + meta.filename + ' (' + questions.length + ' quesiti)',
                       tempoMinuti: meta.tempoMinuti,
                       sogliaSuperamento: meta.sogliaSuperamento,
+                      corso: meta.corso,
+                      corsoKey: meta.corsoKey,
+                      filename: meta.filename,
                       domande: questions
                     });
                   }
@@ -1388,7 +1643,7 @@ nav .nav-logo {
         emptyCard.style.width = '100%';
         emptyCard.innerHTML = 
           '<div class="font-bold text-slate-700 text-sm mb-1">Nessun file quiz trovato nel repository</div>' +
-          '<div class="text-slate-500">I developer possono caricare file <b>.txt</b> nella cartella <code>quiz/</code> della repository con la sintassi convenzionata <code>nomemateria-minuti-soglia.txt</code>.</div>';
+          '<div class="text-slate-500">Carica file <b>.txt</b> in <code>quiz/</code> con la sintassi <code>CLASSE_SPECIALIZZAZIONE_MATERIA_SCUOLA_PERIODO_ANNO-60min-55soglia.txt</code>.</div>';
         container.appendChild(emptyCard);
         updateMateriaInfo();
         return;
@@ -1437,6 +1692,7 @@ nav .nav-logo {
         document.getElementById('info-tempo').textContent = '--';
         document.getElementById('info-soglia').textContent = '--';
         document.getElementById('info-max-errori').textContent = '0 errori';
+        renderSelectedMateriaMaterial();
         return;
       }
       document.getElementById('info-domande').textContent = selectedMateria.domande.length;
@@ -1444,6 +1700,484 @@ nav .nav-logo {
       document.getElementById('info-soglia').textContent = selectedMateria.sogliaSuperamento + '%';
       var maxErr = Math.floor(selectedMateria.domande.length * (1 - selectedMateria.sogliaSuperamento / 100));
       document.getElementById('info-max-errori').textContent = 'max ' + maxErr + ' error' + (maxErr === 1 ? 'e' : 'i');
+      renderSelectedMateriaMaterial();
+    }
+
+    function getTeachingMaterialPath(materia) {
+      if (!materia || !materia.corsoKey) return '';
+      var path = teachingMaterials[materia.corsoKey];
+      if (typeof path !== 'string' || !path.trim() || path.indexOf('..') !== -1 || path.charAt(0) === '/') return '';
+      return path.trim();
+    }
+
+    function renderSelectedMateriaMaterial() {
+      var status = document.getElementById('material-status');
+      var button = document.getElementById('btn-open-material');
+      if (!status || !button) return;
+      button.disabled = !selectedMateria;
+
+      if (!selectedMateria) {
+        status.textContent = 'Seleziona una materia per visualizzare il materiale didattico disponibile.';
+      } else if (getTeachingMaterialPath(selectedMateria)) {
+        status.textContent = 'Slide PDF e spiegazioni testuali disponibili per ' + selectedMateria.nome + '.';
+      } else if (teachingMaterialsLoadFailed) {
+        status.textContent = 'Catalogo PDF non disponibile; puoi comunque aprire le spiegazioni dei quesiti.';
+      } else {
+        status.textContent = 'Per questa materia non è associato un PDF; sono disponibili le spiegazioni testuali dei quesiti.';
+      }
+    }
+
+    function renderLearningExplanations(materia) {
+      var container = document.getElementById('learning-explanations');
+      container.innerHTML = '';
+      var groups = [];
+      var questions = materia && materia.domande ? materia.domande : [];
+
+      for (var i = 0; i < questions.length; i++) {
+        var question = questions[i];
+        if (!question.spiegazione) continue;
+        var topic = question.argomento || 'Generale';
+        var group = null;
+        for (var g = 0; g < groups.length; g++) {
+          if (groups[g].topic === topic) {
+            group = groups[g];
+            break;
+          }
+        }
+        if (!group) {
+          group = { topic: topic, explanations: [] };
+          groups.push(group);
+        }
+        group.explanations.push(question.spiegazione);
+      }
+
+      if (groups.length === 0) {
+        var empty = document.createElement('p');
+        empty.className = 'text-sm text-slate-500';
+        empty.textContent = 'Non sono presenti spiegazioni testuali per questa materia.';
+        container.appendChild(empty);
+        return;
+      }
+
+      for (var gi = 0; gi < groups.length; gi++) {
+        var details = document.createElement('details');
+        var summary = document.createElement('summary');
+        summary.textContent = groups[gi].topic + ' (' + groups[gi].explanations.length + ')';
+        details.appendChild(summary);
+        for (var ei = 0; ei < groups[gi].explanations.length; ei++) {
+          var paragraph = document.createElement('p');
+          paragraph.className = 'learning-explanation';
+          paragraph.textContent = groups[gi].explanations[ei];
+          details.appendChild(paragraph);
+        }
+        container.appendChild(details);
+      }
+    }
+
+    function openStudyMaterial() {
+      var nome = document.getElementById('cand-nome').value.trim();
+      var cognome = document.getElementById('cand-cognome').value.trim();
+      if (!nome || !cognome) {
+        alert('Inserisci Nome e Cognome prima di iniziare il ripasso.');
+        return;
+      }
+      if (!selectedMateria) {
+        alert('Seleziona una materia prima di aprire il materiale.');
+        return;
+      }
+
+      candidate = { nome: nome, cognome: cognome };
+      startPlatformTracking();
+      document.getElementById('learning-title').textContent = selectedMateria.nome + ' - materiale didattico';
+      var courseInfo = selectedMateria.descrizione || '';
+      document.getElementById('learning-course-info').textContent = courseInfo;
+      var pdfPath = getTeachingMaterialPath(selectedMateria);
+      var pdfSection = document.getElementById('learning-pdf-section');
+      var pdfUnavailable = document.getElementById('learning-pdf-unavailable');
+      if (pdfPath) {
+        var pdfUrl = 'appunti/' + encodeURI(pdfPath);
+        document.getElementById('learning-pdf-link').href = pdfUrl;
+        pdfSection.classList.remove('hidden');
+        pdfUnavailable.classList.add('hidden');
+        loadStudySlides(pdfPath);
+      } else {
+        pdfSection.classList.add('hidden');
+        pdfUnavailable.classList.remove('hidden');
+        clearStudySlides();
+      }
+      renderLearningExplanations(selectedMateria);
+      document.getElementById('step-registration').classList.add('hidden');
+      document.getElementById('step-quiz').classList.add('hidden');
+      document.getElementById('step-result').classList.add('hidden');
+      document.getElementById('step-review').classList.add('hidden');
+      document.getElementById('step-learning').classList.remove('hidden');
+      updatePlatformTimeDisplays();
+    }
+
+    function clearStudySlides() {
+      studyDeckLoadToken++;
+      studySlideRenderToken++;
+      studyThumbnailRenderToken++;
+      if (studyDeck && studyDeck.renderTask) {
+        try {
+          studyDeck.renderTask.cancel();
+        } catch (err) {
+          console.warn('Impossibile annullare il rendering della slide:', err);
+        }
+      }
+      for (var i = 0; i < studyThumbnailTasks.length; i++) {
+        try {
+          studyThumbnailTasks[i].cancel();
+        } catch (err) {
+          console.warn('Impossibile annullare il rendering di una miniatura:', err);
+        }
+      }
+      studyThumbnailTasks = [];
+      var previousPdf = studyDeck && studyDeck.pdf;
+      studyDeck = null;
+      if (previousPdf) {
+        previousPdf.destroy().catch(function(err) {
+          console.warn('Impossibile rilasciare il PDF precedente:', err);
+        });
+      }
+      var stage = document.getElementById('learning-slide-stage');
+      stage.setAttribute('aria-busy', 'false');
+      document.getElementById('learning-slide-counter').textContent = 'Slide non disponibili';
+      document.getElementById('learning-slide-title').textContent = 'Nessun PDF associato';
+      document.getElementById('learning-slide-excerpt').textContent = '';
+      document.getElementById('learning-slide-thumbnails').innerHTML = '';
+      document.getElementById('learning-slide-error').classList.add('hidden');
+      document.getElementById('learning-pdf-link').classList.add('hidden');
+      document.getElementById('learning-slide-previous').disabled = true;
+      document.getElementById('learning-slide-next').disabled = true;
+      var canvas = document.getElementById('learning-slide-canvas');
+      canvas.width = 0;
+      canvas.height = 0;
+    }
+
+    function showStudySlideError(message) {
+      var error = document.getElementById('learning-slide-error');
+      error.textContent = message;
+      error.classList.remove('hidden');
+      document.getElementById('learning-slide-stage').setAttribute('aria-busy', 'false');
+      document.getElementById('learning-slide-counter').textContent = 'Presentazione non disponibile';
+      document.getElementById('learning-slide-title').textContent = 'Non è stato possibile preparare le slide';
+      document.getElementById('learning-slide-excerpt').textContent = '';
+      document.getElementById('learning-slide-thumbnails').innerHTML = '';
+      document.getElementById('learning-pdf-link').classList.remove('hidden');
+      document.getElementById('learning-slide-previous').disabled = true;
+      document.getElementById('learning-slide-next').disabled = true;
+    }
+
+    function loadStudySlides(path) {
+      clearStudySlides();
+      var token = ++studyDeckLoadToken;
+      var pdfUrl = 'appunti/' + encodeURI(path);
+      var fallbackLink = document.getElementById('learning-pdf-link');
+      fallbackLink.href = pdfUrl;
+
+      if (!window.pdfjsLib || typeof window.pdfjsLib.getDocument !== 'function') {
+        showStudySlideError('Il visualizzatore di slide non è disponibile. Apri il PDF originale per consultare il materiale.');
+        return;
+      }
+
+      document.getElementById('learning-slide-counter').textContent = 'Estrazione delle slide in corso...';
+      document.getElementById('learning-slide-title').textContent = 'Preparazione delle schede...';
+      document.getElementById('learning-slide-stage').setAttribute('aria-busy', 'true');
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      var loadingTask = window.pdfjsLib.getDocument(pdfUrl);
+      loadingTask.promise.then(function(pdf) {
+        if (token !== studyDeckLoadToken) {
+          pdf.destroy();
+          return;
+        }
+        studyDeck = {
+          pdf: pdf,
+          currentPage: 1,
+          titles: {},
+          renderTask: null
+        };
+        document.getElementById('learning-slide-number').max = pdf.numPages;
+        displayStudySlide(1);
+      }).catch(function(err) {
+        if (token !== studyDeckLoadToken) return;
+        console.error('Impossibile estrarre le slide dal PDF ' + path + ':', err);
+        showStudySlideError('Si è verificato un errore durante la lettura del materiale didattico. Puoi aprire il PDF originale.');
+      });
+    }
+
+    function getStudyPageText(page) {
+      return page.getTextContent().then(function(textContent) {
+        var lines = [];
+        for (var i = 0; i < textContent.items.length; i++) {
+          var value = textContent.items[i].str ? textContent.items[i].str.trim() : '';
+          if (value && !/\b(?:page|pagina)\s+\d+\s*$/i.test(value)) lines.push(value);
+        }
+        var titleIndex = 0;
+        while (titleIndex < lines.length && (
+          /(?:page|pagina)\s*\d+/i.test(lines[titleIndex]) ||
+          !/[A-Za-zÀ-ÿ]{3}/.test(lines[titleIndex])
+        )) titleIndex++;
+        var title = titleIndex < lines.length ? lines[titleIndex] : '';
+        var excerptLines = lines.slice(titleIndex + 1);
+        var excerpt = excerptLines.join(' ').replace(/\s+/g, ' ').trim();
+        if (excerpt.length > 240) excerpt = excerpt.substring(0, 237) + '...';
+        return { title: title, excerpt: excerpt };
+      });
+    }
+
+    function displayStudySlide(pageNumber) {
+      if (!studyDeck) return;
+      var maxPage = studyDeck.pdf.numPages;
+      var nextPage = Math.max(1, Math.min(maxPage, parseInt(pageNumber, 10) || 1));
+      studyDeck.currentPage = nextPage;
+      var renderToken = ++studySlideRenderToken;
+      var deck = studyDeck;
+      var canvas = document.getElementById('learning-slide-canvas');
+      var stage = document.getElementById('learning-slide-stage');
+      var context = canvas.getContext('2d');
+
+      if (deck.renderTask) {
+        deck.renderTask.cancel();
+        deck.renderTask = null;
+      }
+
+      document.getElementById('learning-slide-number').value = nextPage;
+      document.getElementById('learning-slide-counter').textContent = 'Slide ' + nextPage + ' di ' + maxPage;
+      document.getElementById('learning-slide-title').textContent = 'Estrazione della slide...';
+      document.getElementById('learning-slide-excerpt').textContent = '';
+      document.getElementById('learning-slide-previous').disabled = nextPage <= 1;
+      document.getElementById('learning-slide-next').disabled = nextPage >= maxPage;
+      stage.setAttribute('aria-busy', 'true');
+
+      deck.pdf.getPage(nextPage).then(function(page) {
+        if (renderToken !== studySlideRenderToken || deck !== studyDeck) return;
+        return getStudyPageText(page).then(function(pageText) {
+          if (renderToken !== studySlideRenderToken || deck !== studyDeck) return;
+          var title = pageText.title || 'Slide ' + nextPage;
+          deck.titles[nextPage] = title;
+          document.getElementById('learning-slide-title').textContent = title;
+          document.getElementById('learning-slide-excerpt').textContent = pageText.excerpt;
+
+          var baseViewport = page.getViewport({ scale: 1 });
+          var availableWidth = Math.max(280, stage.clientWidth - 36);
+          var availableHeight = Math.max(220, stage.clientHeight - 36);
+          var scale = Math.min(
+            1.5,
+            availableWidth / baseViewport.width,
+            availableHeight / baseViewport.height
+          );
+          var viewport = page.getViewport({ scale: scale });
+          var outputScale = Math.min(window.devicePixelRatio || 1, 2);
+          canvas.width = Math.floor(viewport.width * outputScale);
+          canvas.height = Math.floor(viewport.height * outputScale);
+          canvas.style.width = Math.floor(viewport.width) + 'px';
+          canvas.style.height = Math.floor(viewport.height) + 'px';
+          context.setTransform(outputScale, 0, 0, outputScale, 0, 0);
+
+          deck.renderTask = page.render({
+            canvasContext: context,
+            viewport: viewport
+          });
+          return deck.renderTask.promise.then(function() {
+            if (renderToken !== studySlideRenderToken || deck !== studyDeck) return;
+            deck.renderTask = null;
+            stage.setAttribute('aria-busy', 'false');
+            renderStudyThumbnails();
+          });
+        });
+      }).catch(function(err) {
+        if (renderToken !== studySlideRenderToken || deck !== studyDeck) return;
+        if (err && err.name === 'RenderingCancelledException') return;
+        console.error('Impossibile estrarre la slide ' + nextPage + ':', err);
+        showStudySlideError('Questa slide non è stato possibile visualizzarla. Riprova o apri il PDF originale.');
+      });
+    }
+
+    function renderStudyThumbnails() {
+      if (!studyDeck) return;
+      var token = ++studyThumbnailRenderToken;
+      for (var i = 0; i < studyThumbnailTasks.length; i++) {
+        try {
+          studyThumbnailTasks[i].cancel();
+        } catch (err) {
+          console.warn('Impossibile annullare il rendering di una miniatura:', err);
+        }
+      }
+      studyThumbnailTasks = [];
+
+      var deck = studyDeck;
+      var container = document.getElementById('learning-slide-thumbnails');
+      container.innerHTML = '';
+      var first = Math.max(1, deck.currentPage - 2);
+      var last = Math.min(deck.pdf.numPages, deck.currentPage + 2);
+
+      for (var pageNumber = first; pageNumber <= last; pageNumber++) {
+        (function(number) {
+          var button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'slide-thumbnail' + (number === deck.currentPage ? ' active' : '');
+          button.setAttribute('aria-label', 'Apri slide ' + number + (deck.titles[number] ? ': ' + deck.titles[number] : ''));
+          button.setAttribute('aria-current', number === deck.currentPage ? 'true' : 'false');
+          button.onclick = function() {
+            displayStudySlide(number);
+          };
+
+          var preview = document.createElement('canvas');
+          preview.setAttribute('aria-hidden', 'true');
+          button.appendChild(preview);
+          var caption = document.createElement('span');
+          caption.className = 'slide-thumbnail-title';
+          caption.textContent = 'Slide ' + number + (deck.titles[number] ? ' · ' + deck.titles[number] : '');
+          button.appendChild(caption);
+          container.appendChild(button);
+
+          deck.pdf.getPage(number).then(function(page) {
+            if (token !== studyThumbnailRenderToken || deck !== studyDeck) return;
+            return getStudyPageText(page).then(function(pageText) {
+              if (token !== studyThumbnailRenderToken || deck !== studyDeck) return;
+              if (pageText.title) {
+                deck.titles[number] = pageText.title;
+                caption.textContent = 'Slide ' + number + ' · ' + pageText.title;
+                button.setAttribute('aria-label', 'Apri slide ' + number + ': ' + pageText.title);
+              }
+              var baseViewport = page.getViewport({ scale: 1 });
+              var scale = Math.min(0.28, 132 / baseViewport.width, 78 / baseViewport.height);
+              var viewport = page.getViewport({ scale: scale });
+              preview.width = Math.max(1, Math.floor(viewport.width));
+              preview.height = Math.max(1, Math.floor(viewport.height));
+              var task = page.render({
+                canvasContext: preview.getContext('2d'),
+                viewport: viewport
+              });
+              studyThumbnailTasks.push(task);
+              return task.promise.catch(function(err) {
+                if (token === studyThumbnailRenderToken && deck === studyDeck &&
+                    (!err || err.name !== 'RenderingCancelledException')) {
+                  console.error('Impossibile generare l’anteprima della slide ' + number + ':', err);
+                }
+              });
+            });
+          }).catch(function(err) {
+            if (token === studyThumbnailRenderToken && deck === studyDeck) {
+              console.error('Impossibile preparare la miniatura della slide ' + number + ':', err);
+            }
+          });
+        })(pageNumber);
+      }
+    }
+
+    function initStudySlideshowControls() {
+      document.getElementById('learning-slide-previous').onclick = function() {
+        if (studyDeck) displayStudySlide(studyDeck.currentPage - 1);
+      };
+      document.getElementById('learning-slide-next').onclick = function() {
+        if (studyDeck) displayStudySlide(studyDeck.currentPage + 1);
+      };
+      document.getElementById('learning-slide-number').onchange = function() {
+        if (studyDeck) displayStudySlide(this.value);
+      };
+      document.addEventListener('keydown', function(event) {
+        if (document.getElementById('step-learning').classList.contains('hidden') || !studyDeck) return;
+        if (event.target && /^(INPUT|TEXTAREA|SELECT)$/.test(event.target.tagName)) return;
+        if (event.key === 'ArrowLeft' && studyDeck.currentPage > 1) {
+          event.preventDefault();
+          displayStudySlide(studyDeck.currentPage - 1);
+        } else if (event.key === 'ArrowRight' && studyDeck.currentPage < studyDeck.pdf.numPages) {
+          event.preventDefault();
+          displayStudySlide(studyDeck.currentPage + 1);
+        }
+      });
+    }
+
+    function exitLearning() {
+      document.getElementById('step-learning').classList.add('hidden');
+      document.getElementById('step-registration').classList.remove('hidden');
+    }
+
+    function formatPlatformDuration(seconds, includeSeconds) {
+      var safeSeconds = Math.max(0, Math.floor(seconds || 0));
+      var hours = Math.floor(safeSeconds / 3600);
+      var minutes = Math.floor((safeSeconds % 3600) / 60);
+      var duration = hours + ' h ' + minutes + ' min';
+      if (includeSeconds) duration += ' ' + (safeSeconds % 60) + ' s';
+      return duration;
+    }
+
+    function formatPlatformHours(seconds) {
+      return ((Math.max(0, seconds || 0) / 3600).toFixed(2)).replace('.', ',') + ' ore';
+    }
+
+    function updatePlatformTimeDisplays() {
+      var duration = formatPlatformDuration(platformElapsedSeconds, true);
+      var displayIds = ['learning-platform-time', 'result-platform-time'];
+      for (var i = 0; i < displayIds.length; i++) {
+        var display = document.getElementById(displayIds[i]);
+        if (display) display.textContent = duration;
+      }
+
+      var notices = document.getElementsByClassName('platform-storage-notice');
+      for (var n = 0; n < notices.length; n++) {
+        if (platformStorageAvailable) {
+          notices[n].textContent = '';
+          notices[n].classList.add('hidden');
+        } else {
+          notices[n].textContent = 'Avviso: il browser non consente di salvare il conteggio. Le ore mostrate valgono solo per questa sessione e non saranno conservate dopo aver chiuso o ricaricato la pagina.';
+          notices[n].classList.remove('hidden');
+        }
+      }
+    }
+
+    function persistPlatformTime() {
+      if (!platformStorageAvailable || !platformStorageKey) return;
+      try {
+        window.localStorage.setItem(platformStorageKey, String(platformElapsedSeconds));
+      } catch (err) {
+        platformStorageAvailable = false;
+        console.error('Impossibile salvare il tempo attivo in piattaforma:', err);
+        updatePlatformTimeDisplays();
+      }
+    }
+
+    function startPlatformTracking() {
+      var identity = (candidate.nome + ' ' + candidate.cognome).toLowerCase().replace(/\s+/g, ' ').trim();
+      var nextStorageKey = 'fmorea_platform_seconds_v1:' + encodeURIComponent(identity);
+      if (platformStorageKey === nextStorageKey && platformTimerInterval) return;
+      if (platformTimerInterval) {
+        persistPlatformTime();
+        clearInterval(platformTimerInterval);
+      }
+
+      platformStorageKey = nextStorageKey;
+      platformStorageAvailable = true;
+      platformElapsedSeconds = 0;
+      try {
+        var storedSeconds = parseInt(window.localStorage.getItem(platformStorageKey), 10);
+        if (!isNaN(storedSeconds) && storedSeconds >= 0) platformElapsedSeconds = storedSeconds;
+      } catch (err) {
+        platformStorageAvailable = false;
+        console.error('Impossibile leggere il tempo attivo in piattaforma:', err);
+      }
+
+      platformTimerInterval = setInterval(function() {
+        var isVisible = !document.visibilityState || document.visibilityState === 'visible';
+        var hasFocus = !document.hasFocus || document.hasFocus();
+        if (isVisible && hasFocus) {
+          platformElapsedSeconds++;
+          persistPlatformTime();
+        }
+        updatePlatformTimeDisplays();
+      }, 1000);
+      updatePlatformTimeDisplays();
+    }
+
+    function stopPlatformTracking() {
+      if (platformTimerInterval) {
+        persistPlatformTime();
+        clearInterval(platformTimerInterval);
+        platformTimerInterval = null;
+      }
+      platformStorageKey = '';
     }
 
     function handleCustomFileUpload(e) {
@@ -1610,6 +2344,7 @@ nav .nav-logo {
       }
 
       candidate = { nome: nome, cognome: cognome };
+      startPlatformTracking();
       userAnswers = {};
       currentQuestionIndex = 0;
       secondsRemaining = selectedMateria.tempoMinuti * 60;
@@ -1623,6 +2358,7 @@ nav .nav-logo {
       document.getElementById('step-registration').classList.add('hidden');
       document.getElementById('step-result').classList.add('hidden');
       document.getElementById('step-review').classList.add('hidden');
+      document.getElementById('step-learning').classList.add('hidden');
       document.getElementById('step-quiz').classList.remove('hidden');
 
       renderQuestionsGrid();
@@ -2008,7 +2744,8 @@ nav .nav-logo {
       examResultData = Object.assign({}, payload, {
         materia: selectedMateria,
         reviewUrl: reviewUrl,
-        totalSecondsElapsed: totalSecondsElapsed
+        totalSecondsElapsed: totalSecondsElapsed,
+        platformSecondsElapsed: platformElapsedSeconds
       });
 
       document.getElementById('step-quiz').classList.add('hidden');
@@ -2045,6 +2782,7 @@ nav .nav-logo {
       var sTaken = (totalSecondsElapsed % 60);
       document.getElementById('res-time').textContent = pad2(mTaken) + ':' + pad2(sTaken);
       document.getElementById('res-scheda-id').textContent = idScheda;
+      updatePlatformTimeDisplays();
 
       var qrEl = document.getElementById('result-qrcode');
       qrEl.innerHTML = '';
@@ -2584,6 +3322,16 @@ nav .nav-logo {
       var matLines = doc.splitTextToSize(sanitizePdfText(data.matNome), 84);
       doc.text(matLines, 25, 82.5);
 
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(6.5);
+      doc.setTextColor(100, 116, 139);
+      doc.text("ORE ATTIVE IN PIATTAFORMA (DISPOSITIVO CORRENTE):", 25, 91);
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(15, 23, 42);
+      var platformSeconds = data.platformSecondsElapsed || 0;
+      doc.text(formatPlatformDuration(platformSeconds) + " / " + formatPlatformHours(platformSeconds), 25, 95);
+
       // Separatore verticale interno
       doc.setDrawColor(226, 232, 240);
       doc.setLineWidth(0.3);
@@ -3004,6 +3752,8 @@ nav .nav-logo {
         alert("Nessun dato d'esame disponibile per la generazione del certificato.");
         return;
       }
+      examResultData.platformSecondsElapsed = platformElapsedSeconds;
+      updatePlatformTimeDisplays();
 
       var jsPdfLib = window.jspdf ? window.jspdf.jsPDF : (window.jsPDF || null);
       if (!jsPdfLib) {
@@ -3038,8 +3788,10 @@ nav .nav-logo {
 
     function resetExam() {
       if (timerInterval) clearInterval(timerInterval);
+      stopPlatformTracking();
       document.getElementById('step-result').classList.add('hidden');
       document.getElementById('step-review').classList.add('hidden');
+      document.getElementById('step-learning').classList.add('hidden');
       document.getElementById('step-registration').classList.remove('hidden');
       document.getElementById('cand-nome').value = '';
       document.getElementById('cand-cognome').value = '';
@@ -3048,6 +3800,8 @@ nav .nav-logo {
     /* Inizializzazione compatibile con vecchi e nuovi browser */
     function initApp() {
       scansionaRepository();
+      loadTeachingMaterials();
+      initStudySlideshowControls();
 
       try {
         var reviewParam = getQueryParameter('review') || getQueryParameter('q');

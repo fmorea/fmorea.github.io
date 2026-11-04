@@ -3,7 +3,9 @@
 Piattaforma telematica d'esame eseguibile direttamente da **GitHub Pages** (`fmorea.github.io`) o in locale.
 
 ## Caratteristiche Principali
-- **Scansione Automatica Repository**: `index.html` scansiona automaticamente la cartella `quiz/` del repository GitHub alla ricerca di file con metadati nel nome (es. `Materia-15min-90soglia.txt`).
+- **Scansione Automatica Repository**: `index.html` scansiona automaticamente la cartella `quiz/` del repository GitHub alla ricerca dei file di verifica e legge classe, specializzazione, materia, scuola, periodo, anno, durata e soglia dal nome.
+- **Ripasso con Materiali Didattici**: le pagine dei PDF in `appunti/` vengono estratte e mostrate come slide grafiche con titolo riconosciuto, anteprime navigabili e spiegazioni dei quesiti raggruppate per argomento.
+- **Tempo Attivo in Piattaforma**: il tempo viene conteggiato solo mentre la pagina è visibile e attiva, salvato nel browser per il candidato e riportato nel certificato PDF.
 - **Supporto Immagini Didattiche**: Possibilità di associare immagini a qualunque quesito via tag `[IMMAGINE] img/figura.png` o URL, visibili durante il test e nella scheda di revisione.
 - **Scheda d'Esame Touch**: Mappa numerata delle domande, pulsanti VERO / FALSO, conto alla rovescia e controllo di sicurezza prima della consegna.
 - **QR Code di Verifica e Spiegazione**: Al termine della prova viene generato un QR Code (a video e nel PDF) che codifica lo stato delle risposte fornite. Inquadrandolo con lo smartphone si apre la scheda di revisione con la spiegazione didattica di ogni singolo quesito.
@@ -13,11 +15,15 @@ Piattaforma telematica d'esame eseguibile direttamente da **GitHub Pages** (`fmo
 ## Convenzione Nomi File Quiz (`quiz/`)
 I file nella cartella `quiz/` seguono la sintassi:
 ```
-[NomeMateria]-[Minuti]min-[Soglia]soglia.txt
+[CLASSE]_[SPECIALIZZAZIONE]_[MATERIA]_[SCUOLA]_[PERIODO]_[ANNO]-[Minuti]min-[Soglia]soglia.txt
 ```
 Esempi:
-- `quiz/Patente_B-15min-90soglia.txt` → Materia: "Patente B", Durata: 15 min, Soglia: 90%
-- `quiz/Sicurezza_Lavoro-10min-80soglia.txt` → Materia: "Sicurezza Lavoro", Durata: 10 min, Soglia: 80%
+- `quiz/3B_INF_Telecomunicazioni_IIS-LAGRANGE_trimestre_2026-2027-60min-55soglia.txt`
+- `quiz/4A_ELE_TPSEE_IIS-LAGRANGE_trimestre_2026-2027-60min-55soglia.txt`
+
+Il catalogo `appunti/manifest.json` collega la chiave classe-specializzazione-materia (in minuscolo, con `_` come separatore) al PDF corrispondente. La 3B e la 3C utilizzano lo stesso PDF di telecomunicazioni. Se un corso non ha un PDF associato, la piattaforma mostra comunque il ripasso ricavato dalle spiegazioni dei quesiti.
+
+Il conteggio delle ore è locale al browser e al dispositivo: non è sincronizzato tra dispositivi né verificato da un server. Il tempo viene conteggiato a piattaforma aperta, in primo piano e con la finestra attiva.
 
 ## Sintassi dei File Quiz `.txt`
 All'interno del file di testo, i quesiti sono separati da `---` e definiti con tag intuitivi:
