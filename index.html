@@ -921,7 +921,7 @@ nav .nav-logo {
       }
 
       #app.lesson-mode > #platform-time-indicator {
-        flex: none;
+        display: none;
       }
 
       #app.lesson-mode #step-learning {
@@ -934,13 +934,13 @@ nav .nav-logo {
 
       #app.lesson-mode #step-learning > div:first-child {
         flex: none;
-        margin-bottom: 12px !important;
-        padding-bottom: 12px !important;
+        margin-bottom: 8px !important;
+        padding-bottom: 8px !important;
       }
 
       #app.lesson-mode #step-learning > div:nth-child(2) {
         flex: none;
-        margin-bottom: 12px !important;
+        margin-bottom: 8px !important;
       }
 
       #app.lesson-mode #learning-pdf-section {
@@ -960,7 +960,7 @@ nav .nav-logo {
         display: grid;
         min-height: 0;
         flex: 1;
-        grid-template-columns: minmax(0, 1fr) minmax(270px, 30%);
+        grid-template-columns: minmax(0, 1fr) minmax(270px, 22%);
         grid-template-rows: auto auto minmax(0, 1fr);
       }
 
@@ -1000,6 +1000,11 @@ nav .nav-logo {
         max-width: 100%;
         max-height: 100%;
         margin: auto;
+      }
+
+      #app.lesson-mode .lesson-image-wrap.is-zoomed .lesson-image {
+        max-width: none;
+        max-height: none;
       }
 
       #app.lesson-mode .lesson-card > #learning-slide-details {
@@ -1627,6 +1632,9 @@ nav .nav-logo {
     var teachingSlides = {};
     var teachingMaterialsLoadFailed = false;
     var teachingSlidesLoadFailed = false;
+    var teachingSlidesCatalogLoaded = false;
+    var lessonRestoreAttempted = false;
+    var activeLessonStorageKey = 'fmorea_active_lesson_v1';
     var studyDeck = null;
     var studyDeckLoadToken = 0;
     var studyConceptStopWords = 'al allo alla ai agli alle da dal dallo dalla dai dagli dalle di del dello della dei degli delle in nel nello nella nei negli nelle su sul sullo sulla sui sugli sulle con per tra fra e ed o ma se che chi cui come dove quando quanto quale quali quanto questa questo queste questi quella quello quelle quelli un uno una il lo la i gli le l e a è era sono essere ha hanno viene vengono può possono più molto ogni tutti tutte tutto anche solo quindi come tale tali parte tipo tipi caso casi esempio esempi figura figure tabella sistema sistemi sia ciò essere degli dalle loro loro stesso stessa stessi stesse già ancora senza verso verso cui cioè tra fra degli esercizi esercizio eserciziario eserciziari risposta risposte quesiti quesito domanda domande scheda schede';
@@ -1952,10 +1960,14 @@ nav .nav-logo {
           teachingSlidesLoadFailed = true;
           console.error('Impossibile caricare appunti/slides/manifest.json (HTTP ' + xhr.status + ').');
         }
+        teachingSlidesCatalogLoaded = true;
+        restoreActiveLessonIfAvailable();
       };
       xhr.onerror = function() {
         teachingSlidesLoadFailed = true;
+        teachingSlidesCatalogLoaded = true;
         console.error('Errore di rete durante il caricamento di appunti/slides/manifest.json.');
+        restoreActiveLessonIfAvailable();
       };
       xhr.send();
     }
@@ -2150,6 +2162,7 @@ nav .nav-logo {
       }
       updateMateriaInfo();
       restoreActiveExamIfAvailable();
+      restoreActiveLessonIfAvailable();
     }
 
     function selectMateria(id) {
@@ -2285,7 +2298,7 @@ nav .nav-logo {
       }
     }
 
-    function openStudyMaterial() {
+    function openStudyMaterial(initialPage) {
       var candidateData = getCandidateFromForm();
       if (!candidateData) return;
       if (!selectedMateria) {
@@ -2333,7 +2346,7 @@ nav .nav-logo {
         pdfUnavailable.classList.add('hidden');
         document.getElementById('learning-pdf-link').classList.add('hidden');
         fallbackPdfLink.classList.add('hidden');
-        loadStudySlides(slidesPath);
+        loadStudySlides(slidesPath, initialPage);
       } else {
         pdfSection.classList.add('hidden');
         pdfUnavailable.classList.remove('hidden');
@@ -2353,6 +2366,7 @@ nav .nav-logo {
       document.getElementById('app').classList.toggle('lesson-mode', !!slidesPath && !isLegacy);
       document.getElementById('step-learning').classList.remove('hidden');
       updatePlatformTimeDisplays();
+      persistActiveLesson(initialPage || 1);
     }
 
     function isLegacyLessonBrowser() {
@@ -2399,7 +2413,7 @@ nav .nav-logo {
       document.getElementById('learning-slide-next').disabled = true;
     }
 
-    function loadStudySlides(path) {
+    function loadStudySlides(path, initialPage) {
       clearStudySlides();
       var token = ++studyDeckLoadToken;
       var xhr = new XMLHttpRequest();
@@ -2424,7 +2438,7 @@ nav .nav-logo {
             conceptMap: null
           };
           document.getElementById('learning-concept-map-toggle').disabled = false;
-          displayStudySlide(1);
+          displayStudySlide(initialPage || 1);
         } catch (err) {
           console.error('Impossibile leggere il contenuto estratto degli appunti:', err);
           showStudySlideError('Il materiale estratto non è leggibile. Puoi aprire il PDF originale.');
@@ -2463,6 +2477,8 @@ nav .nav-logo {
 
       var token = studyDeckLoadToken;
       var imageUrl = 'appunti/slides/' + studyDeck.courseKey + '/' + encodeURI(imageName);
+      setStudyZoom(1);
+      persistActiveLesson(number);
       document.getElementById('learning-lesson-card').setAttribute('aria-busy', 'true');
       image.alt = (slide.title || 'Scheda didattica') + ', pagina ' + number;
       image.onload = function() {
@@ -2511,7 +2527,20 @@ nav .nav-logo {
       }
 
       viewport.classList.add('is-zoomed');
-      image.style.width = (nextZoom * 100) + '%';
+      var viewportStyle = window.getComputedStyle
+        ? window.getComputedStyle(viewport)
+        : viewport.currentStyle;
+      var horizontalPadding = parseFloat(viewportStyle.paddingLeft) +
+        parseFloat(viewportStyle.paddingRight);
+      var verticalPadding = parseFloat(viewportStyle.paddingTop) +
+        parseFloat(viewportStyle.paddingBottom);
+      var availableWidth = Math.max(1, viewport.clientWidth - horizontalPadding);
+      var availableHeight = Math.max(1, viewport.clientHeight - verticalPadding);
+      var fitScale = Math.min(
+        availableWidth / image.naturalWidth,
+        availableHeight / image.naturalHeight
+      );
+      image.style.width = Math.round(image.naturalWidth * fitScale * nextZoom) + 'px';
       var localX = focusX - viewportRect.left - viewport.clientLeft;
       var localY = focusY - viewportRect.top - viewport.clientTop;
       viewport.scrollLeft = image.offsetLeft + ratioX * image.offsetWidth - localX;
@@ -3011,9 +3040,97 @@ nav .nav-logo {
 
     function exitLearning() {
       stopStudyAudio(true);
+      clearActiveLesson();
       document.getElementById('app').classList.remove('lesson-mode');
       document.getElementById('step-learning').classList.add('hidden');
       document.getElementById('step-mode').classList.remove('hidden');
+    }
+
+    function clearActiveLesson() {
+      try {
+        window.localStorage.removeItem(activeLessonStorageKey);
+      } catch (err) {
+        console.error('Impossibile rimuovere la lezione salvata nel browser:', err);
+      }
+    }
+
+    function persistActiveLesson(pageNumber) {
+      if (!selectedMateria || document.getElementById('step-learning').classList.contains('hidden')) return;
+      var state = {
+        version: 1,
+        materiaId: selectedMateria.id,
+        page: parseInt(pageNumber, 10) || (studyDeck ? studyDeck.currentPage : 1)
+      };
+      try {
+        window.localStorage.setItem(activeLessonStorageKey, JSON.stringify(state));
+      } catch (err) {
+        console.error('Impossibile salvare la lezione attiva nel browser:', err);
+        var notice = document.querySelector('#step-learning .platform-storage-notice');
+        if (notice) {
+          notice.textContent = 'Avviso: il browser non consente di salvare la lezione; dopo un refresh dovrai riaprirla.';
+          notice.classList.remove('hidden');
+        }
+      }
+    }
+
+    function restoreActiveLessonIfAvailable() {
+      if (lessonRestoreAttempted || !examRestoreAttempted || !BANCA_DATI_MATERIE.length ||
+          !teachingSlidesCatalogLoaded || !document.getElementById('step-quiz').classList.contains('hidden')) return;
+
+      var rawState;
+      try {
+        rawState = window.localStorage.getItem(activeLessonStorageKey);
+      } catch (err) {
+        lessonRestoreAttempted = true;
+        console.error('Impossibile leggere la lezione salvata nel browser:', err);
+        return;
+      }
+      if (!rawState) {
+        lessonRestoreAttempted = true;
+        return;
+      }
+
+      var state;
+      try {
+        state = JSON.parse(rawState);
+      } catch (err) {
+        lessonRestoreAttempted = true;
+        console.error('La lezione salvata non è un JSON valido:', err);
+        clearActiveLesson();
+        return;
+      }
+      if (!state || state.version !== 1 || typeof state.materiaId !== 'string' ||
+          typeof state.page !== 'number' || !isFinite(state.page) || state.page < 1) {
+        lessonRestoreAttempted = true;
+        console.error('La lezione salvata non contiene materia o scheda valide.');
+        clearActiveLesson();
+        return;
+      }
+
+      var materia = null;
+      for (var i = 0; i < BANCA_DATI_MATERIE.length; i++) {
+        if (BANCA_DATI_MATERIE[i].id === state.materiaId) {
+          materia = BANCA_DATI_MATERIE[i];
+          break;
+        }
+      }
+      if (!materia) {
+        lessonRestoreAttempted = true;
+        console.error('La materia della lezione salvata non è disponibile:', state.materiaId);
+        clearActiveLesson();
+        return;
+      }
+      if (!getTeachingSlidesPath(materia)) {
+        lessonRestoreAttempted = true;
+        console.error('Le schede della lezione salvata non sono disponibili:', state.materiaId);
+        clearActiveLesson();
+        return;
+      }
+
+      lessonRestoreAttempted = true;
+      selectedMateria = materia;
+      candidate = { nome: '', cognome: '' };
+      openStudyMaterial(state.page);
     }
 
     function getCandidateFromForm() {
@@ -3235,6 +3352,7 @@ nav .nav-logo {
       } catch (err) {
         console.error('La prova salvata non è un JSON valido:', err);
         clearActiveExam();
+        clearActiveLesson();
         examRestoreAttempted = true;
         return;
       }
