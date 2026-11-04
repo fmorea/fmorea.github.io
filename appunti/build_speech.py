@@ -199,7 +199,7 @@ def main():
         help="Percorso del file delle voci Kokoro.",
     )
     parser.add_argument("--voice", default="im_nicola", help="Voce Kokoro da usare.")
-    parser.add_argument("--speed", type=float, default=0.95, help="Velocità del parlato.")
+    parser.add_argument("--speed", type=float, default=1.0, help="Velocità del parlato.")
     parser.add_argument(
         "--overwrite",
         action="store_true",

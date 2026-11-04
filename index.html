@@ -2375,7 +2375,7 @@ nav .nav-logo {
 
       var audioPath = slide && typeof slide.audio === 'string' ? slide.audio : '';
       if (!audioPath) {
-        status.textContent = 'Audio non ancora disponibile per questa scheda. Puoi leggere il testo o ingrandire l’immagine.';
+        status.textContent = 'Audio non ancora disponibile per questa scheda. Puoi ingrandire la scheda o aprire il PDF originale.';
         return;
       }
       if (!/^audio\/slide-\d{3}\.ogg$/i.test(audioPath)) {
@@ -2384,7 +2384,7 @@ nav .nav-logo {
         return;
       }
       if (typeof player.canPlayType !== 'function' || !player.canPlayType('audio/ogg; codecs="vorbis"')) {
-        status.textContent = 'Questo browser non riproduce l’audio OGG. Puoi leggere la scheda o aprire il PDF originale.';
+        status.textContent = 'Questo browser non riproduce l’audio OGG. Puoi aprire il PDF originale.';
         document.getElementById('learning-pdf-link').classList.remove('hidden');
         return;
       }
@@ -2401,7 +2401,7 @@ nav .nav-logo {
         if (player.classList.contains('hidden')) return;
         player.classList.add('hidden');
         document.getElementById('learning-audio-status').textContent =
-          'Audio non disponibile. Puoi leggere la scheda o aprire il PDF originale.';
+          'Audio non disponibile. Puoi aprire il PDF originale.';
         document.getElementById('learning-pdf-link').classList.remove('hidden');
       };
     }
