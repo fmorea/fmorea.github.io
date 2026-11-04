@@ -68,7 +68,7 @@ def synthesize_slide(kokoro, slide, voice, speed):
     chunks = split_text(spoken_text)
     audio_chunks = []
     sample_rate = None
-    for chunk in chunks:
+    for chunk_index, chunk in enumerate(chunks):
         samples, chunk_sample_rate = kokoro.create(
             chunk, voice=voice, speed=speed, lang="it"
         )
@@ -76,7 +76,7 @@ def synthesize_slide(kokoro, slide, voice, speed):
             raise RuntimeError("Il modello ha restituito frequenze audio non coerenti.")
         sample_rate = chunk_sample_rate
         audio_chunks.append(np.asarray(samples, dtype=np.float32))
-        if chunk is not chunks[-1]:
+        if chunk_index < len(chunks) - 1:
             audio_chunks.append(
                 np.zeros(
                     int(chunk_sample_rate * CHUNK_PAUSE_SECONDS), dtype=np.float32
@@ -124,8 +124,10 @@ def build_course(kokoro, course, pages, voice, speed, overwrite):
             print(f"{course} pagina {page_number}: saltata, testo OCR assente")
             continue
         if audio_path.is_file() and not overwrite:
-            slide["audio"] = f"audio/{audio_name}"
-            changed = True
+            audio_reference = f"audio/{audio_name}"
+            if slide.get("audio") != audio_reference:
+                slide["audio"] = audio_reference
+                changed = True
             print(f"{course} pagina {page_number}: audio già presente")
             continue
 
