@@ -2438,9 +2438,9 @@ nav .nav-logo {
       var preferredVoice = getPreferredItalianStudyVoice();
       var automaticOption = document.createElement('option');
       automaticOption.value = '';
-      automaticOption.textContent = preferredVoice
+      automaticOption.textContent = preferredVoice && isLikelyMaleItalianVoice(preferredVoice)
         ? 'Automatica · ' + preferredVoice.name
-        : 'Voce italiana maschile consigliata';
+        : 'Automatica · seleziona una voce maschile';
       voiceSelect.appendChild(automaticOption);
 
       var preferredIndex = -1;
@@ -2453,7 +2453,9 @@ nav .nav-logo {
         if (voice.voiceURI === previousUri) voiceSelect.value = String(voiceIndex);
         if (voice === preferredVoice) preferredIndex = voiceIndex;
       }
-      if (!previousUri && preferredIndex >= 0) voiceSelect.value = String(preferredIndex);
+      if (!previousUri && preferredIndex >= 0 && isLikelyMaleItalianVoice(preferredVoice)) {
+        voiceSelect.value = String(preferredIndex);
+      }
 
       var hint = document.getElementById('learning-audio-voice-hint');
       if (!studyAvailableVoices.length) {
@@ -2524,24 +2526,27 @@ nav .nav-logo {
         setStudySpeechControls('ready', 'Questa scheda non contiene testo da leggere.');
         return;
       }
-      if (!text) {
-        setStudySpeechControls('speaking', 'Testo OCR non disponibile: viene letto il titolo della scheda.');
-      } else {
-        var selectedVoiceIndex = parseInt(document.getElementById('learning-audio-voice').value, 10);
-        var selectedVoice = !isNaN(selectedVoiceIndex)
-          ? studyAvailableVoices[selectedVoiceIndex]
-          : getPreferredItalianStudyVoice();
+      var selectedVoiceIndex = parseInt(document.getElementById('learning-audio-voice').value, 10);
+      var selectedVoice = !isNaN(selectedVoiceIndex)
+        ? studyAvailableVoices[selectedVoiceIndex]
+        : getPreferredItalianStudyVoice();
+      if (!selectedVoice || (!isLikelyMaleItalianVoice(selectedVoice) && isNaN(selectedVoiceIndex))) {
         setStudySpeechControls(
-          'speaking',
-          selectedVoice && isLikelyMaleItalianVoice(selectedVoice)
-            ? 'Lettura con voce maschile: ' + selectedVoice.name + '.'
-            : 'Voce maschile non disponibile. Installa o seleziona una voce italiana maschile nelle impostazioni vocali.'
+          'ready',
+          'Nessuna voce italiana maschile rilevata. Seleziona una voce maschile dall’elenco oppure installane una nelle impostazioni vocali del sistema.'
         );
+        return;
       }
       studySpeechGeneration++;
       studySpeechChunkIndex = 0;
       studySpeechActive = true;
       window.speechSynthesis.cancel();
+      setStudySpeechControls(
+        'speaking',
+        isLikelyMaleItalianVoice(selectedVoice)
+          ? (text ? 'Lettura con voce maschile: ' : 'Testo OCR assente; leggo il titolo con la voce maschile: ') + selectedVoice.name + '.'
+          : 'Lettura con la voce selezionata: ' + selectedVoice.name + '.'
+      );
       speakNextStudyChunk(studySpeechGeneration);
     }
 
