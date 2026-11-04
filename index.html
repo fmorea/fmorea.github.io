@@ -803,6 +803,8 @@ nav .nav-logo {
     .lesson-zoom-controls button:disabled { opacity: .45; }
     .lesson-zoom-level { min-width: 54px; text-align: center; color: #475569; font-size: 13px; font-weight: 700; }
     .lesson-zoom-slider { width: clamp(80px, 16vw, 180px); accent-color: #2563eb; }
+    .lesson-fullscreen-toggle { min-height: 42px; padding: 8px 14px; border: 0; border-radius: 10px; background: #2563eb; color: #fff; font-size: 13px; font-weight: 800; cursor: pointer; }
+    .lesson-fullscreen-toggle:hover { background: #1d4ed8; }
 
     .lesson-card-copy { padding: 20px 24px 24px; }
     .lesson-audio-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 14px 0; padding: 12px; border: 1px solid #dbeafe; border-radius: 14px; background: linear-gradient(110deg, #eff6ff, #f8fafc); }
@@ -860,6 +862,7 @@ nav .nav-logo {
       #learning-zoom-slider { grid-column: 1 / -1; grid-row: 2; width: 100%; }
       #learning-zoom-in { grid-column: 3; grid-row: 1; }
       #learning-zoom-reset { grid-column: 4; grid-row: 1; }
+      #learning-slide-fullscreen { grid-column: 1 / -1; grid-row: 3; width: 100%; }
       .lesson-zoom-hint { display: none; }
       .lesson-audio-controls { gap: 8px; padding: 10px; }
       .lesson-audio-status { flex-basis: 100%; order: 1; }
@@ -1115,6 +1118,116 @@ nav .nav-logo {
         margin: 20px auto;
       }
     }
+
+    body.slide-viewer-open { overflow: hidden; }
+
+    #app #learning-lesson-card.is-fullscreen {
+      position: fixed;
+      z-index: 1000;
+      inset: 0;
+      display: grid;
+      width: 100vw;
+      height: 100vh;
+      min-height: 0;
+      max-width: none;
+      margin: 0;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto auto minmax(0, 1fr);
+      overflow: hidden;
+      border: 0;
+      border-radius: 0;
+      background: #0f172a;
+    }
+
+    #app #learning-lesson-card.is-fullscreen .lesson-zoom-controls {
+      z-index: 1;
+      grid-column: 1;
+      grid-row: 1;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 16px;
+    }
+
+    #app #learning-lesson-card.is-fullscreen .lesson-fullscreen-toggle {
+      background: #0f172a;
+    }
+
+    #app #learning-lesson-card.is-fullscreen .lesson-audio-controls {
+      z-index: 1;
+      grid-column: 1;
+      grid-row: 2;
+      min-height: 58px;
+      margin: 0;
+      padding: 8px 16px;
+      border: 0;
+      border-bottom: 1px solid #334155;
+      border-radius: 0;
+    }
+
+    #app #learning-lesson-card.is-fullscreen .lesson-image-wrap {
+      min-width: 0;
+      min-height: 0;
+      max-height: none;
+      width: 100%;
+      height: 100%;
+      grid-column: 1;
+      grid-row: 3;
+      overflow: auto;
+      padding: 12px;
+      background: #0f172a;
+    }
+
+    #app #learning-lesson-card.is-fullscreen .lesson-image {
+      width: auto;
+      max-width: 100%;
+      max-height: 100%;
+      margin: auto;
+    }
+
+    #app #learning-lesson-card.is-fullscreen .lesson-image-wrap.is-zoomed .lesson-image {
+      max-width: none;
+      max-height: none;
+    }
+
+    #app #learning-lesson-card.is-fullscreen > #learning-slide-details {
+      position: absolute;
+      z-index: 2;
+      bottom: 12px;
+      left: 50%;
+      display: flex;
+      width: max-content;
+      max-width: calc(100% - 24px);
+      margin: 0 !important;
+      padding: 8px 14px;
+      transform: translateX(-50%);
+      align-items: center;
+      gap: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .96);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, .22);
+    }
+
+    #app #learning-lesson-card.is-fullscreen .lesson-card-copy {
+      padding: 0;
+    }
+
+    #app #learning-lesson-card.is-fullscreen #learning-slide-label {
+      display: none;
+    }
+
+    #app #learning-lesson-card.is-fullscreen #learning-slide-title {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    #app #learning-lesson-card.is-fullscreen #learning-slide-thumbnails {
+      display: none;
+    }
+
+    #app #learning-lesson-card.is-fullscreen > #learning-slide-details > .flex {
+      flex: none;
+    }
   </style>
 </head>
 <body>
@@ -1235,6 +1348,7 @@ nav .nav-logo {
             <input id="learning-zoom-slider" class="lesson-zoom-slider" type="range" min="1" max="4" step="0.1" value="1" aria-label="Livello di zoom">
             <button type="button" id="learning-zoom-in" aria-label="Aumenta zoom" title="Aumenta zoom">+</button>
             <button type="button" id="learning-zoom-reset" aria-label="Reimposta zoom" title="Reimposta zoom">↺</button>
+            <button type="button" id="learning-slide-fullscreen" class="lesson-fullscreen-toggle" aria-pressed="false">⛶ Ingrandisci slide</button>
           </div>
           <div class="lesson-audio-controls" role="group" aria-label="Audio della lezione">
             <audio id="learning-audio-player" class="lesson-audio-player hidden" controls preload="none" aria-label="Audio della spiegazione"></audio>
@@ -1640,6 +1754,7 @@ nav .nav-logo {
     var studyConceptStopWords = 'al allo alla ai agli alle da dal dallo dalla dai dagli dalle di del dello della dei degli delle in nel nello nella nei negli nelle su sul sullo sulla sui sugli sulle con per tra fra e ed o ma se che chi cui come dove quando quanto quale quali quanto questa questo queste questi quella quello quelle quelli un uno una il lo la i gli le l e a è era sono essere ha hanno viene vengono può possono più molto ogni tutti tutte tutto anche solo quindi come tale tali parte tipo tipi caso casi esempio esempi figura figure tabella sistema sistemi sia ciò essere degli dalle loro loro stesso stessa stessi stesse già ancora senza verso verso cui cioè tra fra degli esercizi esercizio eserciziario eserciziari risposta risposte quesiti quesito domanda domande scheda schede';
     var studyConceptCount = 8;
     var studyZoom = 1;
+    var studyFullscreenPreviousZoom = 1;
     var platformElapsedSeconds = 0;
     var platformStorageKey = '';
     var platformStorageAvailable = true;
@@ -2491,7 +2606,9 @@ nav .nav-logo {
         document.getElementById('learning-lesson-card').setAttribute('aria-busy', 'false');
         var zoom = typeof initialZoom === 'number'
           ? initialZoom
-          : (window.innerWidth >= 1200 && window.innerHeight >= 850 ? 1.5 : 1);
+          : (document.getElementById('learning-lesson-card').classList.contains('is-fullscreen')
+            ? 1
+            : (window.innerWidth >= 1200 && window.innerHeight >= 850 ? 1.5 : 1));
         if (zoom > 1) setStudyZoom(zoom);
       };
       image.src = imageUrl;
@@ -2554,6 +2671,7 @@ nav .nav-logo {
 
     function initStudyZoomControls() {
       var viewport = document.querySelector('.lesson-image-wrap');
+      document.getElementById('learning-slide-fullscreen').onclick = toggleStudyFullscreen;
       var desktopLayout = window.innerWidth >= 1200 && window.innerHeight >= 850;
       document.getElementById('learning-zoom-in').onclick = function() {
         setStudyZoom(studyZoom + 0.25);
@@ -2623,6 +2741,23 @@ nav .nav-logo {
         if (event.touches.length < 2) pinchStartDistance = 0;
         if (event.touches.length === 1 && studyZoom > 1) beginTouchPan(event.touches[0]);
       });
+    }
+
+    function toggleStudyFullscreen() {
+      var card = document.getElementById('learning-lesson-card');
+      var button = document.getElementById('learning-slide-fullscreen');
+      var isFullscreen = card.classList.toggle('is-fullscreen');
+      document.body.classList.toggle('slide-viewer-open', isFullscreen);
+      button.setAttribute('aria-pressed', isFullscreen ? 'true' : 'false');
+      button.textContent = isFullscreen ? '↙ Torna alla lezione' : '⛶ Ingrandisci slide';
+      button.setAttribute('aria-label', isFullscreen ? 'Torna alla lezione' : 'Ingrandisci slide a tutto schermo');
+
+      if (isFullscreen) {
+        studyFullscreenPreviousZoom = studyZoom;
+        setStudyZoom(1);
+      } else {
+        setStudyZoom(studyFullscreenPreviousZoom);
+      }
     }
 
     function renderStudyThumbnails() {
@@ -2981,7 +3116,10 @@ nav .nav-logo {
       document.addEventListener('keydown', function(event) {
         if (document.getElementById('step-learning').classList.contains('hidden') || !studyDeck) return;
         if (event.target && /^(INPUT|TEXTAREA|SELECT)$/.test(event.target.tagName)) return;
-        if (event.key === '+' || event.key === '=') {
+        if (event.key === 'Escape' && document.getElementById('learning-lesson-card').classList.contains('is-fullscreen')) {
+          event.preventDefault();
+          toggleStudyFullscreen();
+        } else if (event.key === '+' || event.key === '=') {
           event.preventDefault();
           setStudyZoom(studyZoom + 0.1);
         } else if (event.key === '-' || event.key === '_') {
@@ -3051,6 +3189,9 @@ nav .nav-logo {
 
     function exitLearning() {
       stopStudyAudio(true);
+      if (document.getElementById('learning-lesson-card').classList.contains('is-fullscreen')) {
+        toggleStudyFullscreen();
+      }
       setStudyZoom(1);
       clearActiveLesson();
       document.getElementById('app').classList.remove('lesson-mode');
@@ -3375,7 +3516,12 @@ nav .nav-logo {
       } catch (err) {
         console.error('La prova salvata non è un JSON valido:', err);
         clearActiveExam();
-        if (!document.getElementById('step-learning').classList.contains('hidden')) setStudyZoom(1);
+        if (!document.getElementById('step-learning').classList.contains('hidden')) {
+          if (document.getElementById('learning-lesson-card').classList.contains('is-fullscreen')) {
+            toggleStudyFullscreen();
+          }
+          setStudyZoom(1);
+        }
         clearActiveLesson();
         examRestoreAttempted = true;
         return;
