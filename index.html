@@ -1014,11 +1014,11 @@ nav .nav-logo {
           <p>Creata nel browser dai titoli e dal testo degli appunti; i contenuti restano sul dispositivo.</p>
         </div>
         <section id="learning-concept-map-panel" class="concept-map-panel hidden" aria-label="Mappa concettuale della lezione">
-          <p>La mappa evidenzia i concetti ricorrenti. I collegamenti tratteggiati indicano concetti presenti nella stessa scheda; seleziona un nodo per aprire le schede di origine.</p>
+          <p>La mappa evidenzia i concetti ricorrenti. I collegamenti tratteggiati indicano concetti che ricorrono insieme in più schede; seleziona un nodo per aprire le schede di origine. Su schermi stretti puoi scorrere la mappa in orizzontale.</p>
           <div class="concept-map-viewport">
             <svg id="learning-concept-map" class="concept-map-svg" viewBox="0 0 960 680" role="group" aria-label="Mappa concettuale interattiva"></svg>
           </div>
-          <p class="concept-map-legend">Le linee continue collegano l’argomento della lezione ai concetti estratti; quelle tratteggiate mostrano co-occorrenze nel materiale OCR.</p>
+          <p class="concept-map-legend">Le linee continue collegano l’argomento della lezione ai concetti estratti; quelle tratteggiate mostrano co-occorrenze ricorrenti nel materiale OCR.</p>
           <div id="learning-concept-map-related" class="concept-map-related" aria-live="polite">
             <p class="text-sm text-slate-500">Seleziona un concetto per vedere le schede collegate.</p>
           </div>
@@ -1385,7 +1385,7 @@ nav .nav-logo {
     var teachingSlidesLoadFailed = false;
     var studyDeck = null;
     var studyDeckLoadToken = 0;
-    var studyConceptStopWords = 'al allo alla ai agli alle da dal dallo dalla dai dagli dalle di del dello della dei degli delle in nel nello nella nei negli nelle su sul sullo sulla sui sugli sulle con per tra fra e ed o ma se che chi cui come dove quando quanto quale quali quanto questa questo queste questi quella quello quelle quelli un uno una il lo la i gli le l e a è era sono essere ha hanno viene vengono può possono più molto ogni tutti tutte tutto anche solo quindi come tale tali parte tipo tipi caso casi esempio esempi figura figure tabella sistema sistemi sia ciò essere degli dalle loro loro stesso stessa stessi stesse già ancora senza verso verso cui cioè tra fra degli esercizi esercizio risposta risposte quesiti quesito domanda domande scheda schede';
+    var studyConceptStopWords = 'al allo alla ai agli alle da dal dallo dalla dai dagli dalle di del dello della dei degli delle in nel nello nella nei negli nelle su sul sullo sulla sui sugli sulle con per tra fra e ed o ma se che chi cui come dove quando quanto quale quali quanto questa questo queste questi quella quello quelle quelli un uno una il lo la i gli le l e a è era sono essere ha hanno viene vengono può possono più molto ogni tutti tutte tutto anche solo quindi come tale tali parte tipo tipi caso casi esempio esempi figura figure tabella sistema sistemi sia ciò essere degli dalle loro loro stesso stessa stessi stesse già ancora senza verso verso cui cioè tra fra degli esercizi esercizio eserciziario eserciziari risposta risposte quesiti quesito domanda domande scheda schede';
     var studyConceptCount = 8;
     var studyZoom = 1;
     var platformElapsedSeconds = 0;
@@ -2461,8 +2461,8 @@ nav .nav-logo {
       });
       concepts = concepts.slice(0, studyConceptCount);
 
+      var relations = [];
       for (var firstIndex = 0; firstIndex < concepts.length; firstIndex++) {
-        concepts[firstIndex].relations = [];
         for (var secondIndex = firstIndex + 1; secondIndex < concepts.length; secondIndex++) {
           var sharedPages = 0;
           for (var sharedIndex = 0; sharedIndex < concepts[firstIndex].pages.length; sharedIndex++) {
@@ -2471,10 +2471,27 @@ nav .nav-logo {
               sharedPages++;
             }
           }
-          if (sharedPages >= 2) {
-            concepts[firstIndex].relations.push({ concept: concepts[secondIndex], sharedPages: sharedPages });
+          if (sharedPages >= 6) {
+            relations.push({
+              source: concepts[firstIndex],
+              target: concepts[secondIndex],
+              sharedPages: sharedPages
+            });
           }
         }
+      }
+      relations.sort(function(left, right) {
+        return right.sharedPages - left.sharedPages;
+      });
+      relations = relations.slice(0, 8);
+      for (var conceptIndex = 0; conceptIndex < concepts.length; conceptIndex++) {
+        concepts[conceptIndex].relations = [];
+      }
+      for (var relationIndex = 0; relationIndex < relations.length; relationIndex++) {
+        relations[relationIndex].source.relations.push({
+          concept: relations[relationIndex].target,
+          sharedPages: relations[relationIndex].sharedPages
+        });
       }
       return concepts;
     }
