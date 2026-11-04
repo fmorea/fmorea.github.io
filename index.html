@@ -835,14 +835,14 @@ nav .nav-logo {
       <div class="home-hero">
         <span class="rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-800" style="padding: 5px 12px; display: inline-block;">Piattaforma didattica</span>
         <h1>Da dove vuoi iniziare?</h1>
-        <p class="text-sm text-slate-500">Inserisci i tuoi dati e scegli la classe.</p>
+        <p class="text-sm text-slate-500">Inserisci nome e cognome oppure lascia entrambi i campi vuoti per continuare in anonimo.</p>
         <div class="student-fields">
           <div>
-            <label for="cand-nome">Nome</label>
+            <label for="cand-nome">Nome <span class="text-slate-400">(facoltativo)</span></label>
             <input type="text" id="cand-nome" placeholder="Il tuo nome" autocomplete="given-name">
           </div>
           <div>
-            <label for="cand-cognome">Cognome</label>
+            <label for="cand-cognome">Cognome <span class="text-slate-400">(facoltativo)</span></label>
             <input type="text" id="cand-cognome" placeholder="Il tuo cognome" autocomplete="family-name">
           </div>
         </div>
@@ -1281,6 +1281,8 @@ nav .nav-logo {
 
     var selectedMateria = null;
     var candidate = { nome: '', cognome: '' };
+    var anonymousPlatformIdentity =
+      'anonimo-session-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
     var currentQuestionIndex = 0;
     var userAnswers = {};
     var timerInterval = null;
@@ -1816,6 +1818,8 @@ nav .nav-logo {
     }
 
     function selectMateria(id) {
+      var candidateData = getCandidateFromForm();
+      if (!candidateData) return;
       for (var i = 0; i < BANCA_DATI_MATERIE.length; i++) {
         if (BANCA_DATI_MATERIE[i].id === id) {
           selectedMateria = BANCA_DATI_MATERIE[i];
@@ -1823,10 +1827,7 @@ nav .nav-logo {
         }
       }
       if (!selectedMateria) return;
-      candidate = {
-        nome: document.getElementById('cand-nome').value.trim(),
-        cognome: document.getElementById('cand-cognome').value.trim()
-      };
+      candidate = candidateData;
       document.getElementById('mode-course-title').textContent =
         (selectedMateria.corso ? selectedMateria.corso.classe + ' classe' : 'Corso') +
         ' · ' + selectedMateria.nome;
@@ -1948,18 +1949,14 @@ nav .nav-logo {
     }
 
     function openStudyMaterial() {
-      var nome = document.getElementById('cand-nome').value.trim();
-      var cognome = document.getElementById('cand-cognome').value.trim();
-      if (!nome || !cognome) {
-        alert('Inserisci Nome e Cognome prima di iniziare il ripasso.');
-        return;
-      }
+      var candidateData = getCandidateFromForm();
+      if (!candidateData) return;
       if (!selectedMateria) {
         alert('Seleziona una materia prima di aprire il materiale.');
         return;
       }
 
-      candidate = { nome: nome, cognome: cognome };
+      candidate = candidateData;
       startPlatformTracking();
       document.getElementById('learning-title').textContent = selectedMateria.nome + ' - materiale didattico';
       var courseInfo = selectedMateria.descrizione || '';
@@ -2277,6 +2274,20 @@ nav .nav-logo {
       document.getElementById('step-mode').classList.remove('hidden');
     }
 
+    function getCandidateFromForm() {
+      var nome = document.getElementById('cand-nome').value.trim();
+      var cognome = document.getElementById('cand-cognome').value.trim();
+      if (!!nome !== !!cognome) {
+        alert('Inserisci sia nome sia cognome, oppure lascia entrambi i campi vuoti per continuare in anonimo.');
+        return null;
+      }
+      return { nome: nome, cognome: cognome };
+    }
+
+    function getCandidateDisplayName(person) {
+      return (person.nome + ' ' + person.cognome).trim() || 'Anonimo';
+    }
+
     function formatPlatformDuration(seconds, includeSeconds) {
       var safeSeconds = Math.max(0, Math.floor(seconds || 0));
       var hours = Math.floor(safeSeconds / 3600);
@@ -2323,6 +2334,7 @@ nav .nav-logo {
 
     function startPlatformTracking() {
       var identity = (candidate.nome + ' ' + candidate.cognome).toLowerCase().replace(/\s+/g, ' ').trim();
+      if (!identity) identity = anonymousPlatformIdentity;
       var nextStorageKey = 'fmorea_platform_seconds_v1:' + encodeURIComponent(identity);
       if (platformStorageKey === nextStorageKey && platformTimerInterval) return;
       if (platformTimerInterval) {
@@ -2513,26 +2525,21 @@ nav .nav-logo {
     }
 
     function startExam() {
-      var nome = document.getElementById('cand-nome').value.trim();
-      var cognome = document.getElementById('cand-cognome').value.trim();
-
-      if (!nome || !cognome) {
-        alert("Inserisci Nome e Cognome.");
-        return;
-      }
+      var candidateData = getCandidateFromForm();
+      if (!candidateData) return;
       if (!selectedMateria || !selectedMateria.domande || selectedMateria.domande.length === 0) {
         alert("Seleziona una materia valida con quiz prima di iniziare la prova.");
         return;
       }
 
-      candidate = { nome: nome, cognome: cognome };
+      candidate = candidateData;
       startPlatformTracking();
       userAnswers = {};
       currentQuestionIndex = 0;
       secondsRemaining = selectedMateria.tempoMinuti * 60;
       totalSecondsElapsed = 0;
 
-      document.getElementById('header-cand-name').textContent = candidate.nome + ' ' + candidate.cognome;
+      document.getElementById('header-cand-name').textContent = getCandidateDisplayName(candidate);
       document.getElementById('header-materia-title').textContent = selectedMateria.nome;
       document.getElementById('total-q-num').textContent = selectedMateria.domande.length;
       document.getElementById('count-total').textContent = selectedMateria.domande.length;
@@ -3001,11 +3008,12 @@ nav .nav-logo {
       var isPassed = data.passed;
       var cNome = (data.cand && data.cand.nome) ? data.cand.nome : '';
       var cCognome = (data.cand && data.cand.cognome) ? data.cand.cognome : '';
+      var candidateDisplayName = cNome || cCognome ? cNome + ' ' + cCognome : 'Anonimo';
       summaryCard.innerHTML = 
         '<div class="flex flex-wrap items-center justify-between" style="gap: 16px;">' +
           '<div>' +
             '<div class="text-xs uppercase font-bold text-slate-500">Candidato</div>' +
-            '<div class="text-base font-extrabold text-slate-900">' + cNome + ' ' + cCognome + '</div>' +
+            '<div class="text-base font-extrabold text-slate-900">' + candidateDisplayName + '</div>' +
             '<div class="text-xs text-slate-500 mt-1">Materia: <b class="text-slate-700">' + (data.matNome || 'Scheda Esame') + '</b> &bull; Data: ' + (data.date || '--') + ' &bull; Scheda: <code class="font-mono text-slate-600">' + (data.id || '') + '</code></div>' +
           '</div>' +
           '<div class="flex items-center" style="gap: 16px;">' +
@@ -3491,7 +3499,8 @@ nav .nav-logo {
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(12);
       doc.setTextColor(15, 23, 42);
-      var fullName = (data.cand.cognome + ' ' + data.cand.nome).toUpperCase();
+      var fullName = ((data.cand.cognome || '') + ' ' + (data.cand.nome || '')).trim() || 'Anonimo';
+      fullName = fullName.toUpperCase();
       doc.text(fullName, 25, 69);
 
       doc.setFont('Helvetica', 'bold');
@@ -3914,7 +3923,7 @@ nav .nav-logo {
       }
 
       // Download del file PDF
-      var cognomePulito = (data.cand && data.cand.cognome ? data.cand.cognome : 'Candidato').replace(/[^a-zA-Z0-9_-]/g, '_');
+      var cognomePulito = (data.cand && data.cand.cognome ? data.cand.cognome : 'Anonimo').replace(/[^a-zA-Z0-9_-]/g, '_');
       var nomeFile = 'Certificato_' + cognomePulito + '_' + data.id + '.pdf';
       try {
         if (window.navigator && window.navigator.msSaveBlob) {
