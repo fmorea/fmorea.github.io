@@ -627,12 +627,30 @@ nav .nav-logo {
     border-top: 7px solid #FFFFFF;
 }
 
+    .student-details {
+      max-width: 480px;
+      margin: 12px auto 16px;
+      text-align: left;
+    }
+
+    .student-details summary {
+      width: fit-content;
+      margin: 0 auto;
+      cursor: pointer;
+      color: #475569;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .student-details summary:hover { color: #1d4ed8; }
+    .student-details p { margin: 10px 0; color: #64748b; font-size: 12px; text-align: center; }
+
     .student-fields {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
       max-width: 480px;
-      margin: 20px auto 28px;
+      margin: 0 auto 20px;
       padding: 16px;
       border: 1px solid #e2e8f0;
       border-radius: 16px;
@@ -850,17 +868,20 @@ nav .nav-logo {
       <div class="home-hero">
         <span class="rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-800" style="padding: 5px 12px; display: inline-block;">Piattaforma didattica</span>
         <h1>Da dove vuoi iniziare?</h1>
-        <p class="text-sm text-slate-500">Inserisci nome e cognome oppure lascia entrambi i campi vuoti per continuare in anonimo.</p>
-        <div class="student-fields">
-          <div>
-            <label for="cand-nome">Nome <span class="text-slate-400">(facoltativo)</span></label>
-            <input type="text" id="cand-nome" placeholder="Il tuo nome" autocomplete="given-name">
+        <details class="student-details">
+          <summary>Aggiungi nome e cognome al certificato <span class="text-slate-400">(facoltativo)</span></summary>
+          <p>Lascia entrambi i campi vuoti per continuare in anonimo.</p>
+          <div class="student-fields">
+            <div>
+              <label for="cand-nome">Nome</label>
+              <input type="text" id="cand-nome" placeholder="Il tuo nome" autocomplete="given-name">
+            </div>
+            <div>
+              <label for="cand-cognome">Cognome</label>
+              <input type="text" id="cand-cognome" placeholder="Il tuo cognome" autocomplete="family-name">
+            </div>
           </div>
-          <div>
-            <label for="cand-cognome">Cognome <span class="text-slate-400">(facoltativo)</span></label>
-            <input type="text" id="cand-cognome" placeholder="Il tuo cognome" autocomplete="family-name">
-          </div>
-        </div>
+        </details>
       </div>
 
       <div class="flex flex-wrap items-center justify-between mt-4" style="gap: 10px;">
