@@ -1031,9 +1031,13 @@ nav .nav-logo {
 
       #app.lesson-mode .lesson-thumbnail {
         min-height: 0;
-        margin-top: 8px;
         flex: none;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 8px;
+      }
+
+      #app.lesson-mode .lesson-card > #learning-slide-details .lesson-thumbnail {
+        margin-top: auto;
       }
 
       #app.lesson-mode .lesson-thumbnail button {
@@ -1068,8 +1072,22 @@ nav .nav-logo {
       }
 
       #app.lesson-mode .learning-explanations-disclosure[open] {
-        max-height: 22vh;
+        max-height: none;
+        overflow: visible;
+      }
+
+      #app.lesson-mode .learning-explanations-disclosure[open] > div {
+        position: fixed;
+        z-index: 30;
+        right: 4vw;
+        bottom: 3vh;
+        left: 4vw;
+        max-height: 30vh;
         overflow-y: auto;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 12px 36px rgba(15, 23, 42, .2);
       }
 
       #app.lesson-mode .concept-map-panel {
@@ -1230,9 +1248,9 @@ nav .nav-logo {
               <span id="learning-slide-number" class="text-xs text-slate-500" aria-live="polite"></span>
               <button type="button" id="learning-slide-next" class="btn-secondary" aria-label="Slide successiva" style="padding: 9px 13px; border-radius: 10px; font-size: 18px;" disabled>→</button>
             </div>
+            <div id="learning-slide-thumbnails" class="lesson-thumbnail" aria-label="Schede vicine"></div>
           </div>
-        </article>
-        <div id="learning-slide-thumbnails" class="lesson-thumbnail" aria-label="Schede vicine"></div>
+          </article>
         <div class="concept-map-actions">
           <button type="button" id="learning-concept-map-toggle" class="btn-secondary" style="padding: 10px 14px; border-radius: 10px; font-weight: 700;" aria-expanded="false" aria-controls="learning-concept-map-panel" disabled>Genera mappa concettuale</button>
           <p>Creata nel browser dai titoli e dal testo degli appunti; i contenuti restano sul dispositivo.</p>
