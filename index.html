@@ -8,7 +8,6 @@
 	<nav>
 	<div class="container"><div class="row align-items-center"><div class="nav-logo"><a href="https://fmorea.github.io/" target="_blank"><span style="font-family: Averta, Inter, sans-serif; font-size: 34px; font-weight: 800; color: #fff; letter-spacing: -0.3px; white-space: nowrap;">FMOREA</span></a></div> <div class="nav-lingua dropdown"><button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Cambia lingua" class="dropdown-toggle">Italia - IT</button> <!----></div></div></div>
   	</nav>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <!-- jsPDF per generazione lato client della scheda riepilogativa PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   
@@ -1274,12 +1273,11 @@ nav .nav-logo {
     var currentReviewData = null;
     var currentReviewFilter = 'all';
     var teachingMaterials = {};
+    var teachingSlides = {};
     var teachingMaterialsLoadFailed = false;
+    var teachingSlidesLoadFailed = false;
     var studyDeck = null;
     var studyDeckLoadToken = 0;
-    var studySlideRenderToken = 0;
-    var studyThumbnailRenderToken = 0;
-    var studyThumbnailTasks = [];
     var platformElapsedSeconds = 0;
     var platformStorageKey = '';
     var platformStorageAvailable = true;
@@ -1579,6 +1577,35 @@ nav .nav-logo {
       xhr.send();
     }
 
+    function loadTeachingSlidesCatalog() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'appunti/slides/manifest.json', true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState !== 4) return;
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            var manifest = JSON.parse(xhr.responseText);
+            if (!manifest || typeof manifest !== 'object' || Array.isArray(manifest)) {
+              throw new Error('Il catalogo delle lezioni non ha un formato valido.');
+            }
+            teachingSlides = manifest;
+            teachingSlidesLoadFailed = false;
+          } catch (err) {
+            teachingSlidesLoadFailed = true;
+            console.error('Impossibile leggere appunti/slides/manifest.json:', err);
+          }
+        } else {
+          teachingSlidesLoadFailed = true;
+          console.error('Impossibile caricare appunti/slides/manifest.json (HTTP ' + xhr.status + ').');
+        }
+      };
+      xhr.onerror = function() {
+        teachingSlidesLoadFailed = true;
+        console.error('Errore di rete durante il caricamento di appunti/slides/manifest.json.');
+      };
+      xhr.send();
+    }
+
     /* SCANSIONE AUTOMATICA DELLA REPOSITORY PER FILE .txt */
     function scansionaRepository() {
       var gh = ottieniDatiGitHubDefault();
@@ -1721,38 +1748,39 @@ nav .nav-logo {
 
       if (BANCA_DATI_MATERIE.length === 0) {
         var emptyCard = document.createElement('div');
-        emptyCard.className = 'p-5 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 text-center text-slate-500 text-xs';
-        emptyCard.style.gridColumn = '1 / -1';
-        emptyCard.style.width = '100%';
-        emptyCard.innerHTML = 
-          '<div class="font-bold text-slate-700 text-sm mb-1">Nessun file quiz trovato nel repository</div>' +
-          '<div class="text-slate-500">Carica file <b>.txt</b> in <code>quiz/</code> con la sintassi <code>CLASSE_SPECIALIZZAZIONE_MATERIA_SCUOLA_PERIODO_ANNO-60min-55soglia.txt</code>.</div>';
+        emptyCard.className = 'rounded-xl border p-5 text-center text-sm text-slate-600';
+        emptyCard.textContent = 'Non è stato trovato nessun corso. Controlla la connessione o aggiorna le classi.';
         container.appendChild(emptyCard);
         updateMateriaInfo();
         return;
       }
 
-      if (!selectedMateria || !BANCA_DATI_MATERIE.some(function(m) { return m.id === selectedMateria.id; })) {
-        selectedMateria = BANCA_DATI_MATERIE[0];
-      }
-
       for (var i = 0; i < BANCA_DATI_MATERIE.length; i++) {
         (function(mat) {
-          var isSelected = selectedMateria && (mat.id === selectedMateria.id);
-          var card = document.createElement('div');
+          var card = document.createElement('button');
+          card.type = 'button';
           card.id = 'materia-card-' + mat.id;
-          card.className = 'cursor-pointer p-4 rounded-xl border-2 transition ' + (isSelected ? 'border-blue-600 bg-blue-50' : 'border-slate-200 bg-white');
-          card.style.cursor = 'pointer';
-          card.style.margin = '4px';
+          card.className = 'course-card';
+          card.setAttribute('aria-label', 'Classe ' + (mat.corso ? mat.corso.classe : mat.nome) + ', ' + mat.nome);
           card.onclick = function() {
             selectMateria(mat.id);
           };
-          card.innerHTML = 
-            '<div class="flex items-center justify-between">' +
-              '<div class="font-bold text-sm text-slate-800">' + mat.nome + '</div>' +
-              '<span class="text-xs font-bold bg-slate-100 text-slate-700" style="padding: 2px 8px; border-radius: 6px;">' + mat.domande.length + ' Q</span>' +
-            '</div>' +
-            '<p class="text-xs text-slate-500 mt-1" style="margin-bottom: 0;">' + (mat.descrizione || (mat.tempoMinuti + ' min &bull; soglia ' + mat.sogliaSuperamento + '%')) + '</p>';
+          var classLabel = document.createElement('span');
+          classLabel.className = 'course-card-class';
+          classLabel.textContent = mat.corso ?
+            mat.corso.classe + ' classe · ' + mat.corso.specializzazione :
+            'Corso';
+          var title = document.createElement('span');
+          title.className = 'course-card-title';
+          title.textContent = mat.nome;
+          var details = document.createElement('span');
+          details.className = 'course-card-details';
+          details.textContent = mat.corso ?
+            mat.corso.scuola + ' · ' + mat.corso.periodo + ' ' + mat.corso.anno :
+            mat.domande.length + ' quesiti disponibili';
+          card.appendChild(classLabel);
+          card.appendChild(title);
+          card.appendChild(details);
           container.appendChild(card);
         })(BANCA_DATI_MATERIE[i]);
       }
@@ -1766,29 +1794,63 @@ nav .nav-logo {
           break;
         }
       }
-      renderMaterieSelector();
+      if (!selectedMateria) return;
+      candidate = {
+        nome: document.getElementById('cand-nome').value.trim(),
+        cognome: document.getElementById('cand-cognome').value.trim()
+      };
+      document.getElementById('mode-course-title').textContent =
+        (selectedMateria.corso ? selectedMateria.corso.classe + ' classe' : 'Corso') +
+        ' · ' + selectedMateria.nome;
+      document.getElementById('mode-course-subtitle').textContent =
+        selectedMateria.descrizione || selectedMateria.tempoMinuti + ' minuti · ' +
+        selectedMateria.domande.length + ' quesiti';
+      document.getElementById('step-registration').classList.add('hidden');
+      document.getElementById('step-learning').classList.add('hidden');
+      document.getElementById('step-mode').classList.remove('hidden');
+      updateMateriaInfo();
     }
 
     function updateMateriaInfo() {
       if (!selectedMateria) {
-        document.getElementById('info-domande').textContent = '0';
-        document.getElementById('info-tempo').textContent = '--';
-        document.getElementById('info-soglia').textContent = '--';
-        document.getElementById('info-max-errori').textContent = '0 errori';
+        var emptyCount = document.getElementById('info-domande');
+        var emptyTime = document.getElementById('info-tempo');
+        var emptyThreshold = document.getElementById('info-soglia');
+        var emptyErrors = document.getElementById('info-max-errori');
+        if (emptyCount) emptyCount.textContent = '0';
+        if (emptyTime) emptyTime.textContent = '--';
+        if (emptyThreshold) emptyThreshold.textContent = '--';
+        if (emptyErrors) emptyErrors.textContent = '0 errori';
         renderSelectedMateriaMaterial();
         return;
       }
-      document.getElementById('info-domande').textContent = selectedMateria.domande.length;
-      document.getElementById('info-tempo').textContent = selectedMateria.tempoMinuti + ' min';
-      document.getElementById('info-soglia').textContent = selectedMateria.sogliaSuperamento + '%';
+      var count = document.getElementById('info-domande');
+      var time = document.getElementById('info-tempo');
+      var threshold = document.getElementById('info-soglia');
+      var errors = document.getElementById('info-max-errori');
+      if (count) count.textContent = selectedMateria.domande.length;
+      if (time) time.textContent = selectedMateria.tempoMinuti + ' min';
+      if (threshold) threshold.textContent = selectedMateria.sogliaSuperamento + '%';
       var maxErr = Math.floor(selectedMateria.domande.length * (1 - selectedMateria.sogliaSuperamento / 100));
-      document.getElementById('info-max-errori').textContent = 'max ' + maxErr + ' error' + (maxErr === 1 ? 'e' : 'i');
+      if (errors) errors.textContent = 'max ' + maxErr + ' error' + (maxErr === 1 ? 'e' : 'i');
       renderSelectedMateriaMaterial();
+    }
+
+    function backToClassSelection() {
+      document.getElementById('step-mode').classList.add('hidden');
+      document.getElementById('step-registration').classList.remove('hidden');
     }
 
     function getTeachingMaterialPath(materia) {
       if (!materia || !materia.corsoKey) return '';
       var path = teachingMaterials[materia.corsoKey];
+      if (typeof path !== 'string' || !path.trim() || path.indexOf('..') !== -1 || path.charAt(0) === '/') return '';
+      return path.trim();
+    }
+
+    function getTeachingSlidesPath(materia) {
+      if (!materia || !materia.corsoKey) return '';
+      var path = teachingSlides[materia.corsoKey];
       if (typeof path !== 'string' || !path.trim() || path.indexOf('..') !== -1 || path.charAt(0) === '/') return '';
       return path.trim();
     }
@@ -1875,21 +1937,33 @@ nav .nav-logo {
       var courseInfo = selectedMateria.descrizione || '';
       document.getElementById('learning-course-info').textContent = courseInfo;
       var pdfPath = getTeachingMaterialPath(selectedMateria);
+      var slidesPath = getTeachingSlidesPath(selectedMateria);
       var pdfSection = document.getElementById('learning-pdf-section');
       var pdfUnavailable = document.getElementById('learning-pdf-unavailable');
       if (pdfPath) {
         var pdfUrl = 'appunti/' + encodeURI(pdfPath);
         document.getElementById('learning-pdf-link').href = pdfUrl;
+      } else {
+        document.getElementById('learning-pdf-link').href = '#';
+      }
+      if (slidesPath) {
         pdfSection.classList.remove('hidden');
         pdfUnavailable.classList.add('hidden');
-        loadStudySlides(pdfPath);
+        document.getElementById('learning-pdf-link').classList.add('hidden');
+        loadStudySlides(slidesPath);
       } else {
         pdfSection.classList.add('hidden');
         pdfUnavailable.classList.remove('hidden');
+        document.getElementById('learning-pdf-link').classList.toggle('hidden', !pdfPath);
+        document.getElementById('learning-slide-error').classList.toggle('hidden', !teachingSlidesLoadFailed);
+        if (teachingSlidesLoadFailed && pdfPath) {
+          showStudySlideError('Le schede estratte non sono disponibili. Puoi aprire il PDF originale.');
+        }
         clearStudySlides();
       }
       renderLearningExplanations(selectedMateria);
       document.getElementById('step-registration').classList.add('hidden');
+      document.getElementById('step-mode').classList.add('hidden');
       document.getElementById('step-quiz').classList.add('hidden');
       document.getElementById('step-result').classList.add('hidden');
       document.getElementById('step-review').classList.add('hidden');
@@ -2173,9 +2247,172 @@ nav .nav-logo {
       });
     }
 
+    function clearStudySlides() {
+      studyDeckLoadToken++;
+      studyDeck = null;
+      var image = document.getElementById('learning-slide-image');
+      image.removeAttribute('src');
+      image.alt = '';
+      document.getElementById('learning-lesson-card').setAttribute('aria-busy', 'false');
+      document.getElementById('learning-slide-label').textContent = '';
+      document.getElementById('learning-slide-counter').textContent = 'Schede non disponibili';
+      document.getElementById('learning-slide-title').textContent = 'Appunti non disponibili';
+      document.getElementById('learning-slide-excerpt').textContent = '';
+      document.getElementById('learning-slide-thumbnails').innerHTML = '';
+      document.getElementById('learning-slide-error').classList.add('hidden');
+      document.getElementById('learning-slide-previous').disabled = true;
+      document.getElementById('learning-slide-next').disabled = true;
+    }
+
+    function showStudySlideError(message) {
+      var error = document.getElementById('learning-slide-error');
+      error.textContent = message;
+      error.classList.remove('hidden');
+      document.getElementById('learning-lesson-card').setAttribute('aria-busy', 'false');
+      document.getElementById('learning-slide-counter').textContent = 'Lezione non disponibile';
+      document.getElementById('learning-slide-title').textContent = 'Non è stato possibile aprire le schede';
+      document.getElementById('learning-slide-excerpt').textContent = '';
+      document.getElementById('learning-pdf-link').classList.remove('hidden');
+      document.getElementById('learning-slide-previous').disabled = true;
+      document.getElementById('learning-slide-next').disabled = true;
+    }
+
+    function loadStudySlides(path) {
+      clearStudySlides();
+      var token = ++studyDeckLoadToken;
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'appunti/slides/' + encodeURI(path), true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState !== 4 || token !== studyDeckLoadToken) return;
+        if (xhr.status < 200 || xhr.status >= 300) {
+          console.error('Impossibile caricare le schede degli appunti (HTTP ' + xhr.status + '): ' + path);
+          showStudySlideError('Si è verificato un errore durante il caricamento delle schede. Puoi aprire il PDF originale.');
+          return;
+        }
+        try {
+          var data = JSON.parse(xhr.responseText);
+          if (!data || !Array.isArray(data.slides) || data.slides.length === 0) {
+            throw new Error('Il file delle schede non contiene pagine valide.');
+          }
+          studyDeck = {
+            slides: data.slides,
+            courseKey: path.split('/')[0],
+            currentPage: 1
+          };
+          displayStudySlide(1);
+        } catch (err) {
+          console.error('Impossibile leggere il contenuto estratto degli appunti:', err);
+          showStudySlideError('Il materiale estratto non è leggibile. Puoi aprire il PDF originale.');
+        }
+      };
+      xhr.onerror = function() {
+        if (token !== studyDeckLoadToken) return;
+        console.error('Errore di rete durante il caricamento delle schede degli appunti: ' + path);
+        showStudySlideError('Si è verificato un errore di rete. Puoi aprire il PDF originale.');
+      };
+      xhr.send();
+      document.getElementById('learning-slide-counter').textContent = 'Caricamento delle schede...';
+      document.getElementById('learning-slide-title').textContent = 'Preparazione delle schede...';
+      document.getElementById('learning-lesson-card').setAttribute('aria-busy', 'true');
+    }
+
+    function displayStudySlide(pageNumber) {
+      if (!studyDeck) return;
+      var slides = studyDeck.slides;
+      var number = Math.max(1, Math.min(slides.length, parseInt(pageNumber, 10) || 1));
+      var slide = slides[number - 1];
+      studyDeck.currentPage = number;
+      document.getElementById('learning-slide-counter').textContent = 'Scheda ' + number + ' di ' + slides.length;
+      document.getElementById('learning-slide-label').textContent = 'LEZIONE · SCHEDA ' + number;
+      document.getElementById('learning-slide-title').textContent = slide.title || 'Scheda ' + number;
+      document.getElementById('learning-slide-excerpt').textContent =
+        slide.text || 'Questa pagina è disponibile come immagine negli appunti originali.';
+      document.getElementById('learning-slide-previous').disabled = number <= 1;
+      document.getElementById('learning-slide-next').disabled = number >= slides.length;
+
+      var image = document.getElementById('learning-slide-image');
+      var imageName = slide.image || '';
+      if (!imageName || imageName.indexOf('..') !== -1 || imageName.charAt(0) === '/') {
+        showStudySlideError('Il percorso dell’immagine di questa scheda non è valido.');
+        return;
+      }
+
+      var token = studyDeckLoadToken;
+      var imageUrl = 'appunti/slides/' + studyDeck.courseKey + '/' + encodeURI(imageName);
+      document.getElementById('learning-lesson-card').setAttribute('aria-busy', 'true');
+      image.alt = (slide.title || 'Scheda didattica') + ', pagina ' + number;
+      image.onload = function() {
+        if (token === studyDeckLoadToken) {
+          document.getElementById('learning-lesson-card').setAttribute('aria-busy', 'false');
+        }
+      };
+      image.onerror = function() {
+        if (token !== studyDeckLoadToken) return;
+        console.error('Impossibile caricare l’immagine della scheda ' + number + ': ' + imageUrl);
+        showStudySlideError('Immagine della scheda non disponibile. Puoi aprire il PDF originale.');
+      };
+      image.src = imageUrl;
+      renderStudyThumbnails();
+    }
+
+    function renderStudyThumbnails() {
+      if (!studyDeck) return;
+      var container = document.getElementById('learning-slide-thumbnails');
+      container.innerHTML = '';
+      var first = Math.max(1, studyDeck.currentPage - 2);
+      var last = Math.min(studyDeck.slides.length, studyDeck.currentPage + 2);
+
+      for (var number = first; number <= last; number++) {
+        (function(pageNumber) {
+          var slide = studyDeck.slides[pageNumber - 1];
+          var button = document.createElement('button');
+          button.type = 'button';
+          button.className = pageNumber === studyDeck.currentPage ? 'active' : '';
+          button.setAttribute('aria-label', 'Apri scheda ' + pageNumber + ': ' + (slide.title || 'Lezione'));
+          button.setAttribute('aria-current', pageNumber === studyDeck.currentPage ? 'true' : 'false');
+          button.onclick = function() {
+            displayStudySlide(pageNumber);
+          };
+
+          var image = document.createElement('img');
+          image.src = 'appunti/slides/' + studyDeck.courseKey + '/' + encodeURI(slide.image);
+          image.alt = '';
+          image.loading = 'lazy';
+          button.appendChild(image);
+          var title = document.createElement('span');
+          title.textContent = pageNumber + ' · ' + (slide.title || 'Lezione');
+          button.appendChild(title);
+          container.appendChild(button);
+        })(number);
+      }
+    }
+
+    function initStudySlideshowControls() {
+      document.getElementById('learning-slide-previous').onclick = function() {
+        if (studyDeck) displayStudySlide(studyDeck.currentPage - 1);
+      };
+      document.getElementById('learning-slide-next').onclick = function() {
+        if (studyDeck) displayStudySlide(studyDeck.currentPage + 1);
+      };
+      document.getElementById('learning-slide-number').onchange = function() {
+        if (studyDeck) displayStudySlide(this.value);
+      };
+      document.addEventListener('keydown', function(event) {
+        if (document.getElementById('step-learning').classList.contains('hidden') || !studyDeck) return;
+        if (event.target && /^(INPUT|TEXTAREA|SELECT)$/.test(event.target.tagName)) return;
+        if (event.key === 'ArrowLeft' && studyDeck.currentPage > 1) {
+          event.preventDefault();
+          displayStudySlide(studyDeck.currentPage - 1);
+        } else if (event.key === 'ArrowRight' && studyDeck.currentPage < studyDeck.slides.length) {
+          event.preventDefault();
+          displayStudySlide(studyDeck.currentPage + 1);
+        }
+      });
+    }
+
     function exitLearning() {
       document.getElementById('step-learning').classList.add('hidden');
-      document.getElementById('step-registration').classList.remove('hidden');
+      document.getElementById('step-mode').classList.remove('hidden');
     }
 
     function formatPlatformDuration(seconds, includeSeconds) {
