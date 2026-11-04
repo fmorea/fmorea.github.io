@@ -2517,10 +2517,13 @@ nav .nav-logo {
       var title = document.getElementById('learning-slide-title').textContent.trim();
       var currentSlide = studyDeck && studyDeck.slides[studyDeck.currentPage - 1];
       var text = currentSlide && currentSlide.text ? currentSlide.text.trim() : '';
-      text = text.replace(/-\s*\r?\n\s*/g, '').replace(/\r?\n\s*\r?\n/g, '. ').replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
-      if (text && title && text.slice(0, title.length).toLowerCase() === title.toLowerCase()) {
-        text = text.slice(title.length).replace(/^[\s:.;-]+/, '');
+      var firstTextLine = text.split(/\r?\n/)[0].trim();
+      var normalizedTitle = title.toLowerCase().replace(/[^a-z0-9]/g, '');
+      var normalizedFirstLine = firstTextLine.toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (normalizedTitle && normalizedTitle === normalizedFirstLine) {
+        text = text.slice(firstTextLine.length).replace(/^\s+/, '');
       }
+      text = text.replace(/-\s*\r?\n\s*/g, '').replace(/\r?\n\s*\r?\n/g, '. ').replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
       studySpeechChunks = splitStudyTextForSpeech([title, text].filter(Boolean).join('. '));
       if (!studySpeechChunks.length) {
         setStudySpeechControls('ready', 'Questa scheda non contiene testo da leggere.');
