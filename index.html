@@ -628,88 +628,169 @@ nav .nav-logo {
     border-top: 7px solid #FFFFFF;
 }
 
-    .slide-deck {
-      padding: 18px;
-      border: 1px solid #dbe3ee;
-      border-radius: 20px;
-      background: linear-gradient(145deg, #f8fafc, #eef2f8);
-      box-shadow: 0 16px 40px rgba(15, 23, 42, .08);
+    .student-fields {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 480px;
+      margin: 20px auto 28px;
+      padding: 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      background: #fff;
     }
 
-    .slide-stage {
+    .student-fields label {
+      display: block;
+      margin-bottom: 5px;
+      color: #64748b;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .student-fields input { min-width: 0; }
+
+    .home-hero {
+      padding: 22px 18px 4px;
+      text-align: center;
+    }
+
+    .home-hero h1 {
+      margin: 6px 0;
+      font-size: clamp(24px, 4vw, 34px);
+    }
+
+    .course-grid,
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .course-card {
+      min-height: 120px;
+      padding: 20px;
+      border: 1px solid #dbe3ee;
+      border-radius: 18px;
+      background: #fff;
+      color: #0f172a;
+      text-align: left;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, .05);
+      transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+    }
+
+    .course-card:hover {
+      transform: translateY(-2px);
+      border-color: #93c5fd;
+      box-shadow: 0 12px 28px rgba(37, 99, 235, .12);
+    }
+
+    .course-card-class {
+      display: block;
+      margin-bottom: 8px;
+      color: #2563eb;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .course-card-title {
+      display: block;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .course-card-details {
+      display: block;
+      margin-top: 6px;
+      color: #64748b;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .mode-card {
       display: flex;
-      height: min(68vh, 780px);
+      min-height: 170px;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 24px;
+      border: 1px solid #dbe3ee;
+      border-radius: 20px;
+      background: #fff;
+      color: #0f172a;
+      text-align: left;
+      box-shadow: 0 8px 26px rgba(15, 23, 42, .06);
+      transition: transform .16s ease, box-shadow .16s ease;
+    }
+
+    .mode-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 35px rgba(15, 23, 42, .12);
+    }
+
+    .mode-card-icon {
+      display: grid;
+      width: 44px;
+      height: 44px;
+      margin-bottom: 14px;
+      place-items: center;
+      border-radius: 14px;
+      background: #eff6ff;
+      color: #2563eb;
+      font-size: 22px;
+    }
+
+    .lesson-card {
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      background: #fff;
+      box-shadow: 0 10px 32px rgba(15, 23, 42, .08);
+    }
+
+    .lesson-image-wrap {
+      display: flex;
       min-height: 320px;
-      max-height: 780px;
+      max-height: min(65vh, 760px);
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      padding: 18px;
-      border-radius: 14px;
-      background: #172033;
+      padding: 16px;
+      background: linear-gradient(145deg, #f1f5f9, #e2e8f0);
     }
 
-    .slide-stage canvas {
-      display: block;
-      max-width: 100%;
-      max-height: 100%;
-      border-radius: 3px;
-      background: #fff;
-      box-shadow: 0 10px 35px rgba(0, 0, 0, .35);
-    }
-
-    .slide-thumbnail-list {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .slide-thumbnail {
-      min-width: 0;
-      padding: 8px;
-      overflow: hidden;
-      border: 1px solid #dbe3ee;
-      border-radius: 12px;
-      background: #fff;
-      color: #475569;
-      text-align: left;
-      cursor: pointer;
-    }
-
-    .slide-thumbnail.active {
-      border: 2px solid #2563eb;
-      padding: 7px;
-      color: #1d4ed8;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
-    }
-
-    .slide-thumbnail canvas {
+    .lesson-image {
       display: block;
       width: 100%;
-      height: 86px;
+      height: auto;
+      max-height: calc(min(65vh, 760px) - 32px);
+      border-radius: 10px;
+      background: #fff;
       object-fit: contain;
-      border-radius: 5px;
-      background: #f1f5f9;
+      box-shadow: 0 8px 28px rgba(15, 23, 42, .14);
     }
 
-    .slide-thumbnail-title {
-      display: -webkit-box;
-      min-height: 34px;
-      margin-top: 6px;
-      overflow: hidden;
-      font-size: 11px;
-      font-weight: 700;
-      line-height: 1.4;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-    }
+    .lesson-card-copy { padding: 20px 24px 24px; }
+    .lesson-extracted-text { white-space: pre-line; line-height: 1.75; }
+    .lesson-thumbnail { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+    .lesson-thumbnail button { padding: 6px; overflow: hidden; border: 1px solid #dbe3ee; border-radius: 12px; background: #fff; text-align: left; }
+    .lesson-thumbnail button.active { border: 2px solid #2563eb; padding: 5px; box-shadow: 0 0 0 3px rgba(37, 99, 235, .12); }
+    .lesson-thumbnail img { display: block; width: 100%; height: 78px; border-radius: 6px; background: #f1f5f9; object-fit: contain; }
+    .lesson-thumbnail span { display: block; margin-top: 5px; overflow: hidden; color: #475569; font-size: 11px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
 
     @media screen and (max-width: 600px) {
-      .slide-deck { padding: 10px; }
-      .slide-stage { height: 58vh; min-height: 220px; max-height: 640px; padding: 8px; }
-      .slide-thumbnail-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
-      .slide-thumbnail canvas { height: 68px; }
+      .student-fields { gap: 8px; padding: 12px; }
+      .student-fields input { padding: 10px; font-size: 13px; }
+      .course-grid, .mode-grid { grid-template-columns: 1fr; }
+      .lesson-image-wrap { min-height: 240px; padding: 8px; }
+      .lesson-image { max-height: calc(60vh - 16px); }
+      .lesson-card-copy { padding: 16px; }
+      .lesson-thumbnail { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+      .lesson-thumbnail img { height: 64px; }
     }
 
     .learning-explanations details {
@@ -738,62 +819,62 @@ nav .nav-logo {
 
   <div id="app">
     
-    <!-- 1. REGISTRAZIONE & SELEZIONE MATERIA -->
+    <!-- 1. SELEZIONE CLASSE -->
     <div id="step-registration" class="p-6 md:p-10">
-      <div class="border-b pb-5 mb-6 flex flex-wrap items-center justify-between" style="gap: 12px;">
-        <div>
-          <h1>Erogazione Didattica Integrata Digitale (DID)</h1>
-        </div>
-        <div>
+      <div class="home-hero">
+        <span class="rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-800" style="padding: 5px 12px; display: inline-block;">Piattaforma didattica</span>
+        <h1>Da dove vuoi iniziare?</h1>
+        <p class="text-sm text-slate-500">Inserisci i tuoi dati e scegli la classe.</p>
+        <div class="student-fields">
+          <div>
+            <label for="cand-nome">Nome</label>
+            <input type="text" id="cand-nome" placeholder="Il tuo nome" autocomplete="given-name">
+          </div>
+          <div>
+            <label for="cand-cognome">Cognome</label>
+            <input type="text" id="cand-cognome" placeholder="Il tuo cognome" autocomplete="family-name">
+          </div>
         </div>
       </div>
 
-      <form id="reg-form" onsubmit="event.preventDefault(); startExam();">
-        <div class="mb-4">
-    <div class="w-full mb-2">
-        <label class="text-xs font-bold uppercase text-slate-600 mb-1" style="display: block;">Nome</label>
-        <input type="text" id="cand-nome" value="Mario">
+      <div class="flex flex-wrap items-center justify-between mt-4" style="gap: 10px;">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">Scegli la tua classe</h2>
+          <p class="text-sm text-slate-500">Troverai lezioni e simulazioni del tuo indirizzo.</p>
+        </div>
+        <button type="button" onclick="scansionaRepository()" class="btn-secondary" style="padding: 8px 12px; border-radius: 10px; font-size: 12px; font-weight: 700;" title="Aggiorna l'elenco delle classi">Aggiorna classi</button>
+      </div>
+      <div class="course-grid" id="materie-selector" aria-label="Classi disponibili"></div>
+      <p class="platform-storage-notice hidden mt-4 rounded-lg border p-3 text-xs text-amber-900" role="status" style="border-color: #fcd34d; background: #fffbeb;"></p>
     </div>
 
-    <div class="w-full">
-        <label class="text-xs font-bold uppercase text-slate-600 mb-1" style="display: block;">Cognome</label>
-        <input type="text" id="cand-cognome" value="Rossi">
-    </div>
-</div>
-
-        <!-- Scelta Materia d'Esame -->
-        <div class="border-t pt-5 mb-6">
-          <div class="flex flex-wrap items-center justify-between mb-3" style="gap: 8px;">
-            <label class="text-xs font-bold uppercase text-slate-600">Materia d'Esame</label>
-            <button type="button" onclick="scansionaRepository()" class="btn-secondary" style="padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center;" title="Ricarica i file .txt dal repository">
-              <svg class="w-4" width="16" height="16" style="width: 16px; height: 16px; margin-right: 6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            </button>
-          </div>
-          <div class="grid grid-cols-2" id="materie-selector"></div>
-        </div>
-
-        <div class="mb-6 rounded-xl border p-4" style="border-color: #bfdbfe; background: #eff6ff;">
-          <div class="font-bold text-sm text-slate-800 mb-1">Materiale didattico e ripasso</div>
-          <p id="material-status" class="text-xs text-slate-600 mb-3" role="status">Caricamento dei materiali in corso...</p>
-          <button type="button" id="btn-open-material" onclick="openStudyMaterial()" class="btn-secondary" style="padding: 10px 16px; border-radius: 10px; font-weight: 700;" disabled>
-            Apri slide e spiegazioni
-          </button>
-        </div>
-
-        <div class="p-4 rounded-xl bg-blue-50 border-blue-200 text-xs text-blue-900 flex flex-wrap justify-between items-center mb-6" style="gap: 12px; border: 1px solid #bfdbfe;">
-          <div class="flex items-center">
-            <svg class="w-4" width="16" height="16" style="width: 16px; height: 16px; margin-right: 6px;" fill="none" stroke="#2563eb" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <span>Quesiti: <b id="info-domande">10</b></span>
-          </div>
-          <div>Tempo a disposizione: <b id="info-tempo">15 min</b></div>
-          <div>Soglia superamento: <b id="info-soglia">90%</b> (<span id="info-max-errori">max 1 errore</span>)</div>
-        </div>
-
-        <button type="submit" id="btn-start" class="btn-action btn-primary" style="width: 100%; padding: 16px; font-size: 16px; border-radius: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
-          <span>Inizia Prova d'Esame</span>
-          <svg class="w-5" width="20" height="20" style="width: 20px; height: 20px; margin-left: 6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+    <!-- 2. SCELTA DELL'ATTIVITA -->
+    <div id="step-mode" class="hidden p-6 md:p-10">
+      <button type="button" onclick="backToClassSelection()" class="btn-secondary mb-6" style="padding: 9px 14px; border-radius: 10px; font-weight: 700;">← Cambia classe</button>
+      <div class="home-hero" style="padding-top: 4px;">
+        <span class="rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-800" style="padding: 5px 12px; display: inline-block;">Classe selezionata</span>
+        <h1 id="mode-course-title">Scegli cosa fare</h1>
+        <p id="mode-course-subtitle" class="text-sm text-slate-500"></p>
+      </div>
+      <div class="p-4 rounded-xl bg-blue-50 border-blue-200 text-sm text-blue-900 flex flex-wrap justify-between items-center mb-6" style="gap: 12px; border: 1px solid #bfdbfe;">
+        <span>Quesiti: <b id="info-domande">0</b></span>
+        <span>Tempo simulazione: <b id="info-tempo">--</b></span>
+        <span>Soglia: <b id="info-soglia">--</b> (<span id="info-max-errori">0 errori</span>)</span>
+      </div>
+      <div class="mode-grid">
+        <button type="button" onclick="openStudyMaterial()" class="mode-card">
+          <span class="mode-card-icon" aria-hidden="true">✦</span>
+          <span class="font-bold text-xl">Lezioni</span>
+          <span class="course-card-details">Studia le schede illustrate e ripassa gli argomenti con le spiegazioni.</span>
+          <span class="font-bold text-blue-700 mt-3">Apri le lezioni →</span>
         </button>
-      </form>
+        <button type="button" onclick="startExam()" class="mode-card">
+          <span class="mode-card-icon" aria-hidden="true">✓</span>
+          <span class="font-bold text-xl">Simulazione d’esame</span>
+          <span class="course-card-details">Mettiti alla prova con i quesiti a tempo e consulta il risultato al termine.</span>
+          <span class="font-bold text-blue-700 mt-3">Inizia la simulazione →</span>
+        </button>
+      </div>
     </div>
 
     <!-- MATERIALI DIDATTICI E RIPASSO -->
@@ -822,19 +903,20 @@ nav .nav-logo {
       <div id="learning-pdf-section" class="mb-8">
         <div class="flex flex-wrap items-center justify-between mb-3" style="gap: 8px;">
           <div>
-            <h3 class="text-lg font-bold text-slate-800">Slide di ripasso</h3>
-            <p class="text-xs text-slate-500">Sfoglia le schede o scegli una miniatura; usa anche le frecce della tastiera.</p>
+            <h3 class="text-lg font-bold text-slate-800">Schede della lezione</h3>
+            <p class="text-xs text-slate-500">Immagini e testo estratti dagli appunti. Usa le frecce o scegli una scheda.</p>
           </div>
           <span id="learning-slide-counter" class="text-sm font-bold text-slate-600" aria-live="polite">Caricamento delle slide...</span>
         </div>
-        <div class="slide-deck">
-          <div class="slide-stage" id="learning-slide-stage" aria-busy="true">
-            <canvas id="learning-slide-canvas" aria-label="Pagina della presentazione didattica"></canvas>
+        <article class="lesson-card" id="learning-lesson-card" aria-busy="true">
+          <div class="lesson-image-wrap">
+            <img class="lesson-image" id="learning-slide-image" src="" alt="Immagine della scheda didattica" loading="eager">
           </div>
           <div class="flex flex-wrap items-center justify-between mt-4" style="gap: 10px;">
-            <div style="min-width: 0; flex: 1;">
-              <div id="learning-slide-title" class="font-bold text-lg text-slate-900">Preparazione delle slide...</div>
-              <p id="learning-slide-excerpt" class="text-sm text-slate-600 mt-1" style="margin-bottom: 0;"></p>
+            <div class="lesson-card-copy" style="min-width: 0; flex: 1;">
+              <span id="learning-slide-label" class="text-xs font-bold uppercase tracking-wider text-blue-700"></span>
+              <h3 id="learning-slide-title" class="font-bold text-xl text-slate-900 mt-1">Preparazione delle schede...</h3>
+              <div id="learning-slide-excerpt" class="lesson-extracted-text text-sm text-slate-600 mt-2"></div>
             </div>
             <div class="flex items-center" style="gap: 8px;">
               <button type="button" id="learning-slide-previous" class="btn-secondary" aria-label="Slide precedente" style="padding: 9px 13px; border-radius: 10px; font-size: 18px;" disabled>←</button>
@@ -843,8 +925,9 @@ nav .nav-logo {
               <button type="button" id="learning-slide-next" class="btn-secondary" aria-label="Slide successiva" style="padding: 9px 13px; border-radius: 10px; font-size: 18px;" disabled>→</button>
             </div>
           </div>
-          <div id="learning-slide-thumbnails" class="slide-thumbnail-list" aria-label="Anteprime delle slide vicine"></div>
-        </div>
+          </div>
+        </article>
+        <div id="learning-slide-thumbnails" class="lesson-thumbnail" aria-label="Schede vicine"></div>
         <p id="learning-slide-error" class="hidden mt-3 rounded-xl border p-4 text-sm text-red-800" role="alert" style="border-color: #fecaca; background: #fef2f2;"></p>
         <a id="learning-pdf-link" class="hidden mt-3 text-sm font-bold text-blue-700" target="_blank" rel="noopener">Apri il PDF originale</a>
       </div>
