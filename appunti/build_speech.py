@@ -19,7 +19,7 @@ COURSES = (
     "4a_ele_tpsee",
     "4b_inf_telecomunicazioni",
 )
-MAX_CHUNK_CHARACTERS = 320
+MAX_CHUNK_CHARACTERS = 200
 CHUNK_PAUSE_SECONDS = 0.18
 
 
