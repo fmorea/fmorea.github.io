@@ -853,8 +853,13 @@ nav .nav-logo {
       .course-grid, .mode-grid { grid-template-columns: 1fr; }
       .lesson-image-wrap { min-height: 240px; padding: 8px; }
       .lesson-image { max-height: none; }
-      .lesson-zoom-controls { padding: 8px; }
+      .lesson-zoom-controls { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); justify-items: center; gap: 6px; padding: 8px; }
       .lesson-zoom-controls button { min-width: 44px; min-height: 44px; }
+      #learning-zoom-out { grid-column: 1; grid-row: 1; }
+      #learning-zoom-level { grid-column: 2; grid-row: 1; }
+      #learning-zoom-slider { grid-column: 1 / -1; grid-row: 2; width: 100%; }
+      #learning-zoom-in { grid-column: 3; grid-row: 1; }
+      #learning-zoom-reset { grid-column: 4; grid-row: 1; }
       .lesson-zoom-hint { display: none; }
       .lesson-audio-controls { gap: 8px; padding: 10px; }
       .lesson-audio-status { flex-basis: 100%; order: 1; }
