@@ -67,7 +67,7 @@
 
     /* Struttura contenitore centrale */
     #app {
-      max-width: 900px;
+      max-width: 1280px;
       width: 100%;
       margin: 20px auto;
       background: #ffffff;
@@ -773,7 +773,7 @@ nav .nav-logo {
       position: relative;
       display: flex;
       min-height: 320px;
-      max-height: min(65vh, 760px);
+      max-height: min(82vh, 1050px);
       align-items: center;
       justify-content: center;
       overflow: auto;
@@ -787,7 +787,7 @@ nav .nav-logo {
       flex: none;
       width: 100%;
       height: auto;
-      max-height: calc(min(65vh, 760px) - 32px);
+      max-height: calc(min(82vh, 1050px) - 32px);
       border-radius: 10px;
       background: #fff;
       object-fit: contain;
@@ -820,12 +820,11 @@ nav .nav-logo {
     .concept-map-panel { margin-top: 14px; padding: 16px; border: 1px solid #dbeafe; border-radius: 18px; background: linear-gradient(145deg, #f8fbff, #eff6ff); }
     .concept-map-panel > p { margin: 0 0 12px; color: #475569; font-size: 13px; line-height: 1.6; }
     .concept-map-viewport { overflow-x: auto; overscroll-behavior-x: contain; }
-    .concept-map-svg { display: block; width: 100%; min-width: 620px; max-width: 1040px; height: auto; margin: 0 auto; }
+    .concept-map-svg { display: block; width: 100%; min-width: 760px; max-width: 1200px; height: auto; margin: 0 auto; }
     .concept-map-root { fill: #1d4ed8; stroke: #1e40af; stroke-width: 2; }
     .concept-map-root-label { fill: #fff; font-size: 18px; font-weight: 800; }
     .concept-map-root-caption { fill: #dbeafe; font-size: 12px; font-weight: 700; }
     .concept-map-edge { stroke: #93c5fd; stroke-width: 2; }
-    .concept-map-relation { stroke: #64748b; stroke-dasharray: 5 5; stroke-width: 1.5; opacity: .62; }
     .concept-map-node { cursor: pointer; outline: none; }
     .concept-map-node rect { fill: #fff; stroke: #93c5fd; stroke-width: 2; }
     .concept-map-node:hover rect,
@@ -1014,11 +1013,11 @@ nav .nav-logo {
           <p>Creata nel browser dai titoli e dal testo degli appunti; i contenuti restano sul dispositivo.</p>
         </div>
         <section id="learning-concept-map-panel" class="concept-map-panel hidden" aria-label="Mappa concettuale della lezione">
-          <p>La mappa evidenzia i concetti ricorrenti. I collegamenti tratteggiati indicano concetti che ricorrono insieme in più schede; seleziona un nodo per aprire le schede di origine. Su schermi stretti puoi scorrere la mappa in orizzontale.</p>
+          <p>Mappa degli argomenti ricavata dai titoli delle schede. Ogni nodo mostra il titolo originale e apre le pagine del materiale da cui proviene; su schermi stretti puoi scorrere la mappa in orizzontale.</p>
           <div class="concept-map-viewport">
-            <svg id="learning-concept-map" class="concept-map-svg" viewBox="0 0 960 680" role="group" aria-label="Mappa concettuale interattiva"></svg>
+            <svg id="learning-concept-map" class="concept-map-svg" viewBox="0 0 1200 840" role="group" aria-label="Mappa degli argomenti interattiva"></svg>
           </div>
-          <p class="concept-map-legend">Le linee continue collegano l’argomento della lezione ai concetti estratti; quelle tratteggiate mostrano co-occorrenze ricorrenti nel materiale OCR.</p>
+            <p class="concept-map-legend">Ogni collegamento porta dalla materia a un argomento presente nelle schede.</p>
           <div id="learning-concept-map-related" class="concept-map-related" aria-live="polite">
             <p class="text-sm text-slate-500">Seleziona un concetto per vedere le schede collegate.</p>
           </div>
@@ -2390,110 +2389,55 @@ nav .nav-logo {
         stopWords[stopWordList[stopIndex]] = true;
       }
 
-      var courseTokens = tokenizeStudyConcepts(selectedMateria ? selectedMateria.nome : '');
-      for (var courseIndex = 0; courseIndex < courseTokens.length; courseIndex++) {
-        stopWords[courseTokens[courseIndex]] = true;
-      }
-
-      var terms = {};
+      var topicTitles = {};
       for (var slideIndex = 0; slideIndex < slides.length; slideIndex++) {
         var slide = slides[slideIndex];
-        var titleTokens = tokenizeStudyConcepts(slide.title);
-        var bodyTokens = tokenizeStudyConcepts(slide.text);
-        var titleWords = {};
-        var bodyCounts = {};
-        var documentWords = {};
-        var tokenIndex;
-
-        for (tokenIndex = 0; tokenIndex < titleTokens.length; tokenIndex++) {
-          var titleWord = titleTokens[tokenIndex];
-          if (titleWord.length < 4 || titleWord.length > 24 || stopWords[titleWord] || /^\d+$/.test(titleWord)) continue;
-          titleWords[titleWord] = true;
-          documentWords[titleWord] = true;
-        }
-        for (tokenIndex = 0; tokenIndex < bodyTokens.length; tokenIndex++) {
-          var bodyWord = bodyTokens[tokenIndex];
-          if (bodyWord.length < 4 || bodyWord.length > 24 || stopWords[bodyWord] || /^\d+$/.test(bodyWord)) continue;
-          bodyCounts[bodyWord] = (bodyCounts[bodyWord] || 0) + 1;
-          documentWords[bodyWord] = true;
-        }
-
-        for (var word in documentWords) {
-          if (!Object.prototype.hasOwnProperty.call(documentWords, word)) continue;
-          if (!terms[word]) {
-            terms[word] = {
-              label: word,
-              score: 0,
-              titleHits: 0,
-              pageMap: {},
-              pages: []
-            };
+        var label = String(slide.title || '').replace(/\s+/g, ' ').replace(/^\s+|\s+$/g, '');
+        var tokens = tokenizeStudyConcepts(label);
+        var meaningfulTokens = [];
+        for (var tokenIndex = 0; tokenIndex < tokens.length; tokenIndex++) {
+          if (tokens[tokenIndex].length > 2 && !stopWords[tokens[tokenIndex]] && !/^\d+$/.test(tokens[tokenIndex])) {
+            meaningfulTokens.push(tokens[tokenIndex]);
           }
-          var term = terms[word];
-          term.pageMap[slide.number] = slide;
-          if (titleWords[word]) {
-            term.titleHits++;
-            term.score += 4;
-          }
-          term.score += Math.min(bodyCounts[word] || 0, 6) * 0.15;
         }
+        if (meaningfulTokens.length < 2 || /^(esercizi|esercizio|eserciziario|domande|quesiti)(\s|$)/i.test(label)) continue;
+        var key = tokens.join(' ');
+        if (!topicTitles[key]) {
+          topicTitles[key] = { label: label, score: 0, pages: [] };
+        }
+        topicTitles[key].score += 10 + Math.min(meaningfulTokens.length, 6);
+        topicTitles[key].pages.push(slide);
       }
 
-      var concepts = [];
-      for (var termName in terms) {
-        if (!Object.prototype.hasOwnProperty.call(terms, termName)) continue;
-        var candidate = terms[termName];
-        if (!candidate.titleHits) continue;
-        for (var pageNumber in candidate.pageMap) {
-          if (Object.prototype.hasOwnProperty.call(candidate.pageMap, pageNumber)) {
-            candidate.pages.push(candidate.pageMap[pageNumber]);
-          }
-        }
-        candidate.pages.sort(function(left, right) {
-          var leftInTitle = tokenizeStudyConcepts(left.title).indexOf(candidate.label) !== -1 ? 1 : 0;
-          var rightInTitle = tokenizeStudyConcepts(right.title).indexOf(candidate.label) !== -1 ? 1 : 0;
-          return rightInTitle - leftInTitle || left.number - right.number;
-        });
-        concepts.push(candidate);
+      var topics = [];
+      for (var key in topicTitles) {
+        if (Object.prototype.hasOwnProperty.call(topicTitles, key)) topics.push(topicTitles[key]);
       }
-      concepts.sort(function(left, right) {
+      topics.sort(function(left, right) {
         return right.score - left.score || left.label.localeCompare(right.label);
       });
-      concepts = concepts.slice(0, studyConceptCount);
+      return topics.slice(0, studyConceptCount);
+    }
 
-      var relations = [];
-      for (var firstIndex = 0; firstIndex < concepts.length; firstIndex++) {
-        for (var secondIndex = firstIndex + 1; secondIndex < concepts.length; secondIndex++) {
-          var sharedPages = 0;
-          for (var sharedIndex = 0; sharedIndex < concepts[firstIndex].pages.length; sharedIndex++) {
-            var sharedPage = concepts[firstIndex].pages[sharedIndex];
-            if (Object.prototype.hasOwnProperty.call(concepts[secondIndex].pageMap, sharedPage.number)) {
-              sharedPages++;
-            }
-          }
-          if (sharedPages >= 6) {
-            relations.push({
-              source: concepts[firstIndex],
-              target: concepts[secondIndex],
-              sharedPages: sharedPages
-            });
-          }
+    function wrapStudyConceptTitle(label, maxLength) {
+      var words = String(label || '').split(/\s+/);
+      var lines = [];
+      var line = '';
+      for (var wordIndex = 0; wordIndex < words.length; wordIndex++) {
+        var nextLine = line ? line + ' ' + words[wordIndex] : words[wordIndex];
+        if (line && nextLine.length > maxLength && lines.length < 2) {
+          lines.push(line);
+          line = words[wordIndex];
+        } else {
+          line = nextLine;
         }
       }
-      relations.sort(function(left, right) {
-        return right.sharedPages - left.sharedPages;
-      });
-      relations = relations.slice(0, 8);
-      for (var conceptIndex = 0; conceptIndex < concepts.length; conceptIndex++) {
-        concepts[conceptIndex].relations = [];
+      if (line) lines.push(line);
+      if (lines.length > 3) {
+        lines = lines.slice(0, 3);
+        lines[2] = lines[2].length > maxLength - 3 ? lines[2].substring(0, maxLength - 3) + '…' : lines[2] + '…';
       }
-      for (var relationIndex = 0; relationIndex < relations.length; relationIndex++) {
-        relations[relationIndex].source.relations.push({
-          concept: relations[relationIndex].target,
-          sharedPages: relations[relationIndex].sharedPages
-        });
-      }
-      return concepts;
+      return lines;
     }
 
     function createConceptSvgElement(name, attributes) {
@@ -2509,15 +2453,15 @@ nav .nav-logo {
     function renderStudyConceptMap(concepts) {
       var svg = document.getElementById('learning-concept-map');
       while (svg.firstChild) svg.removeChild(svg.firstChild);
-      var centerX = 480;
-      var centerY = 340;
+      var centerX = 600;
+      var centerY = 420;
       var nodePositions = [];
 
       for (var conceptIndex = 0; conceptIndex < concepts.length; conceptIndex++) {
-        var angle = (-90 + conceptIndex * 360 / concepts.length) * Math.PI / 180;
+        var angle = (-90 + conceptIndex * 360 / Math.max(concepts.length, 1)) * Math.PI / 180;
         nodePositions.push({
-          x: centerX + Math.cos(angle) * 285,
-          y: centerY + Math.sin(angle) * 235
+          x: centerX + Math.cos(angle) * 420,
+          y: centerY + Math.sin(angle) * 300
         });
       }
 
@@ -2530,33 +2474,19 @@ nav .nav-logo {
           'class': 'concept-map-edge'
         }));
       }
-      for (var relationIndex = 0; relationIndex < concepts.length; relationIndex++) {
-        for (var relatedIndex = 0; relatedIndex < concepts[relationIndex].relations.length; relatedIndex++) {
-          var relation = concepts[relationIndex].relations[relatedIndex];
-          var targetIndex = concepts.indexOf(relation.concept);
-          if (targetIndex <= relationIndex) continue;
-          svg.appendChild(createConceptSvgElement('line', {
-            x1: nodePositions[relationIndex].x,
-            y1: nodePositions[relationIndex].y,
-            x2: nodePositions[targetIndex].x,
-            y2: nodePositions[targetIndex].y,
-            'class': 'concept-map-relation'
-          }));
-        }
-      }
 
       var root = createConceptSvgElement('g', { 'aria-hidden': 'true' });
       root.appendChild(createConceptSvgElement('rect', {
-        x: centerX - 100,
-        y: centerY - 38,
-        width: 200,
-        height: 76,
+        x: centerX - 145,
+        y: centerY - 44,
+        width: 290,
+        height: 88,
         rx: 20,
         'class': 'concept-map-root'
       }));
       var rootTitle = createConceptSvgElement('text', {
         x: centerX,
-        y: centerY - 2,
+        y: centerY - 4,
         'text-anchor': 'middle',
         'class': 'concept-map-root-label'
       });
@@ -2564,11 +2494,11 @@ nav .nav-logo {
       root.appendChild(rootTitle);
       var rootCaption = createConceptSvgElement('text', {
         x: centerX,
-        y: centerY + 20,
+        y: centerY + 22,
         'text-anchor': 'middle',
         'class': 'concept-map-root-caption'
       });
-      rootCaption.textContent = 'concetti dagli appunti';
+      rootCaption.textContent = 'argomenti delle schede';
       root.appendChild(rootCaption);
       svg.appendChild(root);
 
@@ -2581,23 +2511,31 @@ nav .nav-logo {
             'aria-label': concept.label + ', presente in ' + concept.pages.length + ' schede'
           });
           node.appendChild(createConceptSvgElement('rect', {
-            x: position.x - 78,
-            y: position.y - 31,
-            width: 156,
-            height: 62,
+            x: position.x - 140,
+            y: position.y - 48,
+            width: 280,
+            height: 96,
             rx: 16
           }));
           var label = createConceptSvgElement('text', {
             x: position.x,
-            y: position.y - 2,
+            y: position.y - 20,
             'text-anchor': 'middle',
             'class': 'concept-map-node-label'
           });
-          label.textContent = concept.label.charAt(0).toUpperCase() + concept.label.substring(1);
+          var titleLines = wrapStudyConceptTitle(concept.label, 29);
+          for (var lineIndex = 0; lineIndex < titleLines.length; lineIndex++) {
+            var titleLine = createConceptSvgElement('tspan', {
+              x: position.x,
+              dy: lineIndex === 0 ? 0 : 17
+            });
+            titleLine.textContent = titleLines[lineIndex];
+            label.appendChild(titleLine);
+          }
           node.appendChild(label);
           var count = createConceptSvgElement('text', {
             x: position.x,
-            y: position.y + 17,
+            y: position.y + 35,
             'text-anchor': 'middle',
             'class': 'concept-map-node-count'
           });
@@ -2634,7 +2572,7 @@ nav .nav-logo {
       var related = document.getElementById('learning-concept-map-related');
       related.innerHTML = '';
       var heading = document.createElement('h4');
-      heading.textContent = 'Schede collegate a “' + concept.label + '”';
+      heading.textContent = 'Schede: ' + concept.label;
       related.appendChild(heading);
       var list = document.createElement('ul');
       var pageLimit = Math.min(concept.pages.length, 6);
