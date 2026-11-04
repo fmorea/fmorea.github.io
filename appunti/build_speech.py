@@ -20,6 +20,7 @@ COURSES = (
     "4b_inf_telecomunicazioni",
 )
 MAX_CHUNK_CHARACTERS = 200
+MAX_PHONEME_CHARACTERS = 400
 CHUNK_PAUSE_SECONDS = 0.18
 
 
@@ -60,6 +61,28 @@ def split_text(text, max_characters=MAX_CHUNK_CHARACTERS):
     return chunks
 
 
+def split_phonemes(phonemes, max_characters=MAX_PHONEME_CHARACTERS):
+    chunks = []
+    current = ""
+    for word in phonemes.split():
+        if len(word) > max_characters:
+            if current:
+                chunks.append(current)
+                current = ""
+            chunks.extend(
+                word[start : start + max_characters]
+                for start in range(0, len(word), max_characters)
+            )
+        elif current and len(current) + len(word) + 1 > max_characters:
+            chunks.append(current)
+            current = word
+        else:
+            current = word if not current else f"{current} {word}"
+    if current:
+        chunks.append(current)
+    return chunks
+
+
 class SpeedInputCompatibilitySession:
     def __init__(self, session):
         self.session = session
@@ -85,18 +108,29 @@ def synthesize_slide(kokoro, slide, voice, speed):
     if not slide.get("text", "").strip():
         return None, None
 
-    chunks = split_text(spoken_text)
+    text_chunks = split_text(spoken_text)
+    phoneme_chunks = [
+        phoneme_chunk
+        for text_chunk in text_chunks
+        for phoneme_chunk in split_phonemes(
+            kokoro.tokenizer.phonemize(text_chunk, "it")
+        )
+    ]
+    if not phoneme_chunks:
+        raise RuntimeError(
+            f"La pagina {slide.get('number', '?')} non ha prodotto fonemi."
+        )
     audio_chunks = []
     sample_rate = None
-    for chunk_index, chunk in enumerate(chunks):
+    for chunk_index, chunk in enumerate(phoneme_chunks):
         samples, chunk_sample_rate = kokoro.create(
-            chunk, voice=voice, speed=speed, lang="it"
+            chunk, voice=voice, speed=speed, lang="it", is_phonemes=True
         )
         if sample_rate is not None and chunk_sample_rate != sample_rate:
             raise RuntimeError("Il modello ha restituito frequenze audio non coerenti.")
         sample_rate = chunk_sample_rate
         audio_chunks.append(np.asarray(samples, dtype=np.float32))
-        if chunk_index < len(chunks) - 1:
+        if chunk_index < len(phoneme_chunks) - 1:
             audio_chunks.append(
                 np.zeros(
                     int(chunk_sample_rate * CHUNK_PAUSE_SECONDS), dtype=np.float32
