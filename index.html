@@ -483,6 +483,7 @@
         margin: 0 !important;
         width: 100% !important;
       }
+      #platform-time-indicator,
       #step-registration,
       #step-quiz,
       #step-review,
@@ -807,6 +808,10 @@ nav .nav-logo {
     .lesson-audio-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 14px 0; padding: 12px; border: 1px solid #dbeafe; border-radius: 14px; background: linear-gradient(110deg, #eff6ff, #f8fafc); }
     .lesson-audio-player { width: min(100%, 440px); min-height: 42px; }
     .lesson-audio-status { flex: 1; min-width: 130px; color: #475569; font-size: 12px; }
+    .platform-time-indicator { display: flex; align-items: center; gap: 10px; padding: 10px 24px; border-bottom: 1px solid #dbeafe; background: linear-gradient(90deg, #eff6ff, #f8fafc); color: #1e3a8a; }
+    .platform-time-indicator svg { width: 20px; height: 20px; color: #2563eb; }
+    .platform-time-indicator strong { font-size: 15px; font-variant-numeric: tabular-nums; }
+    .platform-time-indicator .platform-time-note { margin-left: auto; color: #64748b; font-size: 11px; }
     .browser-update-banner { margin: 0 0 16px; padding: 14px 18px; border: 1px solid #fcd34d; border-radius: 14px; background: #fffbeb; color: #78350f; }
     .browser-update-banner a { color: #1d4ed8; font-weight: 700; text-decoration: underline; }
     .lesson-thumbnail { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
@@ -841,6 +846,8 @@ nav .nav-logo {
     .concept-map-related button:hover { border-color: #93c5fd; background: #eff6ff; }
 
     @media screen and (max-width: 600px) {
+      .platform-time-indicator { flex-wrap: wrap; gap: 7px; padding: 9px 16px; }
+      .platform-time-indicator .platform-time-note { width: 100%; margin-left: 27px; }
       .student-fields { gap: 8px; padding: 12px; }
       .student-fields input { padding: 10px; font-size: 13px; }
       .course-grid, .mode-grid { grid-template-columns: 1fr; }
@@ -882,6 +889,15 @@ nav .nav-logo {
 <body>
 
   <div id="app">
+    <div id="platform-time-indicator" class="platform-time-indicator hidden" role="timer" aria-label="Tempo attivo totale in piattaforma" title="Il conteggio è salvato su questo dispositivo e incluso nel certificato; non è verificato da un server.">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" stroke-width="2"></circle>
+        <path d="M12 7v5l3 2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      <span>Tempo attivo</span>
+      <strong id="platform-time-header">0 h 0 min 0 s</strong>
+      <span id="platform-time-note" class="platform-time-note">Salvato su questo dispositivo</span>
+    </div>
     <div id="browser-update-banner" class="browser-update-banner hidden" role="status">
       <strong>Browser non aggiornato.</strong>
       Per visualizzare le schede interattive e ascoltare la lettura, aggiorna a una versione recente di Edge, Chrome o Firefox.
@@ -2797,10 +2813,22 @@ nav .nav-logo {
 
     function updatePlatformTimeDisplays() {
       var duration = formatPlatformDuration(platformElapsedSeconds, true);
-      var displayIds = ['learning-platform-time', 'result-platform-time'];
+      var displayIds = ['platform-time-header', 'learning-platform-time', 'result-platform-time'];
       for (var i = 0; i < displayIds.length; i++) {
         var display = document.getElementById(displayIds[i]);
         if (display) display.textContent = duration;
+      }
+
+      var indicator = document.getElementById('platform-time-indicator');
+      if (indicator) {
+        if (platformStorageKey) indicator.classList.remove('hidden');
+        else indicator.classList.add('hidden');
+      }
+      var note = document.getElementById('platform-time-note');
+      if (note) {
+        note.textContent = platformStorageAvailable
+          ? 'Salvato su questo dispositivo'
+          : 'Solo per questa sessione';
       }
 
       var notices = document.getElementsByClassName('platform-storage-notice');
@@ -2866,6 +2894,7 @@ nav .nav-logo {
         platformTimerInterval = null;
       }
       platformStorageKey = '';
+      updatePlatformTimeDisplays();
     }
 
     function showExamPersistenceWarning() {
@@ -4670,6 +4699,8 @@ nav .nav-logo {
       initStudyAudioControls();
       window.addEventListener('beforeunload', persistActiveExam);
       window.addEventListener('pagehide', persistActiveExam);
+      window.addEventListener('beforeunload', persistPlatformTime);
+      window.addEventListener('pagehide', persistPlatformTime);
 
       try {
         var reviewParam = getQueryParameter('review') || getQueryParameter('q');
