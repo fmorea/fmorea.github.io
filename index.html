@@ -1718,8 +1718,13 @@ nav .nav-logo {
 
               if (remaining <= 0) {
                 if (loaded.length > 0) {
+                  loaded.sort(function(a, b) {
+                    var aClass = a.corso ? a.corso.classe : a.nome;
+                    var bClass = b.corso ? b.corso.classe : b.nome;
+                    return aClass < bClass ? -1 : (aClass > bClass ? 1 : 0);
+                  });
                   BANCA_DATI_MATERIE = loaded;
-                  selectedMateria = BANCA_DATI_MATERIE[0];
+                  selectedMateria = null;
                 }
                 renderMaterieSelector();
               }
@@ -1729,8 +1734,13 @@ nav .nav-logo {
             remaining--;
             if (remaining <= 0) {
               if (loaded.length > 0) {
+                loaded.sort(function(a, b) {
+                  var aClass = a.corso ? a.corso.classe : a.nome;
+                  var bClass = b.corso ? b.corso.classe : b.nome;
+                  return aClass < bClass ? -1 : (aClass > bClass ? 1 : 0);
+                });
                 BANCA_DATI_MATERIE = loaded;
-                selectedMateria = BANCA_DATI_MATERIE[0];
+                selectedMateria = null;
               }
               renderMaterieSelector();
             }
@@ -1967,282 +1977,6 @@ nav .nav-logo {
       document.getElementById('step-review').classList.add('hidden');
       document.getElementById('step-learning').classList.remove('hidden');
       updatePlatformTimeDisplays();
-    }
-
-    function clearStudySlides() {
-      studyDeckLoadToken++;
-      studySlideRenderToken++;
-      studyThumbnailRenderToken++;
-      if (studyDeck && studyDeck.renderTask) {
-        try {
-          studyDeck.renderTask.cancel();
-        } catch (err) {
-          console.warn('Impossibile annullare il rendering della slide:', err);
-        }
-      }
-      for (var i = 0; i < studyThumbnailTasks.length; i++) {
-        try {
-          studyThumbnailTasks[i].cancel();
-        } catch (err) {
-          console.warn('Impossibile annullare il rendering di una miniatura:', err);
-        }
-      }
-      studyThumbnailTasks = [];
-      var previousPdf = studyDeck && studyDeck.pdf;
-      studyDeck = null;
-      if (previousPdf) {
-        previousPdf.destroy().catch(function(err) {
-          console.warn('Impossibile rilasciare il PDF precedente:', err);
-        });
-      }
-      var stage = document.getElementById('learning-slide-stage');
-      stage.setAttribute('aria-busy', 'false');
-      document.getElementById('learning-slide-counter').textContent = 'Slide non disponibili';
-      document.getElementById('learning-slide-title').textContent = 'Nessun PDF associato';
-      document.getElementById('learning-slide-excerpt').textContent = '';
-      document.getElementById('learning-slide-thumbnails').innerHTML = '';
-      document.getElementById('learning-slide-error').classList.add('hidden');
-      document.getElementById('learning-pdf-link').classList.add('hidden');
-      document.getElementById('learning-slide-previous').disabled = true;
-      document.getElementById('learning-slide-next').disabled = true;
-      var canvas = document.getElementById('learning-slide-canvas');
-      canvas.width = 0;
-      canvas.height = 0;
-    }
-
-    function showStudySlideError(message) {
-      var error = document.getElementById('learning-slide-error');
-      error.textContent = message;
-      error.classList.remove('hidden');
-      document.getElementById('learning-slide-stage').setAttribute('aria-busy', 'false');
-      document.getElementById('learning-slide-counter').textContent = 'Presentazione non disponibile';
-      document.getElementById('learning-slide-title').textContent = 'Non è stato possibile preparare le slide';
-      document.getElementById('learning-slide-excerpt').textContent = '';
-      document.getElementById('learning-slide-thumbnails').innerHTML = '';
-      document.getElementById('learning-pdf-link').classList.remove('hidden');
-      document.getElementById('learning-slide-previous').disabled = true;
-      document.getElementById('learning-slide-next').disabled = true;
-    }
-
-    function loadStudySlides(path) {
-      clearStudySlides();
-      var token = ++studyDeckLoadToken;
-      var pdfUrl = 'appunti/' + encodeURI(path);
-      var fallbackLink = document.getElementById('learning-pdf-link');
-      fallbackLink.href = pdfUrl;
-
-      if (!window.pdfjsLib || typeof window.pdfjsLib.getDocument !== 'function') {
-        showStudySlideError('Il visualizzatore di slide non è disponibile. Apri il PDF originale per consultare il materiale.');
-        return;
-      }
-
-      document.getElementById('learning-slide-counter').textContent = 'Estrazione delle slide in corso...';
-      document.getElementById('learning-slide-title').textContent = 'Preparazione delle schede...';
-      document.getElementById('learning-slide-stage').setAttribute('aria-busy', 'true');
-      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-      var loadingTask = window.pdfjsLib.getDocument(pdfUrl);
-      loadingTask.promise.then(function(pdf) {
-        if (token !== studyDeckLoadToken) {
-          pdf.destroy();
-          return;
-        }
-        studyDeck = {
-          pdf: pdf,
-          currentPage: 1,
-          titles: {},
-          renderTask: null
-        };
-        document.getElementById('learning-slide-number').max = pdf.numPages;
-        displayStudySlide(1);
-      }).catch(function(err) {
-        if (token !== studyDeckLoadToken) return;
-        console.error('Impossibile estrarre le slide dal PDF ' + path + ':', err);
-        showStudySlideError('Si è verificato un errore durante la lettura del materiale didattico. Puoi aprire il PDF originale.');
-      });
-    }
-
-    function getStudyPageText(page) {
-      return page.getTextContent().then(function(textContent) {
-        var lines = [];
-        for (var i = 0; i < textContent.items.length; i++) {
-          var value = textContent.items[i].str ? textContent.items[i].str.trim() : '';
-          if (value && !/\b(?:page|pagina)\s+\d+\s*$/i.test(value)) lines.push(value);
-        }
-        var titleIndex = 0;
-        while (titleIndex < lines.length && (
-          /(?:page|pagina)\s*\d+/i.test(lines[titleIndex]) ||
-          !/[A-Za-zÀ-ÿ]{3}/.test(lines[titleIndex])
-        )) titleIndex++;
-        var title = titleIndex < lines.length ? lines[titleIndex] : '';
-        var excerptLines = lines.slice(titleIndex + 1);
-        var excerpt = excerptLines.join(' ').replace(/\s+/g, ' ').trim();
-        if (excerpt.length > 240) excerpt = excerpt.substring(0, 237) + '...';
-        return { title: title, excerpt: excerpt };
-      });
-    }
-
-    function displayStudySlide(pageNumber) {
-      if (!studyDeck) return;
-      var maxPage = studyDeck.pdf.numPages;
-      var nextPage = Math.max(1, Math.min(maxPage, parseInt(pageNumber, 10) || 1));
-      studyDeck.currentPage = nextPage;
-      var renderToken = ++studySlideRenderToken;
-      var deck = studyDeck;
-      var canvas = document.getElementById('learning-slide-canvas');
-      var stage = document.getElementById('learning-slide-stage');
-      var context = canvas.getContext('2d');
-
-      if (deck.renderTask) {
-        deck.renderTask.cancel();
-        deck.renderTask = null;
-      }
-
-      document.getElementById('learning-slide-number').value = nextPage;
-      document.getElementById('learning-slide-counter').textContent = 'Slide ' + nextPage + ' di ' + maxPage;
-      document.getElementById('learning-slide-title').textContent = 'Estrazione della slide...';
-      document.getElementById('learning-slide-excerpt').textContent = '';
-      document.getElementById('learning-slide-previous').disabled = nextPage <= 1;
-      document.getElementById('learning-slide-next').disabled = nextPage >= maxPage;
-      stage.setAttribute('aria-busy', 'true');
-
-      deck.pdf.getPage(nextPage).then(function(page) {
-        if (renderToken !== studySlideRenderToken || deck !== studyDeck) return;
-        return getStudyPageText(page).then(function(pageText) {
-          if (renderToken !== studySlideRenderToken || deck !== studyDeck) return;
-          var title = pageText.title || 'Slide ' + nextPage;
-          deck.titles[nextPage] = title;
-          document.getElementById('learning-slide-title').textContent = title;
-          document.getElementById('learning-slide-excerpt').textContent = pageText.excerpt;
-
-          var baseViewport = page.getViewport({ scale: 1 });
-          var availableWidth = Math.max(280, stage.clientWidth - 36);
-          var availableHeight = Math.max(220, stage.clientHeight - 36);
-          var scale = Math.min(
-            1.5,
-            availableWidth / baseViewport.width,
-            availableHeight / baseViewport.height
-          );
-          var viewport = page.getViewport({ scale: scale });
-          var outputScale = Math.min(window.devicePixelRatio || 1, 2);
-          canvas.width = Math.floor(viewport.width * outputScale);
-          canvas.height = Math.floor(viewport.height * outputScale);
-          canvas.style.width = Math.floor(viewport.width) + 'px';
-          canvas.style.height = Math.floor(viewport.height) + 'px';
-          context.setTransform(outputScale, 0, 0, outputScale, 0, 0);
-
-          deck.renderTask = page.render({
-            canvasContext: context,
-            viewport: viewport
-          });
-          return deck.renderTask.promise.then(function() {
-            if (renderToken !== studySlideRenderToken || deck !== studyDeck) return;
-            deck.renderTask = null;
-            stage.setAttribute('aria-busy', 'false');
-            renderStudyThumbnails();
-          });
-        });
-      }).catch(function(err) {
-        if (renderToken !== studySlideRenderToken || deck !== studyDeck) return;
-        if (err && err.name === 'RenderingCancelledException') return;
-        console.error('Impossibile estrarre la slide ' + nextPage + ':', err);
-        showStudySlideError('Questa slide non è stato possibile visualizzarla. Riprova o apri il PDF originale.');
-      });
-    }
-
-    function renderStudyThumbnails() {
-      if (!studyDeck) return;
-      var token = ++studyThumbnailRenderToken;
-      for (var i = 0; i < studyThumbnailTasks.length; i++) {
-        try {
-          studyThumbnailTasks[i].cancel();
-        } catch (err) {
-          console.warn('Impossibile annullare il rendering di una miniatura:', err);
-        }
-      }
-      studyThumbnailTasks = [];
-
-      var deck = studyDeck;
-      var container = document.getElementById('learning-slide-thumbnails');
-      container.innerHTML = '';
-      var first = Math.max(1, deck.currentPage - 2);
-      var last = Math.min(deck.pdf.numPages, deck.currentPage + 2);
-
-      for (var pageNumber = first; pageNumber <= last; pageNumber++) {
-        (function(number) {
-          var button = document.createElement('button');
-          button.type = 'button';
-          button.className = 'slide-thumbnail' + (number === deck.currentPage ? ' active' : '');
-          button.setAttribute('aria-label', 'Apri slide ' + number + (deck.titles[number] ? ': ' + deck.titles[number] : ''));
-          button.setAttribute('aria-current', number === deck.currentPage ? 'true' : 'false');
-          button.onclick = function() {
-            displayStudySlide(number);
-          };
-
-          var preview = document.createElement('canvas');
-          preview.setAttribute('aria-hidden', 'true');
-          button.appendChild(preview);
-          var caption = document.createElement('span');
-          caption.className = 'slide-thumbnail-title';
-          caption.textContent = 'Slide ' + number + (deck.titles[number] ? ' · ' + deck.titles[number] : '');
-          button.appendChild(caption);
-          container.appendChild(button);
-
-          deck.pdf.getPage(number).then(function(page) {
-            if (token !== studyThumbnailRenderToken || deck !== studyDeck) return;
-            return getStudyPageText(page).then(function(pageText) {
-              if (token !== studyThumbnailRenderToken || deck !== studyDeck) return;
-              if (pageText.title) {
-                deck.titles[number] = pageText.title;
-                caption.textContent = 'Slide ' + number + ' · ' + pageText.title;
-                button.setAttribute('aria-label', 'Apri slide ' + number + ': ' + pageText.title);
-              }
-              var baseViewport = page.getViewport({ scale: 1 });
-              var scale = Math.min(0.28, 132 / baseViewport.width, 78 / baseViewport.height);
-              var viewport = page.getViewport({ scale: scale });
-              preview.width = Math.max(1, Math.floor(viewport.width));
-              preview.height = Math.max(1, Math.floor(viewport.height));
-              var task = page.render({
-                canvasContext: preview.getContext('2d'),
-                viewport: viewport
-              });
-              studyThumbnailTasks.push(task);
-              return task.promise.catch(function(err) {
-                if (token === studyThumbnailRenderToken && deck === studyDeck &&
-                    (!err || err.name !== 'RenderingCancelledException')) {
-                  console.error('Impossibile generare l’anteprima della slide ' + number + ':', err);
-                }
-              });
-            });
-          }).catch(function(err) {
-            if (token === studyThumbnailRenderToken && deck === studyDeck) {
-              console.error('Impossibile preparare la miniatura della slide ' + number + ':', err);
-            }
-          });
-        })(pageNumber);
-      }
-    }
-
-    function initStudySlideshowControls() {
-      document.getElementById('learning-slide-previous').onclick = function() {
-        if (studyDeck) displayStudySlide(studyDeck.currentPage - 1);
-      };
-      document.getElementById('learning-slide-next').onclick = function() {
-        if (studyDeck) displayStudySlide(studyDeck.currentPage + 1);
-      };
-      document.getElementById('learning-slide-number').onchange = function() {
-        if (studyDeck) displayStudySlide(this.value);
-      };
-      document.addEventListener('keydown', function(event) {
-        if (document.getElementById('step-learning').classList.contains('hidden') || !studyDeck) return;
-        if (event.target && /^(INPUT|TEXTAREA|SELECT)$/.test(event.target.tagName)) return;
-        if (event.key === 'ArrowLeft' && studyDeck.currentPage > 1) {
-          event.preventDefault();
-          displayStudySlide(studyDeck.currentPage - 1);
-        } else if (event.key === 'ArrowRight' && studyDeck.currentPage < studyDeck.pdf.numPages) {
-          event.preventDefault();
-          displayStudySlide(studyDeck.currentPage + 1);
-        }
-      });
     }
 
     function clearStudySlides() {
@@ -2674,6 +2408,7 @@ nav .nav-logo {
       document.getElementById('count-total').textContent = selectedMateria.domande.length;
 
       document.getElementById('step-registration').classList.add('hidden');
+      document.getElementById('step-mode').classList.add('hidden');
       document.getElementById('step-result').classList.add('hidden');
       document.getElementById('step-review').classList.add('hidden');
       document.getElementById('step-learning').classList.add('hidden');
@@ -4110,6 +3845,7 @@ nav .nav-logo {
       document.getElementById('step-result').classList.add('hidden');
       document.getElementById('step-review').classList.add('hidden');
       document.getElementById('step-learning').classList.add('hidden');
+      document.getElementById('step-mode').classList.add('hidden');
       document.getElementById('step-registration').classList.remove('hidden');
       document.getElementById('cand-nome').value = '';
       document.getElementById('cand-cognome').value = '';
@@ -4119,6 +3855,7 @@ nav .nav-logo {
     function initApp() {
       scansionaRepository();
       loadTeachingMaterials();
+      loadTeachingSlidesCatalog();
       initStudySlideshowControls();
 
       try {

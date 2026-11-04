@@ -4,7 +4,8 @@ Piattaforma telematica d'esame eseguibile direttamente da **GitHub Pages** (`fmo
 
 ## Caratteristiche Principali
 - **Scansione Automatica Repository**: `index.html` scansiona automaticamente la cartella `quiz/` del repository GitHub alla ricerca dei file di verifica e legge classe, specializzazione, materia, scuola, periodo, anno, durata e soglia dal nome.
-- **Ripasso con Materiali Didattici**: le pagine dei PDF in `appunti/` vengono estratte e mostrate come slide grafiche con titolo riconosciuto, anteprime navigabili e spiegazioni dei quesiti raggruppate per argomento.
+- **Ripasso con Materiali Didattici**: testo e pagine illustrate dei PDF vengono estratti in schede indipendenti, con miniature, navigazione e spiegazioni dei quesiti per argomento. Le immagini WebP ottimizzate si caricano solo per la scheda visibile e quelle vicine.
+- **Percorso guidato**: prima si sceglie la classe, poi si sceglie se seguire una lezione o fare una simulazione d'esame.
 - **Tempo Attivo in Piattaforma**: il tempo viene conteggiato solo mentre la pagina è visibile e attiva, salvato nel browser per il candidato e riportato nel certificato PDF.
 - **Supporto Immagini Didattiche**: Possibilità di associare immagini a qualunque quesito via tag `[IMMAGINE] img/figura.png` o URL, visibili durante il test e nella scheda di revisione.
 - **Scheda d'Esame Touch**: Mappa numerata delle domande, pulsanti VERO / FALSO, conto alla rovescia e controllo di sicurezza prima della consegna.
@@ -21,7 +22,9 @@ Esempi:
 - `quiz/3B_INF_Telecomunicazioni_IIS-LAGRANGE_trimestre_2026-2027-60min-55soglia.txt`
 - `quiz/4A_ELE_TPSEE_IIS-LAGRANGE_trimestre_2026-2027-60min-55soglia.txt`
 
-Il catalogo `appunti/manifest.json` collega la chiave classe-specializzazione-materia (in minuscolo, con `_` come separatore) al PDF corrispondente. La 3B e la 3C utilizzano lo stesso PDF di telecomunicazioni. Se un corso non ha un PDF associato, la piattaforma mostra comunque il ripasso ricavato dalle spiegazioni dei quesiti.
+Il catalogo `appunti/manifest.json` collega la chiave classe-specializzazione-materia (in minuscolo, con `_` come separatore) al PDF originale. La 3B e la 3C utilizzano lo stesso PDF di telecomunicazioni. Il catalogo `appunti/slides/manifest.json` collega gli stessi corsi ai testi estratti e alle immagini WebP delle singole pagine.
+
+Per rigenerare le schede dopo aver aggiornato un PDF, eseguire `python appunti/build_slides.py` con Poppler (`pdftotext` e `pdftoppm`) e ImageMagick (`magick`) installati. La piattaforma pubblicata utilizza i file statici generati, senza elaborare i PDF nel browser.
 
 Il conteggio delle ore è locale al browser e al dispositivo: non è sincronizzato tra dispositivi né verificato da un server. Il tempo viene conteggiato a piattaforma aperta, in primo piano e con la finestra attiva.
 
