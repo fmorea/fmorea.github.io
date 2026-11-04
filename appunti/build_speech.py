@@ -60,6 +60,26 @@ def split_text(text, max_characters=MAX_CHUNK_CHARACTERS):
     return chunks
 
 
+class SpeedInputCompatibilitySession:
+    def __init__(self, session):
+        self.session = session
+        self.input_types = {item.name: item.type for item in session.get_inputs()}
+
+    def get_inputs(self):
+        return self.session.get_inputs()
+
+    def run(self, output_names, inputs):
+        speed = inputs.get("speed")
+        if (
+            speed is not None
+            and self.input_types.get("speed") == "tensor(float)"
+            and speed.dtype != np.float32
+        ):
+            inputs = dict(inputs)
+            inputs["speed"] = np.asarray(speed, dtype=np.float32)
+        return self.session.run(output_names, inputs)
+
+
 def synthesize_slide(kokoro, slide, voice, speed):
     spoken_text = normalize_spoken_text(slide.get("title", ""), slide.get("text", ""))
     if not slide.get("text", "").strip():
@@ -198,6 +218,7 @@ def main():
             )
 
     kokoro = Kokoro(str(args.model), str(args.voices))
+    kokoro.sess = SpeedInputCompatibilitySession(kokoro.sess)
     courses = (args.course,) if args.course else COURSES
     for course in courses:
         build_course(kokoro, course, args.page, args.voice, args.speed, args.overwrite)
