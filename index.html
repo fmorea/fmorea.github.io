@@ -81,6 +81,10 @@
       display: none !important;
     }
 
+    body.platform-entered nav {
+      display: none;
+    }
+
     /* Tipografia e intestazioni */
     h1, h2, h3, h4 {
       margin-top: 0;
@@ -2282,6 +2286,10 @@ nav .nav-logo {
       restoreActiveLessonIfAvailable();
     }
 
+    function setPlatformEntered(entered) {
+      document.body.classList.toggle('platform-entered', entered);
+    }
+
     function selectMateria(id) {
       var candidateData = getCandidateFromForm();
       if (!candidateData) return;
@@ -2299,6 +2307,7 @@ nav .nav-logo {
       document.getElementById('mode-course-subtitle').textContent =
         selectedMateria.descrizione || selectedMateria.tempoMinuti + ' minuti · ' +
         selectedMateria.domande.length + ' quesiti';
+      setPlatformEntered(true);
       document.getElementById('app').classList.remove('lesson-mode');
       document.getElementById('step-registration').classList.add('hidden');
       document.getElementById('step-learning').classList.add('hidden');
@@ -2332,6 +2341,7 @@ nav .nav-logo {
     }
 
     function backToClassSelection() {
+      setPlatformEntered(false);
       document.getElementById('app').classList.remove('lesson-mode');
       document.getElementById('step-mode').classList.add('hidden');
       document.getElementById('step-registration').classList.remove('hidden');
@@ -2475,6 +2485,7 @@ nav .nav-logo {
         clearStudySlides();
       }
       renderLearningExplanations(selectedMateria);
+      setPlatformEntered(true);
       document.getElementById('step-registration').classList.add('hidden');
       document.getElementById('step-mode').classList.add('hidden');
       document.getElementById('step-quiz').classList.add('hidden');
@@ -3764,6 +3775,7 @@ nav .nav-logo {
     }
 
     function showActiveExam() {
+      setPlatformEntered(true);
       document.getElementById('header-cand-name').textContent = getCandidateDisplayName(candidate);
       document.getElementById('header-materia-title').textContent = selectedMateria.nome;
       document.getElementById('total-q-num').textContent = selectedMateria.domande.length;
@@ -4355,6 +4367,7 @@ nav .nav-logo {
 
     function showReviewView(data) {
       currentReviewData = data;
+      setPlatformEntered(true);
       document.getElementById('step-registration').classList.add('hidden');
       document.getElementById('step-quiz').classList.add('hidden');
       document.getElementById('step-result').classList.add('hidden');
@@ -4527,8 +4540,10 @@ nav .nav-logo {
       document.getElementById('step-review').classList.add('hidden');
       document.getElementById('step-quiz').classList.add('hidden');
       if (examResultData) {
+        setPlatformEntered(true);
         document.getElementById('step-result').classList.remove('hidden');
       } else {
+        setPlatformEntered(false);
         document.getElementById('step-registration').classList.remove('hidden');
       }
     }
@@ -5216,6 +5231,7 @@ nav .nav-logo {
       if (timerInterval) clearInterval(timerInterval);
       clearActiveExam();
       stopPlatformTracking();
+      setPlatformEntered(false);
       document.getElementById('step-result').classList.add('hidden');
       document.getElementById('step-review').classList.add('hidden');
       document.getElementById('step-learning').classList.add('hidden');
