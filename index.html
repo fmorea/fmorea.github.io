@@ -1003,6 +1003,12 @@ nav .nav-logo {
 
     <!-- 2. SCHEDA D'ESAME -->
     <div id="step-quiz" class="hidden flex flex-col">
+      <p id="exam-resume-notice" class="hidden m-4 rounded-lg border p-3 text-sm text-blue-900" role="status" style="border-color: #bfdbfe; background: #eff6ff;">
+        Prova ripristinata: puoi continuare da dove eri rimasto.
+      </p>
+      <p id="exam-persistence-notice" class="hidden m-4 rounded-lg border p-3 text-sm text-amber-900" role="alert" style="border-color: #fcd34d; background: #fffbeb;">
+        Il browser non permette di salvare la prova: evita di ricaricare o chiudere questa pagina.
+      </p>
       <div class="bg-slate-900 text-white p-4 flex flex-wrap justify-between items-center" style="gap: 12px;">
         <div class="flex items-center" style="gap: 12px;">
           <div class="bg-blue-600 rounded-full font-bold text-xs text-white" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
@@ -1323,8 +1329,10 @@ nav .nav-logo {
 
     var selectedMateria = null;
     var candidate = { nome: '', cognome: '' };
-    var anonymousPlatformIdentity =
-      'anonimo-session-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
+    var anonymousPlatformIdentity = '';
+    var activeExamStorageKey = 'fmorea_active_exam_v1';
+    var activeExamStorageAvailable = true;
+    var examRestoreAttempted = false;
     var currentQuestionIndex = 0;
     var userAnswers = {};
     var timerInterval = null;
@@ -1862,6 +1870,7 @@ nav .nav-logo {
         })(BANCA_DATI_MATERIE[i]);
       }
       updateMateriaInfo();
+      restoreActiveExamIfAvailable();
     }
 
     function selectMateria(id) {
@@ -2653,7 +2662,7 @@ nav .nav-logo {
 
     function startPlatformTracking() {
       var identity = (candidate.nome + ' ' + candidate.cognome).toLowerCase().replace(/\s+/g, ' ').trim();
-      if (!identity) identity = anonymousPlatformIdentity;
+      if (!identity) identity = getAnonymousPlatformIdentity();
       var nextStorageKey = 'fmorea_platform_seconds_v1:' + encodeURIComponent(identity);
       if (platformStorageKey === nextStorageKey && platformTimerInterval) return;
       if (platformTimerInterval) {
@@ -2691,6 +2700,166 @@ nav .nav-logo {
         platformTimerInterval = null;
       }
       platformStorageKey = '';
+    }
+
+    function showExamPersistenceWarning() {
+      var notice = document.getElementById('exam-persistence-notice');
+      if (notice) notice.classList.remove('hidden');
+    }
+
+    function clearActiveExam() {
+      try {
+        window.localStorage.removeItem(activeExamStorageKey);
+      } catch (err) {
+        console.error('Impossibile rimuovere la prova salvata dal browser:', err);
+      }
+    }
+
+    function persistActiveExam() {
+      var examStep = document.getElementById('step-quiz');
+      if (!activeExamStorageAvailable || !selectedMateria || !examStep ||
+          examStep.classList.contains('hidden')) return;
+
+      var state = {
+        version: 1,
+        materiaId: selectedMateria.id,
+        candidate: candidate,
+        answers: userAnswers,
+        currentQuestionIndex: currentQuestionIndex,
+        secondsRemaining: secondsRemaining,
+        totalSecondsElapsed: totalSecondsElapsed,
+        savedAt: new Date().getTime()
+      };
+      if (/^(?:custom|github)_/.test(selectedMateria.id)) state.materiaSnapshot = selectedMateria;
+
+      try {
+        var serialized = JSON.stringify(state);
+        if (serialized.length > 2000000) {
+          throw new Error('La prova supera il limite di 2 MB per il salvataggio locale.');
+        }
+        window.localStorage.setItem(activeExamStorageKey, serialized);
+      } catch (err) {
+        activeExamStorageAvailable = false;
+        console.error('Impossibile salvare la prova attiva nel browser:', err);
+        showExamPersistenceWarning();
+      }
+    }
+
+    function getAnonymousPlatformIdentity() {
+      if (anonymousPlatformIdentity) return anonymousPlatformIdentity;
+      try {
+        anonymousPlatformIdentity = window.sessionStorage.getItem('fmorea_anonymous_session_v1') || '';
+        if (!anonymousPlatformIdentity) {
+          anonymousPlatformIdentity =
+            'anonimo-session-' + new Date().getTime().toString(36) + '-' + Math.random().toString(36).slice(2);
+          window.sessionStorage.setItem('fmorea_anonymous_session_v1', anonymousPlatformIdentity);
+        }
+      } catch (err) {
+        console.error('Impossibile conservare l’identificativo anonimo di sessione:', err);
+        anonymousPlatformIdentity =
+          'anonimo-session-' + new Date().getTime().toString(36) + '-' + Math.random().toString(36).slice(2);
+      }
+      return anonymousPlatformIdentity;
+    }
+
+    function findMateriaForExamRestore(state) {
+      for (var i = 0; i < BANCA_DATI_MATERIE.length; i++) {
+        if (BANCA_DATI_MATERIE[i].id === state.materiaId) return BANCA_DATI_MATERIE[i];
+      }
+      var snapshot = state.materiaSnapshot;
+      if (snapshot && snapshot.id === state.materiaId &&
+          Array.isArray(snapshot.domande) && snapshot.domande.length > 0) {
+        return snapshot;
+      }
+      return null;
+    }
+
+    function restoreActiveExamIfAvailable() {
+      if (examRestoreAttempted || !BANCA_DATI_MATERIE.length) return;
+      var rawState;
+      try {
+        rawState = window.localStorage.getItem(activeExamStorageKey);
+      } catch (err) {
+        console.error('Impossibile leggere la prova salvata nel browser:', err);
+        activeExamStorageAvailable = false;
+        return;
+      }
+      if (!rawState) {
+        examRestoreAttempted = true;
+        return;
+      }
+
+      var state;
+      try {
+        state = JSON.parse(rawState);
+      } catch (err) {
+        console.error('La prova salvata non è un JSON valido:', err);
+        clearActiveExam();
+        examRestoreAttempted = true;
+        return;
+      }
+      if (!state || state.version !== 1 || typeof state.materiaId !== 'string' ||
+          !state.candidate || typeof state.candidate.nome !== 'string' ||
+          typeof state.candidate.cognome !== 'string' || !state.answers ||
+          typeof state.answers !== 'object' || typeof state.savedAt !== 'number') {
+        console.error('La prova salvata non contiene i dati necessari per il ripristino.');
+        clearActiveExam();
+        examRestoreAttempted = true;
+        return;
+      }
+
+      var materia = findMateriaForExamRestore(state);
+      if (!materia) {
+        if (state.materiaId.indexOf('custom_') !== 0 && state.materiaId.indexOf('github_') !== 0) {
+          console.error('Il corso della prova salvata non è presente nei quiz disponibili:', state.materiaId);
+          clearActiveExam();
+          examRestoreAttempted = true;
+        }
+        return;
+      }
+      var questionIndex = parseInt(state.currentQuestionIndex, 10);
+      var remaining = parseInt(state.secondsRemaining, 10);
+      var elapsed = parseInt(state.totalSecondsElapsed, 10);
+      if (!materia.domande || !materia.domande.length || isNaN(questionIndex) ||
+          questionIndex < 0 || questionIndex >= materia.domande.length ||
+          isNaN(remaining) || remaining < 0 || isNaN(elapsed) || elapsed < 0) {
+        console.error('La prova salvata contiene un indice o un timer non validi.');
+        clearActiveExam();
+        examRestoreAttempted = true;
+        return;
+      }
+
+      examRestoreAttempted = true;
+      selectedMateria = materia;
+      candidate = {
+        nome: state.candidate.nome,
+        cognome: state.candidate.cognome
+      };
+      userAnswers = {};
+      for (var questionNumber = 0; questionNumber < materia.domande.length; questionNumber++) {
+        var question = materia.domande[questionNumber];
+        var savedAnswer = state.answers[question.id];
+        if (typeof savedAnswer === 'boolean') {
+          userAnswers[question.id] = savedAnswer;
+        } else if (typeof savedAnswer === 'string' && question.opzioni &&
+                   question.opzioni.some(function(option) { return option.id === savedAnswer; })) {
+          userAnswers[question.id] = savedAnswer;
+        }
+      }
+      currentQuestionIndex = questionIndex;
+      totalSecondsElapsed = elapsed;
+      var awaySeconds = Math.max(0, Math.floor((new Date().getTime() - state.savedAt) / 1000));
+      secondsRemaining = Math.max(0, remaining - awaySeconds);
+      totalSecondsElapsed += Math.min(awaySeconds, remaining);
+
+      startPlatformTracking();
+      showActiveExam();
+      document.getElementById('exam-resume-notice').classList.remove('hidden');
+      if (secondsRemaining <= 0) {
+        finishQuiz();
+      } else {
+        persistActiveExam();
+      }
     }
 
     function handleCustomFileUpload(e) {
@@ -2851,13 +3020,20 @@ nav .nav-logo {
         return;
       }
 
+      clearActiveExam();
       candidate = candidateData;
       startPlatformTracking();
       userAnswers = {};
       currentQuestionIndex = 0;
       secondsRemaining = selectedMateria.tempoMinuti * 60;
       totalSecondsElapsed = 0;
+      document.getElementById('exam-resume-notice').classList.add('hidden');
+      document.getElementById('exam-persistence-notice').classList.add('hidden');
+      activeExamStorageAvailable = true;
+      showActiveExam();
+    }
 
+    function showActiveExam() {
       document.getElementById('header-cand-name').textContent = getCandidateDisplayName(candidate);
       document.getElementById('header-materia-title').textContent = selectedMateria.nome;
       document.getElementById('total-q-num').textContent = selectedMateria.domande.length;
@@ -2871,8 +3047,9 @@ nav .nav-logo {
       document.getElementById('step-quiz').classList.remove('hidden');
 
       renderQuestionsGrid();
-      displayQuestion(0);
+      displayQuestion(currentQuestionIndex);
       startTimer();
+      persistActiveExam();
     }
 
     function renderQuestionsGrid() {
@@ -3011,12 +3188,14 @@ nav .nav-logo {
       document.getElementById('btn-next').disabled = (idx === selectedMateria.domande.length - 1);
 
       updateGridButtons();
+      persistActiveExam();
     }
 
     function setAnswer(ans) {
       var q = selectedMateria.domande[currentQuestionIndex];
       userAnswers[q.id] = ans;
       updateGridButtons();
+      persistActiveExam();
       displayQuestion(currentQuestionIndex);
 
       if (currentQuestionIndex < selectedMateria.domande.length - 1) {
@@ -3068,6 +3247,9 @@ nav .nav-logo {
 
     function startTimer() {
       if (timerInterval) clearInterval(timerInterval);
+      var initialMinutes = Math.floor(secondsRemaining / 60);
+      var initialSeconds = secondsRemaining % 60;
+      document.getElementById('quiz-timer').textContent = pad2(initialMinutes) + ':' + pad2(initialSeconds);
       timerInterval = setInterval(function() {
         secondsRemaining--;
         totalSecondsElapsed++;
@@ -3080,6 +3262,7 @@ nav .nav-logo {
         var m = Math.floor(secondsRemaining / 60);
         var s = (secondsRemaining % 60);
         document.getElementById('quiz-timer').textContent = pad2(m) + ':' + pad2(s);
+        persistActiveExam();
       }, 1000);
     }
 
@@ -3195,6 +3378,7 @@ nav .nav-logo {
     }
 
     function finishQuiz() {
+      clearActiveExam();
       var correct = 0;
       var errors = 0;
       for (var i = 0; i < selectedMateria.domande.length; i++) {
@@ -4299,6 +4483,7 @@ nav .nav-logo {
 
     function resetExam() {
       if (timerInterval) clearInterval(timerInterval);
+      clearActiveExam();
       stopPlatformTracking();
       document.getElementById('step-result').classList.add('hidden');
       document.getElementById('step-review').classList.add('hidden');
@@ -4317,6 +4502,8 @@ nav .nav-logo {
       initStudySlideshowControls();
       initStudyZoomControls();
       initStudySpeechControls();
+      window.addEventListener('beforeunload', persistActiveExam);
+      window.addEventListener('pagehide', persistActiveExam);
 
       try {
         var reviewParam = getQueryParameter('review') || getQueryParameter('q');
