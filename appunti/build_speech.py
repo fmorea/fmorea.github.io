@@ -108,7 +108,7 @@ def synthesize_slide(kokoro, slide, voice, speed):
 def write_audio(output_path, samples, sample_rate):
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(
-        dir=output_path.parent, suffix=".ogg", delete=False
+        dir=output_path.parent, suffix=".tmp", delete=False
     ) as temporary_file:
         temporary_path = Path(temporary_file.name)
     try:
@@ -182,6 +182,7 @@ def build_course(kokoro, course, pages, voice, speed, overwrite):
         write_audio(audio_path, samples, sample_rate)
         slide["audio"] = f"audio/{audio_name}"
         save_manifest(manifest_path, data)
+        changed = False
         print(f"{course} pagina {page_number}: creato {audio_path.name}")
 
     if changed:

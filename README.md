@@ -39,6 +39,11 @@ Per generare in seguito le tracce delle schede con testo OCR in tutte le raccolt
 python appunti/build_speech.py
 ```
 Il generatore salva audio OGG e aggiorna il relativo `slides.json`; le pagine senza testo OCR restano senza traccia.
+Per associare subito al manifest le tracce già presenti senza sintetizzare nuovo audio:
+```powershell
+python appunti/build_speech.py --link-existing-only
+```
+Le tracce vengono associate e salvate una alla volta; i blocchi di sintesi sono dimensionati per ridurre le chiamate al modello.
 
 Il conteggio delle ore è locale al browser e al dispositivo: non è sincronizzato tra dispositivi né verificato da un server. Il tempo viene conteggiato a piattaforma aperta, in primo piano e con la finestra attiva.
 
