@@ -803,7 +803,6 @@ nav .nav-logo {
     .lesson-zoom-slider { width: clamp(80px, 16vw, 180px); accent-color: #2563eb; }
 
     .lesson-card-copy { padding: 20px 24px 24px; }
-    .lesson-extracted-text { white-space: pre-line; line-height: 1.85; font-size: 15px; }
     .lesson-audio-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 14px 0; padding: 12px; border: 1px solid #dbeafe; border-radius: 14px; background: linear-gradient(110deg, #eff6ff, #f8fafc); }
     .lesson-audio-player { width: min(100%, 440px); min-height: 42px; }
     .lesson-audio-status { flex: 1; min-width: 130px; color: #475569; font-size: 12px; }
@@ -975,7 +974,6 @@ nav .nav-logo {
                 <audio id="learning-audio-player" class="lesson-audio-player hidden" controls preload="none" aria-label="Audio della spiegazione"></audio>
                 <span id="learning-audio-status" class="lesson-audio-status" aria-live="polite">Audio non ancora disponibile per questa scheda.</span>
               </div>
-              <div id="learning-slide-excerpt" class="lesson-extracted-text text-sm text-slate-600 mt-2"></div>
             </div>
             <div class="flex items-center" style="gap: 8px;">
               <button type="button" id="learning-slide-previous" class="btn-secondary" aria-label="Slide precedente" style="padding: 9px 13px; border-radius: 10px; font-size: 18px;" disabled>←</button>
@@ -2092,7 +2090,6 @@ nav .nav-logo {
       document.getElementById('learning-slide-label').textContent = '';
       document.getElementById('learning-slide-counter').textContent = 'Schede non disponibili';
       document.getElementById('learning-slide-title').textContent = 'Appunti non disponibili';
-      document.getElementById('learning-slide-excerpt').textContent = '';
       document.getElementById('learning-slide-thumbnails').innerHTML = '';
       document.getElementById('learning-slide-error').classList.add('hidden');
       document.getElementById('learning-slide-previous').disabled = true;
@@ -2107,7 +2104,6 @@ nav .nav-logo {
       document.getElementById('learning-lesson-card').setAttribute('aria-busy', 'false');
       document.getElementById('learning-slide-counter').textContent = 'Lezione non disponibile';
       document.getElementById('learning-slide-title').textContent = 'Non è stato possibile aprire le schede';
-      document.getElementById('learning-slide-excerpt').textContent = '';
       document.getElementById('learning-pdf-link').classList.remove('hidden');
       document.getElementById('learning-slide-previous').disabled = true;
       document.getElementById('learning-slide-next').disabled = true;
@@ -2162,8 +2158,6 @@ nav .nav-logo {
       document.getElementById('learning-slide-counter').textContent = 'Scheda ' + number + ' di ' + slides.length;
       document.getElementById('learning-slide-label').textContent = 'LEZIONE · SCHEDA ' + number;
       document.getElementById('learning-slide-title').textContent = slide.title || 'Scheda ' + number;
-      document.getElementById('learning-slide-excerpt').textContent =
-        slide.text || 'Il testo OCR non è disponibile per questa scheda. Puoi leggere l’immagine ingrandendola.';
       loadStudyAudio(slide);
       document.getElementById('learning-slide-previous').disabled = number <= 1;
       document.getElementById('learning-slide-next').disabled = number >= slides.length;

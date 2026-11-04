@@ -189,7 +189,7 @@ def main():
     parser.add_argument(
         "--model",
         type=Path,
-        default=MODEL_ROOT / "kokoro-v1.0.fp16.onnx",
+        default=MODEL_ROOT / "kokoro-v1.0.onnx",
         help="Percorso del modello ONNX Kokoro.",
     )
     parser.add_argument(
