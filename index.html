@@ -2856,12 +2856,15 @@ nav .nav-logo {
 
     function startPlatformTracking() {
       var identity = (candidate.nome + ' ' + candidate.cognome).toLowerCase().replace(/\s+/g, ' ').trim();
-      if (!identity) identity = getAnonymousPlatformIdentity();
+      var anonymousIdentity = getAnonymousPlatformIdentity();
+      if (!identity) identity = anonymousIdentity;
       var nextStorageKey = 'fmorea_platform_seconds_v1:' + encodeURIComponent(identity);
       if (platformStorageKey === nextStorageKey && platformTimerInterval) return;
+      var previousStorageKey = platformStorageKey;
       if (platformTimerInterval) {
         persistPlatformTime();
         clearInterval(platformTimerInterval);
+        platformTimerInterval = null;
       }
 
       platformStorageKey = nextStorageKey;
@@ -2870,6 +2873,16 @@ nav .nav-logo {
       try {
         var storedSeconds = parseInt(window.localStorage.getItem(platformStorageKey), 10);
         if (!isNaN(storedSeconds) && storedSeconds >= 0) platformElapsedSeconds = storedSeconds;
+        var anonymousStorageKey =
+          'fmorea_platform_seconds_v1:' + encodeURIComponent(anonymousIdentity);
+        if (previousStorageKey === anonymousStorageKey && nextStorageKey !== previousStorageKey) {
+          var anonymousSeconds = parseInt(window.localStorage.getItem(anonymousStorageKey), 10);
+          if (!isNaN(anonymousSeconds) && anonymousSeconds >= 0) {
+            platformElapsedSeconds += anonymousSeconds;
+            window.localStorage.setItem(platformStorageKey, String(platformElapsedSeconds));
+            window.localStorage.removeItem(anonymousStorageKey);
+          }
+        }
       } catch (err) {
         platformStorageAvailable = false;
         console.error('Impossibile leggere il tempo attivo in piattaforma:', err);
@@ -4687,10 +4700,13 @@ nav .nav-logo {
       document.getElementById('step-registration').classList.remove('hidden');
       document.getElementById('cand-nome').value = '';
       document.getElementById('cand-cognome').value = '';
+      candidate = { nome: '', cognome: '' };
+      startPlatformTracking();
     }
 
     /* Inizializzazione compatibile con vecchi e nuovi browser */
     function initApp() {
+      startPlatformTracking();
       scansionaRepository();
       loadTeachingMaterials();
       loadTeachingSlidesCatalog();
