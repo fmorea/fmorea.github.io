@@ -19,7 +19,7 @@ COURSES = (
     "4a_ele_tpsee",
     "4b_inf_telecomunicazioni",
 )
-MAX_CHUNK_CHARACTERS = 800
+MAX_CHUNK_CHARACTERS = 120
 CHUNK_PAUSE_SECONDS = 0.18
 
 
@@ -112,14 +112,17 @@ def write_audio(output_path, samples, sample_rate):
     ) as temporary_file:
         temporary_path = Path(temporary_file.name)
     try:
-        sf.write(
+        with sf.SoundFile(
             temporary_path,
-            samples,
-            sample_rate,
+            mode="w",
+            samplerate=sample_rate,
+            channels=1,
             format="OGG",
             subtype="VORBIS",
             compression_level=0.35,
-        )
+        ) as audio_file:
+            for start in range(0, len(samples), 8192):
+                audio_file.write(samples[start : start + 8192])
         temporary_path.replace(output_path)
     finally:
         temporary_path.unlink(missing_ok=True)
@@ -208,8 +211,8 @@ def main():
     args = parser.parse_args()
     if args.page and not args.course:
         parser.error("--page richiede --course.")
-    if not 0.5 <= args.speed <= 2:
-        parser.error("--speed deve essere compreso tra 0.5 e 2.")
+    if not 1 <= args.speed <= 2:
+        parser.error("--speed deve essere compreso tra 1 e 2 per questo modello.")
     for model_path in (args.model, args.voices):
         if not model_path.is_file():
             raise FileNotFoundError(

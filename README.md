@@ -29,7 +29,7 @@ Il catalogo `appunti/manifest.json` collega la chiave classe-specializzazione-ma
 
 Per rigenerare le schede dopo aver aggiornato un PDF, eseguire `python appunti/build_slides.py` con Poppler (`pdftotext` e `pdftoppm`), ImageMagick (`magick`) e il pacchetto Python `rapidocr_onnxruntime` installati. L'OCR integra il testo delle pagine scansionate quando è più completo del testo incorporato nel PDF. Per aggiornare solo i testi e riutilizzare le immagini WebP già generate, eseguire `python appunti/build_slides.py --reuse-images`. La piattaforma pubblicata utilizza i file statici generati, senza elaborare i PDF nel browser.
 
-Le tracce audio vengono generate **localmente**, senza inviare il testo OCR a servizi esterni, con Kokoro ONNX e la voce italiana maschile `im_nicola`. Installare `kokoro-onnx` e `soundfile`, quindi scaricare dal [rilascio ufficiale Kokoro](https://github.com/thewh1teagle/kokoro-onnx/releases/tag/model-files-v1.1) `kokoro-v1.0.fp16.onnx` e `voices-v1.0.bin` in `%USERPROFILE%\.cache\kokoro-onnx\`. Per provare una singola scheda prima di generare tutti gli audio:
+Le tracce audio vengono generate **localmente**, senza inviare il testo OCR a servizi esterni, con Kokoro ONNX e la voce italiana maschile `im_nicola`. Installare `kokoro-onnx` e `soundfile`, quindi scaricare dal [rilascio ufficiale Kokoro](https://github.com/thewh1teagle/kokoro-onnx/releases/tag/model-files-v1.1) `kokoro-v1.0.onnx` e `voices-v1.0.bin` in `%USERPROFILE%\.cache\kokoro-onnx\`. Per provare una singola scheda prima di generare tutti gli audio:
 ```powershell
 python appunti/build_speech.py --course 3a_ele_sistemi --page 1
 ```
