@@ -811,6 +811,17 @@ nav .nav-logo {
     .lesson-fullscreen-toggle:hover { background: #1d4ed8; }
 
     .lesson-card-copy { padding: 20px 24px 24px; }
+    .learning-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; }
+    .learning-header-copy { min-width: 0; flex: 1; }
+    .learning-header-title { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .learning-header-title h2 { margin: 0; font-size: 20px; line-height: 1.25; }
+    .learning-header-badge { padding: 2px 8px; border-radius: 999px; background: #dbeafe; color: #1d4ed8; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+    .learning-header-copy p { margin: 2px 0 0; color: #64748b; font-size: 12px; }
+    .learning-header-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .learning-header-time { padding-right: 10px; border-right: 1px solid #e2e8f0; text-align: right; white-space: nowrap; }
+    .learning-header-time span { display: block; color: #64748b; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+    .learning-header-time strong { color: #1d4ed8; font-size: 13px; }
+    .learning-header-actions > button { padding: 7px 12px !important; font-size: 12px !important; }
     .lesson-audio-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 14px 0; padding: 12px; border: 1px solid #dbeafe; border-radius: 14px; background: linear-gradient(110deg, #eff6ff, #f8fafc); }
     .lesson-audio-player { width: min(100%, 440px); min-height: 42px; }
     .lesson-audio-status { flex: 1; min-width: 130px; color: #475569; font-size: 12px; }
@@ -854,6 +865,8 @@ nav .nav-logo {
     @media screen and (max-width: 600px) {
       .platform-time-indicator { flex-wrap: wrap; gap: 7px; padding: 9px 16px; }
       .platform-time-indicator .platform-time-note { width: 100%; margin-left: 27px; }
+      .learning-header-actions { width: 100%; }
+      .learning-header-time { margin-right: auto; }
       .student-fields { gap: 8px; padding: 12px; }
       .student-fields input { padding: 10px; font-size: 13px; }
       .course-grid, .mode-grid { grid-template-columns: 1fr; }
@@ -945,9 +958,9 @@ nav .nav-logo {
         padding-bottom: 8px !important;
       }
 
-      #app.lesson-mode #step-learning > div:nth-child(2) {
-        flex: none;
-        margin-bottom: 8px !important;
+      #app.lesson-mode #step-learning > .learning-header {
+        margin-bottom: 8px;
+        padding-bottom: 8px;
       }
 
       #app.lesson-mode #learning-pdf-section {
@@ -1317,25 +1330,26 @@ nav .nav-logo {
 
     <!-- MATERIALI DIDATTICI E RIPASSO -->
     <div id="step-learning" class="hidden p-6 md:p-10">
-      <div class="border-b pb-5 mb-6 flex flex-wrap items-center justify-between" style="gap: 12px;">
-        <div>
-          <span class="rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-800" style="padding: 2px 10px; display: inline-block; margin-bottom: 4px;">Lezione e ripasso</span>
+      <div class="learning-header">
+        <div class="learning-header-copy">
+          <div class="learning-header-title">
+            <span class="learning-header-badge">Lezione e ripasso</span>
           <h2 id="learning-title">Materiale didattico</h2>
-          <p id="learning-course-info" class="text-sm text-slate-500"></p>
+          </div>
+          <p id="learning-course-info"></p>
         </div>
-        <div class="text-right">
-          <div class="text-xs text-slate-500 uppercase font-bold">Tempo attivo totale</div>
-          <div id="learning-platform-time" class="font-bold text-blue-700">0 h 0 min</div>
+        <div class="learning-header-actions">
+          <div class="learning-header-time">
+            <span>Tempo attivo totale</span>
+            <strong id="learning-platform-time">0 h 0 min</strong>
+          </div>
+          <button type="button" id="btn-take-exam" onclick="startExam()" class="btn-action btn-primary">
+            Vai alla prova d'esame
+          </button>
+          <button type="button" onclick="exitLearning()" class="btn-secondary" style="border-radius: 10px; font-weight: 700;">
+            Torna alla selezione
+          </button>
         </div>
-      </div>
-
-      <div class="flex flex-wrap mb-5" style="gap: 10px;">
-        <button type="button" id="btn-take-exam" onclick="startExam()" class="btn-action btn-primary" style="padding: 10px 18px; font-size: 13px;">
-          Vai alla prova d'esame
-        </button>
-        <button type="button" onclick="exitLearning()" class="btn-secondary" style="padding: 10px 18px; border-radius: 10px; font-weight: 700;">
-          Torna alla selezione
-        </button>
       </div>
 
       <div id="learning-pdf-section" class="mb-8">
