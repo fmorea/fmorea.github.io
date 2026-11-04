@@ -3149,7 +3149,8 @@ nav .nav-logo {
       document.getElementById('mode-course-subtitle').textContent =
         materia.descrizione || materia.tempoMinuti + ' minuti · ' + materia.domande.length + ' quesiti';
       updateMateriaInfo();
-      var zoom = typeof state.zoom === 'number' && isFinite(state.zoom)
+      var isDesktopLayout = window.innerWidth >= 1200 && window.innerHeight >= 850;
+      var zoom = isDesktopLayout && typeof state.zoom === 'number' && isFinite(state.zoom)
         ? Math.max(1, Math.min(4, state.zoom))
         : 1;
       openStudyMaterial(state.page, zoom);
