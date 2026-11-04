@@ -793,6 +793,10 @@ nav .nav-logo {
     .lesson-audio-status { flex: 1; min-width: 130px; color: #475569; font-size: 12px; }
     .lesson-speed-control { display: flex; align-items: center; gap: 6px; color: #475569; font-size: 12px; font-weight: 700; }
     .lesson-speed-control select { min-height: 38px; padding: 4px 8px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; color: #0f172a; }
+    .lesson-voice-control { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: #475569; font-size: 12px; font-weight: 700; }
+    .lesson-voice-control select { max-width: min(280px, 55vw); min-height: 38px; padding: 4px 8px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; color: #0f172a; }
+    .browser-update-banner { margin: 0 0 16px; padding: 14px 18px; border: 1px solid #fcd34d; border-radius: 14px; background: #fffbeb; color: #78350f; }
+    .browser-update-banner a { color: #1d4ed8; font-weight: 700; text-decoration: underline; }
     .lesson-thumbnail { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
     .lesson-thumbnail button { padding: 6px; overflow: hidden; border: 1px solid #dbe3ee; border-radius: 12px; background: #fff; text-align: left; }
     .lesson-thumbnail button.active { border: 2px solid #2563eb; padding: 5px; box-shadow: 0 0 0 3px rgba(37, 99, 235, .12); }
@@ -810,6 +814,8 @@ nav .nav-logo {
       .lesson-zoom-hint { display: none; }
       .lesson-audio-controls { gap: 8px; padding: 10px; }
       .lesson-audio-status { flex-basis: 100%; order: 1; }
+      .lesson-voice-control { flex-basis: 100%; }
+      .lesson-voice-control select { max-width: 100%; flex: 1; }
       .lesson-card-copy { padding: 16px; }
       .lesson-thumbnail { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
       .lesson-thumbnail img { height: 64px; }
@@ -840,6 +846,11 @@ nav .nav-logo {
 <body>
 
   <div id="app">
+    <div id="browser-update-banner" class="browser-update-banner hidden" role="status">
+      <strong>Browser non aggiornato.</strong>
+      Per visualizzare le schede interattive e ascoltare la lettura, aggiorna a una versione recente di Edge, Chrome o Firefox.
+      Nel frattempo puoi aprire il <a id="browser-update-pdf-link" target="_blank" rel="noopener">PDF originale</a>.
+    </div>
     
     <!-- 1. SELEZIONE CLASSE -->
     <div id="step-registration" class="p-6 md:p-10">
@@ -949,14 +960,20 @@ nav .nav-logo {
               <div class="lesson-audio-controls" role="group" aria-label="Lettura ad alta voce">
                 <button type="button" id="learning-audio-play" class="lesson-audio-play" aria-label="Leggi la scheda" title="Leggi la scheda">▶ Ascolta</button>
                 <button type="button" id="learning-audio-stop" aria-label="Ferma la lettura" title="Ferma la lettura" disabled>■ Ferma</button>
+                <label class="lesson-voice-control" for="learning-audio-voice">Voce
+                  <select id="learning-audio-voice" aria-label="Voce di lettura">
+                    <option value="">Voce italiana maschile consigliata</option>
+                  </select>
+                </label>
                 <label class="lesson-speed-control" for="learning-audio-speed">Velocità
                   <select id="learning-audio-speed" aria-label="Velocità di lettura">
-                    <option value="0.8">Lenta</option>
-                    <option value="1" selected>Normale</option>
-                    <option value="1.2">Veloce</option>
+                    <option value="0.85">Lenta</option>
+                    <option value="0.92" selected>Normale</option>
+                    <option value="1">Veloce</option>
                   </select>
                 </label>
                 <span id="learning-audio-status" class="lesson-audio-status" aria-live="polite">Premi Ascolta per ascoltare il testo della scheda.</span>
+                <span id="learning-audio-voice-hint" class="lesson-audio-status">La naturalezza dipende dalle voci installate nel browser o nel sistema.</span>
               </div>
               <div id="learning-slide-excerpt" class="lesson-extracted-text text-sm text-slate-600 mt-2"></div>
             </div>
@@ -972,7 +989,8 @@ nav .nav-logo {
         <a id="learning-pdf-link" class="hidden mt-3 text-sm font-bold text-blue-700" target="_blank" rel="noopener">Apri il PDF originale</a>
       </div>
       <div id="learning-pdf-unavailable" class="hidden mb-8 rounded-xl border p-4 text-sm text-slate-700" style="border-color: #cbd5e1; background: #f8fafc;">
-        Per questa materia non è associato un PDF. Puoi comunque usare le spiegazioni testuali qui sotto.
+        <p id="learning-pdf-unavailable-text">Per questa materia non è associato un PDF. Puoi comunque usare le spiegazioni testuali qui sotto.</p>
+        <a id="learning-fallback-pdf-link" class="hidden mt-3 inline-block font-bold text-blue-700" target="_blank" rel="noopener">Apri il PDF originale degli appunti</a>
       </div>
 
       <section>
@@ -1326,6 +1344,7 @@ nav .nav-logo {
     var studySpeechChunks = [];
     var studySpeechChunkIndex = 0;
     var studySpeechActive = false;
+    var studyAvailableVoices = [];
     var platformElapsedSeconds = 0;
     var platformStorageKey = '';
     var platformStorageAvailable = true;
@@ -1993,25 +2012,46 @@ nav .nav-logo {
       var slidesPath = getTeachingSlidesPath(selectedMateria);
       var pdfSection = document.getElementById('learning-pdf-section');
       var pdfUnavailable = document.getElementById('learning-pdf-unavailable');
+      var fallbackPdfLink = document.getElementById('learning-fallback-pdf-link');
+      var pdfUnavailableText = document.getElementById('learning-pdf-unavailable-text');
+      var browserBanner = document.getElementById('browser-update-banner');
+      var isLegacy = isLegacyLessonBrowser();
       if (pdfPath) {
         var pdfUrl = 'appunti/' + encodeURI(pdfPath);
         document.getElementById('learning-pdf-link').href = pdfUrl;
+        fallbackPdfLink.href = pdfUrl;
+        document.getElementById('browser-update-pdf-link').href = pdfUrl;
       } else {
         document.getElementById('learning-pdf-link').href = '#';
+        fallbackPdfLink.removeAttribute('href');
+        document.getElementById('browser-update-pdf-link').removeAttribute('href');
       }
-      if (slidesPath) {
+      if (isLegacy) browserBanner.classList.remove('hidden');
+      else browserBanner.classList.add('hidden');
+      if (isLegacy) {
+        stopStudyReading(true);
+        pdfSection.classList.add('hidden');
+        pdfUnavailable.classList.remove('hidden');
+        pdfUnavailableText.textContent = pdfPath
+          ? 'Per garantire la compatibilità con questo browser, le schede interattive sono state sostituite dal documento originale.'
+          : 'Questo browser non supporta le schede interattive e per questa materia non è disponibile un PDF originale.';
+        if (pdfPath) fallbackPdfLink.classList.remove('hidden');
+        else fallbackPdfLink.classList.add('hidden');
+        clearStudySlides();
+      } else if (slidesPath) {
         pdfSection.classList.remove('hidden');
         pdfUnavailable.classList.add('hidden');
         document.getElementById('learning-pdf-link').classList.add('hidden');
+        fallbackPdfLink.classList.add('hidden');
         loadStudySlides(slidesPath);
       } else {
         pdfSection.classList.add('hidden');
         pdfUnavailable.classList.remove('hidden');
-        document.getElementById('learning-pdf-link').classList.toggle('hidden', !pdfPath);
-        document.getElementById('learning-slide-error').classList.toggle('hidden', !teachingSlidesLoadFailed);
-        if (teachingSlidesLoadFailed && pdfPath) {
-          showStudySlideError('Le schede estratte non sono disponibili. Puoi aprire il PDF originale.');
-        }
+        pdfUnavailableText.textContent = pdfPath
+          ? 'Le schede estratte non sono disponibili per questa materia. Puoi aprire il PDF originale.'
+          : 'Per questa materia non è associato un PDF. Puoi comunque usare le spiegazioni testuali qui sotto.';
+        if (pdfPath) fallbackPdfLink.classList.remove('hidden');
+        else fallbackPdfLink.classList.add('hidden');
         clearStudySlides();
       }
       renderLearningExplanations(selectedMateria);
@@ -2022,6 +2062,19 @@ nav .nav-logo {
       document.getElementById('step-review').classList.add('hidden');
       document.getElementById('step-learning').classList.remove('hidden');
       updatePlatformTimeDisplays();
+    }
+
+    function isLegacyLessonBrowser() {
+      var userAgent = window.navigator && window.navigator.userAgent ? window.navigator.userAgent : '';
+      if (/MSIE\s|Trident\//i.test(userAgent)) return true;
+      try {
+        var canvas = document.createElement('canvas');
+        var webpSupported = canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+        return !webpSupported;
+      } catch (err) {
+        console.warn('Verifica del supporto WebP non riuscita; verranno usati i materiali originali.', err);
+        return true;
+      }
     }
 
     function clearStudySlides() {
@@ -2343,6 +2396,75 @@ nav .nav-logo {
       return chunks;
     }
 
+    function isLikelyMaleItalianVoice(voice) {
+      return /(?:^|[\s_-])(cosimo|diego|luca|paolo|matteo|alessandro|francesco|giorgio|marco|stefano|roberto|davide|andrea)(?:$|[\s_-])/i.test(voice.name) ||
+        /\b(?:male|maschile|man)\b/i.test(voice.name);
+    }
+
+    function scoreItalianStudyVoice(voice) {
+      var name = voice.name || '';
+      var score = isLikelyMaleItalianVoice(voice) ? 100 : 0;
+      if (/\b(?:neural|natural|online)\b/i.test(name)) score += 20;
+      if (/\b(?:female|femmina|woman)\b/i.test(name)) score -= 100;
+      if (voice.localService === false) score += 2;
+      return score;
+    }
+
+    function getPreferredItalianStudyVoice() {
+      if (!studyAvailableVoices.length) return null;
+      var sorted = studyAvailableVoices.slice().sort(function(first, second) {
+        return scoreItalianStudyVoice(second) - scoreItalianStudyVoice(first);
+      });
+      return sorted[0];
+    }
+
+    function refreshStudyVoices() {
+      if (!('speechSynthesis' in window)) return;
+      var voiceSelect = document.getElementById('learning-audio-voice');
+      if (!voiceSelect) return;
+      var previousUri = '';
+      var previousIndex = parseInt(voiceSelect.value, 10);
+      if (!isNaN(previousIndex) && studyAvailableVoices[previousIndex]) {
+        previousUri = studyAvailableVoices[previousIndex].voiceURI;
+      }
+
+      var available = window.speechSynthesis.getVoices();
+      studyAvailableVoices = [];
+      for (var i = 0; i < available.length; i++) {
+        if (/^it(?:-|_)/i.test(available[i].lang)) studyAvailableVoices.push(available[i]);
+      }
+
+      while (voiceSelect.firstChild) voiceSelect.removeChild(voiceSelect.firstChild);
+      var preferredVoice = getPreferredItalianStudyVoice();
+      var automaticOption = document.createElement('option');
+      automaticOption.value = '';
+      automaticOption.textContent = preferredVoice
+        ? 'Automatica · ' + preferredVoice.name
+        : 'Voce italiana maschile consigliata';
+      voiceSelect.appendChild(automaticOption);
+
+      var preferredIndex = -1;
+      for (var voiceIndex = 0; voiceIndex < studyAvailableVoices.length; voiceIndex++) {
+        var voice = studyAvailableVoices[voiceIndex];
+        var option = document.createElement('option');
+        option.value = String(voiceIndex);
+        option.textContent = voice.name + (isLikelyMaleItalianVoice(voice) ? ' · maschile' : '');
+        voiceSelect.appendChild(option);
+        if (voice.voiceURI === previousUri) voiceSelect.value = String(voiceIndex);
+        if (voice === preferredVoice) preferredIndex = voiceIndex;
+      }
+      if (!previousUri && preferredIndex >= 0) voiceSelect.value = String(preferredIndex);
+
+      var hint = document.getElementById('learning-audio-voice-hint');
+      if (!studyAvailableVoices.length) {
+        hint.textContent = 'Nessuna voce italiana rilevata. Installa una voce italiana maschile naturale nelle impostazioni vocali del sistema e ricarica la pagina.';
+      } else if (!preferredVoice || !isLikelyMaleItalianVoice(preferredVoice)) {
+        hint.textContent = 'Non è stata rilevata una voce maschile italiana: scegli una voce dall’elenco oppure installane una nelle impostazioni vocali del sistema.';
+      } else {
+        hint.textContent = 'Voce maschile preferita: ' + preferredVoice.name + '. Per una resa più naturale puoi installare altre voci italiane nelle impostazioni vocali del sistema.';
+      }
+    }
+
     function speakNextStudyChunk(generation) {
       if (generation !== studySpeechGeneration || !studySpeechActive) return;
       if (studySpeechChunkIndex >= studySpeechChunks.length) {
@@ -2354,14 +2476,11 @@ nav .nav-logo {
       var utterance = new SpeechSynthesisUtterance(studySpeechChunks[studySpeechChunkIndex]);
       utterance.lang = 'it-IT';
       utterance.rate = parseFloat(document.getElementById('learning-audio-speed').value) || 1;
-      var voices = window.speechSynthesis.getVoices();
-      var italianVoice = null;
-      for (var i = 0; i < voices.length; i++) {
-        if (/^it(?:-|_)/i.test(voices[i].lang)) {
-          italianVoice = voices[i];
-          break;
-        }
-      }
+      var voiceSelect = document.getElementById('learning-audio-voice');
+      var selectedVoiceIndex = parseInt(voiceSelect.value, 10);
+      var italianVoice = !isNaN(selectedVoiceIndex)
+        ? studyAvailableVoices[selectedVoiceIndex]
+        : getPreferredItalianStudyVoice();
       if (italianVoice) utterance.voice = italianVoice;
       utterance.onend = function() {
         if (generation !== studySpeechGeneration || !studySpeechActive) return;
@@ -2396,6 +2515,10 @@ nav .nav-logo {
       var title = document.getElementById('learning-slide-title').textContent.trim();
       var currentSlide = studyDeck && studyDeck.slides[studyDeck.currentPage - 1];
       var text = currentSlide && currentSlide.text ? currentSlide.text.trim() : '';
+      text = text.replace(/-\s*\r?\n\s*/g, '').replace(/\r?\n\s*\r?\n/g, '. ').replace(/\r?\n/g, ' ').replace(/\s+/g, ' ').trim();
+      if (text && title && text.slice(0, title.length).toLowerCase() === title.toLowerCase()) {
+        text = text.slice(title.length).replace(/^[\s:.;-]+/, '');
+      }
       studySpeechChunks = splitStudyTextForSpeech([title, text].filter(Boolean).join('. '));
       if (!studySpeechChunks.length) {
         setStudySpeechControls('ready', 'Questa scheda non contiene testo da leggere.');
@@ -2404,7 +2527,16 @@ nav .nav-logo {
       if (!text) {
         setStudySpeechControls('speaking', 'Testo OCR non disponibile: viene letto il titolo della scheda.');
       } else {
-        setStudySpeechControls('speaking', 'Lettura in corso…');
+        var selectedVoiceIndex = parseInt(document.getElementById('learning-audio-voice').value, 10);
+        var selectedVoice = !isNaN(selectedVoiceIndex)
+          ? studyAvailableVoices[selectedVoiceIndex]
+          : getPreferredItalianStudyVoice();
+        setStudySpeechControls(
+          'speaking',
+          selectedVoice && isLikelyMaleItalianVoice(selectedVoice)
+            ? 'Lettura con voce maschile: ' + selectedVoice.name + '.'
+            : 'Voce maschile non disponibile. Installa o seleziona una voce italiana maschile nelle impostazioni vocali.'
+        );
       }
       studySpeechGeneration++;
       studySpeechChunkIndex = 0;
@@ -2438,8 +2570,12 @@ nav .nav-logo {
       stopButton.onclick = function() {
         stopStudyReading(true);
       };
+      document.getElementById('learning-audio-voice').onchange = function() {
+        if (studySpeechActive) stopStudyReading(true);
+      };
+      refreshStudyVoices();
       window.speechSynthesis.onvoiceschanged = function() {
-        window.speechSynthesis.getVoices();
+        refreshStudyVoices();
       };
     }
 
