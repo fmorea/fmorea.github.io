@@ -814,6 +814,32 @@ nav .nav-logo {
     .lesson-thumbnail img { display: block; width: 100%; height: 78px; border-radius: 6px; background: #f1f5f9; object-fit: contain; }
     .lesson-thumbnail span { display: block; margin-top: 5px; overflow: hidden; color: #475569; font-size: 11px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
 
+    .concept-map-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 16px; }
+    .concept-map-actions p { margin: 0; color: #64748b; font-size: 12px; }
+    .concept-map-actions button:disabled { cursor: not-allowed; opacity: .5; }
+    .concept-map-panel { margin-top: 14px; padding: 16px; border: 1px solid #dbeafe; border-radius: 18px; background: linear-gradient(145deg, #f8fbff, #eff6ff); }
+    .concept-map-panel > p { margin: 0 0 12px; color: #475569; font-size: 13px; line-height: 1.6; }
+    .concept-map-viewport { overflow-x: auto; overscroll-behavior-x: contain; }
+    .concept-map-svg { display: block; width: 100%; min-width: 620px; max-width: 1040px; height: auto; margin: 0 auto; }
+    .concept-map-root { fill: #1d4ed8; stroke: #1e40af; stroke-width: 2; }
+    .concept-map-root-label { fill: #fff; font-size: 18px; font-weight: 800; }
+    .concept-map-root-caption { fill: #dbeafe; font-size: 12px; font-weight: 700; }
+    .concept-map-edge { stroke: #93c5fd; stroke-width: 2; }
+    .concept-map-relation { stroke: #64748b; stroke-dasharray: 5 5; stroke-width: 1.5; opacity: .62; }
+    .concept-map-node { cursor: pointer; outline: none; }
+    .concept-map-node rect { fill: #fff; stroke: #93c5fd; stroke-width: 2; }
+    .concept-map-node:hover rect,
+    .concept-map-node:focus rect,
+    .concept-map-node.selected rect { fill: #dbeafe; stroke: #2563eb; stroke-width: 3; }
+    .concept-map-node-label { fill: #1e293b; font-size: 14px; font-weight: 800; pointer-events: none; }
+    .concept-map-node-count { fill: #64748b; font-size: 11px; font-weight: 600; pointer-events: none; }
+    .concept-map-legend { margin: 4px 0 14px !important; color: #64748b !important; font-size: 11px !important; }
+    .concept-map-related { padding: 14px; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; }
+    .concept-map-related h4 { margin: 0 0 8px; color: #1e293b; font-size: 14px; font-weight: 800; }
+    .concept-map-related ul { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+    .concept-map-related button { width: 100%; padding: 9px 11px; border: 1px solid #e2e8f0; border-radius: 9px; background: #f8fafc; color: #334155; text-align: left; }
+    .concept-map-related button:hover { border-color: #93c5fd; background: #eff6ff; }
+
     @media screen and (max-width: 600px) {
       .student-fields { gap: 8px; padding: 12px; }
       .student-fields input { padding: 10px; font-size: 13px; }
@@ -983,6 +1009,20 @@ nav .nav-logo {
           </div>
         </article>
         <div id="learning-slide-thumbnails" class="lesson-thumbnail" aria-label="Schede vicine"></div>
+        <div class="concept-map-actions">
+          <button type="button" id="learning-concept-map-toggle" class="btn-secondary" style="padding: 10px 14px; border-radius: 10px; font-weight: 700;" aria-expanded="false" aria-controls="learning-concept-map-panel" disabled>Genera mappa concettuale</button>
+          <p>Creata nel browser dai titoli e dal testo degli appunti; i contenuti restano sul dispositivo.</p>
+        </div>
+        <section id="learning-concept-map-panel" class="concept-map-panel hidden" aria-label="Mappa concettuale della lezione">
+          <p>La mappa evidenzia i concetti ricorrenti. I collegamenti tratteggiati indicano concetti presenti nella stessa scheda; seleziona un nodo per aprire le schede di origine.</p>
+          <div class="concept-map-viewport">
+            <svg id="learning-concept-map" class="concept-map-svg" viewBox="0 0 960 680" role="group" aria-label="Mappa concettuale interattiva"></svg>
+          </div>
+          <p class="concept-map-legend">Le linee continue collegano l’argomento della lezione ai concetti estratti; quelle tratteggiate mostrano co-occorrenze nel materiale OCR.</p>
+          <div id="learning-concept-map-related" class="concept-map-related" aria-live="polite">
+            <p class="text-sm text-slate-500">Seleziona un concetto per vedere le schede collegate.</p>
+          </div>
+        </section>
         <p id="learning-slide-error" class="hidden mt-3 rounded-xl border p-4 text-sm text-red-800" role="alert" style="border-color: #fecaca; background: #fef2f2;"></p>
         <a id="learning-pdf-link" class="hidden mt-3 text-sm font-bold text-blue-700" target="_blank" rel="noopener">Apri il PDF originale</a>
       </div>
@@ -1345,6 +1385,8 @@ nav .nav-logo {
     var teachingSlidesLoadFailed = false;
     var studyDeck = null;
     var studyDeckLoadToken = 0;
+    var studyConceptStopWords = 'al allo alla ai agli alle da dal dallo dalla dai dagli dalle di del dello della dei degli delle in nel nello nella nei negli nelle su sul sullo sulla sui sugli sulle con per tra fra e ed o ma se che chi cui come dove quando quanto quale quali quanto questa questo queste questi quella quello quelle quelli un uno una il lo la i gli le l e a è era sono essere ha hanno viene vengono può possono più molto ogni tutti tutte tutto anche solo quindi come tale tali parte tipo tipi caso casi esempio esempi figura figure tabella sistema sistemi sia ciò essere degli dalle loro loro stesso stessa stessi stesse già ancora senza verso verso cui cioè tra fra degli esercizi esercizio risposta risposte quesiti quesito domanda domande scheda schede';
+    var studyConceptCount = 8;
     var studyZoom = 1;
     var platformElapsedSeconds = 0;
     var platformStorageKey = '';
@@ -2082,6 +2124,7 @@ nav .nav-logo {
     function clearStudySlides() {
       studyDeckLoadToken++;
       stopStudyAudio(true);
+      resetStudyConceptMap();
       studyDeck = null;
       var image = document.getElementById('learning-slide-image');
       image.removeAttribute('src');
@@ -2130,8 +2173,10 @@ nav .nav-logo {
           studyDeck = {
             slides: data.slides,
             courseKey: path.split('/')[0],
-            currentPage: 1
+            currentPage: 1,
+            conceptMap: null
           };
+          document.getElementById('learning-concept-map-toggle').disabled = false;
           displayStudySlide(1);
         } catch (err) {
           console.error('Impossibile leggere il contenuto estratto degli appunti:', err);
@@ -2325,7 +2370,315 @@ nav .nav-logo {
       }
     }
 
+    function tokenizeStudyConcepts(value) {
+      return String(value || '')
+        .toLowerCase()
+        .replace(/[àáâäã]/g, 'a')
+        .replace(/[èéêë]/g, 'e')
+        .replace(/[ìíîï]/g, 'i')
+        .replace(/[òóôöõ]/g, 'o')
+        .replace(/[ùúûü]/g, 'u')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .replace(/^\s+|\s+$/g, '')
+        .split(/\s+/);
+    }
+
+    function buildStudyConceptMap(slides) {
+      var stopWords = {};
+      var stopWordList = studyConceptStopWords.split(/\s+/);
+      for (var stopIndex = 0; stopIndex < stopWordList.length; stopIndex++) {
+        stopWords[stopWordList[stopIndex]] = true;
+      }
+
+      var courseTokens = tokenizeStudyConcepts(selectedMateria ? selectedMateria.nome : '');
+      for (var courseIndex = 0; courseIndex < courseTokens.length; courseIndex++) {
+        stopWords[courseTokens[courseIndex]] = true;
+      }
+
+      var terms = {};
+      for (var slideIndex = 0; slideIndex < slides.length; slideIndex++) {
+        var slide = slides[slideIndex];
+        var titleTokens = tokenizeStudyConcepts(slide.title);
+        var bodyTokens = tokenizeStudyConcepts(slide.text);
+        var titleWords = {};
+        var bodyCounts = {};
+        var documentWords = {};
+        var tokenIndex;
+
+        for (tokenIndex = 0; tokenIndex < titleTokens.length; tokenIndex++) {
+          var titleWord = titleTokens[tokenIndex];
+          if (titleWord.length < 4 || titleWord.length > 24 || stopWords[titleWord] || /^\d+$/.test(titleWord)) continue;
+          titleWords[titleWord] = true;
+          documentWords[titleWord] = true;
+        }
+        for (tokenIndex = 0; tokenIndex < bodyTokens.length; tokenIndex++) {
+          var bodyWord = bodyTokens[tokenIndex];
+          if (bodyWord.length < 4 || bodyWord.length > 24 || stopWords[bodyWord] || /^\d+$/.test(bodyWord)) continue;
+          bodyCounts[bodyWord] = (bodyCounts[bodyWord] || 0) + 1;
+          documentWords[bodyWord] = true;
+        }
+
+        for (var word in documentWords) {
+          if (!Object.prototype.hasOwnProperty.call(documentWords, word)) continue;
+          if (!terms[word]) {
+            terms[word] = {
+              label: word,
+              score: 0,
+              titleHits: 0,
+              pageMap: {},
+              pages: []
+            };
+          }
+          var term = terms[word];
+          term.pageMap[slide.number] = slide;
+          if (titleWords[word]) {
+            term.titleHits++;
+            term.score += 4;
+          }
+          term.score += Math.min(bodyCounts[word] || 0, 6) * 0.15;
+        }
+      }
+
+      var concepts = [];
+      for (var termName in terms) {
+        if (!Object.prototype.hasOwnProperty.call(terms, termName)) continue;
+        var candidate = terms[termName];
+        if (!candidate.titleHits) continue;
+        for (var pageNumber in candidate.pageMap) {
+          if (Object.prototype.hasOwnProperty.call(candidate.pageMap, pageNumber)) {
+            candidate.pages.push(candidate.pageMap[pageNumber]);
+          }
+        }
+        candidate.pages.sort(function(left, right) {
+          var leftInTitle = tokenizeStudyConcepts(left.title).indexOf(candidate.label) !== -1 ? 1 : 0;
+          var rightInTitle = tokenizeStudyConcepts(right.title).indexOf(candidate.label) !== -1 ? 1 : 0;
+          return rightInTitle - leftInTitle || left.number - right.number;
+        });
+        concepts.push(candidate);
+      }
+      concepts.sort(function(left, right) {
+        return right.score - left.score || left.label.localeCompare(right.label);
+      });
+      concepts = concepts.slice(0, studyConceptCount);
+
+      for (var firstIndex = 0; firstIndex < concepts.length; firstIndex++) {
+        concepts[firstIndex].relations = [];
+        for (var secondIndex = firstIndex + 1; secondIndex < concepts.length; secondIndex++) {
+          var sharedPages = 0;
+          for (var sharedIndex = 0; sharedIndex < concepts[firstIndex].pages.length; sharedIndex++) {
+            var sharedPage = concepts[firstIndex].pages[sharedIndex];
+            if (Object.prototype.hasOwnProperty.call(concepts[secondIndex].pageMap, sharedPage.number)) {
+              sharedPages++;
+            }
+          }
+          if (sharedPages >= 2) {
+            concepts[firstIndex].relations.push({ concept: concepts[secondIndex], sharedPages: sharedPages });
+          }
+        }
+      }
+      return concepts;
+    }
+
+    function createConceptSvgElement(name, attributes) {
+      var element = document.createElementNS('http://www.w3.org/2000/svg', name);
+      for (var attribute in attributes) {
+        if (Object.prototype.hasOwnProperty.call(attributes, attribute)) {
+          element.setAttribute(attribute, attributes[attribute]);
+        }
+      }
+      return element;
+    }
+
+    function renderStudyConceptMap(concepts) {
+      var svg = document.getElementById('learning-concept-map');
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+      var centerX = 480;
+      var centerY = 340;
+      var nodePositions = [];
+
+      for (var conceptIndex = 0; conceptIndex < concepts.length; conceptIndex++) {
+        var angle = (-90 + conceptIndex * 360 / concepts.length) * Math.PI / 180;
+        nodePositions.push({
+          x: centerX + Math.cos(angle) * 285,
+          y: centerY + Math.sin(angle) * 235
+        });
+      }
+
+      for (var edgeIndex = 0; edgeIndex < concepts.length; edgeIndex++) {
+        svg.appendChild(createConceptSvgElement('line', {
+          x1: centerX,
+          y1: centerY,
+          x2: nodePositions[edgeIndex].x,
+          y2: nodePositions[edgeIndex].y,
+          'class': 'concept-map-edge'
+        }));
+      }
+      for (var relationIndex = 0; relationIndex < concepts.length; relationIndex++) {
+        for (var relatedIndex = 0; relatedIndex < concepts[relationIndex].relations.length; relatedIndex++) {
+          var relation = concepts[relationIndex].relations[relatedIndex];
+          var targetIndex = concepts.indexOf(relation.concept);
+          if (targetIndex <= relationIndex) continue;
+          svg.appendChild(createConceptSvgElement('line', {
+            x1: nodePositions[relationIndex].x,
+            y1: nodePositions[relationIndex].y,
+            x2: nodePositions[targetIndex].x,
+            y2: nodePositions[targetIndex].y,
+            'class': 'concept-map-relation'
+          }));
+        }
+      }
+
+      var root = createConceptSvgElement('g', { 'aria-hidden': 'true' });
+      root.appendChild(createConceptSvgElement('rect', {
+        x: centerX - 100,
+        y: centerY - 38,
+        width: 200,
+        height: 76,
+        rx: 20,
+        'class': 'concept-map-root'
+      }));
+      var rootTitle = createConceptSvgElement('text', {
+        x: centerX,
+        y: centerY - 2,
+        'text-anchor': 'middle',
+        'class': 'concept-map-root-label'
+      });
+      rootTitle.textContent = selectedMateria ? selectedMateria.nome : 'Lezione';
+      root.appendChild(rootTitle);
+      var rootCaption = createConceptSvgElement('text', {
+        x: centerX,
+        y: centerY + 20,
+        'text-anchor': 'middle',
+        'class': 'concept-map-root-caption'
+      });
+      rootCaption.textContent = 'concetti dagli appunti';
+      root.appendChild(rootCaption);
+      svg.appendChild(root);
+
+      for (var nodeIndex = 0; nodeIndex < concepts.length; nodeIndex++) {
+        (function(concept, position) {
+          var node = createConceptSvgElement('g', {
+            'class': 'concept-map-node',
+            role: 'button',
+            tabindex: '0',
+            'aria-label': concept.label + ', presente in ' + concept.pages.length + ' schede'
+          });
+          node.appendChild(createConceptSvgElement('rect', {
+            x: position.x - 78,
+            y: position.y - 31,
+            width: 156,
+            height: 62,
+            rx: 16
+          }));
+          var label = createConceptSvgElement('text', {
+            x: position.x,
+            y: position.y - 2,
+            'text-anchor': 'middle',
+            'class': 'concept-map-node-label'
+          });
+          label.textContent = concept.label.charAt(0).toUpperCase() + concept.label.substring(1);
+          node.appendChild(label);
+          var count = createConceptSvgElement('text', {
+            x: position.x,
+            y: position.y + 17,
+            'text-anchor': 'middle',
+            'class': 'concept-map-node-count'
+          });
+          count.textContent = concept.pages.length + (concept.pages.length === 1 ? ' scheda' : ' schede');
+          node.appendChild(count);
+          node.onclick = function() {
+            selectStudyConcept(concept, node);
+          };
+          node.onkeydown = function(event) {
+            event = event || window.event;
+            if (event.key === 'Enter' || event.key === ' ' || event.keyCode === 13 || event.keyCode === 32) {
+              if (event.preventDefault) event.preventDefault();
+              selectStudyConcept(concept, node);
+            }
+          };
+          svg.appendChild(node);
+        })(concepts[nodeIndex], nodePositions[nodeIndex]);
+      }
+      if (concepts.length) selectStudyConcept(concepts[0], svg.querySelector('.concept-map-node'));
+      else {
+        var related = document.getElementById('learning-concept-map-related');
+        related.textContent = 'Non sono stati trovati concetti sufficienti nei titoli delle schede.';
+      }
+    }
+
+    function selectStudyConcept(concept, selectedNode) {
+      var svg = document.getElementById('learning-concept-map');
+      var nodes = svg.querySelectorAll('.concept-map-node');
+      for (var nodeIndex = 0; nodeIndex < nodes.length; nodeIndex++) {
+        nodes[nodeIndex].classList.remove('selected');
+      }
+      if (selectedNode) selectedNode.classList.add('selected');
+
+      var related = document.getElementById('learning-concept-map-related');
+      related.innerHTML = '';
+      var heading = document.createElement('h4');
+      heading.textContent = 'Schede collegate a “' + concept.label + '”';
+      related.appendChild(heading);
+      var list = document.createElement('ul');
+      var pageLimit = Math.min(concept.pages.length, 6);
+      for (var pageIndex = 0; pageIndex < pageLimit; pageIndex++) {
+        (function(slide) {
+          var item = document.createElement('li');
+          var button = document.createElement('button');
+          button.type = 'button';
+          button.textContent = 'Scheda ' + slide.number + ' · ' + (slide.title || 'Appunti');
+          button.onclick = function() {
+            displayStudySlide(slide.number);
+            document.getElementById('learning-lesson-card').scrollIntoView();
+          };
+          item.appendChild(button);
+          list.appendChild(item);
+        })(concept.pages[pageIndex]);
+      }
+      if (concept.pages.length > pageLimit) {
+        var more = document.createElement('li');
+        more.className = 'text-xs text-slate-500';
+        more.textContent = 'Altre ' + (concept.pages.length - pageLimit) + ' schede sono collegate a questo concetto.';
+        list.appendChild(more);
+      }
+      related.appendChild(list);
+    }
+
+    function toggleStudyConceptMap() {
+      if (!studyDeck) return;
+      var panel = document.getElementById('learning-concept-map-panel');
+      var toggle = document.getElementById('learning-concept-map-toggle');
+      if (panel.classList.contains('hidden')) {
+        if (!studyDeck.conceptMap) studyDeck.conceptMap = buildStudyConceptMap(studyDeck.slides);
+        renderStudyConceptMap(studyDeck.conceptMap);
+        panel.classList.remove('hidden');
+        toggle.textContent = 'Nascondi mappa concettuale';
+        toggle.setAttribute('aria-expanded', 'true');
+        var viewport = document.querySelector('.concept-map-viewport');
+        if (viewport) viewport.scrollLeft = Math.max(0, (viewport.scrollWidth - viewport.clientWidth) / 2);
+      } else {
+        panel.classList.add('hidden');
+        toggle.textContent = 'Mostra mappa concettuale';
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    function resetStudyConceptMap() {
+      var panel = document.getElementById('learning-concept-map-panel');
+      var toggle = document.getElementById('learning-concept-map-toggle');
+      if (!panel || !toggle) return;
+      panel.classList.add('hidden');
+      toggle.textContent = 'Genera mappa concettuale';
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.disabled = true;
+      var svg = document.getElementById('learning-concept-map');
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+      var related = document.getElementById('learning-concept-map-related');
+      related.textContent = 'Seleziona un concetto per vedere le schede collegate.';
+    }
+
     function initStudySlideshowControls() {
+      document.getElementById('learning-concept-map-toggle').onclick = toggleStudyConceptMap;
       document.getElementById('learning-slide-previous').onclick = function() {
         if (studyDeck) displayStudySlide(studyDeck.currentPage - 1);
       };
