@@ -919,11 +919,9 @@ nav .nav-logo {
             </div>
             <div class="flex items-center" style="gap: 8px;">
               <button type="button" id="learning-slide-previous" class="btn-secondary" aria-label="Slide precedente" style="padding: 9px 13px; border-radius: 10px; font-size: 18px;" disabled>←</button>
-              <label for="learning-slide-number" class="text-xs text-slate-500">Slide</label>
-              <input id="learning-slide-number" type="number" min="1" value="1" aria-label="Numero slide" style="width: 68px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 8px;">
+              <span id="learning-slide-number" class="text-xs text-slate-500" aria-live="polite"></span>
               <button type="button" id="learning-slide-next" class="btn-secondary" aria-label="Slide successiva" style="padding: 9px 13px; border-radius: 10px; font-size: 18px;" disabled>→</button>
             </div>
-          </div>
           </div>
         </article>
         <div id="learning-slide-thumbnails" class="lesson-thumbnail" aria-label="Schede vicine"></div>
