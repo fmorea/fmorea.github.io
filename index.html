@@ -5,22 +5,32 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Piattaforma Didattica Morea</title>
-	<nav>
-	<div class="container"><div class="row align-items-center"><div class="nav-logo"><a href="https://fmorea.github.io/" target="_blank"><span style="font-family: Averta, Inter, sans-serif; font-size: 34px; font-weight: 800; color: #fff; letter-spacing: -0.3px; white-space: nowrap;">FMOREA</span></a></div> <div class="nav-lingua dropdown"><button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Cambia lingua" class="dropdown-toggle">Italia - IT</button> <!----></div></div></div>
-  	</nav>
-  <!-- jsPDF per generazione lato client della scheda riepilogativa PDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  
+
+  <!-- Polyfills per HTML5 e JSON per vecchi browser tipo Internet Explorer 8 -->
+  <!--[if lt IE 9]>
+    <script>
+      (function(){
+        var tags = ['header','nav','section','article','aside','footer','main','figure','figcaption','details','summary','time','mark','audio','video','canvas'];
+        for (var i = 0; i < tags.length; i++) { document.createElement(tags[i]); }
+      })();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/json2/20160511/json2.min.js"></script>
+  <![endif]-->
+
   <!-- QRCode.js per generare il codice QR a video e sul PDF (compatibile IE6-IE11) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <!-- LZ-String per compressione efficiente dello stato delle domande nel QR code -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
 
-  <!-- KaTeX per rendering formule matematiche e scientifiche (LaTeX) -->
+  <!-- Librerie moderne con sintassi ES6: caricate solo su browser moderni (IE10+, Edge, Chrome, Firefox) per non bloccare il parser JS di IE8/IE9 -->
+  <!--[if gt IE 9]><!-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+  <!--<![endif]-->
 
   <!-- Fogli di stile completi compatibili al 100% con Internet Explorer (9, 10, 11) e browser moderni -->
   <style>
@@ -32,6 +42,11 @@
       box-sizing: border-box;
     }
     
+    /* Supporto elementi semantici HTML5 per IE8/IE9 */
+    header, nav, section, article, aside, footer, main, figure, figcaption, details, summary {
+      display: block;
+    }
+
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       margin: 0;
@@ -142,7 +157,7 @@
       -ms-flex-negative: 0;
     }
 
-    /* Griglia a 2 e 4 colonne compatibile con tutti i browser */
+    /* Griglia a 2 e 4 colonne compatibile con tutti i browser (incluso IE8/IE9 via float e clearfix) */
     .grid {
       display: -webkit-box;
       display: -ms-flexbox;
@@ -150,10 +165,23 @@
       -ms-flex-wrap: wrap;
       flex-wrap: wrap;
       margin: -6px;
+      *zoom: 1;
+    }
+    .grid:before,
+    .grid:after {
+      content: " ";
+      display: table;
+    }
+    .grid:after {
+      clear: both;
     }
     .grid > * {
       padding: 6px;
       width: 100%;
+      float: left;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
     }
     .grid-cols-2 > * {
       width: 50%;
@@ -344,6 +372,12 @@
       display: -webkit-inline-box;
       display: -ms-inline-flexbox;
       display: inline-flex;
+      display: inline-block\9; /* Fallback IE8/IE9 */
+      *display: inline;
+      *zoom: 1;
+      text-align: center;
+      line-height: 36px;
+      vertical-align: middle;
       -webkit-box-align: center;
       -ms-flex-align: center;
       align-items: center;
@@ -373,6 +407,8 @@
       display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
+      display: block\9; /* Fallback IE8/IE9 */
+      text-align: center;
       -webkit-box-align: center;
       -ms-flex-align: center;
       align-items: center;
@@ -391,6 +427,12 @@
       display: -webkit-inline-box;
       display: -ms-inline-flexbox;
       display: inline-flex;
+      display: inline-block\9; /* Fallback IE8/IE9 */
+      *display: inline;
+      *zoom: 1;
+      text-align: center;
+      line-height: 32px;
+      vertical-align: middle;
       -webkit-box-align: center;
       -ms-flex-align: center;
       align-items: center;
@@ -456,6 +498,12 @@
       display: -webkit-inline-box;
       display: -ms-inline-flexbox;
       display: inline-flex;
+      display: inline-block\9; /* Fallback IE8/IE9 */
+      *display: inline;
+      *zoom: 1;
+      text-align: center;
+      line-height: 34px;
+      vertical-align: middle;
       -webkit-box-align: center;
       -ms-flex-align: center;
       align-items: center;
@@ -573,11 +621,24 @@ nav .row {
     position: relative;
     align-items: center;
     min-height: 65px;
+    *zoom: 1;
+}
+
+nav .row:after {
+    content: "";
+    display: table;
+    clear: both;
 }
 
 /* Logo della navigazione */
 nav .nav-logo {
     margin-right: auto;
+    float: left;
+}
+
+.nav-lingua {
+    float: right;
+    margin-top: 10px\9;
 }
 
 /* Contenitori: tablet e schermi medi */
@@ -651,6 +712,7 @@ nav .nav-logo {
     .student-details p { margin: 10px 0; color: #64748b; font-size: 12px; text-align: center; }
 
     .student-fields {
+      display: block\9;
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
@@ -660,6 +722,21 @@ nav .nav-logo {
       border: 1px solid #e2e8f0;
       border-radius: 16px;
       background: #fff;
+      *zoom: 1;
+    }
+    .student-fields:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+    .student-fields > div {
+      display: inline-block\9;
+      *display: inline;
+      *zoom: 1;
+      vertical-align: top;
+      width: 47%\9;
+      margin-right: 2%\9;
+      box-sizing: border-box;
     }
 
     .student-fields label {
@@ -681,15 +758,24 @@ nav .nav-logo {
 
     .home-hero h1 {
       margin: 6px 0;
+      font-size: 28px;
       font-size: clamp(24px, 4vw, 34px);
     }
 
     .course-grid,
     .mode-grid {
+      display: block\9;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 14px;
       margin-top: 16px;
+      *zoom: 1;
+    }
+    .course-grid:after,
+    .mode-grid:after {
+      content: "";
+      display: table;
+      clear: both;
     }
 
     .course-card {
@@ -702,6 +788,13 @@ nav .nav-logo {
       text-align: left;
       box-shadow: 0 6px 20px rgba(15, 23, 42, .05);
       transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+      display: inline-block\9;
+      *display: inline;
+      *zoom: 1;
+      vertical-align: top;
+      width: 47%\9;
+      margin: 1% 1% 14px 0\9;
+      box-sizing: border-box;
     }
 
     .course-card:hover {
@@ -747,6 +840,13 @@ nav .nav-logo {
       text-align: left;
       box-shadow: 0 8px 26px rgba(15, 23, 42, .06);
       transition: transform .16s ease, box-shadow .16s ease;
+      display: inline-block\9;
+      *display: inline;
+      *zoom: 1;
+      vertical-align: top;
+      width: 47%\9;
+      margin: 1% 1% 14px 0\9;
+      box-sizing: border-box;
     }
 
     .mode-card:hover {
@@ -764,6 +864,23 @@ nav .nav-logo {
       background: #eff6ff;
       color: #2563eb;
       font-size: 22px;
+      display: inline-block\9;
+      *display: inline;
+      *zoom: 1;
+      text-align: center;
+      line-height: 44px;
+    }
+
+    /* Fallback per <details> in vecchi browser (IE8/IE9/IE10/IE11) */
+    details {
+      display: block;
+    }
+    summary {
+      display: block;
+      cursor: pointer;
+    }
+    details.ie-closed > *:not(summary) {
+      display: none !important;
     }
 
     .lesson-card {
@@ -1254,6 +1371,10 @@ nav .nav-logo {
 </head>
 <body>
 
+  <nav>
+    <div class="container"><div class="row align-items-center"><div class="nav-logo"><a href="https://fmorea.github.io/" target="_blank"><span style="font-family: Averta, Inter, sans-serif; font-size: 34px; font-weight: 800; color: #fff; letter-spacing: -0.3px; white-space: nowrap;">FMOREA</span></a></div> <div class="nav-lingua dropdown"><button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Cambia lingua" class="dropdown-toggle">Italia - IT</button> <!----></div></div></div>
+  </nav>
+
   <div id="app">
     <div id="platform-time-indicator" class="platform-time-indicator hidden" role="timer" aria-label="Tempo attivo totale in piattaforma" title="Il conteggio è salvato su questo dispositivo e incluso nel certificato; non è verificato da un server.">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
@@ -1655,14 +1776,148 @@ nav .nav-logo {
 
   <script>
     /* ==============================================================
-       POLYFILLS PER VECCHI BROWSER (Internet Explorer 9, 10, 11 e P.A.)
+       POLYFILLS PER VECCHI BROWSER (Internet Explorer 8, 9, 10, 11 e P.A.)
        ============================================================== */
+
+    /* 1. console fallback (evita crash bloccanti in IE8/IE9 a DevTools chiusi) */
+    if (!window.console) {
+      window.console = {
+        log: function () {},
+        info: function () {},
+        warn: function () {},
+        error: function () {},
+        debug: function () {},
+        dir: function () {}
+      };
+    }
+
+    /* 2. Date.now */
+    if (!Date.now) {
+      Date.now = function () {
+        return new Date().getTime();
+      };
+    }
+
+    /* 3. String.prototype.trim */
     if (!String.prototype.trim) {
       String.prototype.trim = function () {
         return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
       };
     }
 
+    /* 4. Array.isArray */
+    if (!Array.isArray) {
+      Array.isArray = function (arg) {
+        return Object.prototype.toString.call(arg) === '[object Array]';
+      };
+    }
+
+    /* 5. Array.prototype.indexOf & lastIndexOf */
+    if (!Array.prototype.indexOf) {
+      Array.prototype.indexOf = function (searchElement, fromIndex) {
+        if (this == null) throw new TypeError('"this" is null or not defined');
+        var o = Object(this);
+        var len = o.length >>> 0;
+        if (len === 0) return -1;
+        var n = fromIndex | 0;
+        if (Math.abs(n) === Infinity) n = 0;
+        if (n >= len) return -1;
+        var k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
+        while (k < len) {
+          if (k in o && o[k] === searchElement) return k;
+          k++;
+        }
+        return -1;
+      };
+    }
+    if (!Array.prototype.lastIndexOf) {
+      Array.prototype.lastIndexOf = function (searchElement, fromIndex) {
+        if (this == null) throw new TypeError('"this" is null or not defined');
+        var o = Object(this);
+        var len = o.length >>> 0;
+        if (len === 0) return -1;
+        var n = len - 1;
+        if (arguments.length > 1) {
+          n = fromIndex | 0;
+          if (n !== n) n = 0;
+          else if (n !== 0 && n !== Infinity && n !== -Infinity) {
+            n = (n > 0 || -1) * Math.floor(Math.abs(n));
+          }
+        }
+        var k = n >= 0 ? Math.min(n, len - 1) : len - Math.abs(n);
+        while (k >= 0) {
+          if (k in o && o[k] === searchElement) return k;
+          k--;
+        }
+        return -1;
+      };
+    }
+
+    /* 6. Array.prototype methods (forEach, map, filter, some, every, find) */
+    if (!Array.prototype.forEach) {
+      Array.prototype.forEach = function (callback, thisArg) {
+        if (this == null) throw new TypeError('Array.prototype.forEach chiamato su null o undefined');
+        if (typeof callback !== 'function') throw new TypeError(callback + ' non e una funzione');
+        var o = Object(this);
+        var len = o.length >>> 0;
+        for (var i = 0; i < len; i++) {
+          if (i in o) callback.call(thisArg, o[i], i, o);
+        }
+      };
+    }
+    if (!Array.prototype.map) {
+      Array.prototype.map = function (callback, thisArg) {
+        if (this == null) throw new TypeError('Array.prototype.map chiamato su null o undefined');
+        if (typeof callback !== 'function') throw new TypeError(callback + ' non e una funzione');
+        var o = Object(this);
+        var len = o.length >>> 0;
+        var res = new Array(len);
+        for (var i = 0; i < len; i++) {
+          if (i in o) res[i] = callback.call(thisArg, o[i], i, o);
+        }
+        return res;
+      };
+    }
+    if (!Array.prototype.filter) {
+      Array.prototype.filter = function (callback, thisArg) {
+        if (this == null) throw new TypeError('Array.prototype.filter chiamato su null o undefined');
+        if (typeof callback !== 'function') throw new TypeError(callback + ' non e una funzione');
+        var o = Object(this);
+        var len = o.length >>> 0;
+        var res = [];
+        for (var i = 0; i < len; i++) {
+          if (i in o) {
+            var val = o[i];
+            if (callback.call(thisArg, val, i, o)) res.push(val);
+          }
+        }
+        return res;
+      };
+    }
+    if (!Array.prototype.some) {
+      Array.prototype.some = function (fun, thisArg) {
+        if (this == null) throw new TypeError('Array.prototype.some chiamato su null o undefined');
+        if (typeof fun !== 'function') throw new TypeError();
+        var t = Object(this);
+        var len = t.length >>> 0;
+        for (var i = 0; i < len; i++) {
+          if (i in t && fun.call(thisArg, t[i], i, t)) return true;
+        }
+        return false;
+      };
+    }
+    if (!Array.prototype.every) {
+      Array.prototype.every = function (fun, thisArg) {
+        if (this == null) throw new TypeError('Array.prototype.every chiamato su null o undefined');
+        if (typeof fun !== 'function') throw new TypeError();
+        var t = Object(this);
+        var len = t.length >>> 0;
+        for (var i = 0; i < len; i++) {
+          if (i in t && !fun.call(thisArg, t[i], i, t)) return false;
+        }
+        return true;
+      };
+    }
     if (!Array.prototype.find) {
       Array.prototype.find = function (predicate) {
         if (this == null) throw new TypeError('Array.prototype.find chiamato su null o undefined');
@@ -1678,6 +1933,7 @@ nav .nav-logo {
       };
     }
 
+    /* 7. Object.assign */
     if (typeof Object.assign !== 'function') {
       Object.assign = function (target) {
         if (target == null) throw new TypeError('Cannot convert undefined or null to object');
@@ -1693,6 +1949,401 @@ nav .nav-logo {
           }
         }
         return to;
+      };
+    }
+
+    /* 8. Object.keys */
+    if (!Object.keys) {
+      Object.keys = (function () {
+        var hasOwnProperty = Object.prototype.hasOwnProperty,
+            hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString'),
+            dontEnums = [
+              'toString',
+              'toLocaleString',
+              'valueOf',
+              'hasOwnProperty',
+              'isPrototypeOf',
+              'propertyIsEnumerable',
+              'constructor'
+            ],
+            dontEnumsLength = dontEnums.length;
+
+        return function (obj) {
+          if (typeof obj !== 'function' && (typeof obj !== 'object' || obj === null)) {
+            throw new TypeError('Object.keys chiamato su un non-oggetto');
+          }
+          var result = [], prop, i;
+          for (prop in obj) {
+            if (hasOwnProperty.call(obj, prop)) {
+              result.push(prop);
+            }
+          }
+          if (hasDontEnumBug) {
+            for (i = 0; i < dontEnumsLength; i++) {
+              if (hasOwnProperty.call(obj, dontEnums[i])) {
+                result.push(dontEnums[i]);
+              }
+            }
+          }
+          return result;
+        };
+      }());
+    }
+
+    /* 9. Function.prototype.bind */
+    if (!Function.prototype.bind) {
+      Function.prototype.bind = function (oThis) {
+        if (typeof this !== 'function') {
+          throw new TypeError('Function.prototype.bind - elemento non invocabile');
+        }
+        var aArgs = Array.prototype.slice.call(arguments, 1),
+            fToBind = this,
+            fNOP = function () {},
+            fBound = function () {
+              return fToBind.apply(this instanceof fNOP ? this : oThis,
+                                   aArgs.concat(Array.prototype.slice.call(arguments)));
+            };
+        if (this.prototype) fNOP.prototype = this.prototype;
+        fBound.prototype = new fNOP();
+        return fBound;
+      };
+    }
+
+    /* 10. Base64 atob & btoa per IE8/IE9 */
+    if (!window.btoa) {
+      var b64Map = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+      window.btoa = function (input) {
+        var str = String(input);
+        var output = '';
+        for (var block = 0, charCode, i = 0, map = b64Map;
+             str.charAt(i | 0) || (map = '=', i % 1);
+             output += map.charAt(63 & block >> 8 - i % 1 * 8)) {
+          charCode = str.charCodeAt(i += 3/4);
+          if (charCode > 0xFF) {
+            throw new Error("'btoa' fallito: la stringa contiene caratteri fuori dal range Latin1.");
+          }
+          block = block << 8 | charCode;
+        }
+        return output;
+      };
+    }
+    if (!window.atob) {
+      var b64Map = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+      window.atob = function (input) {
+        var str = String(input).replace(/=+$/, '');
+        if (str.length % 4 === 1) {
+          throw new Error("'atob' fallito: stringa codificata non valida.");
+        }
+        var output = '';
+        for (var bc = 0, bs = 0, buffer, i = 0;
+             buffer = str.charAt(i++);
+             ~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer,
+               bc++ % 4) ? output += String.fromCharCode(255 & bs >> (-2 * bc & 6)) : 0) {
+          buffer = b64Map.indexOf(buffer);
+        }
+        return output;
+      };
+    }
+
+    /* 11. window.location.origin per IE8/IE9/IE10 */
+    if (!window.location.origin) {
+      window.location.origin = window.location.protocol + '//' + window.location.host;
+    }
+
+    /* 12. document.getElementsByClassName per IE8 */
+    if (!document.getElementsByClassName) {
+      document.getElementsByClassName = function (searchClass) {
+        if (document.querySelectorAll) {
+          return document.querySelectorAll('.' + searchClass);
+        }
+        var classElements = [];
+        var els = document.all || document.getElementsByTagName('*');
+        var pattern = new RegExp('(^|\\s)' + searchClass + '(\\s|$)');
+        for (var i = 0; i < els.length; i++) {
+          if (pattern.test(els[i].className)) {
+            classElements.push(els[i]);
+          }
+        }
+        return classElements;
+      };
+    }
+
+    /* 13. document.createElementNS per IE8 */
+    if (!document.createElementNS) {
+      document.createElementNS = function (ns, name) {
+        return document.createElement(name);
+      };
+    }
+
+    /* 14. addEventListener / removeEventListener polyfill universale (IE8 attachEvent) */
+    function bindEventListener(target, type, listener) {
+      if (!target || typeof listener !== 'function') return;
+      if (target.addEventListener) {
+        target.addEventListener(type, listener, false);
+        return;
+      }
+      if (!target.attachEvent) return;
+
+      var actualType = type;
+      if (type === 'wheel') actualType = 'mousewheel';
+      if (type === 'DOMContentLoaded') actualType = 'readystatechange';
+
+      var wrappedListener = function (event) {
+        event = event || window.event || {};
+        if (type === 'DOMContentLoaded' && document.readyState !== 'complete') {
+          return;
+        }
+        if (!event.target) event.target = event.srcElement || target;
+        if (!event.currentTarget) event.currentTarget = target;
+        if (!event.preventDefault) {
+          event.preventDefault = function () {
+            event.returnValue = false;
+          };
+        }
+        if (!event.stopPropagation) {
+          event.stopPropagation = function () {
+            event.cancelBubble = true;
+          };
+        }
+        return listener.call(target, event);
+      };
+
+      if (!target._ieListeners) target._ieListeners = {};
+      if (!target._ieListeners[type]) target._ieListeners[type] = [];
+      target._ieListeners[type].push({ orig: listener, wrapped: wrappedListener });
+
+      try {
+        target.attachEvent('on' + actualType, wrappedListener);
+      } catch (err) {}
+    }
+
+    function unbindEventListener(target, type, listener) {
+      if (!target) return;
+      if (target.removeEventListener) {
+        target.removeEventListener(type, listener, false);
+        return;
+      }
+      if (!target.detachEvent || !target._ieListeners || !target._ieListeners[type]) return;
+
+      var actualType = type;
+      if (type === 'wheel') actualType = 'mousewheel';
+      if (type === 'DOMContentLoaded') actualType = 'readystatechange';
+
+      var list = target._ieListeners[type];
+      for (var i = list.length - 1; i >= 0; i--) {
+        if (list[i].orig === listener) {
+          try {
+            target.detachEvent('on' + actualType, list[i].wrapped);
+          } catch (err) {}
+          list.splice(i, 1);
+        }
+      }
+    }
+
+    if (!window.addEventListener) {
+      window.addEventListener = function (type, listener) {
+        bindEventListener(window, type, listener);
+      };
+      window.removeEventListener = function (type, listener) {
+        unbindEventListener(window, type, listener);
+      };
+    }
+    if (!document.addEventListener) {
+      document.addEventListener = function (type, listener) {
+        bindEventListener(document, type, listener);
+      };
+      document.removeEventListener = function (type, listener) {
+        unbindEventListener(document, type, listener);
+      };
+    }
+
+    /* 15. classList Polyfill per IE9 (via Element.prototype) e IE8 (via decorazione elemento) */
+    function DOMTokenListPolyfill(el) {
+      this.el = el;
+    }
+    DOMTokenListPolyfill.prototype = {
+      contains: function (cls) {
+        if (!cls) return false;
+        var current = this.el.className || '';
+        return new RegExp('(^|\\s+)' + cls + '(\\s+|$)').test(current);
+      },
+      add: function () {
+        var current = this.el.className || '';
+        for (var i = 0; i < arguments.length; i++) {
+          var cls = arguments[i];
+          if (cls && !this.contains(cls)) {
+            current = (current ? current + ' ' : '') + cls;
+          }
+        }
+        this.el.className = current.replace(/\s+/g, ' ').replace(/^\s+|\s+$/g, '');
+      },
+      remove: function () {
+        var current = this.el.className || '';
+        for (var i = 0; i < arguments.length; i++) {
+          var cls = arguments[i];
+          if (cls) {
+            var re = new RegExp('(^|\\s+)' + cls + '(\\s+|$)', 'g');
+            current = current.replace(re, ' ');
+          }
+        }
+        this.el.className = current.replace(/\s+/g, ' ').replace(/^\s+|\s+$/g, '');
+      },
+      toggle: function (cls, force) {
+        var has = this.contains(cls);
+        var add = (typeof force === 'boolean') ? force : !has;
+        if (add) {
+          this.add(cls);
+        } else {
+          this.remove(cls);
+        }
+        return add;
+      }
+    };
+
+    if (!('classList' in document.createElement('_'))) {
+      if (Object.defineProperty && window.Element && Element.prototype) {
+        try {
+          Object.defineProperty(Element.prototype, 'classList', {
+            get: function () {
+              return new DOMTokenListPolyfill(this);
+            },
+            enumerable: true,
+            configurable: true
+          });
+        } catch (eDef) {}
+      }
+    }
+
+    /* 16. Decoratore di istanza DOM per IE8 (aggiunge classList, addEventListener e sincronizza textContent) */
+    function decorateDomNode(node) {
+      if (!node || node.nodeType !== 1) return node;
+
+      if (!node.classList) {
+        node.classList = new DOMTokenListPolyfill(node);
+      }
+
+      if (!node.addEventListener && node.attachEvent) {
+        node.addEventListener = function (type, listener) {
+          bindEventListener(node, type, listener);
+        };
+        node.removeEventListener = function (type, listener) {
+          unbindEventListener(node, type, listener);
+        };
+      }
+
+      if (typeof node.textContent === 'undefined') {
+        try {
+          node.attachEvent('onpropertychange', function (evt) {
+            evt = evt || window.event;
+            if (evt && evt.propertyName === 'textContent') {
+              node.innerText = node.textContent;
+            }
+          });
+        } catch (eProp) {}
+      }
+
+      return node;
+    }
+
+    var _origGetElementById = document.getElementById;
+    document.getElementById = function (id) {
+      var el = _origGetElementById.call ? _origGetElementById.call(document, id) : _origGetElementById(id);
+      return decorateDomNode(el);
+    };
+
+    var _origCreateElement = document.createElement;
+    document.createElement = function (tagName) {
+      var el = _origCreateElement.call ? _origCreateElement.call(document, tagName) : _origCreateElement(tagName);
+      return decorateDomNode(el);
+    };
+
+    if (document.querySelector) {
+      var _origQuerySelector = document.querySelector;
+      document.querySelector = function (selector) {
+        var el = _origQuerySelector.call ? _origQuerySelector.call(document, selector) : _origQuerySelector(selector);
+        return decorateDomNode(el);
+      };
+    }
+
+    if (document.querySelectorAll) {
+      var _origQuerySelectorAll = document.querySelectorAll;
+      document.querySelectorAll = function (selector) {
+        var list = _origQuerySelectorAll.call ? _origQuerySelectorAll.call(document, selector) : _origQuerySelectorAll(selector);
+        if (list) {
+          for (var i = 0; i < list.length; i++) {
+            decorateDomNode(list[i]);
+          }
+        }
+        return list;
+      };
+    }
+
+    /* Helper sicuro per impostare testo nei nodi compatibile con tutti i browser */
+    function setElementText(node, text) {
+      if (!node) return;
+      if (typeof node.textContent !== 'undefined') {
+        node.textContent = text;
+      }
+      node.innerText = text;
+    }
+
+    /* 17. Helper dimensioni finestra per IE8 */
+    function getWindowInnerWidth() {
+      return window.innerWidth || (document.documentElement ? document.documentElement.clientWidth : 0) || (document.body ? document.body.clientWidth : 0) || 1024;
+    }
+    function getWindowInnerHeight() {
+      return window.innerHeight || (document.documentElement ? document.documentElement.clientHeight : 0) || (document.body ? document.body.clientHeight : 0) || 768;
+    }
+
+    /* 18. Polyfill per <details> e <summary> in IE8/IE9/IE10/IE11 */
+    function initDetailsPolyfill() {
+      var testDetails = document.createElement('details');
+      if ('open' in testDetails) return;
+
+      var allDetails = document.getElementsByTagName('details');
+      for (var d = 0; d < allDetails.length; d++) {
+        var det = allDetails[d];
+        if (det.getAttribute('open') === null) {
+          det.className = (det.className ? det.className + ' ' : '') + 'ie-closed';
+        }
+      }
+
+      function handleSummaryClick(e) {
+        e = e || window.event;
+        var target = e.target || e.srcElement;
+        while (target && target.tagName && target.tagName.toUpperCase() !== 'SUMMARY') {
+          if (target === document.body) return;
+          target = target.parentNode;
+        }
+        if (!target) return;
+        var parentDet = target.parentNode;
+        if (!parentDet || parentDet.tagName.toUpperCase() !== 'DETAILS') return;
+
+        var isOpen = parentDet.getAttribute('open') !== null;
+        if (isOpen) {
+          parentDet.removeAttribute('open');
+          parentDet.className = parentDet.className.replace(/\bie-closed\b/g, '').replace(/^\s+|\s+$/g, '');
+          parentDet.className = (parentDet.className ? parentDet.className + ' ' : '') + 'ie-closed';
+        } else {
+          parentDet.setAttribute('open', 'open');
+          parentDet.className = parentDet.className.replace(/\bie-closed\b/g, '').replace(/^\s+|\s+$/g, '');
+        }
+      }
+
+      if (document.addEventListener) {
+        document.addEventListener('click', handleSummaryClick, false);
+      } else if (document.attachEvent) {
+        document.attachEvent('onclick', handleSummaryClick);
+      }
+    }
+
+    /* 19. Fallback XMLHttpRequest per IE8 se disattivato nativamente */
+    if (!window.XMLHttpRequest && window.ActiveXObject) {
+      window.XMLHttpRequest = function () {
+        try { return new ActiveXObject('Msxml2.XMLHTTP.6.0'); } catch (e) {}
+        try { return new ActiveXObject('Msxml2.XMLHTTP.3.0'); } catch (e) {}
+        try { return new ActiveXObject('Microsoft.XMLHTTP'); } catch (e) {}
+        throw new Error('Questo browser non supporta XMLHttpRequest.');
       };
     }
 
@@ -2532,6 +3183,7 @@ nav .nav-logo {
       if (/MSIE\s|Trident\//i.test(userAgent)) return true;
       try {
         var canvas = document.createElement('canvas');
+        if (!canvas || typeof canvas.toDataURL !== 'function') return true;
         var webpSupported = canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
         return !webpSupported;
       } catch (err) {
@@ -2651,7 +3303,7 @@ nav .nav-logo {
           ? initialZoom
           : (document.getElementById('learning-lesson-card').classList.contains('is-fullscreen')
             ? 1
-            : (window.innerWidth >= 1200 && window.innerHeight >= 850 ? 1.5 : 1));
+            : (getWindowInnerWidth() >= 1200 && getWindowInnerHeight() >= 850 ? 1.5 : 1));
         if (zoom > 1) setStudyZoom(zoom);
       };
       image.src = imageUrl;
@@ -2715,7 +3367,7 @@ nav .nav-logo {
     function initStudyZoomControls() {
       var viewport = document.querySelector('.lesson-image-wrap');
       document.getElementById('learning-slide-fullscreen').onclick = toggleStudyFullscreen;
-      var desktopLayout = window.innerWidth >= 1200 && window.innerHeight >= 850;
+      var desktopLayout = getWindowInnerWidth() >= 1200 && getWindowInnerHeight() >= 850;
       document.getElementById('learning-zoom-in').onclick = function() {
         setStudyZoom(studyZoom + 0.25);
       };
@@ -2729,7 +3381,7 @@ nav .nav-logo {
         setStudyZoom(parseFloat(this.value));
       };
       window.addEventListener('resize', function() {
-        var nextDesktopLayout = window.innerWidth >= 1200 && window.innerHeight >= 850;
+        var nextDesktopLayout = getWindowInnerWidth() >= 1200 && getWindowInnerHeight() >= 850;
         if (desktopLayout && !nextDesktopLayout && studyDeck) setStudyZoom(1);
         desktopLayout = nextDesktopLayout;
       });
@@ -2737,9 +3389,12 @@ nav .nav-logo {
       if (!viewport) return;
       viewport.addEventListener('wheel', function(event) {
         if (!event.ctrlKey || !studyDeck) return;
-        event.preventDefault();
-        setStudyZoom(studyZoom + (event.deltaY < 0 ? 0.1 : -0.1), event.clientX, event.clientY);
-      }, { passive: false });
+        if (event.preventDefault) event.preventDefault(); else event.returnValue = false;
+        var delta = typeof event.deltaY === 'number'
+          ? (event.deltaY < 0 ? 0.1 : -0.1)
+          : (event.wheelDelta ? (event.wheelDelta > 0 ? 0.1 : -0.1) : 0);
+        setStudyZoom(studyZoom + delta, event.clientX, event.clientY);
+      }, false);
 
       var pinchStartDistance = 0;
       var pinchStartZoom = 1;
@@ -3157,25 +3812,36 @@ nav .nav-logo {
         if (studyDeck) displayStudySlide(this.value);
       };
       document.addEventListener('keydown', function(event) {
+        event = event || window.event;
         if (document.getElementById('step-learning').classList.contains('hidden') || !studyDeck) return;
-        if (event.target && /^(INPUT|TEXTAREA|SELECT)$/.test(event.target.tagName)) return;
-        if (event.key === 'Escape' && document.getElementById('learning-lesson-card').classList.contains('is-fullscreen')) {
-          event.preventDefault();
+        var target = event.target || event.srcElement;
+        if (target && /^(INPUT|TEXTAREA|SELECT)$/i.test(target.tagName)) return;
+        var key = event.key || '';
+        var code = event.keyCode || event.which || 0;
+        var isEscape = (key === 'Escape' || code === 27);
+        var isPlus = (key === '+' || key === '=' || code === 187 || code === 107 || code === 61);
+        var isMinus = (key === '-' || key === '_' || code === 189 || code === 109 || code === 173);
+        var isZero = (key === '0' || code === 48 || code === 96);
+        var isLeft = (key === 'ArrowLeft' || code === 37);
+        var isRight = (key === 'ArrowRight' || code === 39);
+
+        if (isEscape && document.getElementById('learning-lesson-card').classList.contains('is-fullscreen')) {
+          if (event.preventDefault) event.preventDefault(); else event.returnValue = false;
           toggleStudyFullscreen();
-        } else if (event.key === '+' || event.key === '=') {
-          event.preventDefault();
+        } else if (isPlus) {
+          if (event.preventDefault) event.preventDefault(); else event.returnValue = false;
           setStudyZoom(studyZoom + 0.1);
-        } else if (event.key === '-' || event.key === '_') {
-          event.preventDefault();
+        } else if (isMinus) {
+          if (event.preventDefault) event.preventDefault(); else event.returnValue = false;
           setStudyZoom(studyZoom - 0.1);
-        } else if (event.key === '0') {
-          event.preventDefault();
+        } else if (isZero) {
+          if (event.preventDefault) event.preventDefault(); else event.returnValue = false;
           setStudyZoom(1);
-        } else if (event.key === 'ArrowLeft' && studyDeck.currentPage > 1) {
-          event.preventDefault();
+        } else if (isLeft && studyDeck.currentPage > 1) {
+          if (event.preventDefault) event.preventDefault(); else event.returnValue = false;
           displayStudySlide(studyDeck.currentPage - 1);
-        } else if (event.key === 'ArrowRight' && studyDeck.currentPage < studyDeck.slides.length) {
-          event.preventDefault();
+        } else if (isRight && studyDeck.currentPage < studyDeck.slides.length) {
+          if (event.preventDefault) event.preventDefault(); else event.returnValue = false;
           displayStudySlide(studyDeck.currentPage + 1);
         }
       });
@@ -3184,10 +3850,10 @@ nav .nav-logo {
     function stopStudyAudio(reset) {
       var player = document.getElementById('learning-audio-player');
       if (!player) return;
-      player.pause();
+      if (typeof player.pause === 'function') player.pause();
       if (reset) {
         player.removeAttribute('src');
-        player.load();
+        if (typeof player.load === 'function') player.load();
         player.classList.add('hidden');
       }
     }
@@ -3333,7 +3999,7 @@ nav .nav-logo {
       document.getElementById('mode-course-subtitle').textContent =
         materia.descrizione || materia.tempoMinuti + ' minuti · ' + materia.domande.length + ' quesiti';
       updateMateriaInfo();
-      var isDesktopLayout = window.innerWidth >= 1200 && window.innerHeight >= 850;
+      var isDesktopLayout = getWindowInnerWidth() >= 1200 && getWindowInnerHeight() >= 850;
       var zoom = isDesktopLayout && typeof state.zoom === 'number' && isFinite(state.zoom)
         ? Math.max(1, Math.min(4, state.zoom))
         : 1;
@@ -3868,7 +4534,7 @@ nav .nav-logo {
         audioContainer.classList.remove('hidden');
       } else {
         audioContainer.classList.add('hidden');
-        if (audioEl) audioEl.pause();
+        if (audioEl && typeof audioEl.pause === 'function') audioEl.pause();
       }
 
       // 3. Codice sorgente monospace (informatica / dev)
@@ -5275,6 +5941,13 @@ nav .nav-logo {
 
     /* Inizializzazione compatibile con vecchi e nuovi browser */
     function initApp() {
+      if (document.body) decorateDomNode(document.body);
+      if (document.all) {
+        for (var dIdx = 0; dIdx < document.all.length; dIdx++) {
+          decorateDomNode(document.all[dIdx]);
+        }
+      }
+      initDetailsPolyfill();
       startPlatformTracking();
       scansionaRepository();
       loadTeachingMaterials();
