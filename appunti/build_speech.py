@@ -3,6 +3,8 @@ import json
 import re
 import tempfile
 import unicodedata
+import urllib.parse
+import urllib.request
 from pathlib import Path
 
 import numpy as np
@@ -22,6 +24,34 @@ COURSES = (
 MAX_CHUNK_CHARACTERS = 200
 MAX_PHONEME_CHARACTERS = 400
 CHUNK_PAUSE_SECONDS = 0.18
+
+
+def translate_text(text, source_lang="it", target_lang="en"):
+    cleaned = text.strip()
+    if not cleaned:
+        return ""
+    # Dividi in frasi o paragrafi per non eccedere limiti dell'endpoint
+    lines = [l.strip() for l in cleaned.splitlines() if l.strip()]
+    translated_lines = []
+    for line in lines:
+        try:
+            url = (
+                "https://translate.googleapis.com/translate_a/single?client=gtx&sl="
+                + source_lang
+                + "&tl="
+                + target_lang
+                + "&dt=t&q="
+                + urllib.parse.quote(line)
+            )
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=12) as resp:
+                res = json.loads(resp.read().decode("utf-8"))
+                translated = "".join(part[0] for part in res[0] if part and part[0])
+                translated_lines.append(translated)
+        except Exception as e:
+            print(f"Avviso traduzione fallita per riga ('{line[:40]}...'): {e}")
+            translated_lines.append(line)
+    return "\n".join(translated_lines)
 
 
 def normalize_spoken_text(title, text):
@@ -103,17 +133,27 @@ class SpeedInputCompatibilitySession:
         return self.session.run(output_names, inputs)
 
 
-def synthesize_slide(kokoro, slide, voice, speed):
-    spoken_text = normalize_spoken_text(slide.get("title", ""), slide.get("text", ""))
-    if not slide.get("text", "").strip():
+def synthesize_slide(kokoro, slide, voice, speed, lang="it"):
+    title = slide.get("title", "")
+    text = slide.get("text", "")
+    if not text.strip():
         return None, None
 
+    if lang == "en":
+        print(f"Traduzione in corso della pagina {slide.get('number', '?')} in inglese...")
+        title = translate_text(title, "it", "en")
+        text = translate_text(text, "it", "en")
+        tokenizer_lang = "en-us"
+    else:
+        tokenizer_lang = "it"
+
+    spoken_text = normalize_spoken_text(title, text)
     text_chunks = split_text(spoken_text)
     phoneme_chunks = [
         phoneme_chunk
         for text_chunk in text_chunks
         for phoneme_chunk in split_phonemes(
-            kokoro.tokenizer.phonemize(text_chunk, "it")
+            kokoro.tokenizer.phonemize(text_chunk, tokenizer_lang)
         )
     ]
     if not phoneme_chunks:
@@ -124,7 +164,7 @@ def synthesize_slide(kokoro, slide, voice, speed):
     sample_rate = None
     for chunk_index, chunk in enumerate(phoneme_chunks):
         samples, chunk_sample_rate = kokoro.create(
-            chunk, voice=voice, speed=speed, lang="it", is_phonemes=True
+            chunk, voice=voice, speed=speed, lang=tokenizer_lang, is_phonemes=True
         )
         if sample_rate is not None and chunk_sample_rate != sample_rate:
             raise RuntimeError("Il modello ha restituito frequenze audio non coerenti.")
@@ -180,7 +220,7 @@ def save_manifest(manifest_path, data):
         temporary_path.unlink(missing_ok=True)
 
 
-def build_course(kokoro, course, pages, voice, speed, overwrite):
+def build_course(kokoro, course, pages, voice, speed, overwrite, lang="it"):
     manifest_path = SLIDE_ROOT / course / "slides.json"
     data = json.loads(manifest_path.read_text(encoding="utf-8"))
     slides = data["slides"]
@@ -189,35 +229,39 @@ def build_course(kokoro, course, pages, voice, speed, overwrite):
 
     selected_pages = set(pages) if pages else set(range(1, len(slides) + 1))
     changed = False
+
+    target_dir = SLIDE_ROOT / course / "audio" / "en" if lang == "en" else SLIDE_ROOT / course / "audio"
+    audio_key = "audio_en" if lang == "en" else "audio"
+
     for slide in slides:
         page_number = slide["number"]
         if page_number not in selected_pages:
             continue
         audio_name = f"slide-{page_number:03}.ogg"
-        audio_path = SLIDE_ROOT / course / "audio" / audio_name
+        audio_path = target_dir / audio_name
         if not slide.get("text", "").strip():
             print(f"{course} pagina {page_number}: saltata, testo OCR assente")
             continue
+        audio_reference = f"audio/en/{audio_name}" if lang == "en" else f"audio/{audio_name}"
         if audio_path.is_file() and not overwrite:
-            audio_reference = f"audio/{audio_name}"
-            if slide.get("audio") != audio_reference:
-                slide["audio"] = audio_reference
+            if slide.get(audio_key) != audio_reference:
+                slide[audio_key] = audio_reference
                 changed = True
-            print(f"{course} pagina {page_number}: audio già presente")
+            print(f"{course} pagina {page_number}: audio ({lang}) già presente")
             if changed:
                 save_manifest(manifest_path, data)
                 changed = False
             continue
         if kokoro is None:
-            print(f"{course} pagina {page_number}: audio non presente")
+            print(f"{course} pagina {page_number}: audio ({lang}) non presente")
             continue
 
-        samples, sample_rate = synthesize_slide(kokoro, slide, voice, speed)
+        samples, sample_rate = synthesize_slide(kokoro, slide, voice, speed, lang=lang)
         write_audio(audio_path, samples, sample_rate)
-        slide["audio"] = f"audio/{audio_name}"
+        slide[audio_key] = audio_reference
         save_manifest(manifest_path, data)
         changed = False
-        print(f"{course} pagina {page_number}: creato {audio_path.name}")
+        print(f"{course} pagina {page_number}: creato {audio_path.name} ({lang})")
 
     if changed:
         save_manifest(manifest_path, data)
@@ -235,6 +279,12 @@ def main():
         help="Genera la pagina indicata (ripetibile; richiede --course).",
     )
     parser.add_argument(
+        "--lang",
+        choices=["it", "en"],
+        default="it",
+        help="Lingua per la sintesi audio (it o en).",
+    )
+    parser.add_argument(
         "--model",
         type=Path,
         default=MODEL_ROOT / "kokoro-v1.0.onnx",
@@ -246,7 +296,7 @@ def main():
         default=MODEL_ROOT / "voices-v1.0.bin",
         help="Percorso del file delle voci Kokoro.",
     )
-    parser.add_argument("--voice", default="im_nicola", help="Voce Kokoro da usare.")
+    parser.add_argument("--voice", default=None, help="Voce Kokoro da usare.")
     parser.add_argument("--speed", type=float, default=1.0, help="Velocità del parlato.")
     parser.add_argument(
         "--overwrite",
@@ -265,6 +315,11 @@ def main():
         parser.error("--speed deve essere compreso tra 1 e 2 per questo modello.")
     if args.link_existing_only and args.overwrite:
         parser.error("--link-existing-only non può essere usato con --overwrite.")
+
+    voice = args.voice
+    if not voice:
+        voice = "am_adam" if args.lang == "en" else "im_nicola"
+
     kokoro = None
     if not args.link_existing_only:
         for model_path in (args.model, args.voices):
@@ -278,7 +333,7 @@ def main():
         kokoro.sess = SpeedInputCompatibilitySession(kokoro.sess)
     courses = (args.course,) if args.course else COURSES
     for course in courses:
-        build_course(kokoro, course, args.page, args.voice, args.speed, args.overwrite)
+        build_course(kokoro, course, args.page, voice, args.speed, args.overwrite, lang=args.lang)
 
 
 if __name__ == "__main__":
