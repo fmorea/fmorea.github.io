@@ -1769,22 +1769,27 @@ nav .nav-logo {
           </div>
           <div>
             <div class="text-sm font-bold" id="header-cand-name">Mario Rossi</div>
-            <div class="text-xs text-slate-400">Candidato</div>
+            <div class="text-xs text-slate-400" data-i18n="candidate_label">Candidato</div>
           </div>
         </div>
 
         <div class="text-center p-2 rounded-lg bg-slate-800 border" style="border-color: #334155;">
           <div class="text-xs uppercase text-slate-400 font-bold" id="header-materia-title">Materia</div>
-          <div class="text-xs font-bold text-blue-300">Scheda di Verifica</div>
+          <div class="text-xs font-bold text-blue-300" data-i18n="assessment_sheet">Scheda di Verifica</div>
         </div>
 
         <div class="flex items-center" style="gap: 16px;">
+          <div class="platform-lang-switch" role="group" aria-label="Lingua / Language">
+            <button type="button" id="quiz-lang-it" onclick="setLanguage('it')" class="active" title="Italiano">IT</button>
+            <span class="lang-divider" aria-hidden="true">|</span>
+            <button type="button" id="quiz-lang-en" onclick="setLanguage('en')" title="English">EN</button>
+          </div>
           <div class="text-right">
-            <div class="text-xs uppercase text-slate-400 font-bold">Tempo Residuo</div>
+            <div class="text-xs uppercase text-slate-400 font-bold" data-i18n="time_remaining">Tempo Residuo</div>
             <div class="text-xl font-mono font-black text-amber-400" id="quiz-timer">15:00</div>
           </div>
           <button onclick="confirmSubmitQuiz()" class="btn-action" style="background-color: #dc2626; color: #fff; padding: 10px 16px; font-size: 12px;">
-            Consegna Scheda
+            <span data-i18n="btn_finish_submit">Consegna Scheda</span>
           </button>
         </div>
       </div>
@@ -1793,7 +1798,7 @@ nav .nav-logo {
         <div>
           <div class="flex items-center justify-between border-b pb-3 mb-6">
             <span class="text-xs font-extrabold text-blue-600 uppercase tracking-widest">
-              Domanda <span id="current-q-num">1</span> di <span id="total-q-num">10</span>
+              <span data-i18n="question_label">Domanda</span> <span id="current-q-num">1</span> <span data-i18n="of_label">di</span> <span id="total-q-num">10</span>
             </span>
             <span id="badge-argomento" class="text-xs bg-slate-100 text-slate-600 rounded-full font-semibold" style="padding: 4px 12px;">Argomento</span>
           </div>
@@ -1824,13 +1829,13 @@ nav .nav-logo {
         <div class="flex items-center justify-between border-t pt-5">
           <button id="btn-prev" onclick="navQuestion(-1)" class="btn-secondary" style="padding: 10px 18px; border-radius: 8px; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center;">
             <svg class="w-4" width="16" height="16" style="width: 16px; height: 16px; margin-right: 6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-            <span>Precedente</span>
+            <span data-i18n="btn_prev">Precedente</span>
           </button>
           <div class="text-xs text-slate-500 font-medium">
-            Risposte registrate: <span id="count-answered" class="font-bold text-slate-900">0</span> / <span id="count-total">10</span>
+            <span data-i18n="recorded_answers">Risposte registrate:</span> <span id="count-answered" class="font-bold text-slate-900">0</span> / <span id="count-total">10</span>
           </div>
           <button id="btn-next" onclick="navQuestion(1)" class="btn-action btn-primary" style="padding: 10px 18px; border-radius: 8px; font-weight: 700; font-size: 12px; display: inline-flex; align-items: center;">
-            <span>Successiva</span>
+            <span data-i18n="btn_next">Successiva</span>
             <svg class="w-4" width="16" height="16" style="width: 16px; height: 16px; margin-left: 6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
           </button>
         </div>
@@ -1854,34 +1859,34 @@ nav .nav-logo {
       <div class="grid grid-cols-4 mb-6">
         <div>
           <div class="bg-slate-50 border p-4 rounded-xl text-center">
-            <div class="text-xs text-slate-500 uppercase font-bold mb-1">Percentuale</div>
+            <div class="text-xs text-slate-500 uppercase font-bold mb-1" data-i18n="res_percentage">Percentuale</div>
             <div class="text-2xl font-black text-blue-600" id="res-score">100%</div>
           </div>
         </div>
         <div>
           <div class="bg-slate-50 border p-4 rounded-xl text-center">
-            <div class="text-xs text-slate-500 uppercase font-bold mb-1">Risposte Esatte</div>
+            <div class="text-xs text-slate-500 uppercase font-bold mb-1" data-i18n="res_correct">Risposte Esatte</div>
             <div class="text-2xl font-black text-emerald-600" id="res-correct">10/10</div>
           </div>
         </div>
         <div>
           <div class="bg-slate-50 border p-4 rounded-xl text-center">
-            <div class="text-xs text-slate-500 uppercase font-bold mb-1">Errori Commessi</div>
+            <div class="text-xs text-slate-500 uppercase font-bold mb-1" data-i18n="res_errors">Errori Commessi</div>
             <div class="text-2xl font-black text-red-500" id="res-errors">0</div>
           </div>
         </div>
         <div>
           <div class="bg-slate-50 border p-4 rounded-xl text-center">
-            <div class="text-xs text-slate-500 uppercase font-bold mb-1">Tempo Utilizzato</div>
+            <div class="text-xs text-slate-500 uppercase font-bold mb-1" data-i18n="res_time">Tempo Utilizzato</div>
             <div class="text-2xl font-black text-purple-600" id="res-time">03:45</div>
           </div>
         </div>
       </div>
 
       <div class="rounded-xl border p-4 mb-6 text-sm" style="border-color: #bfdbfe; background: #eff6ff;">
-        <span class="font-bold text-slate-700">Tempo attivo totale in piattaforma:</span>
+        <span class="font-bold text-slate-700" data-i18n="total_platform_time">Tempo attivo totale in piattaforma:</span>
         <span id="result-platform-time" class="font-black text-blue-700">0 h 0 min</span>
-        <span class="text-xs text-slate-600"> (ore e minuti)</span>
+        <span class="text-xs text-slate-600" data-i18n="hours_minutes"> (ore e minuti)</span>
         <p class="platform-storage-notice hidden mt-2 rounded-lg border p-3 text-xs text-amber-900" role="status" style="border-color: #fcd34d; background: #fffbeb;"></p>
       </div>
 
@@ -1890,31 +1895,31 @@ nav .nav-logo {
         <div class="flex flex-wrap items-center" style="gap: 24px;">
           <div class="bg-white p-3 rounded-2xl border shrink-0 text-center" style="width: 164px; margin: 0 auto;">
             <div id="result-qrcode" style="width: 140px; height: 140px; margin: 0 auto; display: flex; align-items: center; justify-content: center; background: #fff;"></div>
-            <div class="text-xs text-slate-500 font-bold uppercase tracking-wider mt-2">
+            <div class="text-xs text-slate-500 font-bold uppercase tracking-wider mt-2" data-i18n="scan_camera">
               Inquadra fotocamera
             </div>
           </div>
           <div class="flex-1 text-center md:text-left" style="min-width: 260px;">
             <div class="flex flex-wrap items-center mb-2" style="gap: 8px;">
-              <span class="rounded-full text-xs font-bold bg-blue-100 text-blue-800" style="padding: 2px 10px;">
+              <span class="rounded-full text-xs font-bold bg-blue-100 text-blue-800" style="padding: 2px 10px;" data-i18n="qr_badge">
                 QR Code Stato Domande
               </span>
               <span class="text-xs text-slate-400 font-mono" id="res-scheda-id">SCHEDA-A1B2C3</span>
             </div>
-            <h3 class="text-xl font-bold text-slate-900 mb-1">
+            <h3 class="text-xl font-bold text-slate-900 mb-1" data-i18n="qr_title">
               Scansiona per spiegare le domande e risposte
             </h3>
-            <p class="text-sm text-slate-600 mb-4 leading-relaxed">
+            <p class="text-sm text-slate-600 mb-4 leading-relaxed" data-i18n="qr_desc">
               Questo codice QR memorizza lo stato delle risposte fornite: inquadrandolo con la fotocamera del tuo cellulare puoi rivedere ogni domanda con la spiegazione didattica del perché è Vera o Falsa.
             </p>
             <div class="flex flex-wrap items-center" style="gap: 10px;">
               <button onclick="openReviewScreen()" class="btn-action btn-primary" style="padding: 10px 18px; font-size: 13px; display: inline-flex; align-items: center;">
                 <svg class="w-4" width="16" height="16" style="width: 16px; height: 16px; margin-right: 6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                <span>Visualizza Spiegazioni Online</span>
+                <span data-i18n="btn_view_explanations">Visualizza Spiegazioni Online</span>
               </button>
               <button onclick="copyReviewUrl()" id="btn-copy-link" class="btn-secondary" style="padding: 10px 18px; font-size: 13px; border-radius: 12px; display: inline-flex; align-items: center;">
                 <svg class="w-4" width="16" height="16" style="width: 16px; height: 16px; margin-right: 6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
-                <span id="text-copy-link">Copia Link Revisione</span>
+                <span id="text-copy-link" data-i18n="btn_copy_link">Copia Link Revisione</span>
               </button>
             </div>
           </div>
@@ -1924,14 +1929,14 @@ nav .nav-logo {
       <div class="flex flex-wrap" style="gap: 12px;">
         <button id="btn-download-pdf" onclick="scaricaAttestatoPDF()" class="btn-action btn-success flex-1" style="padding: 16px; font-size: 15px; display: flex; align-items: center; justify-content: center;">
           <svg class="w-5" width="20" height="20" style="width: 20px; height: 20px; margin-right: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-          <span>Scarica Certificato Ufficiale (PDF)</span>
+          <span data-i18n="btn_download_pdf">Scarica Certificato Ufficiale (PDF)</span>
         </button>
         <button onclick="window.print()" class="btn-secondary" style="padding: 16px 20px; border-radius: 12px; font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;" title="Stampa o Salva in PDF nativamente (ottimale per vecchi browser come Internet Explorer)">
           <svg class="w-5" width="20" height="20" style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-          <span>Stampa / PDF (IE)</span>
+          <span data-i18n="btn_print_pdf">Stampa / PDF (IE)</span>
         </button>
         <button onclick="resetExam()" class="btn-secondary" style="padding: 16px 24px; border-radius: 12px; font-weight: 700; font-size: 13px;">
-          Sostieni Altra Prova
+          <span data-i18n="btn_repeat">Sostieni Altra Prova</span>
         </button>
       </div>
 
@@ -1942,15 +1947,15 @@ nav .nav-logo {
     <div id="step-review" class="hidden p-6 md:p-10">
       <div class="border-b pb-5 mb-6 flex flex-wrap items-center justify-between" style="gap: 12px;">
         <div>
-          <span class="rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-800" style="padding: 2px 10px; display: inline-block; margin-bottom: 4px;">
+          <span class="rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-800" style="padding: 2px 10px; display: inline-block; margin-bottom: 4px;" data-i18n="review_badge">
             Revisione Interattiva
           </span>
-          <h2>Spiegazione Risposte & Quesiti</h2>
-          <p class="text-sm text-slate-500">Analisi dettagliata di ogni domanda con motivazione didattica</p>
+          <h2 data-i18n="review_title">Spiegazione Risposte & Quesiti</h2>
+          <p class="text-sm text-slate-500" data-i18n="review_subtitle">Analisi dettagliata di ogni domanda con motivazione didattica</p>
         </div>
         <div>
           <button onclick="exitReview()" class="btn-secondary" style="padding: 8px 16px; border-radius: 10px; font-weight: 700; font-size: 12px;">
-            <span>← Torna alla Piattaforma</span>
+            <span data-i18n="btn_back_platform">← Torna alla Piattaforma</span>
           </button>
         </div>
       </div>
@@ -1961,13 +1966,13 @@ nav .nav-logo {
       <!-- Filtri domande: Tutte / Errori / Corrette -->
       <div class="flex flex-wrap items-center mb-6" style="gap: 8px;">
         <button id="filter-all" onclick="filterReview('all')" class="btn-action btn-primary" style="padding: 8px 16px; font-size: 12px; border-radius: 8px;">
-          Tutte le Domande (<span id="count-rev-all">0</span>)
+          <span data-i18n="filter_all">Tutte le Domande</span> (<span id="count-rev-all">0</span>)
         </button>
         <button id="filter-errors" onclick="filterReview('errors')" class="btn-secondary" style="padding: 8px 16px; font-size: 12px; border-radius: 8px;">
-          Solo Errori (<span id="count-rev-errors">0</span>)
+          <span data-i18n="filter_errors">Solo Errori</span> (<span id="count-rev-errors">0</span>)
         </button>
         <button id="filter-correct" onclick="filterReview('correct')" class="btn-secondary" style="padding: 8px 16px; font-size: 12px; border-radius: 8px;">
-          Solo Corrette (<span id="count-rev-correct">0</span>)
+          <span data-i18n="filter_correct">Solo Corrette</span> (<span id="count-rev-correct">0</span>)
         </button>
       </div>
 
@@ -1976,7 +1981,7 @@ nav .nav-logo {
 
       <div class="text-center pt-5 border-t">
         <button onclick="exitReview()" class="btn-action btn-primary" style="padding: 14px 28px; font-size: 14px; border-radius: 12px;">
-          Torna alla Piattaforma / Nuova Prova
+          <span data-i18n="btn_home">Torna alla Piattaforma / Nuova Prova</span>
         </button>
       </div>
     </div>
