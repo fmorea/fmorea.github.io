@@ -1086,14 +1086,15 @@ nav .nav-logo {
       padding: 0 14px 12px;
     }
 
-    @media screen and (min-width: 1200px) and (min-height: 850px) {
+    @media screen and (min-width: 860px) and (min-height: 480px) {
       #app.lesson-mode {
         display: flex;
-        width: calc(100% - 32px);
-        max-width: 1920px;
-        height: calc(100vh - 56px);
+        width: 100%;
+        max-width: clamp(960px, 97vw, 1920px);
+        height: calc(100vh - clamp(10px, 2vh, 32px));
+        max-height: calc(100vh - clamp(10px, 2vh, 32px));
         min-height: 0;
-        margin: 12px auto;
+        margin: clamp(4px, 1vh, 12px) auto;
         flex-direction: column;
       }
 
@@ -1104,56 +1105,59 @@ nav .nav-logo {
       #app.lesson-mode #step-learning {
         display: flex;
         min-height: 0;
-        flex: 1;
+        flex: 1 1 0;
         flex-direction: column;
-        padding: 18px 24px;
+        padding: clamp(8px, 1.2vw, 16px) clamp(10px, 1.6vw, 20px);
+        overflow: hidden;
       }
 
       #app.lesson-mode #step-learning > div:first-child {
         flex: none;
-        margin-bottom: 8px !important;
-        padding-bottom: 8px !important;
+        margin-bottom: 6px !important;
+        padding-bottom: 6px !important;
       }
 
       #app.lesson-mode #step-learning > .learning-header {
-        margin-bottom: 8px;
-        padding-bottom: 8px;
+        margin-bottom: 6px;
+        padding-bottom: 6px;
       }
 
       #app.lesson-mode #learning-pdf-section {
         display: flex;
         min-height: 0;
         margin-bottom: 0 !important;
-        flex: 1;
+        flex: 1 1 0;
         flex-direction: column;
+        overflow: hidden;
       }
 
       #app.lesson-mode #learning-pdf-section > .flex {
         flex: none;
-        margin-bottom: 8px !important;
+        margin-bottom: 6px !important;
       }
 
       #app.lesson-mode .lesson-card {
         display: grid;
         min-height: 0;
-        flex: 1;
-        grid-template-columns: minmax(0, 1fr) minmax(270px, 22%);
+        flex: 1 1 0;
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 24%);
         grid-template-rows: auto auto minmax(0, 1fr);
+        overflow: hidden;
       }
 
       #app.lesson-mode .lesson-zoom-controls {
         grid-column: 1 / -1;
         grid-row: 1;
-        padding-top: 7px;
-        padding-bottom: 7px;
+        padding-top: 5px;
+        padding-bottom: 5px;
       }
 
       #app.lesson-mode .lesson-audio-controls {
         grid-column: 1 / -1;
         grid-row: 2;
-        min-height: 58px;
+        min-height: 48px;
         margin: 0;
-        padding: 8px 14px;
+        padding: 6px 12px;
         border: 0;
         border-bottom: 1px solid #dbeafe;
         border-radius: 0;
@@ -1169,13 +1173,18 @@ nav .nav-logo {
         height: 100%;
         grid-column: 1;
         grid-row: 3;
-        padding: 12px;
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
       }
 
       #app.lesson-mode .lesson-image {
         width: auto;
         max-width: 100%;
         max-height: 100%;
+        object-fit: contain;
         margin: auto;
       }
 
@@ -1189,13 +1198,14 @@ nav .nav-logo {
         min-width: 0;
         min-height: 0;
         margin-top: 0 !important;
-        padding: 18px;
+        padding: 14px;
         grid-column: 2;
         grid-row: 3;
         flex-direction: column;
         align-items: stretch;
         justify-content: space-between;
         border-left: 1px solid #e2e8f0;
+        overflow-y: auto;
       }
 
       #app.lesson-mode .lesson-card-copy {
@@ -1283,13 +1293,13 @@ nav .nav-logo {
       }
     }
 
-    @media screen and (max-width: 1199px), screen and (max-height: 849px) {
+    @media screen and (max-width: 859px), screen and (max-height: 479px) {
       #app.lesson-mode {
         width: 100%;
         height: auto;
         min-height: 0;
-        max-width: 1280px;
-        margin: 20px auto;
+        max-width: 100%;
+        margin: 8px auto;
       }
     }
 
