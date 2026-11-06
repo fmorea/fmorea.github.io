@@ -1661,21 +1661,26 @@ nav .nav-logo {
       <div class="learning-header">
         <div class="learning-header-copy">
           <div class="learning-header-title">
-            <span class="learning-header-badge">Lezione e ripasso</span>
-          <h2 id="learning-title">Materiale didattico</h2>
+            <span class="learning-header-badge" data-i18n="lesson_badge">Lezione e ripasso</span>
+            <h2 id="learning-title" data-i18n="learning_title">Materiale didattico</h2>
           </div>
           <p id="learning-course-info"></p>
         </div>
         <div class="learning-header-actions">
           <div class="learning-header-time">
-            <span>Tempo attivo totale</span>
+            <span data-i18n="time_active">Tempo attivo</span>
             <strong id="learning-platform-time">0 h 0 min</strong>
           </div>
+          <div class="platform-lang-switch" role="group" aria-label="Lingua / Language">
+            <button type="button" id="learn-lang-it" onclick="setLanguage('it')" class="active" title="Italiano">IT</button>
+            <span class="lang-divider" aria-hidden="true">|</span>
+            <button type="button" id="learn-lang-en" onclick="setLanguage('en')" title="English">EN</button>
+          </div>
           <button type="button" id="btn-take-exam" onclick="startExam()" class="btn-action btn-primary">
-            Vai alla prova d'esame
+            <span data-i18n="btn_take_exam">Avvia simulazione d’esame</span>
           </button>
           <button type="button" onclick="exitLearning()" class="btn-secondary" style="border-radius: 10px; font-weight: 700;">
-            Torna alla selezione
+            <span data-i18n="btn_exit_learning">✕ Chiudi lezione</span>
           </button>
         </div>
       </div>
@@ -1683,18 +1688,18 @@ nav .nav-logo {
       <div id="learning-pdf-section" class="mb-8">
         <div class="flex flex-wrap items-center justify-between" style="gap: 6px; margin-bottom: 2px;">
           <div class="learning-section-heading">
-            <h3 class="text-lg font-bold text-slate-800" style="margin: 0; line-height: 1.2;" title="Naviga con ←/→ o scegli una scheda · ingrandisci con pinch, cursore o +/− · ascolta dai controlli audio · ⛶ apre la scheda a tutto schermo.">Schede della lezione</h3>
+            <h3 class="text-lg font-bold text-slate-800" style="margin: 0; line-height: 1.2;" title="Naviga con ←/→ o scegli una scheda · ingrandisci con pinch, cursore o +/− · ascolta dai controlli audio · ⛶ apre la scheda a tutto schermo." data-i18n="lesson_heading">Schede della lezione</h3>
           </div>
-          <span id="learning-slide-counter" class="learning-slide-counter text-sm font-bold text-slate-600" aria-live="polite">Caricamento delle slide...</span>
+          <span id="learning-slide-counter" class="learning-slide-counter text-sm font-bold text-slate-600" aria-live="polite" data-i18n="lesson_slide_loading">Caricamento delle slide...</span>
         </div>
         <article class="lesson-card" id="learning-lesson-card" aria-busy="true">
           <div class="lesson-zoom-controls" aria-label="Controlli zoom">
-            <button type="button" id="learning-zoom-out" aria-label="Riduci zoom" title="Riduci zoom">−</button>
+            <button type="button" id="learning-zoom-out" aria-label="Riduci zoom" title="Riduci zoom" data-i18n-title="zoom_out" data-i18n-aria-label="zoom_out">−</button>
             <span id="learning-zoom-level" class="lesson-zoom-level" aria-live="polite">100%</span>
             <input id="learning-zoom-slider" class="lesson-zoom-slider" type="range" min="1" max="4" step="0.1" value="1" aria-label="Livello di zoom">
-            <button type="button" id="learning-zoom-in" aria-label="Aumenta zoom" title="Aumenta zoom">+</button>
-            <button type="button" id="learning-zoom-reset" aria-label="Reimposta zoom" title="Reimposta zoom">↺</button>
-            <button type="button" id="learning-slide-fullscreen" class="lesson-fullscreen-toggle" aria-pressed="false">⛶ Ingrandisci slide</button>
+            <button type="button" id="learning-zoom-in" aria-label="Aumenta zoom" title="Aumenta zoom" data-i18n-title="zoom_in" data-i18n-aria-label="zoom_in">+</button>
+            <button type="button" id="learning-zoom-reset" aria-label="Reimposta zoom" title="Reimposta zoom" data-i18n-title="zoom_reset" data-i18n-aria-label="zoom_reset">↺</button>
+            <button type="button" id="learning-slide-fullscreen" class="lesson-fullscreen-toggle" aria-pressed="false" data-i18n="fullscreen_open">⛶ Ingrandisci slide</button>
           </div>
           <div class="lesson-audio-controls" role="group" aria-label="Audio della lezione">
             <audio id="learning-audio-player" class="lesson-audio-player hidden" controls preload="none" aria-label="Audio della spiegazione"></audio>
@@ -1709,16 +1714,16 @@ nav .nav-logo {
               <h3 id="learning-slide-title" class="font-bold text-xl text-slate-900 mt-1">Preparazione delle schede...</h3>
             </div>
             <div class="flex items-center" style="gap: 8px;">
-              <button type="button" id="learning-slide-previous" class="btn-secondary" aria-label="Slide precedente" style="padding: 9px 13px; border-radius: 10px; font-size: 18px;" disabled>←</button>
+              <button type="button" id="learning-slide-previous" class="btn-secondary" aria-label="Slide precedente" style="padding: 9px 13px; border-radius: 10px; font-size: 18px;" disabled data-i18n-title="btn_prev" data-i18n-aria-label="btn_prev">←</button>
               <span id="learning-slide-number" class="text-xs text-slate-500" aria-live="polite"></span>
-              <button type="button" id="learning-slide-next" class="btn-secondary" aria-label="Slide successiva" style="padding: 9px 13px; border-radius: 10px; font-size: 18px;" disabled>→</button>
+              <button type="button" id="learning-slide-next" class="btn-secondary" aria-label="Slide successiva" style="padding: 9px 13px; border-radius: 10px; font-size: 18px;" disabled data-i18n-title="btn_next" data-i18n-aria-label="btn_next">→</button>
             </div>
             <div id="learning-slide-thumbnails" class="lesson-thumbnail" aria-label="Schede vicine"></div>
           </div>
-          </article>
+        </article>
         <div class="concept-map-actions">
-          <button type="button" id="learning-concept-map-toggle" class="btn-secondary" style="padding: 10px 14px; border-radius: 10px; font-weight: 700;" aria-expanded="false" aria-controls="learning-concept-map-panel" disabled>Genera mappa concettuale</button>
-          <p>Creata nel browser dai titoli e dal testo degli appunti; i contenuti restano sul dispositivo.</p>
+          <button type="button" id="learning-concept-map-toggle" class="btn-secondary" style="padding: 10px 14px; border-radius: 10px; font-weight: 700;" aria-expanded="false" aria-controls="learning-concept-map-panel" disabled data-i18n="concept_map">Genera mappa concettuale</button>
+          <p data-i18n="concept_map_desc">Creata nel browser dai titoli e dal testo degli appunti; i contenuti restano sul dispositivo.</p>
         </div>
         <section id="learning-concept-map-panel" class="concept-map-panel hidden" aria-label="Mappa concettuale della lezione">
           <p>Mappa degli argomenti ricavata dai titoli delle schede. Ogni nodo mostra il titolo originale e apre le pagine del materiale da cui proviene; su schermi stretti puoi scorrere la mappa in orizzontale.</p>
@@ -1731,18 +1736,18 @@ nav .nav-logo {
           </div>
         </section>
         <p id="learning-slide-error" class="hidden mt-3 rounded-xl border p-4 text-sm text-red-800" role="alert" style="border-color: #fecaca; background: #fef2f2;"></p>
-        <a id="learning-pdf-link" class="hidden mt-3 text-sm font-bold text-blue-700" target="_blank" rel="noopener">Apri il PDF originale</a>
+        <a id="learning-pdf-link" class="hidden mt-3 text-sm font-bold text-blue-700" target="_blank" rel="noopener" data-i18n="open_original_pdf">Apri il PDF originale</a>
       </div>
       <div id="learning-pdf-unavailable" class="hidden mb-8 rounded-xl border p-4 text-sm text-slate-700" style="border-color: #cbd5e1; background: #f8fafc;">
         <p id="learning-pdf-unavailable-text">Per questa materia non è associato un PDF. Puoi comunque usare le spiegazioni testuali qui sotto.</p>
         <iframe id="learning-native-pdf" class="learning-pdf-frame hidden" title="PDF originale degli appunti" loading="eager"></iframe>
-        <a id="learning-fallback-pdf-link" class="hidden mt-3 inline-block font-bold text-blue-700" target="_blank" rel="noopener">Apri il PDF originale degli appunti</a>
+        <a id="learning-fallback-pdf-link" class="hidden mt-3 inline-block font-bold text-blue-700" target="_blank" rel="noopener" data-i18n="open_pdf_new_tab">Apri il PDF originale degli appunti</a>
       </div>
 
       <details class="learning-explanations-disclosure">
-        <summary>Spiegazioni per argomento</summary>
+        <summary data-i18n="explanations_summary">Spiegazioni per argomento</summary>
         <div>
-          <p class="text-sm text-slate-500 mb-3">Le spiegazioni dei quesiti sono raccolte per argomento per facilitare il ripasso prima della prova.</p>
+          <p class="text-sm text-slate-500 mb-3" data-i18n="explanations_desc">Le spiegazioni dei quesiti sono raccolte per argomento per facilitare il ripasso prima della prova.</p>
           <div id="learning-explanations" class="learning-explanations"></div>
         </div>
       </details>
