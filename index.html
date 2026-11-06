@@ -642,11 +642,13 @@ nav {
 }
 
 nav > .container {
-    width: 60%;
-    height: 150%;
-    min-width: 1000px;
+    width: 100%;
+    max-width: clamp(920px, 95vw, 1600px);
+    min-width: 0;
     margin-right: auto;
     margin-left: auto;
+    padding: 0 clamp(8px, 1.5vw, 20px);
+    box-sizing: border-box;
 }
 
 /* Navigazione: riga */
@@ -674,6 +676,7 @@ nav .nav-logo {
 }
 
 .nav-lingua {
+    position: relative;
     float: right;
     margin-top: 10px\9;
 }
@@ -683,8 +686,8 @@ nav .nav-logo {
     nav > .container,
     .main-container,
     .footer-container {
-        width: 90%;
-        min-width: inherit;
+        width: 100%;
+        min-width: 0;
     }
 }
 
@@ -692,11 +695,12 @@ nav .nav-logo {
 @media screen and (max-width: 768px) {
     nav > .container,
     .footer-container {
-        width: 95%;
+        width: 100%;
+        padding: 0 10px;
     }
 
     nav .row {
-        justify-content: center;
+        justify-content: space-between;
     }
 
     nav .nav-logo {
@@ -705,29 +709,154 @@ nav .nav-logo {
     }
 }
 .nav-lingua {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
     height: 44px;
-    padding: 0 14px;
+    padding: 0 10px;
     background-color: #8B0000;
     color: #FFFFFF;
     font-family: 'Averta', sans-serif;
-    font-size: 20px;
-    font-weight: 400;
+    font-size: 17px;
+    font-weight: 600;
     white-space: nowrap;
-    cursor: pointer;
-    border: none;
+    border-radius: 8px;
 }
 
-.nav-lingua::after {
+.nav-lingua button.dropdown-toggle {
+    background: transparent;
+    border: none;
+    color: #FFFFFF;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: background-color 0.15s ease;
+}
+
+.nav-lingua button.dropdown-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.nav-lingua button.dropdown-toggle::after {
     content: "";
     width: 0;
     height: 0;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-top: 7px solid #FFFFFF;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #FFFFFF;
+    margin-left: 4px;
+    display: inline-block;
+    vertical-align: middle;
+    transition: transform 0.2s ease;
+}
+
+.nav-lingua.is-open button.dropdown-toggle::after {
+    transform: rotate(180deg);
+}
+
+.nav-lingua-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    z-index: 1050;
+    min-width: 170px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.nav-lingua-menu.hidden {
+    display: none !important;
+}
+
+.nav-lang-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: #1e293b;
+    font-family: 'Averta', 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    white-space: nowrap;
+}
+
+.nav-lang-option:hover,
+.nav-lang-option:focus {
+    background-color: #f1f5f9;
+    color: #1d4ed8;
+}
+
+.nav-lang-option.active {
+    background-color: #eff6ff;
+    color: #1d4ed8;
+    font-weight: 700;
+}
+
+.flag-icon {
+    font-size: 17px;
+    line-height: 1;
+}
+
+/* Switch compatto di lingua per le schermate interne della piattaforma */
+.platform-lang-switch {
+    display: inline-flex;
+    align-items: center;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 9999px;
+    padding: 2px 4px;
+    gap: 2px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.platform-lang-switch button {
+    background: transparent;
+    border: none;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #64748b;
+    cursor: pointer;
+    border-radius: 9999px;
+    transition: all 0.15s ease;
+    line-height: 1.2;
+}
+
+.platform-lang-switch button:hover {
+    color: #1d4ed8;
+}
+
+.platform-lang-switch button.active {
+    background: #2563eb;
+    color: #ffffff;
+    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.35);
+}
+
+.lang-divider {
+    color: #cbd5e1;
+    font-size: 10px;
+    font-weight: 300;
+    user-select: none;
 }
 
     .student-details {
