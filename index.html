@@ -2501,6 +2501,400 @@ nav .nav-logo {
       node.innerText = text;
     }
 
+    /* ==================================================
+       SISTEMA DI INTERNAZIONALIZZAZIONE (IT / EN)
+       ================================================== */
+    var currentLang = 'it';
+    try {
+      if (window.localStorage) {
+        var savedLang = window.localStorage.getItem('fmorea_platform_lang');
+        if (savedLang === 'en' || savedLang === 'it') {
+          currentLang = savedLang;
+        }
+      }
+    } catch (eLang) {}
+
+    var UI_TRANSLATIONS = {
+      it: {
+        lang_name: "Italia - IT",
+        platform_badge: "Piattaforma didattica",
+        hero_title: "Da dove vuoi iniziare?",
+        student_details_summary: "Aggiungi nome e cognome al certificato <span class=\"text-slate-400\">(facoltativo)</span>",
+        student_details_note: "Il nome inserito verrà stampato sull'attestato finale con il punteggio e la data.",
+        label_first_name: "Nome",
+        label_last_name: "Cognome",
+        placeholder_first_name: "Il tuo nome",
+        placeholder_last_name: "Il tuo cognome",
+        choose_class_title: "Scegli la tua classe",
+        choose_class_subtitle: "Troverai lezioni e simulazioni del tuo indirizzo.",
+        btn_refresh_classes: "Aggiorna classi",
+        time_active: "Tempo attivo",
+        saved_on_device: "Salvato su questo dispositivo",
+        change_lang_aria: "Cambia lingua",
+        btn_change_class: "← Cambia classe",
+        study_mode_badge: "Classe selezionata",
+        choose_mode_title: "Scegli cosa fare",
+        info_questions: "Quesiti:",
+        info_sim_time: "Tempo simulazione:",
+        info_threshold: "Soglia:",
+        mode_lessons_title: "Lezioni",
+        mode_lessons_desc: "Studia le schede illustrate e ripassa gli argomenti con le spiegazioni.",
+        mode_lessons_action: "Apri le lezioni →",
+        mode_exam_title: "Simulazione d’esame",
+        mode_exam_desc: "Mettiti alla prova con i quesiti a tempo e consulta il risultato al termine.",
+        mode_exam_action: "Inizia la simulazione →",
+        lesson_badge: "Lezione e ripasso",
+        learning_title: "Materiale didattico",
+        lesson_heading: "Schede della lezione",
+        lesson_slide_loading: "Caricamento delle slide...",
+        btn_take_exam: "Avvia simulazione d’esame",
+        btn_exit_learning: "✕ Chiudi lezione",
+        zoom_out: "Riduci zoom",
+        zoom_reset: "Reimposta zoom",
+        zoom_in: "Aumenta zoom",
+        fullscreen_open: "⛶ Ingrandisci slide",
+        fullscreen_close: "⛶ Chiudi schermo intero",
+        concept_map: "Genera mappa concettuale",
+        concept_map_desc: "Creata nel browser dai titoli e dal testo degli appunti; i contenuti restano sul dispositivo.",
+        btn_prev: "Precedente",
+        btn_next: "Successiva",
+        audio_group_aria: "Audio della lezione",
+        audio_unavailable: "Audio non ancora disponibile per questa scheda. Puoi ingrandire la scheda o aprire il PDF originale.",
+        audio_ready_it: "Audio pronto · voce maschile neurale generata localmente.",
+        audio_ready_en: "Audio pronto in inglese · voce neurale generata localmente.",
+        audio_ready_synth_en: "Lettura inglese attiva · sintesi vocale parametrica del browser.",
+        audio_ogg_unsupported: "Questo browser non riproduce l’audio OGG. Puoi aprire il PDF originale.",
+        audio_invalid: "Il file audio di questa scheda non è valido.",
+        explanations_summary: "Spiegazioni per argomento",
+        explanations_desc: "Le spiegazioni dei quesiti sono raccolte per argomento per facilitare il ripasso prima della prova.",
+        candidate_label: "Candidato",
+        assessment_sheet: "Scheda di Verifica",
+        time_remaining: "Tempo Residuo",
+        btn_finish_submit: "Consegna Scheda",
+        question_label: "Domanda",
+        of_label: "di",
+        true_label: "VERO",
+        false_label: "FALSO",
+        recorded_answers: "Risposte registrate:",
+        exam_passed: "ESAME SUPERATO",
+        exam_failed: "ESAME NON SUPERATO",
+        exam_passed_desc: "Valutazione completata con successo.",
+        exam_failed_desc: "Non hai raggiunto la soglia minima richiesta.",
+        res_percentage: "Percentuale",
+        res_correct: "Risposte Esatte",
+        res_errors: "Errori Commessi",
+        res_time: "Tempo Utilizzato",
+        total_platform_time: "Tempo attivo totale in piattaforma:",
+        hours_minutes: " (ore e minuti)",
+        scan_camera: "Inquadra fotocamera",
+        qr_badge: "QR Code Stato Domande",
+        qr_title: "Scansiona per spiegare le domande e risposte",
+        qr_desc: "Questo codice QR memorizza lo stato delle risposte fornite: inquadrandolo con la fotocamera del tuo cellulare puoi rivedere ogni domanda con la spiegazione didattica del perché è Vera o Falsa.",
+        btn_view_explanations: "Visualizza Spiegazioni Online",
+        btn_copy_link: "Copia Link Revisione",
+        btn_download_pdf: "Scarica Certificato Ufficiale (PDF)",
+        btn_print_pdf: "Stampa / PDF (IE)",
+        btn_repeat: "Sostieni Altra Prova",
+        review_badge: "Revisione Interattiva",
+        review_title: "Spiegazione Risposte & Quesiti",
+        review_subtitle: "Analisi dettagliata di ogni domanda con motivazione didattica",
+        btn_back_platform: "← Torna alla Piattaforma",
+        filter_all: "Tutte le Domande",
+        filter_errors: "Solo Errori",
+        filter_correct: "Solo Corrette",
+        your_answer: "La tua risposta:",
+        correct_answer: "Risposta corretta:",
+        not_answered: "Non data",
+        solution_label: "Spiegazione / Motivazione didattica:",
+        btn_home: "Torna alla Piattaforma / Nuova Prova",
+        native_pdf_banner_title: "Modalità PDF nativa.",
+        native_pdf_banner_desc: "Alcune funzioni interattive non sono disponibili in questo browser.",
+        open_original_pdf: "Apri il PDF originale",
+        open_pdf_new_tab: "Apri il PDF originale degli appunti",
+        slide_viewer_loading: "Caricamento delle schede...",
+        slide_viewer_prep: "Preparazione delle schede...",
+        slide_viewer_unavailable: "Schede non disponibili",
+        slide_viewer_notes_unavailable: "Appunti non disponibili",
+        lesson_not_available: "Lezione non disponibile",
+        slides_not_opened: "Non è stato possibile aprire le schede",
+        confirm_submit: "Sei sicuro di voler consegnare la scheda d’esame? Non potrai più modificare le risposte.",
+        time_expired: "Tempo scaduto! La scheda viene consegnata automaticamente."
+      },
+      en: {
+        lang_name: "English - EN",
+        platform_badge: "Learning Platform",
+        hero_title: "Where would you like to begin?",
+        student_details_summary: "Add your full name to the certificate <span class=\"text-slate-400\">(optional)</span>",
+        student_details_note: "The entered name will be printed on the final certificate with score and date.",
+        label_first_name: "First Name",
+        label_last_name: "Last Name",
+        placeholder_first_name: "Your first name",
+        placeholder_last_name: "Your last name",
+        choose_class_title: "Choose your class",
+        choose_class_subtitle: "Find lessons and exam simulations for your field of study.",
+        btn_refresh_classes: "Refresh classes",
+        time_active: "Active time",
+        saved_on_device: "Saved on this device",
+        change_lang_aria: "Change language",
+        btn_change_class: "← Change class",
+        study_mode_badge: "Selected Class",
+        choose_mode_title: "Choose what to do",
+        info_questions: "Questions:",
+        info_sim_time: "Simulation time:",
+        info_threshold: "Passing threshold:",
+        mode_lessons_title: "Lessons",
+        mode_lessons_desc: "Study illustrated slide decks and review core concepts with detailed explanations.",
+        mode_lessons_action: "Open lessons →",
+        mode_exam_title: "Exam Simulation",
+        mode_exam_desc: "Test your knowledge with timed questions and view comprehensive results.",
+        mode_exam_action: "Start simulation →",
+        lesson_badge: "Lesson & Review",
+        learning_title: "Learning Material",
+        lesson_heading: "Lesson Slides",
+        lesson_slide_loading: "Loading slide deck...",
+        btn_take_exam: "Start exam simulation",
+        btn_exit_learning: "✕ Close lesson",
+        zoom_out: "Zoom out",
+        zoom_reset: "Reset zoom",
+        zoom_in: "Zoom in",
+        fullscreen_open: "⛶ Enlarge slide",
+        fullscreen_close: "⛶ Exit fullscreen",
+        concept_map: "Generate concept map",
+        concept_map_desc: "Generated in-browser from slide titles and notes; data stays strictly on your device.",
+        btn_prev: "Previous",
+        btn_next: "Next",
+        audio_group_aria: "Lesson audio player",
+        audio_unavailable: "Audio not yet available for this slide. You can zoom the slide or view the original PDF.",
+        audio_ready_it: "Audio ready · locally generated neural voice.",
+        audio_ready_en: "English audio ready · locally generated neural voice.",
+        audio_ready_synth_en: "English speech active · browser speech synthesis fallback.",
+        audio_ogg_unsupported: "This browser cannot play OGG audio. You can view the original PDF.",
+        audio_invalid: "The audio file for this slide is invalid.",
+        explanations_summary: "Explanations by topic",
+        explanations_desc: "Question explanations are grouped by topic to facilitate efficient review.",
+        candidate_label: "Candidate",
+        assessment_sheet: "Assessment Test",
+        time_remaining: "Time Remaining",
+        btn_finish_submit: "Submit Exam",
+        question_label: "Question",
+        of_label: "of",
+        true_label: "TRUE",
+        false_label: "FALSE",
+        recorded_answers: "Answers recorded:",
+        exam_passed: "EXAM PASSED",
+        exam_failed: "EXAM NOT PASSED",
+        exam_passed_desc: "Assessment completed successfully.",
+        exam_failed_desc: "You did not reach the required minimum passing threshold.",
+        res_percentage: "Percentage",
+        res_correct: "Correct Answers",
+        res_errors: "Mistakes",
+        res_time: "Time Used",
+        total_platform_time: "Total active platform time:",
+        hours_minutes: " (hours and minutes)",
+        scan_camera: "Scan with camera",
+        qr_badge: "QR Code Answer State",
+        qr_title: "Scan to explain questions and answers",
+        qr_desc: "This QR code stores your exam answer state: scan it with your smartphone camera to review each question with pedagogical explanations.",
+        btn_view_explanations: "View Explanations Online",
+        btn_copy_link: "Copy Review Link",
+        btn_download_pdf: "Download Official Certificate (PDF)",
+        btn_print_pdf: "Print / PDF (IE)",
+        btn_repeat: "Take Another Test",
+        review_badge: "Interactive Review",
+        review_title: "Question Explanations & Review",
+        review_subtitle: "In-depth analysis of each question with pedagogical justification",
+        btn_back_platform: "← Back to Platform",
+        filter_all: "All Questions",
+        filter_errors: "Errors Only",
+        filter_correct: "Correct Only",
+        your_answer: "Your answer:",
+        correct_answer: "Correct answer:",
+        not_answered: "Unanswered",
+        solution_label: "Pedagogical Explanation:",
+        btn_home: "Return to Platform / New Test",
+        native_pdf_banner_title: "Native PDF Mode.",
+        native_pdf_banner_desc: "Some interactive features are not available in this browser.",
+        open_original_pdf: "Open original PDF",
+        open_pdf_new_tab: "Open original PDF notes in a new tab",
+        slide_viewer_loading: "Loading slides...",
+        slide_viewer_prep: "Preparing slides...",
+        slide_viewer_unavailable: "Slides unavailable",
+        slide_viewer_notes_unavailable: "Notes unavailable",
+        lesson_not_available: "Lesson unavailable",
+        slides_not_opened: "Could not open slides",
+        confirm_submit: "Are you sure you want to submit your exam sheet? Answers can no longer be edited.",
+        time_expired: "Time is up! Your exam sheet has been submitted automatically."
+      }
+    };
+
+    function t(key, fallback) {
+      var dict = UI_TRANSLATIONS[currentLang] || UI_TRANSLATIONS['it'];
+      if (dict && typeof dict[key] !== 'undefined') {
+        return dict[key];
+      }
+      var itDict = UI_TRANSLATIONS['it'];
+      if (itDict && typeof itDict[key] !== 'undefined') {
+        return itDict[key];
+      }
+      return fallback || key;
+    }
+
+    function toggleNavLangMenu(event) {
+      if (event) {
+        if (event.stopPropagation) event.stopPropagation();
+        event.cancelBubble = true;
+      }
+      var dropdown = document.getElementById('nav-lingua-dropdown');
+      var menu = document.getElementById('nav-lingua-menu');
+      if (!dropdown || !menu) return;
+      var isOpen = dropdown.classList.contains('is-open');
+      if (isOpen) {
+        dropdown.classList.remove('is-open');
+        menu.classList.add('hidden');
+      } else {
+        dropdown.classList.add('is-open');
+        menu.classList.remove('hidden');
+      }
+    }
+
+    function setLanguage(lang, event) {
+      if (event) {
+        if (event.stopPropagation) event.stopPropagation();
+        event.cancelBubble = true;
+      }
+      if (lang !== 'it' && lang !== 'en') return;
+      currentLang = lang;
+      try {
+        if (window.localStorage) {
+          window.localStorage.setItem('fmorea_platform_lang', lang);
+        }
+      } catch (eStorage) {}
+
+      var dropdown = document.getElementById('nav-lingua-dropdown');
+      var menu = document.getElementById('nav-lingua-menu');
+      if (dropdown) dropdown.classList.remove('is-open');
+      if (menu) menu.classList.add('hidden');
+
+      applyLanguage(lang);
+    }
+
+    function applyLanguage(lang) {
+      currentLang = lang || currentLang;
+      if (document.documentElement) {
+        document.documentElement.lang = currentLang;
+      }
+
+      // 1. Aggiorna etichetta bottone barra di navigazione
+      var navLabel = document.getElementById('current-nav-lang-label');
+      if (navLabel) {
+        navLabel.textContent = (currentLang === 'en' ? 'English - EN' : 'Italia - IT');
+      }
+
+      // 2. Aggiorna classe attiva nel menu a discesa
+      var optIt = document.getElementById('nav-lang-opt-it');
+      var optEn = document.getElementById('nav-lang-opt-en');
+      if (optIt) {
+        if (currentLang === 'it') optIt.classList.add('active'); else optIt.classList.remove('active');
+      }
+      if (optEn) {
+        if (currentLang === 'en') optEn.classList.add('active'); else optEn.classList.remove('active');
+      }
+
+      // 3. Aggiorna selettori rapidi pillola interni alla piattaforma
+      var pillPrefixes = ['time-lang-', 'learn-lang-', 'quiz-lang-'];
+      for (var pi = 0; pi < pillPrefixes.length; pi++) {
+        var itBtn = document.getElementById(pillPrefixes[pi] + 'it');
+        var enBtn = document.getElementById(pillPrefixes[pi] + 'en');
+        if (itBtn) {
+          if (currentLang === 'it') itBtn.classList.add('active'); else itBtn.classList.remove('active');
+        }
+        if (enBtn) {
+          if (currentLang === 'en') enBtn.classList.add('active'); else enBtn.classList.remove('active');
+        }
+      }
+
+      // 4. Traduzione di tutti gli elementi marcati con data-i18n
+      var i18nElements = document.querySelectorAll ? document.querySelectorAll('[data-i18n]') : [];
+      for (var i = 0; i < i18nElements.length; i++) {
+        var el = i18nElements[i];
+        var key = el.getAttribute('data-i18n');
+        var translation = t(key);
+        if (translation) {
+          if (translation.indexOf('<') !== -1) {
+            el.innerHTML = translation;
+          } else {
+            setElementText(el, translation);
+          }
+        }
+      }
+
+      // 5. Aggiorna placeholder per input
+      var placeholderElements = document.querySelectorAll ? document.querySelectorAll('[data-i18n-placeholder]') : [];
+      for (var p = 0; p < placeholderElements.length; p++) {
+        var pel = placeholderElements[p];
+        var pkey = pel.getAttribute('data-i18n-placeholder');
+        var ptrans = t(pkey);
+        if (ptrans) pel.placeholder = ptrans;
+      }
+
+      // 6. Aggiorna attributi title
+      var titleElements = document.querySelectorAll ? document.querySelectorAll('[data-i18n-title]') : [];
+      for (var ti = 0; ti < titleElements.length; ti++) {
+        var tel = titleElements[ti];
+        var tkey = tel.getAttribute('data-i18n-title');
+        var ttrans = t(tkey);
+        if (ttrans) tel.title = ttrans;
+      }
+
+      // 7. Aggiorna attributi aria-label
+      var ariaElements = document.querySelectorAll ? document.querySelectorAll('[data-i18n-aria-label]') : [];
+      for (var ai = 0; ai < ariaElements.length; ai++) {
+        var ael = ariaElements[ai];
+        var akey = ael.getAttribute('data-i18n-aria-label');
+        var atrans = t(akey);
+        if (atrans) ael.setAttribute('aria-label', atrans);
+      }
+
+      // 8. Aggiorna contestualmente lo stato delle schermate attive
+      if (selectedMateria) {
+        updateMateriaInfo();
+        var stepLearning = document.getElementById('step-learning');
+        var stepQuiz = document.getElementById('step-quiz');
+        if (studyDeck && stepLearning && !stepLearning.classList.contains('hidden')) {
+          displayStudySlide(studyDeck.currentPage);
+        } else if (stepQuiz && !stepQuiz.classList.contains('hidden')) {
+          displayQuestion(currentQuestionIndex);
+        }
+      }
+
+      var stepReview = document.getElementById('step-review');
+      if (currentReviewData && stepReview && !stepReview.classList.contains('hidden')) {
+        renderReviewQuestions();
+      }
+    }
+
+    if (window.addEventListener) {
+      window.addEventListener('click', function(e) {
+        var dropdown = document.getElementById('nav-lingua-dropdown');
+        var menu = document.getElementById('nav-lingua-menu');
+        if (dropdown && menu && !dropdown.contains(e.target)) {
+          dropdown.classList.remove('is-open');
+          menu.classList.add('hidden');
+        }
+      });
+    } else if (document.attachEvent) {
+      document.attachEvent('onclick', function(e) {
+        var dropdown = document.getElementById('nav-lingua-dropdown');
+        var menu = document.getElementById('nav-lingua-menu');
+        e = e || window.event;
+        var target = e.target || e.srcElement;
+        if (dropdown && menu && !dropdown.contains(target)) {
+          dropdown.classList.remove('is-open');
+          menu.classList.add('hidden');
+        }
+      });
+    }
+
     /* 17. Helper dimensioni finestra per IE8 */
     function getWindowInnerWidth() {
       return window.innerWidth || (document.documentElement ? document.documentElement.clientWidth : 0) || (document.body ? document.body.clientWidth : 0) || 1024;
@@ -4061,7 +4455,38 @@ nav .nav-logo {
       });
     }
 
+    function getSlideAudioPath(slide, courseKey, lang) {
+      if (!slide) return '';
+      if (lang === 'en' && (courseKey === '4b_inf_telecomunicazioni' || slide.audio_en)) {
+        if (slide.audio_en) return slide.audio_en;
+        if (slide.audio) {
+          return slide.audio.replace(/^audio\//, 'audio/en/');
+        }
+      }
+      return slide.audio || '';
+    }
+
+    function playSpeechSynthesisFallback(slide, statusEl) {
+      if (!('speechSynthesis' in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        var textToSpeak = (slide.title ? slide.title + '. ' : '') + (slide.text || '');
+        var utter = new SpeechSynthesisUtterance(textToSpeak);
+        utter.lang = 'en-US';
+        utter.rate = 0.95;
+        utter.onstart = function() {
+          if (statusEl) statusEl.textContent = t('audio_ready_synth_en');
+        };
+        window.speechSynthesis.speak(utter);
+      } catch (err) {
+        console.warn('SpeechSynthesis fallback notice:', err);
+      }
+    }
+
     function stopStudyAudio(reset) {
+      if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
       var player = document.getElementById('learning-audio-player');
       if (!player) return;
       if (typeof player.pause === 'function') player.pause();
@@ -4077,35 +4502,55 @@ nav .nav-logo {
       var status = document.getElementById('learning-audio-status');
       stopStudyAudio(true);
 
-      var audioPath = slide && typeof slide.audio === 'string' ? slide.audio : '';
+      var isEn = (currentLang === 'en');
+      var courseKey = studyDeck ? studyDeck.courseKey : '';
+      var is4B = (courseKey === '4b_inf_telecomunicazioni');
+      var audioPath = getSlideAudioPath(slide, courseKey, currentLang);
+
       if (!audioPath) {
-        status.textContent = 'Audio non ancora disponibile per questa scheda. Puoi ingrandire la scheda o aprire il PDF originale.';
+        if (isEn && is4B && 'speechSynthesis' in window && slide && (slide.title || slide.text)) {
+          playSpeechSynthesisFallback(slide, status);
+          return;
+        }
+        status.textContent = t('audio_unavailable');
         return;
       }
-      if (!/^audio\/slide-\d{3}\.ogg$/i.test(audioPath)) {
+      if (!/^audio(?:\/[a-z]{2})?\/slide-\d{3}(?:-[a-z]{2})?\.ogg$/i.test(audioPath)) {
         console.error('Percorso audio della scheda non valido:', audioPath);
-        status.textContent = 'Il file audio di questa scheda non è valido.';
+        status.textContent = t('audio_invalid');
         return;
       }
       if (typeof player.canPlayType !== 'function' || !player.canPlayType('audio/ogg; codecs="vorbis"')) {
-        status.textContent = 'Questo browser non riproduce l’audio OGG. Puoi aprire il PDF originale.';
+        status.textContent = t('audio_ogg_unsupported');
         document.getElementById('learning-pdf-link').classList.remove('hidden');
         return;
       }
 
-      player.src = 'appunti/slides/' + studyDeck.courseKey + '/' + encodeURI(audioPath);
+      player.src = 'appunti/slides/' + courseKey + '/' + encodeURI(audioPath);
       player.classList.remove('hidden');
       player.load();
-      status.textContent = 'Audio pronto · voce maschile neurale generata localmente.';
+      if (isEn && is4B) {
+        status.textContent = t('audio_ready_en');
+      } else {
+        status.textContent = t('audio_ready_it');
+      }
     }
 
     function initStudyAudioControls() {
       var player = document.getElementById('learning-audio-player');
       player.onerror = function() {
         if (player.classList.contains('hidden')) return;
+        var status = document.getElementById('learning-audio-status');
+        if (currentLang === 'en' && 'speechSynthesis' in window && studyDeck && studyDeck.slides) {
+          var slide = studyDeck.slides[studyDeck.currentPage - 1];
+          if (slide && (slide.title || slide.text)) {
+            player.classList.add('hidden');
+            playSpeechSynthesisFallback(slide, status);
+            return;
+          }
+        }
         player.classList.add('hidden');
-        document.getElementById('learning-audio-status').textContent =
-          'Audio non disponibile. Puoi aprire il PDF originale.';
+        status.textContent = t('audio_unavailable');
         document.getElementById('learning-pdf-link').classList.remove('hidden');
       };
     }
