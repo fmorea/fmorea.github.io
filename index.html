@@ -1548,7 +1548,30 @@ nav .nav-logo {
 <body>
 
   <nav>
-    <div class="container"><div class="row align-items-center"><div class="nav-logo"><a href="https://fmorea.github.io/" target="_blank"><span style="font-family: Averta, Inter, sans-serif; font-size: 34px; font-weight: 800; color: #fff; letter-spacing: -0.3px; white-space: nowrap;">FMOREA</span></a></div> <div class="nav-lingua dropdown"><button type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Cambia lingua" class="dropdown-toggle">Italia - IT</button> <!----></div></div></div>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="nav-logo">
+          <a href="https://fmorea.github.io/" target="_blank">
+            <span style="font-family: Averta, Inter, sans-serif; font-size: 34px; font-weight: 800; color: #fff; letter-spacing: -0.3px; white-space: nowrap;">FMOREA</span>
+          </a>
+        </div>
+        <div class="nav-lingua dropdown" id="nav-lingua-dropdown">
+          <button type="button" id="dropdownMenuButton" aria-haspopup="true" aria-expanded="false" aria-label="Cambia lingua" class="dropdown-toggle" onclick="toggleNavLangMenu(event)">
+            <span id="current-nav-lang-label">Italia - IT</span>
+          </button>
+          <div id="nav-lingua-menu" class="nav-lingua-menu hidden" role="menu" aria-labelledby="dropdownMenuButton">
+            <button type="button" role="menuitem" class="nav-lang-option active" id="nav-lang-opt-it" onclick="setLanguage('it', event)">
+              <span class="flag-icon" aria-hidden="true">🇮🇹</span>
+              <span>Italia - IT</span>
+            </button>
+            <button type="button" role="menuitem" class="nav-lang-option" id="nav-lang-opt-en" onclick="setLanguage('en', event)">
+              <span class="flag-icon" aria-hidden="true">🇬🇧</span>
+              <span>English - EN</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </nav>
 
   <div id="app">
@@ -1557,32 +1580,37 @@ nav .nav-logo {
         <circle cx="12" cy="12" r="9" stroke-width="2"></circle>
         <path d="M12 7v5l3 2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
       </svg>
-      <span>Tempo attivo</span>
+      <span data-i18n="time_active">Tempo attivo</span>
       <strong id="platform-time-header">0 h 0 min 0 s</strong>
-      <span id="platform-time-note" class="platform-time-note">Salvato su questo dispositivo</span>
+      <span id="platform-time-note" class="platform-time-note" data-i18n="saved_on_device">Salvato su questo dispositivo</span>
+      <div class="platform-lang-switch" role="group" aria-label="Lingua / Language">
+        <button type="button" id="time-lang-it" onclick="setLanguage('it')" class="active" title="Italiano">IT</button>
+        <span class="lang-divider" aria-hidden="true">|</span>
+        <button type="button" id="time-lang-en" onclick="setLanguage('en')" title="English">EN</button>
+      </div>
     </div>
     <div id="browser-update-banner" class="browser-update-banner hidden" role="status">
-      <strong>Modalità PDF nativa.</strong>
-      Alcune funzioni interattive non sono disponibili in questo browser.
-      <a id="browser-update-pdf-link" target="_blank" rel="noopener">Apri il PDF originale</a>
+      <strong data-i18n="native_pdf_banner_title">Modalità PDF nativa.</strong>
+      <span data-i18n="native_pdf_banner_desc">Alcune funzioni interattive non sono disponibili in questo browser.</span>
+      <a id="browser-update-pdf-link" target="_blank" rel="noopener" data-i18n="open_original_pdf">Apri il PDF originale</a>
     </div>
     
     <!-- 1. SELEZIONE CLASSE -->
     <div id="step-registration" class="p-6 md:p-10">
       <div class="home-hero">
-        <span class="rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-800" style="padding: 5px 12px; display: inline-block;">Piattaforma didattica</span>
-        <h1>Da dove vuoi iniziare?</h1>
+        <span class="rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-800" style="padding: 5px 12px; display: inline-block;" data-i18n="platform_badge">Piattaforma didattica</span>
+        <h1 data-i18n="hero_title">Da dove vuoi iniziare?</h1>
         <details class="student-details">
-          <summary>Aggiungi nome e cognome al certificato <span class="text-slate-400">(facoltativo)</span></summary>
-          <p>Lascia entrambi i campi vuoti per continuare in anonimo.</p>
+          <summary data-i18n="student_details_summary">Aggiungi nome e cognome al certificato <span class="text-slate-400">(facoltativo)</span></summary>
+          <p data-i18n="student_details_note">Lascia entrambi i campi vuoti per continuare in anonimo.</p>
           <div class="student-fields">
             <div>
-              <label for="cand-nome">Nome</label>
-              <input type="text" id="cand-nome" placeholder="Il tuo nome" autocomplete="given-name">
+              <label for="cand-nome" data-i18n="label_first_name">Nome</label>
+              <input type="text" id="cand-nome" placeholder="Il tuo nome" data-i18n-placeholder="placeholder_first_name" autocomplete="given-name">
             </div>
             <div>
-              <label for="cand-cognome">Cognome</label>
-              <input type="text" id="cand-cognome" placeholder="Il tuo cognome" autocomplete="family-name">
+              <label for="cand-cognome" data-i18n="label_last_name">Cognome</label>
+              <input type="text" id="cand-cognome" placeholder="Il tuo cognome" data-i18n-placeholder="placeholder_last_name" autocomplete="family-name">
             </div>
           </div>
         </details>
@@ -1590,10 +1618,10 @@ nav .nav-logo {
 
       <div class="flex flex-wrap items-center justify-between mt-4" style="gap: 10px;">
         <div>
-          <h2 class="text-xl font-bold text-slate-900">Scegli la tua classe</h2>
-          <p class="text-sm text-slate-500">Troverai lezioni e simulazioni del tuo indirizzo.</p>
+          <h2 class="text-xl font-bold text-slate-900" data-i18n="choose_class_title">Scegli la tua classe</h2>
+          <p class="text-sm text-slate-500" data-i18n="choose_class_subtitle">Troverai lezioni e simulazioni del tuo indirizzo.</p>
         </div>
-        <button type="button" onclick="scansionaRepository()" class="btn-secondary" style="padding: 8px 12px; border-radius: 10px; font-size: 12px; font-weight: 700;" title="Aggiorna l'elenco delle classi">Aggiorna classi</button>
+        <button type="button" onclick="scansionaRepository()" class="btn-secondary" style="padding: 8px 12px; border-radius: 10px; font-size: 12px; font-weight: 700;" title="Aggiorna l'elenco delle classi" data-i18n="btn_refresh_classes">Aggiorna classi</button>
       </div>
       <div class="course-grid" id="materie-selector" aria-label="Classi disponibili"></div>
       <p class="platform-storage-notice hidden mt-4 rounded-lg border p-3 text-xs text-amber-900" role="status" style="border-color: #fcd34d; background: #fffbeb;"></p>
@@ -1601,29 +1629,29 @@ nav .nav-logo {
 
     <!-- 2. SCELTA DELL'ATTIVITA -->
     <div id="step-mode" class="hidden p-6 md:p-10">
-      <button type="button" onclick="backToClassSelection()" class="btn-secondary mb-6" style="padding: 9px 14px; border-radius: 10px; font-weight: 700;">← Cambia classe</button>
+      <button type="button" onclick="backToClassSelection()" class="btn-secondary mb-6" style="padding: 9px 14px; border-radius: 10px; font-weight: 700;" data-i18n="btn_change_class">← Cambia classe</button>
       <div class="home-hero" style="padding-top: 4px;">
-        <span class="rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-800" style="padding: 5px 12px; display: inline-block;">Classe selezionata</span>
+        <span class="rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-800" style="padding: 5px 12px; display: inline-block;" data-i18n="study_mode_badge">Classe selezionata</span>
         <h1 id="mode-course-title">Scegli cosa fare</h1>
         <p id="mode-course-subtitle" class="text-sm text-slate-500"></p>
       </div>
       <div class="p-4 rounded-xl bg-blue-50 border-blue-200 text-sm text-blue-900 flex flex-wrap justify-between items-center mb-6" style="gap: 12px; border: 1px solid #bfdbfe;">
-        <span>Quesiti: <b id="info-domande">0</b></span>
-        <span>Tempo simulazione: <b id="info-tempo">--</b></span>
-        <span>Soglia: <b id="info-soglia">--</b> (<span id="info-max-errori">0 errori</span>)</span>
+        <span><span data-i18n="info_questions">Quesiti:</span> <b id="info-domande">0</b></span>
+        <span><span data-i18n="info_sim_time">Tempo simulazione:</span> <b id="info-tempo">--</b></span>
+        <span><span data-i18n="info_threshold">Soglia:</span> <b id="info-soglia">--</b> (<span id="info-max-errori">0 errori</span>)</span>
       </div>
       <div class="mode-grid">
         <button type="button" onclick="openStudyMaterial()" class="mode-card">
           <span class="mode-card-icon" aria-hidden="true">✦</span>
-          <span class="font-bold text-xl">Lezioni</span>
-          <span class="course-card-details">Studia le schede illustrate e ripassa gli argomenti con le spiegazioni.</span>
-          <span class="font-bold text-blue-700 mt-3">Apri le lezioni →</span>
+          <span class="font-bold text-xl" data-i18n="mode_lessons_title">Lezioni</span>
+          <span class="course-card-details" data-i18n="mode_lessons_desc">Studia le schede illustrate e ripassa gli argomenti con le spiegazioni.</span>
+          <span class="font-bold text-blue-700 mt-3" data-i18n="mode_lessons_action">Apri le lezioni →</span>
         </button>
         <button type="button" onclick="startExam()" class="mode-card">
           <span class="mode-card-icon" aria-hidden="true">✓</span>
-          <span class="font-bold text-xl">Simulazione d’esame</span>
-          <span class="course-card-details">Mettiti alla prova con i quesiti a tempo e consulta il risultato al termine.</span>
-          <span class="font-bold text-blue-700 mt-3">Inizia la simulazione →</span>
+          <span class="font-bold text-xl" data-i18n="mode_exam_title">Simulazione d’esame</span>
+          <span class="course-card-details" data-i18n="mode_exam_desc">Mettiti alla prova con i quesiti a tempo e consulta il risultato al termine.</span>
+          <span class="font-bold text-blue-700 mt-3" data-i18n="mode_exam_action">Inizia la simulazione →</span>
         </button>
       </div>
     </div>
