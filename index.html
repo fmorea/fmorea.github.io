@@ -1654,8 +1654,8 @@ nav .nav-logo {
       </div>
     </div>
     <div id="browser-update-banner" class="browser-update-banner hidden" role="status">
-      <strong data-i18n="native_pdf_banner_title">Modalità PDF nativa.</strong>
-      <span data-i18n="native_pdf_banner_desc">Alcune funzioni interattive non sono disponibili in questo browser.</span>
+      <strong data-i18n="native_pdf_banner_title">Modalità compatibile.</strong>
+      <span data-i18n="native_pdf_banner_desc">Le schede vengono mostrate come immagini; audio e alcune funzioni avanzate potrebbero non essere disponibili.</span>
       <a id="browser-update-pdf-link" target="_blank" rel="noopener" data-i18n="open_original_pdf">Apri il PDF originale</a>
     </div>
     
@@ -3926,7 +3926,7 @@ selectedMateria.domande.length + ' quesiti'));
       document.getElementById('step-quiz').classList.add('hidden');
       document.getElementById('step-result').classList.add('hidden');
       document.getElementById('step-review').classList.add('hidden');
-      document.getElementById('app').classList.toggle('lesson-mode', !!slidesPath && !isLegacy);
+      document.getElementById('app').classList.toggle('lesson-mode', !!slidesPath && !useCompatibleImages);
       document.getElementById('step-learning').classList.remove('hidden');
       updatePlatformTimeDisplays();
       persistActiveLesson(initialPage || 1, initialZoom);
