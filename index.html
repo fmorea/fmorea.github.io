@@ -3828,7 +3828,7 @@ selectedMateria.domande.length + ' quesiti'));
       var nativePdfFrame = document.getElementById('learning-native-pdf');
       var pdfUnavailableText = document.getElementById('learning-pdf-unavailable-text');
       var browserBanner = document.getElementById('browser-update-banner');
-      var isLegacy = isLegacyLessonBrowser();
+      var useCompatibleImages = requiresCompatibleSlideImages();
       var pdfUrl = '';
       nativePdfFrame.removeAttribute('src');
       nativePdfFrame.classList.add('hidden');
@@ -3842,9 +3842,9 @@ selectedMateria.domande.length + ' quesiti'));
         fallbackPdfLink.removeAttribute('href');
         document.getElementById('browser-update-pdf-link').removeAttribute('href');
       }
-      if (isLegacy && pdfPath) browserBanner.classList.remove('hidden');
+      if (useCompatibleImages && pdfPath) browserBanner.classList.remove('hidden');
       else browserBanner.classList.add('hidden');
-      if (isLegacy) {
+      if (useCompatibleImages && !slidesPath) {
         stopStudyAudio(true);
         pdfSection.classList.add('hidden');
         pdfUnavailable.classList.remove('hidden');
@@ -3866,7 +3866,7 @@ selectedMateria.domande.length + ' quesiti'));
         pdfUnavailable.classList.add('hidden');
         document.getElementById('learning-pdf-link').classList.add('hidden');
         fallbackPdfLink.classList.add('hidden');
-        loadStudySlides(slidesPath, initialPage, initialZoom);
+        loadStudySlides(slidesPath, initialPage, initialZoom, useCompatibleImages);
       } else {
         pdfSection.classList.add('hidden');
         pdfUnavailable.classList.remove('hidden');
@@ -3897,7 +3897,7 @@ selectedMateria.domande.length + ' quesiti'));
       persistActiveLesson(initialPage || 1, initialZoom);
     }
 
-    function isLegacyLessonBrowser() {
+    function requiresCompatibleSlideImages() {
       var userAgent = window.navigator && window.navigator.userAgent ? window.navigator.userAgent : '';
       if (/MSIE\s|Trident\//i.test(userAgent)) return true;
       try {
@@ -3906,7 +3906,7 @@ selectedMateria.domande.length + ' quesiti'));
         var webpSupported = canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
         return !webpSupported;
       } catch (err) {
-        console.warn('Verifica del supporto WebP non riuscita; verranno usati i materiali originali.', err);
+        console.warn('Verifica del supporto WebP non riuscita; verranno usate le immagini JPEG alternative.', err);
         return true;
       }
     }
@@ -3942,7 +3942,7 @@ selectedMateria.domande.length + ' quesiti'));
       document.getElementById('learning-slide-next').disabled = true;
     }
 
-    function loadStudySlides(path, initialPage, initialZoom) {
+    function loadStudySlides(path, initialPage, initialZoom, useJpegImages) {
       clearStudySlides();
       var token = ++studyDeckLoadToken;
       var xhr = new XMLHttpRequest();
@@ -3963,6 +3963,7 @@ selectedMateria.domande.length + ' quesiti'));
           studyDeck = {
             slides: data.slides,
             courseKey: path.split('/')[0],
+            imageFormat: useJpegImages ? 'jpg' : 'webp',
             currentPage: 1,
             conceptMap: null
           };
@@ -3998,7 +3999,7 @@ selectedMateria.domande.length + ' quesiti'));
       document.getElementById('learning-slide-next').disabled = number >= slides.length;
 
       var image = document.getElementById('learning-slide-image');
-      var imageName = slide.image || '';
+      var imageName = getStudySlideImageName(slide);
       if (!imageName || imageName.indexOf('..') !== -1 || imageName.charAt(0) === '/') {
         showStudySlideError('Il percorso dell’immagine di questa scheda non è valido.');
         return;
@@ -4027,6 +4028,14 @@ selectedMateria.domande.length + ' quesiti'));
       };
       image.src = imageUrl;
       renderStudyThumbnails();
+    }
+
+    function getStudySlideImageName(slide) {
+      var imageName = slide.image || '';
+      if (studyDeck && studyDeck.imageFormat === 'jpg') {
+        return imageName.replace(/\.webp$/i, '.jpg');
+      }
+      return imageName;
     }
 
     function setStudyZoom(requestedZoom, focalClientX, focalClientY) {
@@ -4197,7 +4206,7 @@ selectedMateria.domande.length + ' quesiti'));
           };
 
           var image = document.createElement('img');
-          image.src = 'appunti/slides/' + studyDeck.courseKey + '/' + encodeURI(slide.image);
+          image.src = 'appunti/slides/' + studyDeck.courseKey + '/' + encodeURI(getStudySlideImageName(slide));
           image.alt = '';
           image.loading = 'lazy';
           button.appendChild(image);

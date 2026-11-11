@@ -20,6 +20,8 @@ COURSE_ALIASES = {
 }
 IMAGE_MAX_DIMENSION = "1500"
 WEBP_QUALITY = "72"
+JPEG_MAX_DIMENSION = "1200"
+JPEG_QUALITY = "76"
 PAGE_FOOTER = re.compile(r"^(?:.+\s+)?(?:page|pagina)\s+\d+\s*$", re.IGNORECASE)
 REPEATED_HEADER = re.compile(
     r"(?:giuseppe luigi lagrange|istituto istruzione superiore|"
@@ -45,6 +47,18 @@ def run_tool(name, *arguments, capture_output=False):
         capture_output=capture_output,
     )
     return completed.stdout if capture_output else None
+
+
+def build_compatible_image(source_path, output_path):
+    run_tool(
+        "magick",
+        source_path,
+        "-resize",
+        f"{JPEG_MAX_DIMENSION}x{JPEG_MAX_DIMENSION}>",
+        "-quality",
+        JPEG_QUALITY,
+        output_path,
+    )
 
 
 def extract_page_texts(pdf_path):
@@ -131,6 +145,9 @@ def build_course(course_key, pdf_name, ocr, reuse_images=False):
         for page_number, (image_path, extracted_text) in enumerate(
             zip(existing_images, page_texts), start=1
         ):
+            build_compatible_image(
+                image_path, output_dir / f"slide-{page_number:03}.jpg"
+            )
             process_page(page_number, image_path, extracted_text)
     else:
         with tempfile.TemporaryDirectory(prefix="fmorea-slides-") as temp_dir:
@@ -166,6 +183,9 @@ def build_course(course_key, pdf_name, ocr, reuse_images=False):
                     WEBP_QUALITY,
                     image_path,
                 )
+                build_compatible_image(
+                    source_image, output_dir / f"slide-{page_number:03}.jpg"
+                )
                 process_page(page_number, image_path, extracted_text)
 
     manifest_path = output_dir / "slides.json"
@@ -185,7 +205,7 @@ def main():
     parser.add_argument(
         "--reuse-images",
         action="store_true",
-        help="Riconosce il testo senza rigenerare immagini WebP già presenti.",
+        help="Riconosce il testo e genera JPEG compatibili riutilizzando le WebP presenti.",
     )
     args = parser.parse_args()
 
