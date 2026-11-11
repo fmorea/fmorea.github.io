@@ -50,6 +50,7 @@
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       margin: 0;
+      padding: 8px;
       padding: clamp(6px, 1.2vw, 16px);
       background-color: #b00000;
       color: #1e293b;
@@ -86,11 +87,15 @@
     /* Struttura contenitore centrale che si adatta allo spazio con qualsiasi fattore di zoom */
     #app {
       width: 100%;
+      max-width: 1200px;
       max-width: clamp(920px, 95vw, 1600px);
+      margin: 12px auto;
       margin: clamp(6px, 1.5vh, 18px) auto;
+      min-height: 700px;
       min-height: calc(100vh - clamp(16px, 3.5vh, 44px));
       background: #ffffff;
       border: 1px solid #cbd5e1;
+      border-radius: 12px;
       border-radius: clamp(10px, 1.4vw, 18px);
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
       overflow: hidden;
@@ -643,10 +648,12 @@ nav {
 
 nav > .container {
     width: 100%;
+    max-width: 1200px;
     max-width: clamp(920px, 95vw, 1600px);
     min-width: 0;
     margin-right: auto;
     margin-left: auto;
+    padding: 0 12px;
     padding: 0 clamp(8px, 1.5vw, 20px);
     box-sizing: border-box;
 }
@@ -866,8 +873,9 @@ nav .nav-logo {
     }
 
     .student-details summary {
-      width: fit-content;
+      width: auto;
       margin: 0 auto;
+      width: fit-content;
       cursor: pointer;
       color: #475569;
       font-size: 13px;
@@ -878,6 +886,7 @@ nav .nav-logo {
     .student-details p { margin: 10px 0; color: #64748b; font-size: 12px; text-align: center; }
 
     .student-fields {
+      display: block;
       display: block\9;
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -896,10 +905,13 @@ nav .nav-logo {
       clear: both;
     }
     .student-fields > div {
+      display: inline-block;
       display: inline-block\9;
       *display: inline;
       *zoom: 1;
       vertical-align: top;
+      width: 47%;
+      margin-right: 2%;
       width: 47%\9;
       margin-right: 2%\9;
       box-sizing: border-box;
@@ -930,6 +942,7 @@ nav .nav-logo {
 
     .course-grid,
     .mode-grid {
+      display: block;
       display: block\9;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -954,6 +967,9 @@ nav .nav-logo {
       text-align: left;
       box-shadow: 0 6px 20px rgba(15, 23, 42, .05);
       transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+      display: inline-block;
+      width: 47%;
+      margin: 1% 1% 14px 0;
       display: inline-block\9;
       *display: inline;
       *zoom: 1;
@@ -1006,6 +1022,9 @@ nav .nav-logo {
       text-align: left;
       box-shadow: 0 8px 26px rgba(15, 23, 42, .06);
       transition: transform .16s ease, box-shadow .16s ease;
+      display: inline-block;
+      width: 47%;
+      margin: 1% 1% 14px 0;
       display: inline-block\9;
       *display: inline;
       *zoom: 1;
@@ -1015,12 +1034,28 @@ nav .nav-logo {
       box-sizing: border-box;
     }
 
+    @supports (display: grid) {
+      .course-card,
+      .mode-card {
+        width: auto;
+        margin: 0;
+      }
+      .mode-card {
+        display: flex;
+      }
+      .student-fields > div {
+        width: auto;
+        margin-right: 0;
+      }
+    }
+
     .mode-card:hover {
       transform: translateY(-3px);
       box-shadow: 0 16px 35px rgba(15, 23, 42, .12);
     }
 
     .mode-card-icon {
+      display: inline-block;
       display: grid;
       width: 44px;
       height: 44px;
@@ -1044,6 +1079,10 @@ nav .nav-logo {
     summary {
       display: block;
       cursor: pointer;
+    }
+    details.ie-closed > p,
+    details.ie-closed > div {
+      display: none !important;
     }
     details.ie-closed > *:not(summary) {
       display: none !important;
@@ -1089,7 +1128,7 @@ nav .nav-logo {
     .lesson-zoom-controls button { min-width: 42px; min-height: 40px; padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 10px; background: #fff; color: #0f172a; font-size: 18px; font-weight: 700; }
     .lesson-zoom-controls button:disabled { opacity: .45; }
     .lesson-zoom-level { min-width: 54px; text-align: center; color: #475569; font-size: 13px; font-weight: 700; }
-    .lesson-zoom-slider { width: clamp(80px, 16vw, 180px); accent-color: #2563eb; }
+    .lesson-zoom-slider { width: 140px; width: clamp(80px, 16vw, 180px); accent-color: #2563eb; }
     .lesson-fullscreen-toggle { min-height: 42px; padding: 8px 14px; border: 0; border-radius: 10px; background: #2563eb; color: #fff; font-size: 13px; font-weight: 800; cursor: pointer; }
     .lesson-fullscreen-toggle:hover { background: #1d4ed8; }
 
@@ -1157,6 +1196,7 @@ nav .nav-logo {
       .student-fields { gap: 8px; padding: 12px; }
       .student-fields input { padding: 10px; font-size: 13px; }
       .course-grid, .mode-grid { grid-template-columns: 1fr; }
+      .course-card, .mode-card { width: 100%; margin: 0 0 12px; }
       .lesson-image-wrap { min-height: 240px; padding: 8px; }
       .lesson-image { max-height: none; }
       .lesson-zoom-controls { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); justify-items: center; gap: 6px; padding: 8px; }
@@ -1219,10 +1259,14 @@ nav .nav-logo {
       #app.lesson-mode {
         display: flex;
         width: 100%;
+        max-width: 1200px;
         max-width: clamp(960px, 97vw, 1920px);
+        height: 800px;
         height: calc(100vh - clamp(10px, 2vh, 32px));
+        max-height: 800px;
         max-height: calc(100vh - clamp(10px, 2vh, 32px));
         min-height: 0;
+        margin: 8px auto;
         margin: clamp(4px, 1vh, 12px) auto;
         flex-direction: column;
       }
@@ -1236,6 +1280,7 @@ nav .nav-logo {
         min-height: 0;
         flex: 1 1 0;
         flex-direction: column;
+        padding: 12px;
         padding: clamp(8px, 1.2vw, 16px) clamp(10px, 1.6vw, 20px);
         overflow: hidden;
       }
@@ -1600,12 +1645,14 @@ nav .nav-logo {
       <div class="home-hero">
         <span class="rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-800" style="padding: 5px 12px; display: inline-block;" data-i18n="platform_badge">Piattaforma didattica</span>
         <h1 data-i18n="hero_title">Da dove vuoi iniziare?</h1>
-        <div class="mt-3 flex items-start rounded-lg border p-3 text-sm text-slate-700" role="note" style="gap: 12px; border-color: #cbd5e1; background: #f8fafc;">
-          <img src="assets/mim-logo.svg" alt="Emblema del Ministero dell'Istruzione e del Merito" style="width: 48px; height: auto; flex: 0 0 auto; padding: 4px; border: 1px solid #06c; border-radius: 6px; background: #06c;">
-          <div data-i18n="ai_personal_data_note" style="font-size: 11px; line-height: 1.35; text-align: justify;"><p style="margin: 0 0 3px;"><strong>VISTA</strong> la Determinazione AgID n. 17/2025, recante “Linee guida per l’adozione dell’Intelligenza Artificiale nella Pubblica Amministrazione”;</p><p style="margin: 0 0 3px;"><strong>VISTO</strong> il Regolamento (UE) 2024/1689 (AI Act);</p><p style="margin: 0 0 3px;"><strong>VISTA</strong> la Circolare MIM n. 153 del 6 novembre 2026, in particolare il punto 2;</p><p style="margin: 0;"><strong>SI DICHIARA</strong> che, per la produzione autonoma di materiali didattici con strumenti di IA, non si fa uso, non si trattano né si caricano dati personali degli alunni. I contenuti generati non sono utilizzati per la valutazione automatizzata degli studenti né per attività incidenti sul loro percorso formativo.</p></div>
+        <div class="mt-3 rounded-lg border p-3 text-sm text-slate-700" role="note" style="display: table; width: 100%; border-color: #cbd5e1; background: #f8fafc;">
+          <div style="display: table-cell; width: 62px; padding-right: 12px; vertical-align: top;">
+            <img src="assets/mim-logo.svg" alt="Emblema del Ministero dell'Istruzione e del Merito" style="display: block; width: 48px; height: auto; padding: 4px; border: 1px solid #06c; border-radius: 6px; background: #06c;">
+          </div>
+          <div data-i18n="ai_personal_data_note" style="display: table-cell; vertical-align: top; font-size: 11px; line-height: 1.35; text-align: justify;"><p style="margin: 0 0 3px;"><strong>VISTA</strong> la Determinazione AgID n. 17/2025, recante “Linee guida per l’adozione dell’Intelligenza Artificiale nella Pubblica Amministrazione”;</p><p style="margin: 0 0 3px;"><strong>VISTO</strong> il Regolamento (UE) 2024/1689 (AI Act);</p><p style="margin: 0 0 3px;"><strong>VISTA</strong> la Circolare MIM n. 153 del 6 novembre 2026, in particolare il punto 2;</p><p style="margin: 0;"><strong>SI DICHIARA</strong> che, per la produzione autonoma di materiali didattici con strumenti di IA, non si fa uso, non si trattano né si caricano dati personali degli alunni. I contenuti generati non sono utilizzati per la valutazione automatizzata degli studenti né per attività incidenti sul loro percorso formativo.</p></div>
         </div>
         <details class="student-details">
-          <summary data-i18n="student_details_summary">Aggiungi nome e cognome al certificato <span class="text-slate-400">(facoltativo)</span></summary>
+          <summary tabindex="0" data-i18n="student_details_summary">Aggiungi nome e cognome al certificato <span class="text-slate-400">(facoltativo)</span></summary>
           <p data-i18n="student_details_note">Lascia entrambi i campi vuoti per continuare in anonimo.</p>
           <div class="student-fields">
             <div>
@@ -1749,7 +1796,7 @@ nav .nav-logo {
       </div>
 
       <details class="learning-explanations-disclosure">
-        <summary data-i18n="explanations_summary">Spiegazioni per argomento</summary>
+        <summary tabindex="0" data-i18n="explanations_summary">Spiegazioni per argomento</summary>
         <div>
           <p class="text-sm text-slate-500 mb-3" data-i18n="explanations_desc">Le spiegazioni dei quesiti sono raccolte per argomento per facilitare il ripasso prima della prova.</p>
           <div id="learning-explanations" class="learning-explanations"></div>
@@ -2505,6 +2552,17 @@ nav .nav-logo {
       node.innerText = text;
     }
 
+    function getElementsByAttribute(attributeName) {
+      var nodes = document.getElementsByTagName('*');
+      var matches = [];
+      for (var i = 0; i < nodes.length; i++) {
+        if (nodes[i].getAttribute && nodes[i].getAttribute(attributeName) !== null) {
+          matches.push(nodes[i]);
+        }
+      }
+      return matches;
+    }
+
     /* ==================================================
        SISTEMA DI INTERNAZIONALIZZAZIONE (IT / EN)
        ================================================== */
@@ -2793,7 +2851,7 @@ nav .nav-logo {
       // 1. Aggiorna etichetta bottone barra di navigazione
       var navLabel = document.getElementById('current-nav-lang-label');
       if (navLabel) {
-        navLabel.textContent = (currentLang === 'en' ? 'English - EN' : 'Italia - IT');
+        setElementText(navLabel, ((currentLang === 'en' ? 'English - EN' : 'Italia - IT')));
       }
 
       // 2. Aggiorna classe attiva nel menu a discesa
@@ -2820,7 +2878,7 @@ nav .nav-logo {
       }
 
       // 4. Traduzione di tutti gli elementi marcati con data-i18n
-      var i18nElements = document.querySelectorAll ? document.querySelectorAll('[data-i18n]') : [];
+      var i18nElements = getElementsByAttribute('data-i18n');
       for (var i = 0; i < i18nElements.length; i++) {
         var el = i18nElements[i];
         var key = el.getAttribute('data-i18n');
@@ -2835,7 +2893,7 @@ nav .nav-logo {
       }
 
       // 5. Aggiorna placeholder per input
-      var placeholderElements = document.querySelectorAll ? document.querySelectorAll('[data-i18n-placeholder]') : [];
+      var placeholderElements = getElementsByAttribute('data-i18n-placeholder');
       for (var p = 0; p < placeholderElements.length; p++) {
         var pel = placeholderElements[p];
         var pkey = pel.getAttribute('data-i18n-placeholder');
@@ -2844,7 +2902,7 @@ nav .nav-logo {
       }
 
       // 6. Aggiorna attributi title
-      var titleElements = document.querySelectorAll ? document.querySelectorAll('[data-i18n-title]') : [];
+      var titleElements = getElementsByAttribute('data-i18n-title');
       for (var ti = 0; ti < titleElements.length; ti++) {
         var tel = titleElements[ti];
         var tkey = tel.getAttribute('data-i18n-title');
@@ -2853,7 +2911,7 @@ nav .nav-logo {
       }
 
       // 7. Aggiorna attributi aria-label
-      var ariaElements = document.querySelectorAll ? document.querySelectorAll('[data-i18n-aria-label]') : [];
+      var ariaElements = getElementsByAttribute('data-i18n-aria-label');
       for (var ai = 0; ai < ariaElements.length; ai++) {
         var ael = ariaElements[ai];
         var akey = ael.getAttribute('data-i18n-aria-label');
@@ -2946,8 +3004,25 @@ nav .nav-logo {
 
       if (document.addEventListener) {
         document.addEventListener('click', handleSummaryClick, false);
+        document.addEventListener('keydown', function(e) {
+          e = e || window.event;
+          var target = e.target || e.srcElement;
+          var key = e.keyCode || e.which;
+          if (!target || !target.tagName || target.tagName.toUpperCase() !== 'SUMMARY' || (key !== 13 && key !== 32)) return;
+          if (e.preventDefault) e.preventDefault();
+          e.returnValue = false;
+          handleSummaryClick(e);
+        }, false);
       } else if (document.attachEvent) {
         document.attachEvent('onclick', handleSummaryClick);
+        document.attachEvent('onkeydown', function(e) {
+          e = e || window.event;
+          var target = e.target || e.srcElement;
+          var key = e.keyCode || e.which;
+          if (!target || !target.tagName || target.tagName.toUpperCase() !== 'SUMMARY' || (key !== 13 && key !== 32)) return;
+          e.returnValue = false;
+          handleSummaryClick(e);
+        });
       }
     }
 
@@ -3527,7 +3602,7 @@ nav .nav-logo {
       if (BANCA_DATI_MATERIE.length === 0) {
         var emptyCard = document.createElement('div');
         emptyCard.className = 'rounded-xl border p-5 text-center text-sm text-slate-600';
-        emptyCard.textContent = 'Non è stato trovato nessun corso. Controlla la connessione o aggiorna le classi.';
+        setElementText(emptyCard, ('Non è stato trovato nessun corso. Controlla la connessione o aggiorna le classi.'));
         container.appendChild(emptyCard);
         updateMateriaInfo();
         return;
@@ -3545,17 +3620,21 @@ nav .nav-logo {
           };
           var classLabel = document.createElement('span');
           classLabel.className = 'course-card-class';
-          classLabel.textContent = mat.corso ?
-            mat.corso.classe + ' classe · ' + mat.corso.specializzazione :
-            'Corso';
+          setElementText(classLabel, (mat.corso ?
+mat.corso.classe + ' classe · ' + mat.corso.specializzazione :
+'Corso'));
+
+
           var title = document.createElement('span');
           title.className = 'course-card-title';
-          title.textContent = mat.nome;
+          setElementText(title, (mat.nome));
           var details = document.createElement('span');
           details.className = 'course-card-details';
-          details.textContent = mat.corso ?
-            mat.corso.scuola + ' · ' + mat.corso.periodo + ' ' + mat.corso.anno :
-            mat.domande.length + ' quesiti disponibili';
+          setElementText(details, (mat.corso ?
+mat.corso.scuola + ' · ' + mat.corso.periodo + ' ' + mat.corso.anno :
+mat.domande.length + ' quesiti disponibili'));
+
+
           card.appendChild(classLabel);
           card.appendChild(title);
           card.appendChild(details);
@@ -3582,12 +3661,16 @@ nav .nav-logo {
       }
       if (!selectedMateria) return;
       candidate = candidateData;
-      document.getElementById('mode-course-title').textContent =
-        (selectedMateria.corso ? selectedMateria.corso.classe + ' classe' : 'Corso') +
-        ' · ' + selectedMateria.nome;
-      document.getElementById('mode-course-subtitle').textContent =
-        selectedMateria.descrizione || selectedMateria.tempoMinuti + ' minuti · ' +
-        selectedMateria.domande.length + ' quesiti';
+      setElementText(document.getElementById('mode-course-title'), (
+(selectedMateria.corso ? selectedMateria.corso.classe + ' classe' : 'Corso') +
+' · ' + selectedMateria.nome));
+
+
+      setElementText(document.getElementById('mode-course-subtitle'), (
+selectedMateria.descrizione || selectedMateria.tempoMinuti + ' minuti · ' +
+selectedMateria.domande.length + ' quesiti'));
+
+
       setPlatformEntered(true);
       document.getElementById('app').classList.remove('lesson-mode');
       document.getElementById('step-registration').classList.add('hidden');
@@ -3602,10 +3685,10 @@ nav .nav-logo {
         var emptyTime = document.getElementById('info-tempo');
         var emptyThreshold = document.getElementById('info-soglia');
         var emptyErrors = document.getElementById('info-max-errori');
-        if (emptyCount) emptyCount.textContent = '0';
-        if (emptyTime) emptyTime.textContent = '--';
-        if (emptyThreshold) emptyThreshold.textContent = '--';
-        if (emptyErrors) emptyErrors.textContent = '0 errori';
+        if (emptyCount) setElementText(emptyCount, ('0'));
+        if (emptyTime) setElementText(emptyTime, ('--'));
+        if (emptyThreshold) setElementText(emptyThreshold, ('--'));
+        if (emptyErrors) setElementText(emptyErrors, ('0 errori'));
         renderSelectedMateriaMaterial();
         return;
       }
@@ -3613,11 +3696,11 @@ nav .nav-logo {
       var time = document.getElementById('info-tempo');
       var threshold = document.getElementById('info-soglia');
       var errors = document.getElementById('info-max-errori');
-      if (count) count.textContent = selectedMateria.domande.length;
-      if (time) time.textContent = selectedMateria.tempoMinuti + ' min';
-      if (threshold) threshold.textContent = selectedMateria.sogliaSuperamento + '%';
+      if (count) setElementText(count, (selectedMateria.domande.length));
+      if (time) setElementText(time, (selectedMateria.tempoMinuti + ' min'));
+      if (threshold) setElementText(threshold, (selectedMateria.sogliaSuperamento + '%'));
       var maxErr = Math.floor(selectedMateria.domande.length * (1 - selectedMateria.sogliaSuperamento / 100));
-      if (errors) errors.textContent = 'max ' + maxErr + ' error' + (maxErr === 1 ? 'e' : 'i');
+      if (errors) setElementText(errors, ('max ' + maxErr + ' error' + (maxErr === 1 ? 'e' : 'i')));
       renderSelectedMateriaMaterial();
     }
 
@@ -3649,13 +3732,13 @@ nav .nav-logo {
       button.disabled = !selectedMateria;
 
       if (!selectedMateria) {
-        status.textContent = 'Seleziona una materia per visualizzare il materiale didattico disponibile.';
+        setElementText(status, ('Seleziona una materia per visualizzare il materiale didattico disponibile.'));
       } else if (getTeachingMaterialPath(selectedMateria)) {
-        status.textContent = 'Slide PDF e spiegazioni testuali disponibili per ' + selectedMateria.nome + '.';
+        setElementText(status, ('Slide PDF e spiegazioni testuali disponibili per ' + selectedMateria.nome + '.'));
       } else if (teachingMaterialsLoadFailed) {
-        status.textContent = 'Catalogo PDF non disponibile; puoi comunque aprire le spiegazioni dei quesiti.';
+        setElementText(status, ('Catalogo PDF non disponibile; puoi comunque aprire le spiegazioni dei quesiti.'));
       } else {
-        status.textContent = 'Per questa materia non è associato un PDF; sono disponibili le spiegazioni testuali dei quesiti.';
+        setElementText(status, ('Per questa materia non è associato un PDF; sono disponibili le spiegazioni testuali dei quesiti.'));
       }
     }
 
@@ -3686,20 +3769,22 @@ nav .nav-logo {
       if (groups.length === 0) {
         var empty = document.createElement('p');
         empty.className = 'text-sm text-slate-500';
-        empty.textContent = 'Non sono presenti spiegazioni testuali per questa materia.';
+        setElementText(empty, ('Non sono presenti spiegazioni testuali per questa materia.'));
         container.appendChild(empty);
         return;
       }
 
       for (var gi = 0; gi < groups.length; gi++) {
         var details = document.createElement('details');
+        if (!('open' in details)) details.className = 'ie-closed';
         var summary = document.createElement('summary');
-        summary.textContent = groups[gi].topic + ' (' + groups[gi].explanations.length + ')';
+        summary.tabIndex = 0;
+        setElementText(summary, groups[gi].topic + ' (' + groups[gi].explanations.length + ')');
         details.appendChild(summary);
         for (var ei = 0; ei < groups[gi].explanations.length; ei++) {
           var paragraph = document.createElement('p');
           paragraph.className = 'learning-explanation';
-          paragraph.textContent = groups[gi].explanations[ei];
+          setElementText(paragraph, (groups[gi].explanations[ei]));
           details.appendChild(paragraph);
         }
         container.appendChild(details);
@@ -3716,9 +3801,9 @@ nav .nav-logo {
 
       candidate = candidateData;
       startPlatformTracking();
-      document.getElementById('learning-title').textContent = selectedMateria.nome + ' - materiale didattico';
+      setElementText(document.getElementById('learning-title'), (selectedMateria.nome + ' - materiale didattico'));
       var courseInfo = selectedMateria.descrizione || '';
-      document.getElementById('learning-course-info').textContent = courseInfo;
+      setElementText(document.getElementById('learning-course-info'), (courseInfo));
       var pdfPath = getTeachingMaterialPath(selectedMateria);
       var slidesPath = getTeachingSlidesPath(selectedMateria);
       var pdfSection = document.getElementById('learning-pdf-section');
@@ -3747,9 +3832,11 @@ nav .nav-logo {
         stopStudyAudio(true);
         pdfSection.classList.add('hidden');
         pdfUnavailable.classList.remove('hidden');
-        pdfUnavailableText.textContent = pdfPath
-          ? 'Schede interattive non supportate: visualizzazione del PDF originale nel browser. Se non compare, aprilo in una nuova scheda.'
-          : 'Questo browser non supporta le schede interattive e per questa materia non è disponibile un PDF originale.';
+        setElementText(pdfUnavailableText, (pdfPath
+? 'Schede interattive non supportate: visualizzazione del PDF originale nel browser. Se non compare, aprilo in una nuova scheda.'
+: 'Questo browser non supporta le schede interattive e per questa materia non è disponibile un PDF originale.'));
+
+
         if (pdfPath) {
           nativePdfFrame.src = pdfUrl;
           nativePdfFrame.classList.remove('hidden');
@@ -3767,9 +3854,11 @@ nav .nav-logo {
       } else {
         pdfSection.classList.add('hidden');
         pdfUnavailable.classList.remove('hidden');
-        pdfUnavailableText.textContent = pdfPath
-          ? 'Schede illustrate non disponibili: visualizzazione del PDF originale nel browser. Se non compare, aprilo in una nuova scheda.'
-          : 'Per questa materia non è associato un PDF. Puoi comunque usare le spiegazioni testuali qui sotto.';
+        setElementText(pdfUnavailableText, (pdfPath
+? 'Schede illustrate non disponibili: visualizzazione del PDF originale nel browser. Se non compare, aprilo in una nuova scheda.'
+: 'Per questa materia non è associato un PDF. Puoi comunque usare le spiegazioni testuali qui sotto.'));
+
+
         if (pdfPath) {
           nativePdfFrame.src = pdfUrl;
           nativePdfFrame.classList.remove('hidden');
@@ -3815,9 +3904,9 @@ nav .nav-logo {
       image.removeAttribute('src');
       image.alt = '';
       document.getElementById('learning-lesson-card').setAttribute('aria-busy', 'false');
-      document.getElementById('learning-slide-label').textContent = '';
-      document.getElementById('learning-slide-counter').textContent = 'Schede non disponibili';
-      document.getElementById('learning-slide-title').textContent = 'Appunti non disponibili';
+      setElementText(document.getElementById('learning-slide-label'), (''));
+      setElementText(document.getElementById('learning-slide-counter'), ('Schede non disponibili'));
+      setElementText(document.getElementById('learning-slide-title'), ('Appunti non disponibili'));
       document.getElementById('learning-slide-thumbnails').innerHTML = '';
       document.getElementById('learning-slide-error').classList.add('hidden');
       document.getElementById('learning-slide-previous').disabled = true;
@@ -3827,11 +3916,11 @@ nav .nav-logo {
     function showStudySlideError(message) {
       stopStudyAudio(true);
       var error = document.getElementById('learning-slide-error');
-      error.textContent = message;
+      setElementText(error, (message));
       error.classList.remove('hidden');
       document.getElementById('learning-lesson-card').setAttribute('aria-busy', 'false');
-      document.getElementById('learning-slide-counter').textContent = 'Lezione non disponibile';
-      document.getElementById('learning-slide-title').textContent = 'Non è stato possibile aprire le schede';
+      setElementText(document.getElementById('learning-slide-counter'), ('Lezione non disponibile'));
+      setElementText(document.getElementById('learning-slide-title'), ('Non è stato possibile aprire le schede'));
       document.getElementById('learning-pdf-link').classList.remove('hidden');
       document.getElementById('learning-slide-previous').disabled = true;
       document.getElementById('learning-slide-next').disabled = true;
@@ -3874,8 +3963,8 @@ nav .nav-logo {
         showStudySlideError('Si è verificato un errore di rete. Puoi aprire il PDF originale.');
       };
       xhr.send();
-      document.getElementById('learning-slide-counter').textContent = 'Caricamento delle schede...';
-      document.getElementById('learning-slide-title').textContent = 'Preparazione delle schede...';
+      setElementText(document.getElementById('learning-slide-counter'), ('Caricamento delle schede...'));
+      setElementText(document.getElementById('learning-slide-title'), ('Preparazione delle schede...'));
       document.getElementById('learning-lesson-card').setAttribute('aria-busy', 'true');
     }
 
@@ -3885,9 +3974,9 @@ nav .nav-logo {
       var number = Math.max(1, Math.min(slides.length, parseInt(pageNumber, 10) || 1));
       var slide = slides[number - 1];
       studyDeck.currentPage = number;
-      document.getElementById('learning-slide-counter').textContent = 'Scheda ' + number + ' di ' + slides.length;
-      document.getElementById('learning-slide-label').textContent = 'LEZIONE · SCHEDA ' + number;
-      document.getElementById('learning-slide-title').textContent = slide.title || 'Scheda ' + number;
+      setElementText(document.getElementById('learning-slide-counter'), ('Scheda ' + number + ' di ' + slides.length));
+      setElementText(document.getElementById('learning-slide-label'), ('LEZIONE · SCHEDA ' + number));
+      setElementText(document.getElementById('learning-slide-title'), (slide.title || 'Scheda ' + number));
       loadStudyAudio(slide);
       document.getElementById('learning-slide-previous').disabled = number <= 1;
       document.getElementById('learning-slide-next').disabled = number >= slides.length;
@@ -3942,7 +4031,7 @@ nav .nav-logo {
       var slider = document.getElementById('learning-zoom-slider');
       var zoomOut = document.getElementById('learning-zoom-out');
       var zoomIn = document.getElementById('learning-zoom-in');
-      level.textContent = Math.round(nextZoom * 100) + '%';
+      setElementText(level, (Math.round(nextZoom * 100) + '%'));
       slider.value = String(nextZoom);
       zoomOut.disabled = nextZoom <= 1;
       zoomIn.disabled = nextZoom >= 4;
@@ -4061,7 +4150,7 @@ nav .nav-logo {
       var isFullscreen = card.classList.toggle('is-fullscreen');
       document.body.classList.toggle('slide-viewer-open', isFullscreen);
       button.setAttribute('aria-pressed', isFullscreen ? 'true' : 'false');
-      button.textContent = isFullscreen ? '↙ Torna alla lezione' : '⛶ Ingrandisci slide';
+      setElementText(button, (isFullscreen ? '↙ Torna alla lezione' : '⛶ Ingrandisci slide'));
       button.setAttribute('aria-label', isFullscreen ? 'Torna alla lezione' : 'Ingrandisci slide a tutto schermo');
 
       if (isFullscreen) {
@@ -4097,7 +4186,7 @@ nav .nav-logo {
           image.loading = 'lazy';
           button.appendChild(image);
           var title = document.createElement('span');
-          title.textContent = pageNumber + ' · ' + (slide.title || 'Lezione');
+          setElementText(title, (pageNumber + ' · ' + (slide.title || 'Lezione')));
           button.appendChild(title);
           container.appendChild(button);
         })(number);
@@ -4272,7 +4361,7 @@ nav .nav-logo {
         'text-anchor': 'middle',
         'class': 'concept-map-root-label'
       });
-      rootTitle.textContent = selectedMateria ? selectedMateria.nome : 'Lezione';
+      setElementText(rootTitle, (selectedMateria ? selectedMateria.nome : 'Lezione'));
       root.appendChild(rootTitle);
       var rootCaption = createConceptSvgElement('text', {
         x: centerX,
@@ -4280,7 +4369,7 @@ nav .nav-logo {
         'text-anchor': 'middle',
         'class': 'concept-map-root-caption'
       });
-      rootCaption.textContent = 'argomenti delle schede';
+      setElementText(rootCaption, ('argomenti delle schede'));
       root.appendChild(rootCaption);
       svg.appendChild(root);
 
@@ -4311,7 +4400,7 @@ nav .nav-logo {
               x: position.x,
               dy: lineIndex === 0 ? 0 : 17
             });
-            titleLine.textContent = titleLines[lineIndex];
+            setElementText(titleLine, (titleLines[lineIndex]));
             label.appendChild(titleLine);
           }
           node.appendChild(label);
@@ -4321,7 +4410,7 @@ nav .nav-logo {
             'text-anchor': 'middle',
             'class': 'concept-map-node-count'
           });
-          count.textContent = concept.pages.length + (concept.pages.length === 1 ? ' scheda' : ' schede');
+          setElementText(count, (concept.pages.length + (concept.pages.length === 1 ? ' scheda' : ' schede')));
           node.appendChild(count);
           node.onclick = function() {
             selectStudyConcept(concept, node);
@@ -4339,7 +4428,7 @@ nav .nav-logo {
       if (concepts.length) selectStudyConcept(concepts[0], svg.querySelector('.concept-map-node'));
       else {
         var related = document.getElementById('learning-concept-map-related');
-        related.textContent = 'Non sono stati trovati concetti sufficienti nei titoli delle schede.';
+        setElementText(related, ('Non sono stati trovati concetti sufficienti nei titoli delle schede.'));
       }
     }
 
@@ -4354,7 +4443,7 @@ nav .nav-logo {
       var related = document.getElementById('learning-concept-map-related');
       related.innerHTML = '';
       var heading = document.createElement('h4');
-      heading.textContent = 'Schede: ' + concept.label;
+      setElementText(heading, ('Schede: ' + concept.label));
       related.appendChild(heading);
       var list = document.createElement('ul');
       var pageLimit = Math.min(concept.pages.length, 6);
@@ -4363,7 +4452,7 @@ nav .nav-logo {
           var item = document.createElement('li');
           var button = document.createElement('button');
           button.type = 'button';
-          button.textContent = 'Scheda ' + slide.number + ' · ' + (slide.title || 'Appunti');
+          setElementText(button, ('Scheda ' + slide.number + ' · ' + (slide.title || 'Appunti')));
           button.onclick = function() {
             displayStudySlide(slide.number);
             document.getElementById('learning-lesson-card').scrollIntoView();
@@ -4375,7 +4464,7 @@ nav .nav-logo {
       if (concept.pages.length > pageLimit) {
         var more = document.createElement('li');
         more.className = 'text-xs text-slate-500';
-        more.textContent = 'Altre ' + (concept.pages.length - pageLimit) + ' schede sono collegate a questo concetto.';
+        setElementText(more, ('Altre ' + (concept.pages.length - pageLimit) + ' schede sono collegate a questo concetto.'));
         list.appendChild(more);
       }
       related.appendChild(list);
@@ -4389,13 +4478,13 @@ nav .nav-logo {
         if (!studyDeck.conceptMap) studyDeck.conceptMap = buildStudyConceptMap(studyDeck.slides);
         renderStudyConceptMap(studyDeck.conceptMap);
         panel.classList.remove('hidden');
-        toggle.textContent = 'Nascondi mappa concettuale';
+        setElementText(toggle, ('Nascondi mappa concettuale'));
         toggle.setAttribute('aria-expanded', 'true');
         var viewport = document.querySelector('.concept-map-viewport');
         if (viewport) viewport.scrollLeft = Math.max(0, (viewport.scrollWidth - viewport.clientWidth) / 2);
       } else {
         panel.classList.add('hidden');
-        toggle.textContent = 'Mostra mappa concettuale';
+        setElementText(toggle, ('Mostra mappa concettuale'));
         toggle.setAttribute('aria-expanded', 'false');
       }
     }
@@ -4405,13 +4494,13 @@ nav .nav-logo {
       var toggle = document.getElementById('learning-concept-map-toggle');
       if (!panel || !toggle) return;
       panel.classList.add('hidden');
-      toggle.textContent = 'Genera mappa concettuale';
+      setElementText(toggle, ('Genera mappa concettuale'));
       toggle.setAttribute('aria-expanded', 'false');
       toggle.disabled = true;
       var svg = document.getElementById('learning-concept-map');
       while (svg.firstChild) svg.removeChild(svg.firstChild);
       var related = document.getElementById('learning-concept-map-related');
-      related.textContent = 'Seleziona un concetto per vedere le schede collegate.';
+      setElementText(related, ('Seleziona un concetto per vedere le schede collegate.'));
     }
 
     function initStudySlideshowControls() {
@@ -4481,7 +4570,7 @@ nav .nav-logo {
         utter.lang = 'en-US';
         utter.rate = 0.95;
         utter.onstart = function() {
-          if (statusEl) statusEl.textContent = t('audio_ready_synth_en');
+          if (statusEl) setElementText(statusEl, (t('audio_ready_synth_en')));
         };
         window.speechSynthesis.speak(utter);
       } catch (err) {
@@ -4518,16 +4607,16 @@ nav .nav-logo {
           playSpeechSynthesisFallback(slide, status);
           return;
         }
-        status.textContent = t('audio_unavailable');
+        setElementText(status, (t('audio_unavailable')));
         return;
       }
       if (!/^audio(?:\/[a-z]{2})?\/slide-\d{3}(?:-[a-z]{2})?\.ogg$/i.test(audioPath)) {
         console.error('Percorso audio della scheda non valido:', audioPath);
-        status.textContent = t('audio_invalid');
+        setElementText(status, (t('audio_invalid')));
         return;
       }
       if (typeof player.canPlayType !== 'function' || !player.canPlayType('audio/ogg; codecs="vorbis"')) {
-        status.textContent = t('audio_ogg_unsupported');
+        setElementText(status, (t('audio_ogg_unsupported')));
         document.getElementById('learning-pdf-link').classList.remove('hidden');
         return;
       }
@@ -4536,9 +4625,9 @@ nav .nav-logo {
       player.classList.remove('hidden');
       player.load();
       if (isEn && is4B) {
-        status.textContent = t('audio_ready_en');
+        setElementText(status, (t('audio_ready_en')));
       } else {
-        status.textContent = t('audio_ready_it');
+        setElementText(status, (t('audio_ready_it')));
       }
     }
 
@@ -4556,7 +4645,7 @@ nav .nav-logo {
           }
         }
         player.classList.add('hidden');
-        status.textContent = t('audio_unavailable');
+        setElementText(status, (t('audio_unavailable')));
         document.getElementById('learning-pdf-link').classList.remove('hidden');
       };
     }
@@ -4596,7 +4685,7 @@ nav .nav-logo {
         console.error('Impossibile salvare la lezione attiva nel browser:', err);
         var notice = document.querySelector('#step-learning .platform-storage-notice');
         if (notice) {
-          notice.textContent = 'Avviso: il browser non consente di salvare la lezione; dopo un refresh dovrai riaprirla.';
+          setElementText(notice, ('Avviso: il browser non consente di salvare la lezione; dopo un refresh dovrai riaprirla.'));
           notice.classList.remove('hidden');
         }
       }
@@ -4659,10 +4748,12 @@ nav .nav-logo {
       lessonRestoreAttempted = true;
       selectedMateria = materia;
       candidate = { nome: '', cognome: '' };
-      document.getElementById('mode-course-title').textContent =
-        (materia.corso ? materia.corso.classe + ' classe' : 'Corso') + ' · ' + materia.nome;
-      document.getElementById('mode-course-subtitle').textContent =
-        materia.descrizione || materia.tempoMinuti + ' minuti · ' + materia.domande.length + ' quesiti';
+      setElementText(document.getElementById('mode-course-title'), (
+(materia.corso ? materia.corso.classe + ' classe' : 'Corso') + ' · ' + materia.nome));
+
+      setElementText(document.getElementById('mode-course-subtitle'), (
+materia.descrizione || materia.tempoMinuti + ' minuti · ' + materia.domande.length + ' quesiti'));
+
       updateMateriaInfo();
       var isDesktopLayout = getWindowInnerWidth() >= 1200 && getWindowInnerHeight() >= 850;
       var zoom = isDesktopLayout && typeof state.zoom === 'number' && isFinite(state.zoom)
@@ -4703,7 +4794,7 @@ nav .nav-logo {
       var displayIds = ['platform-time-header', 'learning-platform-time', 'result-platform-time'];
       for (var i = 0; i < displayIds.length; i++) {
         var display = document.getElementById(displayIds[i]);
-        if (display) display.textContent = duration;
+        if (display) setElementText(display, (duration));
       }
 
       var indicator = document.getElementById('platform-time-indicator');
@@ -4713,18 +4804,20 @@ nav .nav-logo {
       }
       var note = document.getElementById('platform-time-note');
       if (note) {
-        note.textContent = platformStorageAvailable
-          ? 'Salvato su questo dispositivo'
-          : 'Solo per questa sessione';
+        setElementText(note, (platformStorageAvailable
+? 'Salvato su questo dispositivo'
+: 'Solo per questa sessione'));
+
+
       }
 
       var notices = document.getElementsByClassName('platform-storage-notice');
       for (var n = 0; n < notices.length; n++) {
         if (platformStorageAvailable) {
-          notices[n].textContent = '';
+          setElementText(notices[n], '');
           notices[n].classList.add('hidden');
         } else {
-          notices[n].textContent = 'Avviso: il browser non consente di salvare il conteggio. Le ore mostrate valgono solo per questa sessione e non saranno conservate dopo aver chiuso o ricaricato la pagina.';
+          setElementText(notices[n], 'Avviso: il browser non consente di salvare il conteggio. Le ore mostrate valgono solo per questa sessione e non saranno conservate dopo aver chiuso o ricaricato la pagina.');
           notices[n].classList.remove('hidden');
         }
       }
@@ -5137,10 +5230,10 @@ nav .nav-logo {
 
     function showActiveExam() {
       setPlatformEntered(true);
-      document.getElementById('header-cand-name').textContent = getCandidateDisplayName(candidate);
-      document.getElementById('header-materia-title').textContent = selectedMateria.nome;
-      document.getElementById('total-q-num').textContent = selectedMateria.domande.length;
-      document.getElementById('count-total').textContent = selectedMateria.domande.length;
+      setElementText(document.getElementById('header-cand-name'), (getCandidateDisplayName(candidate)));
+      setElementText(document.getElementById('header-materia-title'), (selectedMateria.nome));
+      setElementText(document.getElementById('total-q-num'), (selectedMateria.domande.length));
+      setElementText(document.getElementById('count-total'), (selectedMateria.domande.length));
 
       document.getElementById('step-registration').classList.add('hidden');
       document.getElementById('step-mode').classList.add('hidden');
@@ -5164,7 +5257,7 @@ nav .nav-logo {
           var btn = document.createElement('button');
           btn.id = 'q-grid-btn-' + i;
           btn.className = 'btn-quiz-number';
-          btn.textContent = i + 1;
+          setElementText(btn, (i + 1));
           btn.onclick = function() {
             displayQuestion(i);
           };
@@ -5177,9 +5270,9 @@ nav .nav-logo {
     function displayQuestion(idx) {
       currentQuestionIndex = idx;
       var q = selectedMateria.domande[idx];
-      document.getElementById('current-q-num').textContent = idx + 1;
-      document.getElementById('badge-argomento').textContent = q.argomento || selectedMateria.nome;
-      document.getElementById('q-text').textContent = q.testo;
+      setElementText(document.getElementById('current-q-num'), (idx + 1));
+      setElementText(document.getElementById('badge-argomento'), (q.argomento || selectedMateria.nome));
+      setElementText(document.getElementById('q-text'), (q.testo));
 
       // 1. Immagine del quesito
       var imgContainer = document.getElementById('q-image-container');
@@ -5206,7 +5299,7 @@ nav .nav-logo {
       var codeContainer = document.getElementById('q-code-container');
       var codeEl = document.getElementById('q-code');
       if (q.codice) {
-        codeEl.textContent = q.codice;
+        setElementText(codeEl, (q.codice));
         codeContainer.classList.remove('hidden');
       } else {
         codeContainer.classList.add('hidden');
@@ -5323,7 +5416,7 @@ nav .nav-logo {
           answeredCount++;
         }
       }
-      document.getElementById('count-answered').textContent = answeredCount;
+      setElementText(document.getElementById('count-answered'), (answeredCount));
 
       for (var idx = 0; idx < selectedMateria.domande.length; idx++) {
         var q = selectedMateria.domande[idx];
@@ -5353,7 +5446,7 @@ nav .nav-logo {
       if (timerInterval) clearInterval(timerInterval);
       var initialMinutes = Math.floor(secondsRemaining / 60);
       var initialSeconds = secondsRemaining % 60;
-      document.getElementById('quiz-timer').textContent = pad2(initialMinutes) + ':' + pad2(initialSeconds);
+      setElementText(document.getElementById('quiz-timer'), (pad2(initialMinutes) + ':' + pad2(initialSeconds)));
       timerInterval = setInterval(function() {
         secondsRemaining--;
         totalSecondsElapsed++;
@@ -5365,7 +5458,7 @@ nav .nav-logo {
         }
         var m = Math.floor(secondsRemaining / 60);
         var s = (secondsRemaining % 60);
-        document.getElementById('quiz-timer').textContent = pad2(m) + ':' + pad2(s);
+        setElementText(document.getElementById('quiz-timer'), (pad2(m) + ':' + pad2(s)));
         persistActiveExam();
       }, 1000);
     }
@@ -5559,26 +5652,26 @@ nav .nav-logo {
         icon.style.backgroundColor = "#059669";
         icon.style.color = "#ffffff";
         icon.innerHTML = "✓";
-        title.textContent = "ESAME SUPERATO: IDONEO";
-        subtitle.textContent = "Punteggio conseguito: " + scorePct + "%. Soglia minima (" + selectedMateria.sogliaSuperamento + "%) raggiunta.";
+        setElementText(title, ("ESAME SUPERATO: IDONEO"));
+        setElementText(subtitle, ("Punteggio conseguito: " + scorePct + "%. Soglia minima (" + selectedMateria.sogliaSuperamento + "%) raggiunta."));
       } else {
         badgeBox.className = "text-center p-6 rounded-2xl mb-6 bg-red-50 border-red-500 text-red-900";
         badgeBox.style.border = "2px solid #ef4444";
         icon.style.backgroundColor = "#dc2626";
         icon.style.color = "#ffffff";
         icon.innerHTML = "✗";
-        title.textContent = "ESAME NON SUPERATO";
-        subtitle.textContent = "Punteggio: " + scorePct + "% (" + errors + " errori). Minimo richiesto: " + selectedMateria.sogliaSuperamento + "%.";
+        setElementText(title, ("ESAME NON SUPERATO"));
+        setElementText(subtitle, ("Punteggio: " + scorePct + "% (" + errors + " errori). Minimo richiesto: " + selectedMateria.sogliaSuperamento + "%."));
       }
 
-      document.getElementById('res-score').textContent = scorePct + '%';
-      document.getElementById('res-correct').textContent = correct + '/' + totalQ;
-      document.getElementById('res-errors').textContent = errors;
+      setElementText(document.getElementById('res-score'), (scorePct + '%'));
+      setElementText(document.getElementById('res-correct'), (correct + '/' + totalQ));
+      setElementText(document.getElementById('res-errors'), (errors));
 
       var mTaken = Math.floor(totalSecondsElapsed / 60);
       var sTaken = (totalSecondsElapsed % 60);
-      document.getElementById('res-time').textContent = pad2(mTaken) + ':' + pad2(sTaken);
-      document.getElementById('res-scheda-id').textContent = idScheda;
+      setElementText(document.getElementById('res-time'), (pad2(mTaken) + ':' + pad2(sTaken)));
+      setElementText(document.getElementById('res-scheda-id'), (idScheda));
       updatePlatformTimeDisplays();
 
       var qrEl = document.getElementById('result-qrcode');
@@ -5649,9 +5742,9 @@ nav .nav-logo {
         }
       }
 
-      document.getElementById('count-rev-all').textContent = questionsList.length;
-      document.getElementById('count-rev-errors').textContent = errCount;
-      document.getElementById('count-rev-correct').textContent = corrCount;
+      setElementText(document.getElementById('count-rev-all'), (questionsList.length));
+      setElementText(document.getElementById('count-rev-errors'), (errCount));
+      setElementText(document.getElementById('count-rev-correct'), (corrCount));
 
       filterReview('all');
     }
@@ -5939,9 +6032,9 @@ nav .nav-logo {
 
       if (copied) {
         var textSpan = document.getElementById('text-copy-link');
-        textSpan.textContent = "✓ Link Copiato!";
+        setElementText(textSpan, ("✓ Link Copiato!"));
         setTimeout(function() {
-          textSpan.textContent = "Copia Link Revisione";
+          setElementText(textSpan, ("Copia Link Revisione"));
         }, 2200);
       } else {
         prompt("Copia questo link di revisione:", url);
