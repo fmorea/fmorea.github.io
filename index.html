@@ -1147,6 +1147,16 @@ nav .nav-logo {
     .learning-section-heading { min-width: 0; flex: 1 1 auto; }
     .learning-slide-counter { flex: 0 0 auto; white-space: nowrap; }
     .learning-pdf-frame { display: block; width: 100%; height: 78vh; max-height: 900px; min-height: 420px; border: 0; background: #e2e8f0; }
+    .learning-fallback-card { margin-bottom: 24px; padding: 18px; border: 1px solid #cbd5e1; border-left: 5px solid #2563eb; border-radius: 12px; background: #f8fafc; color: #334155; }
+    .learning-fallback-message { display: table; width: 100%; margin-bottom: 14px; }
+    .learning-fallback-icon,
+    .learning-fallback-copy { display: table-cell; vertical-align: top; }
+    .learning-fallback-icon { width: 42px; height: 42px; border-radius: 50%; background: #dbeafe; color: #1d4ed8; text-align: center; vertical-align: middle; font-size: 22px; font-weight: 800; line-height: 42px; }
+    .learning-fallback-copy { padding-left: 12px; }
+    .learning-fallback-copy h3 { margin: 0 0 4px; color: #0f172a; font-size: 17px; line-height: 1.3; }
+    .learning-fallback-copy p { margin: 0; color: #475569; font-size: 14px; line-height: 1.5; }
+    .learning-fallback-link { display: inline-block; margin-bottom: 14px; padding: 10px 15px; border: 1px solid #1d4ed8; border-radius: 8px; background: #2563eb; color: #fff !important; font-size: 14px; font-weight: 700; text-decoration: none; }
+    .learning-fallback-link:hover { background: #1d4ed8; }
     .lesson-audio-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 14px 0; padding: 12px; border: 1px solid #dbeafe; border-radius: 14px; background: linear-gradient(110deg, #eff6ff, #f8fafc); }
     .lesson-audio-player { width: min(100%, 440px); min-height: 42px; }
     .lesson-audio-status { flex: 1; min-width: 130px; color: #475569; font-size: 12px; }
@@ -1789,10 +1799,16 @@ nav .nav-logo {
         <p id="learning-slide-error" class="hidden mt-3 rounded-xl border p-4 text-sm text-red-800" role="alert" style="border-color: #fecaca; background: #fef2f2;"></p>
         <a id="learning-pdf-link" class="hidden mt-3 text-sm font-bold text-blue-700" target="_blank" rel="noopener" data-i18n="open_original_pdf">Apri il PDF originale</a>
       </div>
-      <div id="learning-pdf-unavailable" class="hidden mb-8 rounded-xl border p-4 text-sm text-slate-700" style="border-color: #cbd5e1; background: #f8fafc;">
-        <p id="learning-pdf-unavailable-text">Per questa materia non è associato un PDF. Puoi comunque usare le spiegazioni testuali qui sotto.</p>
+      <div id="learning-pdf-unavailable" class="learning-fallback-card hidden">
+        <div class="learning-fallback-message">
+          <span class="learning-fallback-icon" aria-hidden="true">i</span>
+          <div class="learning-fallback-copy">
+            <h3>Materiale didattico</h3>
+            <p id="learning-pdf-unavailable-text">Per questa materia non è associato un PDF. Puoi comunque usare le spiegazioni testuali qui sotto.</p>
+          </div>
+        </div>
+        <a id="learning-fallback-pdf-link" class="learning-fallback-link hidden" target="_blank" rel="noopener" data-i18n="open_pdf_new_tab">Apri il PDF originale degli appunti</a>
         <iframe id="learning-native-pdf" class="learning-pdf-frame hidden" title="PDF originale degli appunti" loading="eager"></iframe>
-        <a id="learning-fallback-pdf-link" class="hidden mt-3 inline-block font-bold text-blue-700" target="_blank" rel="noopener" data-i18n="open_pdf_new_tab">Apri il PDF originale degli appunti</a>
       </div>
 
       <details class="learning-explanations-disclosure">
