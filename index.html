@@ -885,6 +885,15 @@ nav .nav-logo {
     .student-details summary:hover { color: #1d4ed8; }
     .student-details p { margin: 10px 0; color: #64748b; font-size: 12px; text-align: center; }
 
+    .ai-personal-data-note { display: table-cell; vertical-align: top; text-align: left; font-size: 11px; line-height: 1.4; }
+    .ai-personal-data-references { margin-bottom: 6px; }
+    .ai-personal-data-references summary { cursor: pointer; color: #475569; font-size: 11px; font-weight: 700; }
+    .ai-personal-data-references summary:hover { color: #1d4ed8; }
+    .ai-reference-list { padding-top: 5px; }
+    .ai-reference-list p { margin: 0 0 3px; }
+    .ai-declaration { margin: 0; font-size: 15px; line-height: 1.45; text-align: justify; }
+    .ai-personal-data-references[open] + .ai-declaration { font-size: 11px; line-height: 1.4; }
+
     .student-fields {
       display: block;
       display: block\9;
@@ -1659,7 +1668,17 @@ nav .nav-logo {
           <div style="display: table-cell; width: 62px; padding-right: 12px; vertical-align: top;">
             <img src="assets/mim-logo.svg" alt="Emblema del Ministero dell'Istruzione e del Merito" style="display: block; width: 48px; height: auto; padding: 4px; border: 1px solid #06c; border-radius: 6px; background: #06c;">
           </div>
-          <div data-i18n="ai_personal_data_note" style="display: table-cell; vertical-align: top; font-size: 11px; line-height: 1.35; text-align: justify;"><p style="margin: 0 0 3px;"><strong>VISTA</strong> la Determinazione AgID n. 17/2025, recante “Linee guida per l’adozione dell’Intelligenza Artificiale nella Pubblica Amministrazione”;</p><p style="margin: 0 0 3px;"><strong>VISTO</strong> il Regolamento (UE) 2024/1689 (AI Act);</p><p style="margin: 0 0 3px;"><strong>VISTA</strong> la Circolare MIM n. 153 del 6 novembre 2026, in particolare il punto 2;</p><p style="margin: 0;"><strong>SI DICHIARA</strong> che, per la produzione autonoma di materiali didattici con strumenti di IA, non si fa uso, non si trattano né si caricano dati personali degli alunni. I contenuti generati non sono utilizzati per la valutazione automatizzata degli studenti né per attività incidenti sul loro percorso formativo.</p></div>
+          <div class="ai-personal-data-note" role="note">
+            <details class="ai-personal-data-references">
+              <summary data-i18n="ai_references_summary">Mostra i riferimenti normativi</summary>
+              <div class="ai-reference-list">
+                <p><strong data-i18n="ai_reference_agid_label">VISTA</strong> <span data-i18n="ai_reference_agid">la Determinazione AgID n. 17/2025, recante “Linee guida per l’adozione dell’Intelligenza Artificiale nella Pubblica Amministrazione”;</span></p>
+                <p><strong data-i18n="ai_reference_ai_act_label">VISTO</strong> <span data-i18n="ai_reference_ai_act">il Regolamento (UE) 2024/1689 (AI Act);</span></p>
+                <p><strong data-i18n="ai_reference_mim_label">VISTA</strong> <span data-i18n="ai_reference_mim">la Circolare MIM n. 153 del 6 novembre 2026, in particolare il punto 2;</span></p>
+              </div>
+            </details>
+            <p class="ai-declaration"><strong data-i18n="ai_declaration_label">SI DICHIARA</strong> <span data-i18n="ai_declaration">che, per la produzione autonoma di materiali didattici con strumenti di IA, non si fa uso, non si trattano né si caricano dati personali degli alunni. I contenuti generati non sono utilizzati per la valutazione automatizzata degli studenti né per attività incidenti sul loro percorso formativo.</span></p>
+          </div>
         </div>
         <details class="student-details">
           <summary tabindex="0" data-i18n="student_details_summary">Aggiungi nome e cognome al certificato <span class="text-slate-400">(facoltativo)</span></summary>
@@ -2597,7 +2616,15 @@ nav .nav-logo {
         lang_name: "Italia - IT",
         platform_badge: "Piattaforma didattica",
         hero_title: "Da dove vuoi iniziare?",
-        ai_personal_data_note: "<p style=\"margin: 0 0 3px;\"><strong>VISTA</strong> la Determinazione AgID n. 17/2025, recante “Linee guida per l’adozione dell’Intelligenza Artificiale nella Pubblica Amministrazione”;</p><p style=\"margin: 0 0 3px;\"><strong>VISTO</strong> il Regolamento (UE) 2024/1689 (AI Act);</p><p style=\"margin: 0 0 3px;\"><strong>VISTA</strong> la Circolare MIM n. 153 del 6 novembre 2026, in particolare il punto 2;</p><p style=\"margin: 0;\"><strong>SI DICHIARA</strong> che, per la produzione autonoma di materiali didattici con strumenti di IA, non si fa uso, non si trattano né si caricano dati personali degli alunni. I contenuti generati non sono utilizzati per la valutazione automatizzata degli studenti né per attività incidenti sul loro percorso formativo.</p>",
+        ai_references_summary: "Mostra i riferimenti normativi",
+        ai_reference_agid_label: "VISTA",
+        ai_reference_agid: "la Determinazione AgID n. 17/2025, recante “Linee guida per l’adozione dell’Intelligenza Artificiale nella Pubblica Amministrazione”;",
+        ai_reference_ai_act_label: "VISTO",
+        ai_reference_ai_act: "il Regolamento (UE) 2024/1689 (AI Act);",
+        ai_reference_mim_label: "VISTA",
+        ai_reference_mim: "la Circolare MIM n. 153 del 6 novembre 2026, in particolare il punto 2;",
+        ai_declaration_label: "SI DICHIARA",
+        ai_declaration: "che, per la produzione autonoma di materiali didattici con strumenti di IA, non si fa uso, non si trattano né si caricano dati personali degli alunni. I contenuti generati non sono utilizzati per la valutazione automatizzata degli studenti né per attività incidenti sul loro percorso formativo.",
         student_details_summary: "Aggiungi nome e cognome al certificato <span class=\"text-slate-400\">(facoltativo)</span>",
         student_details_note: "Il nome inserito verrà stampato sull'attestato finale con il punteggio e la data.",
         label_first_name: "Nome",
@@ -2686,8 +2713,8 @@ nav .nav-logo {
         not_answered: "Non data",
         solution_label: "Spiegazione / Motivazione didattica:",
         btn_home: "Torna alla Piattaforma / Nuova Prova",
-        native_pdf_banner_title: "Modalità PDF nativa.",
-        native_pdf_banner_desc: "Alcune funzioni interattive non sono disponibili in questo browser.",
+        native_pdf_banner_title: "Modalità compatibile.",
+        native_pdf_banner_desc: "Le schede vengono mostrate come immagini; audio e alcune funzioni avanzate potrebbero non essere disponibili.",
         open_original_pdf: "Apri il PDF originale",
         open_pdf_new_tab: "Apri il PDF originale degli appunti",
         slide_viewer_loading: "Caricamento delle schede...",
@@ -2703,7 +2730,15 @@ nav .nav-logo {
         lang_name: "English - EN",
         platform_badge: "Learning Platform",
         hero_title: "Where would you like to begin?",
-        ai_personal_data_note: "<p style=\"margin: 0 0 3px;\"><strong>HAVING REGARD TO</strong> AgID Determination No. 17/2025, containing the “Guidelines for the adoption of Artificial Intelligence in Public Administration”;</p><p style=\"margin: 0 0 3px;\"><strong>HAVING REGARD TO</strong> Regulation (EU) 2024/1689 (AI Act);</p><p style=\"margin: 0 0 3px;\"><strong>HAVING REGARD TO</strong> MIM Circular No. 153 of 6 November 2026, in particular section 2;</p><p style=\"margin: 0;\"><strong>IT IS HEREBY DECLARED</strong> that no students’ personal data are used, processed, or uploaded in the autonomous production of teaching materials with AI tools. Generated content is not used for automated student assessment or for activities affecting their educational path.</p>",
+        ai_references_summary: "Show legal references",
+        ai_reference_agid_label: "HAVING REGARD TO",
+        ai_reference_agid: "AgID Determination No. 17/2025, containing the “Guidelines for the adoption of Artificial Intelligence in Public Administration”;",
+        ai_reference_ai_act_label: "HAVING REGARD TO",
+        ai_reference_ai_act: "Regulation (EU) 2024/1689 (AI Act);",
+        ai_reference_mim_label: "HAVING REGARD TO",
+        ai_reference_mim: "MIM Circular No. 153 of 6 November 2026, in particular section 2;",
+        ai_declaration_label: "IT IS HEREBY DECLARED",
+        ai_declaration: "that no students’ personal data are used, processed, or uploaded in the autonomous production of teaching materials with AI tools. Generated content is not used for automated student assessment or for activities affecting their educational path.",
         student_details_summary: "Add your full name to the certificate <span class=\"text-slate-400\">(optional)</span>",
         student_details_note: "The entered name will be printed on the final certificate with score and date.",
         label_first_name: "First Name",
@@ -2792,8 +2827,8 @@ nav .nav-logo {
         not_answered: "Unanswered",
         solution_label: "Pedagogical Explanation:",
         btn_home: "Return to Platform / New Test",
-        native_pdf_banner_title: "Native PDF Mode.",
-        native_pdf_banner_desc: "Some interactive features are not available in this browser.",
+        native_pdf_banner_title: "Compatible mode.",
+        native_pdf_banner_desc: "Slides are shown as images; audio and some advanced features may not be available in this browser.",
         open_original_pdf: "Open original PDF",
         open_pdf_new_tab: "Open original PDF notes in a new tab",
         slide_viewer_loading: "Loading slides...",
