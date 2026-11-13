@@ -9,7 +9,7 @@
   <!-- Google Fonts: Inter & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 
   <!-- QRCode.js for generating QR code on the final slide -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -21,26 +21,24 @@
 
   <style>
     :root {
-      --eu-blue: #003399;
-      --eu-blue-dark: #002266;
-      --eu-blue-light: #1a4fba;
-      --eu-gold: #ffcc00;
-      --eu-gold-hover: #ffd633;
-      --slate-950: #0a0f1d;
+      --primary: #1e40af;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --primary-border: #bfdbfe;
+      --eu-gold-bg: #fffbeb;
+      --eu-gold-text: #92400e;
+      --eu-gold-border: #fde68a;
       --slate-900: #0f172a;
       --slate-800: #1e293b;
       --slate-700: #334155;
       --slate-600: #475569;
-      --slate-400: #94a3b8;
+      --slate-500: #64748b;
       --slate-300: #cbd5e1;
+      --slate-200: #e2e8f0;
       --slate-100: #f1f5f9;
-      --cyan-400: #38bdf8;
-      --cyan-500: #0ea5e9;
-      --emerald-400: #34d399;
-      --emerald-500: #10b981;
-      --indigo-400: #818cf8;
-      --card-bg: rgba(30, 41, 59, 0.85);
-      --card-border: rgba(148, 163, 184, 0.18);
+      --slate-50: #f8fafc;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
     }
 
     * {
@@ -51,8 +49,10 @@
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: radial-gradient(circle at 50% 10%, #1e3a8a 0%, #0f172a 55%, #050b14 100%);
-      color: #f8fafc;
+      background-color: #f1f5f9;
+      background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: var(--slate-900);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -62,11 +62,9 @@
 
     /* TOP NAVIGATION BAR */
     header.deck-header {
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 10px 20px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--slate-200);
+      padding: 12px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -74,6 +72,7 @@
       position: sticky;
       top: 0;
       z-index: 50;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
     }
 
     .brand-group {
@@ -87,35 +86,35 @@
       align-items: center;
       gap: 6px;
       padding: 7px 14px;
-      background: rgba(255, 255, 255, 0.08);
-      color: #f8fafc;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: var(--slate-100);
+      color: var(--slate-700);
+      border: 1px solid var(--slate-300);
       border-radius: 9999px;
       font-size: 13px;
       font-weight: 600;
       text-decoration: none;
-      transition: all 0.2s ease;
+      transition: all 0.16s ease;
       cursor: pointer;
     }
     .back-btn:hover {
-      background: rgba(255, 255, 255, 0.18);
-      border-color: rgba(255, 255, 255, 0.3);
+      background: var(--slate-200);
+      color: var(--slate-900);
       transform: translateX(-2px);
     }
 
     .school-title {
       font-size: 14px;
       font-weight: 700;
-      color: #e2e8f0;
+      color: var(--slate-800);
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    .school-title span.badge-eu {
-      background: linear-gradient(135deg, var(--eu-blue) 0%, #001f54 100%);
-      color: var(--eu-gold);
-      border: 1px solid rgba(255, 204, 0, 0.4);
-      padding: 2px 8px;
+    .badge-eu {
+      background: var(--eu-gold-bg);
+      color: var(--eu-gold-text);
+      border: 1px solid var(--eu-gold-border);
+      padding: 3px 8px;
       border-radius: 6px;
       font-size: 11px;
       font-weight: 800;
@@ -132,28 +131,23 @@
     }
 
     .nav-icon-btn {
-      background: rgba(255, 255, 255, 0.08);
-      color: #e2e8f0;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: #ffffff;
+      color: var(--slate-700);
+      border: 1px solid var(--slate-300);
       border-radius: 8px;
-      padding: 7px 12px;
+      padding: 7px 14px;
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.18s ease;
+      transition: all 0.16s ease;
     }
     .nav-icon-btn:hover {
-      background: rgba(255, 255, 255, 0.16);
-      color: #ffffff;
-      border-color: rgba(255, 255, 255, 0.3);
-    }
-    .nav-icon-btn.active {
-      background: var(--eu-blue);
-      border-color: var(--eu-gold);
-      color: #ffffff;
+      background: var(--slate-50);
+      color: var(--primary);
+      border-color: var(--primary-border);
     }
 
     /* SLIDE WRAPPER */
@@ -170,11 +164,10 @@
       width: 100%;
       max-width: 1180px;
       min-height: 640px;
-      background: var(--slate-900);
-      background: linear-gradient(145deg, rgba(15, 23, 42, 0.94) 0%, rgba(10, 15, 29, 0.98) 100%);
-      border: 1px solid var(--card-border);
+      background: #ffffff;
+      border: 1px solid var(--slate-300);
       border-radius: 20px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.02);
       position: relative;
       overflow: hidden;
       display: flex;
@@ -184,11 +177,11 @@
     /* INDIVIDUAL SLIDE */
     .slide {
       flex: 1 1 auto;
-      padding: 44px 52px;
+      padding: 40px 48px;
       display: none;
       flex-direction: column;
       justify-content: space-between;
-      animation: fadeInSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: fadeInSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       opacity: 0;
       overflow-y: auto;
     }
@@ -200,11 +193,11 @@
     @keyframes fadeInSlide {
       from {
         opacity: 0;
-        transform: translateY(10px) scale(0.995);
+        transform: translateY(6px);
       }
       to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
       }
     }
 
@@ -213,40 +206,39 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       font-size: 12px;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: var(--cyan-400);
+      letter-spacing: 1.1px;
     }
     .slide-eyebrow .chip {
-      background: rgba(56, 189, 248, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.3);
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
       padding: 3px 10px;
       border-radius: 9999px;
-      color: var(--cyan-400);
+      color: var(--primary);
     }
     .slide-eyebrow .chip-gold {
-      background: rgba(255, 204, 0, 0.12);
-      border: 1px solid rgba(255, 204, 0, 0.35);
-      color: var(--eu-gold);
+      background: var(--eu-gold-bg);
+      border: 1px solid var(--eu-gold-border);
+      color: var(--eu-gold-text);
     }
 
     h1.slide-title {
-      font-size: 32px;
-      font-weight: 900;
-      color: #ffffff;
-      letter-spacing: -0.8px;
-      line-height: 1.2;
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--slate-900);
+      letter-spacing: -0.6px;
+      line-height: 1.25;
       margin-bottom: 8px;
     }
     p.slide-subtitle {
-      font-size: 16px;
-      color: var(--slate-300);
-      margin-bottom: 24px;
+      font-size: 15px;
+      color: var(--slate-600);
+      margin-bottom: 22px;
       max-width: 860px;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
     /* SLIDE BODY GRIDS */
@@ -254,85 +246,80 @@
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 18px;
     }
 
     .grid-2 {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
+      gap: 18px;
     }
     .grid-3 {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
+      gap: 16px;
     }
 
     /* CARDS INSIDE SLIDES */
     .info-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
       border-radius: 14px;
-      padding: 20px;
-      transition: all 0.2s ease;
+      padding: 18px 20px;
+      transition: all 0.16s ease;
       display: flex;
       flex-direction: column;
     }
     .info-card:hover {
-      border-color: rgba(56, 189, 248, 0.35);
+      background: #ffffff;
+      border-color: var(--primary-border);
+      box-shadow: 0 8px 20px -6px rgba(15, 23, 42, 0.08);
       transform: translateY(-2px);
-      box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.5);
     }
 
     .info-card-header {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .info-card-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: rgba(56, 189, 248, 0.15);
-      color: var(--cyan-400);
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      color: var(--primary);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
+      font-size: 16px;
+      font-weight: 700;
       flex-shrink: 0;
     }
     .info-card-icon.gold {
-      background: rgba(255, 204, 0, 0.15);
-      color: var(--eu-gold);
-    }
-    .info-card-icon.emerald {
-      background: rgba(16, 185, 129, 0.15);
-      color: var(--emerald-400);
+      background: var(--eu-gold-bg);
+      border-color: var(--eu-gold-border);
+      color: var(--eu-gold-text);
     }
 
     .info-card-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
-      color: #ffffff;
+      color: var(--slate-900);
     }
     .info-card p, .info-card li {
-      font-size: 14px;
-      color: var(--slate-300);
+      font-size: 13.5px;
+      color: var(--slate-600);
       line-height: 1.55;
     }
     .info-card ul {
       list-style-type: disc;
-      padding-left: 20px;
+      padding-left: 18px;
       margin-top: 6px;
     }
     .info-card li {
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
 
     .highlight-pill {
@@ -341,15 +328,15 @@
       font-weight: 700;
       padding: 3px 8px;
       border-radius: 6px;
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--cyan-400);
+      background: var(--primary-light);
+      color: var(--primary);
       font-family: 'JetBrains Mono', monospace;
     }
 
     /* FOOTER BAR OF DECK */
     footer.deck-footer {
-      background: rgba(10, 15, 29, 0.95);
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background: #ffffff;
+      border-top: 1px solid var(--slate-200);
       padding: 14px 28px;
       display: flex;
       align-items: center;
@@ -364,25 +351,25 @@
       left: 0;
       right: 0;
       height: 3px;
-      background: rgba(255, 255, 255, 0.08);
+      background: var(--slate-100);
     }
     .progress-bar-fill {
       height: 100%;
-      background: linear-gradient(90deg, var(--eu-blue) 0%, var(--cyan-400) 70%, var(--eu-gold) 100%);
+      background: var(--primary);
       width: 8.33%;
-      transition: width 0.3s ease;
+      transition: width 0.25s ease;
     }
 
     .slide-counter {
       font-size: 13px;
       font-weight: 600;
-      color: var(--slate-400);
+      color: var(--slate-500);
       display: flex;
       align-items: center;
       gap: 8px;
     }
     .slide-counter b {
-      color: #ffffff;
+      color: var(--slate-900);
     }
 
     .slide-nav-buttons {
@@ -391,9 +378,9 @@
       gap: 10px;
     }
     .btn-slide-nav {
-      background: rgba(255, 255, 255, 0.08);
-      color: #ffffff;
-      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: var(--slate-100);
+      color: var(--slate-700);
+      border: 1px solid var(--slate-300);
       padding: 8px 18px;
       border-radius: 10px;
       font-size: 14px;
@@ -402,11 +389,11 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      transition: all 0.18s ease;
+      transition: all 0.16s ease;
     }
     .btn-slide-nav:hover:not(:disabled) {
-      background: rgba(255, 255, 255, 0.18);
-      border-color: rgba(255, 255, 255, 0.3);
+      background: var(--slate-200);
+      color: var(--slate-900);
       transform: translateY(-1px);
     }
     .btn-slide-nav:disabled {
@@ -414,65 +401,33 @@
       cursor: not-allowed;
     }
     .btn-slide-nav.btn-primary {
-      background: var(--eu-blue);
-      border-color: rgba(255, 204, 0, 0.4);
+      background: var(--primary);
+      border-color: var(--primary);
       color: #ffffff;
     }
     .btn-slide-nav.btn-primary:hover:not(:disabled) {
-      background: var(--eu-blue-light);
-      box-shadow: 0 4px 14px rgba(0, 51, 153, 0.4);
-    }
-
-    /* TTS AUDIO NARRATION STATUS */
-    .tts-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      color: var(--slate-400);
-    }
-    .sound-waves {
-      display: none;
-      align-items: flex-end;
-      gap: 2px;
-      height: 14px;
-    }
-    .sound-waves.playing {
-      display: inline-flex;
-    }
-    .sound-waves span {
-      width: 3px;
-      background: var(--eu-gold);
-      border-radius: 2px;
-      animation: wave 1s ease-in-out infinite;
-    }
-    .sound-waves span:nth-child(1) { height: 4px; animation-delay: 0.1s; }
-    .sound-waves span:nth-child(2) { height: 12px; animation-delay: 0.25s; }
-    .sound-waves span:nth-child(3) { height: 8px; animation-delay: 0.4s; }
-    .sound-waves span:nth-child(4) { height: 14px; animation-delay: 0.15s; }
-    @keyframes wave {
-      0%, 100% { transform: scaleY(0.4); }
-      50% { transform: scaleY(1); }
+      background: var(--primary-hover);
+      box-shadow: 0 4px 12px rgba(30, 64, 175, 0.25);
     }
 
     /* LIVE FOURIER SYNTHESIZER WIDGET (Slide 5) */
     .fourier-widget-container {
-      background: rgba(10, 15, 29, 0.7);
-      border: 1px solid rgba(56, 189, 248, 0.25);
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
       border-radius: 14px;
       padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
     .canvas-wrap {
       width: 100%;
       height: 180px;
-      background: #020617;
+      background: #0f172a;
       border-radius: 10px;
       position: relative;
       overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--slate-700);
     }
     canvas#fourierCanvas {
       width: 100%;
@@ -484,7 +439,7 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
+      gap: 12px;
       font-size: 13px;
     }
     .wave-btn-group {
@@ -492,9 +447,9 @@
       gap: 6px;
     }
     .wave-btn {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: var(--slate-300);
+      background: #ffffff;
+      border: 1px solid var(--slate-300);
+      color: var(--slate-700);
       padding: 5px 12px;
       border-radius: 6px;
       font-size: 12px;
@@ -503,9 +458,9 @@
       transition: all 0.15s ease;
     }
     .wave-btn.active, .wave-btn:hover {
-      background: var(--eu-blue);
+      background: var(--primary);
       color: #ffffff;
-      border-color: var(--cyan-400);
+      border-color: var(--primary);
     }
     .slider-group {
       display: flex;
@@ -514,15 +469,15 @@
     }
     .slider-group input[type="range"] {
       width: 140px;
-      accent-color: var(--cyan-400);
+      accent-color: var(--primary);
     }
 
     /* TABLE OF CONTENTS MODAL / DRAWER */
     #toc-drawer {
       position: fixed;
       inset: 0;
-      background: rgba(5, 10, 20, 0.85);
-      backdrop-filter: blur(8px);
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(4px);
       z-index: 100;
       display: none;
       align-items: center;
@@ -533,15 +488,15 @@
       display: flex;
     }
     .toc-modal {
-      background: var(--slate-900);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: #ffffff;
+      border: 1px solid var(--slate-300);
       border-radius: 18px;
       width: 100%;
       max-width: 840px;
       max-height: 85vh;
       overflow-y: auto;
-      padding: 30px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+      padding: 28px;
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
     }
     .toc-grid {
       display: grid;
@@ -550,8 +505,8 @@
       margin-top: 18px;
     }
     .toc-item {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
       padding: 12px 16px;
       border-radius: 10px;
       cursor: pointer;
@@ -559,37 +514,40 @@
       transition: all 0.15s ease;
     }
     .toc-item:hover, .toc-item.current {
-      background: rgba(56, 189, 248, 0.15);
-      border-color: var(--cyan-400);
+      background: var(--primary-light);
+      border-color: var(--primary-border);
     }
     .toc-item-number {
       font-size: 11px;
       font-weight: 800;
-      color: var(--cyan-400);
+      color: var(--primary);
       text-transform: uppercase;
     }
     .toc-item-title {
       font-size: 13px;
       font-weight: 600;
-      color: #ffffff;
+      color: var(--slate-900);
       margin-top: 2px;
     }
 
     /* QR CODE BOX (Slide 12) */
     .qr-card-final {
-      background: #ffffff;
-      color: #0f172a;
-      padding: 18px;
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      padding: 20px;
       border-radius: 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
       text-align: center;
       min-width: 200px;
     }
     .qr-card-final #slide-final-qr {
+      background: #ffffff;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid var(--slate-200);
       margin-bottom: 8px;
     }
 
@@ -597,6 +555,7 @@
     @media print {
       body {
         background: #ffffff !important;
+        background-image: none !important;
         color: #0f172a !important;
       }
       header.deck-header, footer.deck-footer, #toc-drawer {
@@ -621,7 +580,7 @@
         color: #0f172a !important;
       }
       h1.slide-title {
-        color: #003399 !important;
+        color: #1e40af !important;
       }
       p.slide-subtitle {
         color: #475569 !important;
@@ -631,47 +590,31 @@
         border: 1px solid #cbd5e1 !important;
         color: #0f172a !important;
       }
-      .info-card-title {
-        color: #0f172a !important;
-      }
-      .info-card p, .info-card li {
-        color: #334155 !important;
-      }
-      .highlight-pill {
-        background: #e2e8f0 !important;
-        color: #003399 !important;
-      }
       .fourier-widget-container {
         background: #f1f5f9 !important;
-        border: 1px solid #cbd5e1 !important;
-      }
-      canvas#fourierCanvas {
-        border: 1px solid #94a3b8 !important;
-      }
-      .qr-card-final {
         border: 1px solid #cbd5e1 !important;
       }
     }
 
     /* RESPONSIVE DESIGN */
     @media (max-width: 900px) {
-      .grid-3, .grid-4 {
+      .grid-3 {
         grid-template-columns: repeat(2, 1fr);
       }
       .slide {
         padding: 30px 24px;
       }
       h1.slide-title {
-        font-size: 26px;
+        font-size: 25px;
       }
     }
 
     @media (max-width: 680px) {
-      .grid-2, .grid-3, .grid-4 {
+      .grid-2, .grid-3 {
         grid-template-columns: 1fr;
       }
       header.deck-header {
-        padding: 8px 12px;
+        padding: 10px 14px;
       }
       .school-title {
         display: none;
@@ -680,10 +623,10 @@
         padding: 20px 16px;
       }
       h1.slide-title {
-        font-size: 22px;
+        font-size: 21px;
       }
       p.slide-subtitle {
-        font-size: 14px;
+        font-size: 13.5px;
         margin-bottom: 16px;
       }
       footer.deck-footer {
@@ -702,28 +645,21 @@
       </a>
       <div class="school-title">
         <span class="badge-eu">★ ERASMUS+</span>
-        <span>IIS "L. Lagrange" Milano · 4B INF</span>
+        <span>IIS "Luigi Lagrange" Milano · 4B INF</span>
       </div>
     </div>
 
     <div class="controls-group">
-      <button type="button" class="nav-icon-btn" id="btn-tts" onclick="toggleSpeech()" title="Listen to slide narrative in English">
-        <span id="tts-icon">🔊</span> <span id="tts-label">Listen</span>
-        <div class="sound-waves" id="sound-waves">
-          <span></span><span></span><span></span><span></span>
-        </div>
-      </button>
-
       <button type="button" class="nav-icon-btn" onclick="openToc()" title="View slide overview (Key: O)">
         <span>🗂️</span> Overview
       </button>
 
       <button type="button" class="nav-icon-btn" onclick="window.print()" title="Print / Save PDF handout">
-        <span>🖨️</span> PDF
+        <span>🖨️</span> PDF Handout
       </button>
 
       <button type="button" class="nav-icon-btn" onclick="toggleFullscreen()" title="Fullscreen mode (Key: F)">
-        <span id="fs-icon">⛶</span>
+        <span id="fs-icon">⛶</span> Fullscreen
       </button>
     </div>
   </header>
@@ -767,20 +703,20 @@
 
             <div class="info-card">
               <div class="info-card-header">
-                <div class="info-card-icon emerald">🤝</div>
+                <div class="info-card-icon">🤝</div>
                 <div class="info-card-title">Erasmus+ Goals</div>
               </div>
               <p>Job shadowing, pedagogical practice exchange, co-teaching bilingual (CLIL) modules, and laying foundations for cross-border student mobilities (VET) and joint STEM projects.</p>
             </div>
           </div>
 
-          <div class="info-card" style="margin-top: 4px; background: rgba(0, 51, 153, 0.2); border-color: rgba(255, 204, 0, 0.3);">
+          <div class="info-card" style="margin-top: 4px; background: var(--primary-light); border-color: var(--primary-border);">
             <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
               <div>
-                <span class="highlight-pill" style="color: var(--eu-gold);">Academic Year 2026/2027</span>
-                <span style="margin-left: 8px; font-size: 13px; color: #e2e8f0;">Course Coordinator: <b>Prof. Fernando Morea</b></span>
+                <span class="highlight-pill">Academic Year 2026/2027</span>
+                <span style="margin-left: 8px; font-size: 13px; color: var(--slate-700);">Course Coordinator: <b>Prof. Fernando Morea</b></span>
               </div>
-              <div style="font-size: 12px; color: var(--slate-300);">
+              <div style="font-size: 12px; color: var(--slate-500);">
                 Use keyboard <b>← / →</b> or <b>Spacebar</b> to navigate slides
               </div>
             </div>
@@ -819,9 +755,9 @@
               </ul>
             </div>
 
-            <div class="info-card" style="border-color: rgba(56, 189, 248, 0.4); background: rgba(14, 165, 233, 0.08);">
+            <div class="info-card" style="border-color: var(--primary-border); background: var(--primary-light);">
               <div class="info-card-header">
-                <div class="info-card-icon" style="background: var(--eu-blue); color: #fff;">3-5</div>
+                <div class="info-card-icon" style="background: var(--primary); color: #fff; border-color: var(--primary);">3-5</div>
                 <div class="info-card-title">Triennio (Years 3–5 · Ages 16–19) ★ Class 4B</div>
               </div>
               <p>Specialization: <b>Informatica e Telecomunicazioni</b></p>
@@ -837,7 +773,7 @@
           <div class="grid-2" style="margin-top: 4px;">
             <div class="info-card">
               <div class="info-card-header">
-                <div class="info-card-icon emerald">🎓</div>
+                <div class="info-card-icon">🎓</div>
                 <div class="info-card-title">Graduate Qualification & Outcomes</div>
               </div>
               <p>Graduates receive the <b>Diploma di Perito Industriale Capotecnico in Telecomunicazioni</b> (EQF Level 4). They can directly enter the European labor market as network & telecom technicians or pursue university STEM degrees.</p>
@@ -911,9 +847,9 @@
               <p>OSI 7-layer and TCP/IP models, Ethernet framing (IEEE 802.3), MAC addressing, VLAN tagging (802.1Q), and packet routing fundamentals.</p>
             </div>
 
-            <div class="info-card" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);">
+            <div class="info-card" style="background: var(--primary-light); border-color: var(--primary-border);">
               <div class="info-card-header">
-                <div class="info-card-icon emerald">🔬</div>
+                <div class="info-card-icon">🔬</div>
                 <div class="info-card-title">Hands-on Laboratory</div>
               </div>
               <p>40% of class time is spent on bench testing with digital storage oscilloscopes (DSOs), arbitrary waveform generators, and Cisco Packet Tracer.</p>
@@ -966,12 +902,12 @@
 
           <div class="grid-3" style="margin-top: 4px;">
             <div class="info-card">
-              <div class="info-card-title" style="color: var(--cyan-400);">Peak & Period</div>
+              <div class="info-card-title" style="color: var(--primary);">Peak & Period</div>
               <p>Peak voltage $V_p$, Peak-to-Peak $V_{pp} = 2V_p$, and Period $T$ (seconds) where fundamental frequency is $f_0 = 1/T$ (Hz).</p>
             </div>
 
             <div class="info-card">
-              <div class="info-card-title" style="color: var(--cyan-400);">Average Value (DC)</div>
+              <div class="info-card-title" style="color: var(--primary);">Average Value (DC)</div>
               <p>Arithmetic mean over period $T$:
                 $$\displaystyle V_{avg} = \frac{1}{T}\int_0^T s(t)\,dt$$
                 Equals $0\,\text{V}$ for symmetrical AC waveforms.
@@ -979,7 +915,7 @@
             </div>
 
             <div class="info-card">
-              <div class="info-card-title" style="color: var(--cyan-400);">RMS Effective Value</div>
+              <div class="info-card-title" style="color: var(--primary);">RMS Effective Value</div>
               <p>Equivalent thermal power dissipation:
                 $$\displaystyle V_{rms} = \sqrt{\frac{1}{T}\int_0^T s^2(t)\,dt} = \frac{V_p}{\sqrt{2}} \approx 0.707 V_p$$
               </p>
@@ -1034,7 +970,7 @@
                 </div>
 
                 <div class="slider-group">
-                  <label for="harmonicsSlider" style="color: var(--slate-300);">Harmonics: <b id="harmonicsVal" style="color: var(--cyan-400);">5</b></label>
+                  <label for="harmonicsSlider" style="color: var(--slate-700); font-weight: 600;">Harmonics: <b id="harmonicsVal" style="color: var(--primary);">5</b></label>
                   <input type="range" id="harmonicsSlider" min="1" max="15" value="5" step="1" oninput="updateHarmonics(this.value)">
                 </div>
               </div>
@@ -1042,7 +978,7 @@
           </div>
 
           <div class="info-card" style="margin-top: 4px; padding: 12px 20px;">
-            <p style="font-size: 13px; color: var(--slate-300);">
+            <p style="font-size: 13px; color: var(--slate-600);">
               💡 <b>Didactic observation for Erasmus teachers:</b> Notice how odd harmonics ($1f, 3f, 5f\dots$) assemble with amplitude proportional to $1/n$ to sharpen the rise-time edges of the square wave, demonstrating why digital lines require broadband frequency response.
             </p>
           </div>
@@ -1084,7 +1020,7 @@
 
             <div class="info-card">
               <div class="info-card-header">
-                <div class="info-card-icon emerald">✨</div>
+                <div class="info-card-icon">✨</div>
                 <div class="info-card-title">Single-Mode Fiber (SMF)</div>
               </div>
               <p>Narrow core ($9\,\mu\text{m}$), eliminating intermodal dispersion. Laser excitation at $1310\,\text{nm}$ and $1550\,\text{nm}$. Enables 100+ km backbone transmission links.</p>
@@ -1159,17 +1095,17 @@
 
           <div class="grid-3" style="margin-top: 4px;">
             <div class="info-card">
-              <div class="info-card-title" style="color: var(--cyan-400);">Analog Modulation</div>
+              <div class="info-card-title" style="color: var(--primary);">Analog Modulation</div>
               <p><b>AM:</b> carrier amplitude modulated by information ($B = 2f_m$).<br><b>FM:</b> Carson's rule $B \approx 2(\Delta f + f_m)$, superior SNR and noise resilience.</p>
             </div>
 
             <div class="info-card">
-              <div class="info-card-title" style="color: var(--cyan-400);">Binary Digital Shift Keying</div>
+              <div class="info-card-title" style="color: var(--primary);">Binary Digital Shift Keying</div>
               <p><b>ASK:</b> Amplitude Shift Keying.<br><b>FSK:</b> Frequency Shift Keying.<br><b>BPSK:</b> Phase Shift Keying ($0^\circ / 180^\circ$, 1 bit/symbol).</p>
             </div>
 
             <div class="info-card">
-              <div class="info-card-title" style="color: var(--cyan-400);">M-ary QAM Constellations</div>
+              <div class="info-card-title" style="color: var(--primary);">M-ary QAM Constellations</div>
               <p>Quadrature Amplitude Modulation: combining phase & amplitude.<br><b>Bit rate:</b> $R_b = R_s \cdot \log_2(M)$. 64-QAM delivers 6 bits per transmitted symbol!</p>
             </div>
           </div>
@@ -1207,32 +1143,32 @@
               </ul>
             </div>
 
-            <div class="info-card" style="border-color: rgba(255, 204, 0, 0.4);">
+            <div class="info-card" style="border-color: var(--primary-border); background: var(--primary-light);">
               <div class="info-card-header">
-                <div class="info-card-icon gold">🎯</div>
+                <div class="info-card-icon" style="background: var(--primary); color: #fff;">🎯</div>
                 <div class="info-card-title">Digital Oscilloscope "Rule of 5"</div>
               </div>
               <p>To measure high-speed digital clocks without distorting rise time $t_r$ and harmonics:</p>
-              <div style="background: rgba(0, 0, 0, 0.35); padding: 10px 14px; border-radius: 8px; margin: 8px 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--eu-gold);">
+              <div style="background: #ffffff; padding: 10px 14px; border-radius: 8px; margin: 8px 0; border: 1px solid var(--primary-border); font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--primary); font-weight: 700;">
                 B<sub>scope</sub> ≥ 5 × B<sub>signal</sub>
               </div>
-              <p style="font-size: 13px;">Captures up to the 5th harmonic with &lt;3% amplitude attenuation error. Scope rise time is governed by $t_r \approx 0.35 / B_{scope}$.</p>
+              <p style="font-size: 13px; color: var(--slate-700);">Captures up to the 5th harmonic with &lt;3% amplitude attenuation error. Scope rise time is governed by $t_r \approx 0.35 / B_{scope}$.</p>
             </div>
           </div>
 
           <div class="grid-3" style="margin-top: 4px;">
             <div class="info-card">
-              <div class="info-card-title" style="color: var(--cyan-400);">Sampling Rate Criterion</div>
+              <div class="info-card-title" style="color: var(--primary);">Sampling Rate Criterion</div>
               <p>Real-time DSO sampling rate must be $f_{sample} \ge 4 \text{ to } 10 \times B_{scope}$ to accurately reconstruct fast transient spikes.</p>
             </div>
 
             <div class="info-card">
-              <div class="info-card-title" style="color: var(--cyan-400);">Probe Compensation</div>
+              <div class="info-card-title" style="color: var(--primary);">Probe Compensation</div>
               <p>$10\times$ passive probes reduce circuit capacitive loading by a factor of 10, requiring periodic trimmer capacitor calibration.</p>
             </div>
 
             <div class="info-card">
-              <div class="info-card-title" style="color: var(--cyan-400);">Spectrum Analyzers</div>
+              <div class="info-card-title" style="color: var(--primary);">Spectrum Analyzers</div>
               <p>Hardware FFT analyzers transform time-domain traces into RF power spectral density plots in $\text{dBm}$ across frequency bins.</p>
             </div>
           </div>
@@ -1246,7 +1182,7 @@
         <div>
           <div class="slide-eyebrow">
             <span class="chip">Pedagogical Framework</span>
-            <span class="chip emerald">Learning by Doing</span>
+            <span class="chip">Learning by Doing</span>
           </div>
           <h1 class="slide-title">"Didattica Laboratoriale" - Hands-on Pedagogy</h1>
           <p class="slide-subtitle">
@@ -1266,7 +1202,7 @@
 
             <div class="info-card">
               <div class="info-card-header">
-                <div class="info-card-icon emerald">💻</div>
+                <div class="info-card-icon">💻</div>
                 <div class="info-card-title">Hybrid Simulation</div>
               </div>
               <p>Circuit modeling in <b>LTspice</b> and network architecture emulation in <b>Cisco Packet Tracer</b> precede physical assembly, ensuring zero equipment blowouts.</p>
@@ -1281,7 +1217,7 @@
             </div>
           </div>
 
-          <div class="info-card" style="margin-top: 4px; background: rgba(56, 189, 248, 0.08); border-color: rgba(56, 189, 248, 0.3);">
+          <div class="info-card" style="margin-top: 4px; background: var(--primary-light); border-color: var(--primary-border);">
             <div class="info-card-header">
               <div class="info-card-icon">📋</div>
               <div class="info-card-title">Sample 4th-Year Laboratory Practicums</div>
@@ -1327,7 +1263,7 @@
 
             <div class="info-card">
               <div class="info-card-header">
-                <div class="info-card-icon emerald">📱</div>
+                <div class="info-card-icon">📱</div>
                 <div class="info-card-title">Smart QR-Code Revision</div>
               </div>
               <p>Compresses full student exam answer sheets via <b>LZ-String</b> into a high-density QR code. Scanning opens dedicated question explanations without any database storage!</p>
@@ -1345,8 +1281,8 @@
           <div class="grid-2" style="margin-top: 4px;">
             <div class="info-card">
               <div class="info-card-header">
-                <div class="info-card-icon">🗣️</div>
-                <div class="info-card-title">Local Neural TTS (Kokoro ONNX)</div>
+                <div class="info-card-icon">🎧</div>
+                <div class="info-card-title">Local Offline Neural Audio (Kokoro)</div>
               </div>
               <p>Didactic slides feature synthesized spoken audio generated entirely offline with neural Kokoro ONNX models (Italian voice <i>im_nicola</i> & English models), fostering multi-sensory learning.</p>
             </div>
@@ -1379,7 +1315,7 @@
 
         <div class="slide-body">
           <div class="grid-2">
-            <div class="info-card" style="border-color: rgba(255, 204, 0, 0.3);">
+            <div class="info-card">
               <div class="info-card-header">
                 <div class="info-card-icon gold">🧑‍🏫</div>
                 <div class="info-card-title">1. Teacher Job Shadowing (KA1 Mobility)</div>
@@ -1392,7 +1328,7 @@
               </ul>
             </div>
 
-            <div class="info-card" style="border-color: rgba(56, 189, 248, 0.3);">
+            <div class="info-card">
               <div class="info-card-header">
                 <div class="info-card-icon">🧳</div>
                 <div class="info-card-title">2. VET Student Mobilities</div>
@@ -1409,7 +1345,7 @@
           <div class="grid-2" style="margin-top: 4px;">
             <div class="info-card">
               <div class="info-card-header">
-                <div class="info-card-icon emerald">📡</div>
+                <div class="info-card-icon">📡</div>
                 <div class="info-card-title">3. Joint Bilateral STEM Projects</div>
               </div>
               <p>Collaborative eTwinning or KA2 small-scale partnerships:</p>
@@ -1457,31 +1393,31 @@
               <p><b>Address:</b> Via Litta Modignani 65, 20161 Milano, Italy</p>
               <p style="margin-top: 6px;"><b>Contact Person:</b> Prof. Fernando Morea</p>
               <p><b>Department:</b> Computer Science & Telecommunications</p>
-              <p style="margin-top: 8px;"><b>School Portal:</b> <a href="https://www.iis-lagrange.edu.it" target="_blank" style="color: var(--cyan-400); text-decoration: none;">www.iis-lagrange.edu.it</a></p>
-              <p><b>Course Platform:</b> <a href="https://fmorea.github.io/" target="_blank" style="color: var(--cyan-400); text-decoration: none;">fmorea.github.io</a></p>
-              <p><b>GitHub Repo:</b> <a href="https://github.com/fmorea/fmorea.github.io" target="_blank" style="color: var(--cyan-400); text-decoration: none;">github.com/fmorea/fmorea.github.io</a></p>
+              <p style="margin-top: 8px;"><b>School Portal:</b> <a href="https://www.iis-lagrange.edu.it" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600;">www.iis-lagrange.edu.it</a></p>
+              <p><b>Course Platform:</b> <a href="https://fmorea.github.io/" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600;">fmorea.github.io</a></p>
+              <p><b>GitHub Repo:</b> <a href="https://github.com/fmorea/fmorea.github.io" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600;">github.com/fmorea/fmorea.github.io</a></p>
             </div>
 
             <!-- QR CODE BOX FOR VISITING TEACHERS -->
             <div class="qr-card-final">
               <div id="slide-final-qr"></div>
-              <p style="font-weight: 700; font-size: 14px; color: #003399; margin-top: 4px;">fmorea.github.io</p>
-              <p style="font-size: 11px; color: #64748b; margin-top: 2px;">
+              <p style="font-weight: 700; font-size: 14px; color: var(--primary); margin-top: 4px;">fmorea.github.io</p>
+              <p style="font-size: 11px; color: var(--slate-500); margin-top: 2px;">
                 Scan with your phone to take this platform with you!
               </p>
               <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
-                <a href="../index.html" class="nav-icon-btn active" style="font-size: 12px; text-decoration: none; padding: 6px 14px;">
+                <a href="../index.html" class="nav-icon-btn" style="background: var(--primary); color: #fff; border-color: var(--primary); text-decoration: none; padding: 6px 14px; font-size: 12px;">
                   ← Open Platform
                 </a>
-                <button type="button" class="nav-icon-btn" onclick="goToSlide(1)" style="font-size: 12px; padding: 6px 14px; background: #e2e8f0; color: #0f172a; border-color: #cbd5e1;">
+                <button type="button" class="nav-icon-btn" onclick="goToSlide(1)" style="font-size: 12px; padding: 6px 14px;">
                   ↺ Replay
                 </button>
               </div>
             </div>
           </div>
 
-          <div class="info-card" style="margin-top: 4px; text-align: center; padding: 12px;">
-            <p style="font-size: 13px; color: var(--slate-300);">
+          <div class="info-card" style="margin-top: 4px; text-align: center; padding: 12px; background: var(--primary-light); border-color: var(--primary-border);">
+            <p style="font-size: 13px; color: var(--slate-700);">
               🇪🇺 <i>"Enriching lives, opening minds through European educational cooperation."</i>
             </p>
           </div>
@@ -1498,8 +1434,8 @@
 
         <div class="slide-counter">
           <span>Slide <b id="currentSlideNum">1</b> of <span id="totalSlidesNum">12</span></span>
-          <span style="color: rgba(255,255,255,0.2);">|</span>
-          <span id="currentSlideTitle" style="color: var(--slate-300); font-size: 12px;">Welcome & Erasmus+ Context</span>
+          <span style="color: var(--slate-300);">|</span>
+          <span id="currentSlideTitle" style="color: var(--slate-600); font-size: 12px;">Welcome & Erasmus+ Context</span>
         </div>
 
         <div class="slide-nav-buttons">
@@ -1518,8 +1454,8 @@
   <!-- TABLE OF CONTENTS DRAWER / MODAL -->
   <div id="toc-drawer" onclick="closeTocOnBackdrop(event)">
     <div class="toc-modal">
-      <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px;">
-        <h2 style="font-size: 18px; color: #fff; font-weight: 800;">Slide Overview</h2>
+      <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--slate-200); padding-bottom: 12px;">
+        <h2 style="font-size: 17px; color: var(--slate-900); font-weight: 800;">Slide Overview</h2>
         <button type="button" onclick="closeToc()" class="nav-icon-btn" style="padding: 4px 10px;">✕ Close</button>
       </div>
       <div class="toc-grid" id="tocGrid"></div>
@@ -1533,23 +1469,6 @@
        ============================================================== */
     var totalSlides = 12;
     var currentSlide = 1;
-    var isNarrating = false;
-
-    // Slide spoken narrative summaries for Web Speech API (English)
-    var SLIDE_NARRATIVES = {
-      1: "Welcome to IIS Luigi Lagrange in Milan. This presentation introduces our fourth-year Telecommunications curriculum, laboratory methodology, and Erasmus-plus bilateral exchange opportunities for visiting European teachers.",
-      2: "The Italian technical high school framework spans five years. Class 4B is in the specialized three-year cycle for Computer Science and Telecommunications, leading to an EQF level 4 qualification.",
-      3: "Our fourth-year curriculum is structured around five core pillars: signal theory, Fourier spectral analysis, physical transmission media, analog and digital modulation, and network protocol architectures.",
-      4: "Module one focuses on signal classification and time-domain analysis. We examine deterministic versus random signals, continuous, sampled, and digital waveforms, and key parameters like peak, average, and root-mean-square values.",
-      5: "Module two explores Fourier decomposition. Any composite periodic signal can be represented as a sum of sinusoidal harmonics. You can interact with the live wave synthesizer on screen to adjust harmonics in real time.",
-      6: "Module three investigates transmission media: twisted pair copper cables, coaxial lines, and fiber optics based on Snell's law and total internal reflection, alongside attenuation and dispersion mechanisms.",
-      7: "Module four covers modulation systems. We analyze why carrier modulation is required to shrink physical antennas, analog AM and FM, digital constellations like QAM, and the Nyquist-Shannon sampling theorem.",
-      8: "Module five bridges hardware with networking protocols, examining the OSI and TCP/IP stacks, Ethernet framing, and the golden rule of measurement: oscilloscope bandwidth must be at least five times the signal bandwidth.",
-      9: "Our pedagogical methodology emphasizes learning by doing. Students work in pairs at professional lab benches, utilizing oscilloscopes, arbitrary function generators, LTspice simulations, and Cisco Packet Tracer.",
-      10: "We also showcase our open-source digital teaching platform at fmorea dot github dot io, featuring serverless client-side testing, smart QR-code revision, neural audio synthesis, and strict compliance with the EU AI Act.",
-      11: "We warmly invite European partner institutions to collaborate with us through Erasmus-plus teacher job shadowing, bilateral VET student internships, joint STEM eTwinning projects, and open educational resources.",
-      12: "Thank you for visiting IIS Luigi Lagrange in Milan. Please scan the QR code on screen to bookmark this platform, or reach out to course coordinator Professor Fernando Morea for international cooperation."
-    };
 
     function updateSlideView() {
       // Hide all slides
@@ -1578,11 +1497,6 @@
         nextBtn.innerHTML = 'Finish ↺';
       } else {
         nextBtn.innerHTML = 'Next ▶';
-      }
-
-      // If narrating, speak current slide narrative
-      if (isNarrating) {
-        speakCurrentSlide();
       }
 
       // On slide 5, ensure Fourier canvas animation is active
@@ -1621,7 +1535,6 @@
         currentSlide++;
         updateSlideView();
       } else {
-        // Replay from start
         currentSlide = 1;
         updateSlideView();
       }
@@ -1715,69 +1628,6 @@
       }
     }
 
-    /* WEB SPEECH API AUDIO NARRATION (ENGLISH) */
-    function toggleSpeech() {
-      if (!('speechSynthesis' in window)) {
-        alert("Speech synthesis is not supported in this browser.");
-        return;
-      }
-      if (isNarrating) {
-        stopSpeech();
-      } else {
-        isNarrating = true;
-        document.getElementById('btn-tts').classList.add('active');
-        document.getElementById('sound-waves').classList.add('playing');
-        document.getElementById('tts-label').textContent = 'Pause';
-        speakCurrentSlide();
-      }
-    }
-
-    function stopSpeech() {
-      isNarrating = false;
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-      }
-      var ttsBtn = document.getElementById('btn-tts');
-      var waves = document.getElementById('sound-waves');
-      var label = document.getElementById('tts-label');
-      if (ttsBtn) ttsBtn.classList.remove('active');
-      if (waves) waves.classList.remove('playing');
-      if (label) label.textContent = 'Listen';
-    }
-
-    function speakCurrentSlide() {
-      if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-
-      var text = SLIDE_NARRATIVES[currentSlide] || '';
-      if (!text) return;
-
-      var utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      utterance.rate = 0.98;
-
-      // Select an English voice if available
-      var voices = window.speechSynthesis.getVoices();
-      for (var v = 0; v < voices.length; v++) {
-        if (voices[v].lang.indexOf('en') === 0) {
-          utterance.voice = voices[v];
-          break;
-        }
-      }
-
-      utterance.onend = function() {
-        var waves = document.getElementById('sound-waves');
-        if (waves) waves.classList.remove('playing');
-      };
-      utterance.onerror = function() {
-        stopSpeech();
-      };
-
-      var waves = document.getElementById('sound-waves');
-      if (waves) waves.classList.add('playing');
-      window.speechSynthesis.speak(utterance);
-    }
-
     /* FOURIER LIVE INTERACTIVE CANVAS SYNTHESIZER */
     var fourierWaveType = 'square';
     var fourierHarmonics = 5;
@@ -1837,7 +1687,7 @@
 
       // Centerline
       var midY = h / 2;
-      ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.3)';
       ctx.beginPath();
       ctx.moveTo(0, midY);
       ctx.lineTo(w, midY);
@@ -1857,19 +1707,16 @@
         var yVal = 0;
 
         if (fourierWaveType === 'square') {
-          // Square wave: odd harmonics, amplitude = 1/n
           for (var n = 1; n <= fourierHarmonics * 2; n += 2) {
             yVal += (4 / Math.PI) * (1 / n) * Math.sin(n * baseFreq * t);
           }
         } else if (fourierWaveType === 'triangle') {
-          // Triangle wave: odd harmonics, amplitude = (-1)^((n-1)/2) / n^2
           for (var k = 1; k <= fourierHarmonics; k++) {
             var nVal = 2 * k - 1;
             var sign = Math.pow(-1, k - 1);
             yVal += (8 / (Math.PI * Math.PI)) * (sign / (nVal * nVal)) * Math.sin(nVal * baseFreq * t);
           }
         } else if (fourierWaveType === 'sawtooth') {
-          // Sawtooth: all harmonics, amplitude = 1/n
           for (var s = 1; s <= fourierHarmonics; s++) {
             yVal += (2 / Math.PI) * (1 / s) * Math.sin(s * baseFreq * t);
           }
@@ -1886,9 +1733,9 @@
       ctx.stroke();
 
       // Legend in top-right of canvas
-      ctx.fillStyle = '#ffcc00';
+      ctx.fillStyle = '#38bdf8';
       ctx.font = '11px JetBrains Mono, monospace';
-      ctx.fillText(fourierWaveType.toUpperCase() + ' (N=' + fourierHarmonics + ')', w - 140, 20);
+      ctx.fillText(fourierWaveType.toUpperCase() + ' (N=' + fourierHarmonics + ')', w - 130, 20);
 
       fourierPhase += 1.5;
       fourierAnimId = requestAnimationFrame(drawFourier);
@@ -1903,7 +1750,6 @@
 
       var targetUrl = 'https://fmorea.github.io/';
       if (window.location && window.location.origin && window.location.origin.indexOf('http') === 0) {
-        // Resolve parent URL
         targetUrl = window.location.origin + window.location.pathname.replace(/\/erasmus\/?$/, '/');
       }
 
@@ -1940,9 +1786,6 @@
     /* INITIALIZATION */
     window.addEventListener('DOMContentLoaded', function() {
       updateSlideView();
-      if (window.speechSynthesis) {
-        window.speechSynthesis.onvoiceschanged = function() {};
-      }
     });
   </script>
 </body>
