@@ -1,0 +1,1949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IIS Lagrange Milan · 4B INF Telecommunications · Erasmus+ Presentation for Visiting Teachers</title>
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- QRCode.js for generating QR code on the final slide -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- KaTeX for crisp mathematical formulas -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root {
+      --eu-blue: #003399;
+      --eu-blue-dark: #002266;
+      --eu-blue-light: #1a4fba;
+      --eu-gold: #ffcc00;
+      --eu-gold-hover: #ffd633;
+      --slate-950: #0a0f1d;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-400: #94a3b8;
+      --slate-300: #cbd5e1;
+      --slate-100: #f1f5f9;
+      --cyan-400: #38bdf8;
+      --cyan-500: #0ea5e9;
+      --emerald-400: #34d399;
+      --emerald-500: #10b981;
+      --indigo-400: #818cf8;
+      --card-bg: rgba(30, 41, 59, 0.85);
+      --card-border: rgba(148, 163, 184, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at 50% 10%, #1e3a8a 0%, #0f172a 55%, #050b14 100%);
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* TOP NAVIGATION BAR */
+    header.deck-header {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateX(-2px);
+    }
+
+    .school-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .school-title span.badge-eu {
+      background: linear-gradient(135deg, var(--eu-blue) 0%, #001f54 100%);
+      color: var(--eu-gold);
+      border: 1px solid rgba(255, 204, 0, 0.4);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .controls-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-icon-btn {
+      background: rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.18s ease;
+    }
+    .nav-icon-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    .nav-icon-btn.active {
+      background: var(--eu-blue);
+      border-color: var(--eu-gold);
+      color: #ffffff;
+    }
+
+    /* SLIDE WRAPPER */
+    main.presentation-viewport {
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      position: relative;
+    }
+
+    .deck-container {
+      width: 100%;
+      max-width: 1180px;
+      min-height: 640px;
+      background: var(--slate-900);
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.94) 0%, rgba(10, 15, 29, 0.98) 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* INDIVIDUAL SLIDE */
+    .slide {
+      flex: 1 1 auto;
+      padding: 44px 52px;
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      animation: fadeInSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+      overflow-y: auto;
+    }
+    .slide.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    @keyframes fadeInSlide {
+      from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.995);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* SLIDE HEADER & TYPOGRAPHY */
+    .slide-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--cyan-400);
+    }
+    .slide-eyebrow .chip {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 3px 10px;
+      border-radius: 9999px;
+      color: var(--cyan-400);
+    }
+    .slide-eyebrow .chip-gold {
+      background: rgba(255, 204, 0, 0.12);
+      border: 1px solid rgba(255, 204, 0, 0.35);
+      color: var(--eu-gold);
+    }
+
+    h1.slide-title {
+      font-size: 32px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -0.8px;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    p.slide-subtitle {
+      font-size: 16px;
+      color: var(--slate-300);
+      margin-bottom: 24px;
+      max-width: 860px;
+      line-height: 1.5;
+    }
+
+    /* SLIDE BODY GRIDS */
+    .slide-body {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    /* CARDS INSIDE SLIDES */
+    .info-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 20px;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .info-card:hover {
+      border-color: rgba(56, 189, 248, 0.35);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.5);
+    }
+
+    .info-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .info-card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--cyan-400);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .info-card-icon.gold {
+      background: rgba(255, 204, 0, 0.15);
+      color: var(--eu-gold);
+    }
+    .info-card-icon.emerald {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--emerald-400);
+    }
+
+    .info-card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .info-card p, .info-card li {
+      font-size: 14px;
+      color: var(--slate-300);
+      line-height: 1.55;
+    }
+    .info-card ul {
+      list-style-type: disc;
+      padding-left: 20px;
+      margin-top: 6px;
+    }
+    .info-card li {
+      margin-bottom: 6px;
+    }
+
+    .highlight-pill {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--cyan-400);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* FOOTER BAR OF DECK */
+    footer.deck-footer {
+      background: rgba(10, 15, 29, 0.95);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: relative;
+    }
+
+    .progress-bar-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--eu-blue) 0%, var(--cyan-400) 70%, var(--eu-gold) 100%);
+      width: 8.33%;
+      transition: width 0.3s ease;
+    }
+
+    .slide-counter {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--slate-400);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .slide-counter b {
+      color: #ffffff;
+    }
+
+    .slide-nav-buttons {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-slide-nav {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.18s ease;
+    }
+    .btn-slide-nav:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+    .btn-slide-nav:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .btn-slide-nav.btn-primary {
+      background: var(--eu-blue);
+      border-color: rgba(255, 204, 0, 0.4);
+      color: #ffffff;
+    }
+    .btn-slide-nav.btn-primary:hover:not(:disabled) {
+      background: var(--eu-blue-light);
+      box-shadow: 0 4px 14px rgba(0, 51, 153, 0.4);
+    }
+
+    /* TTS AUDIO NARRATION STATUS */
+    .tts-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--slate-400);
+    }
+    .sound-waves {
+      display: none;
+      align-items: flex-end;
+      gap: 2px;
+      height: 14px;
+    }
+    .sound-waves.playing {
+      display: inline-flex;
+    }
+    .sound-waves span {
+      width: 3px;
+      background: var(--eu-gold);
+      border-radius: 2px;
+      animation: wave 1s ease-in-out infinite;
+    }
+    .sound-waves span:nth-child(1) { height: 4px; animation-delay: 0.1s; }
+    .sound-waves span:nth-child(2) { height: 12px; animation-delay: 0.25s; }
+    .sound-waves span:nth-child(3) { height: 8px; animation-delay: 0.4s; }
+    .sound-waves span:nth-child(4) { height: 14px; animation-delay: 0.15s; }
+    @keyframes wave {
+      0%, 100% { transform: scaleY(0.4); }
+      50% { transform: scaleY(1); }
+    }
+
+    /* LIVE FOURIER SYNTHESIZER WIDGET (Slide 5) */
+    .fourier-widget-container {
+      background: rgba(10, 15, 29, 0.7);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .canvas-wrap {
+      width: 100%;
+      height: 180px;
+      background: #020617;
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    canvas#fourierCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .fourier-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      font-size: 13px;
+    }
+    .wave-btn-group {
+      display: flex;
+      gap: 6px;
+    }
+    .wave-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--slate-300);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .wave-btn.active, .wave-btn:hover {
+      background: var(--eu-blue);
+      color: #ffffff;
+      border-color: var(--cyan-400);
+    }
+    .slider-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .slider-group input[type="range"] {
+      width: 140px;
+      accent-color: var(--cyan-400);
+    }
+
+    /* TABLE OF CONTENTS MODAL / DRAWER */
+    #toc-drawer {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 10, 20, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    #toc-drawer.open {
+      display: flex;
+    }
+    .toc-modal {
+      background: var(--slate-900);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 840px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 30px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+    }
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .toc-item {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 12px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+    }
+    .toc-item:hover, .toc-item.current {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--cyan-400);
+    }
+    .toc-item-number {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--cyan-400);
+      text-transform: uppercase;
+    }
+    .toc-item-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-top: 2px;
+    }
+
+    /* QR CODE BOX (Slide 12) */
+    .qr-card-final {
+      background: #ffffff;
+      color: #0f172a;
+      padding: 18px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      min-width: 200px;
+    }
+    .qr-card-final #slide-final-qr {
+      margin-bottom: 8px;
+    }
+
+    /* PRINT STYLESHEET */
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+      }
+      header.deck-header, footer.deck-footer, #toc-drawer {
+        display: none !important;
+      }
+      main.presentation-viewport {
+        padding: 0 !important;
+      }
+      .deck-container {
+        border: none !important;
+        box-shadow: none !important;
+        background: #ffffff !important;
+        max-width: 100% !important;
+      }
+      .slide {
+        display: flex !important;
+        opacity: 1 !important;
+        page-break-after: always;
+        break-after: page;
+        min-height: 98vh;
+        padding: 30px !important;
+        color: #0f172a !important;
+      }
+      h1.slide-title {
+        color: #003399 !important;
+      }
+      p.slide-subtitle {
+        color: #475569 !important;
+      }
+      .info-card {
+        background: #f8fafc !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #0f172a !important;
+      }
+      .info-card-title {
+        color: #0f172a !important;
+      }
+      .info-card p, .info-card li {
+        color: #334155 !important;
+      }
+      .highlight-pill {
+        background: #e2e8f0 !important;
+        color: #003399 !important;
+      }
+      .fourier-widget-container {
+        background: #f1f5f9 !important;
+        border: 1px solid #cbd5e1 !important;
+      }
+      canvas#fourierCanvas {
+        border: 1px solid #94a3b8 !important;
+      }
+      .qr-card-final {
+        border: 1px solid #cbd5e1 !important;
+      }
+    }
+
+    /* RESPONSIVE DESIGN */
+    @media (max-width: 900px) {
+      .grid-3, .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .slide {
+        padding: 30px 24px;
+      }
+      h1.slide-title {
+        font-size: 26px;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: 1fr;
+      }
+      header.deck-header {
+        padding: 8px 12px;
+      }
+      .school-title {
+        display: none;
+      }
+      .slide {
+        padding: 20px 16px;
+      }
+      h1.slide-title {
+        font-size: 22px;
+      }
+      p.slide-subtitle {
+        font-size: 14px;
+        margin-bottom: 16px;
+      }
+      footer.deck-footer {
+        padding: 10px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <header class="deck-header">
+    <div class="brand-group">
+      <a href="../index.html" class="back-btn" title="Return to Teaching Platform">
+        <span aria-hidden="true">←</span> Platform
+      </a>
+      <div class="school-title">
+        <span class="badge-eu">★ ERASMUS+</span>
+        <span>IIS "L. Lagrange" Milano · 4B INF</span>
+      </div>
+    </div>
+
+    <div class="controls-group">
+      <button type="button" class="nav-icon-btn" id="btn-tts" onclick="toggleSpeech()" title="Listen to slide narrative in English">
+        <span id="tts-icon">🔊</span> <span id="tts-label">Listen</span>
+        <div class="sound-waves" id="sound-waves">
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </button>
+
+      <button type="button" class="nav-icon-btn" onclick="openToc()" title="View slide overview (Key: O)">
+        <span>🗂️</span> Overview
+      </button>
+
+      <button type="button" class="nav-icon-btn" onclick="window.print()" title="Print / Save PDF handout">
+        <span>🖨️</span> PDF
+      </button>
+
+      <button type="button" class="nav-icon-btn" onclick="toggleFullscreen()" title="Fullscreen mode (Key: F)">
+        <span id="fs-icon">⛶</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- PRESENTATION MAIN VIEWPORT -->
+  <main class="presentation-viewport">
+    <div class="deck-container" id="presentationContainer">
+
+      <!-- ==============================================================
+           SLIDE 1: WELCOME & ERASMUS+ MOBILITY
+           ============================================================== -->
+      <section class="slide active" id="slide-1" data-title="Welcome & Erasmus+ Context">
+        <div>
+          <div class="slide-eyebrow">
+            <span class="chip chip-gold">🇪🇺 Erasmus+ Staff Mobility</span>
+            <span class="chip">Department of Computer Science & Telecommunications</span>
+          </div>
+          <h1 class="slide-title">Welcome to IIS "Luigi Lagrange" - Milan</h1>
+          <p class="slide-subtitle">
+            A comprehensive overview of our 4th-Year Telecommunications curriculum (Class 4B INF), laboratory methodology, and international bilateral exchange opportunities for visiting European educators.
+          </p>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-3">
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon gold">🏫</div>
+                <div class="info-card-title">School Context</div>
+              </div>
+              <p><b>IIS "Luigi Lagrange"</b> is a prominent public technical and scientific high school in Northern Milan (Italy), hosting over 1,200 students with state-of-the-art STEM & electronics laboratories.</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon">📡</div>
+                <div class="info-card-title">Class 4B INF Profile</div>
+              </div>
+              <p>4th-year technical cohort (students aged 17–18) specializing in <b>Telecommunications & Network Engineering</b>. Focus on signals, Fourier decomposition, high-speed lines, and data protocols.</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon emerald">🤝</div>
+                <div class="info-card-title">Erasmus+ Goals</div>
+              </div>
+              <p>Job shadowing, pedagogical practice exchange, co-teaching bilingual (CLIL) modules, and laying foundations for cross-border student mobilities (VET) and joint STEM projects.</p>
+            </div>
+          </div>
+
+          <div class="info-card" style="margin-top: 4px; background: rgba(0, 51, 153, 0.2); border-color: rgba(255, 204, 0, 0.3);">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <span class="highlight-pill" style="color: var(--eu-gold);">Academic Year 2026/2027</span>
+                <span style="margin-left: 8px; font-size: 13px; color: #e2e8f0;">Course Coordinator: <b>Prof. Fernando Morea</b></span>
+              </div>
+              <div style="font-size: 12px; color: var(--slate-300);">
+                Use keyboard <b>← / →</b> or <b>Spacebar</b> to navigate slides
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           SLIDE 2: ITALIAN TECHNICAL EDUCATION SYSTEM
+           ============================================================== -->
+      <section class="slide" id="slide-2" data-title="The Italian Technical High School System">
+        <div>
+          <div class="slide-eyebrow">
+            <span class="chip">Institutional Framework</span>
+            <span class="chip">EQF Level 4</span>
+          </div>
+          <h1 class="slide-title">The Italian Technical Education Architecture</h1>
+          <p class="slide-subtitle">
+            Understanding the 5-year curriculum of the <i>Istituto Tecnico Tecnologico</i> (Technology High School) and the specialization pathway in Telecommunications.
+          </p>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon">1-2</div>
+                <div class="info-card-title">Biennio Comune (Years 1–2 · Ages 14–16)</div>
+              </div>
+              <p>Common scientific and humanitarian baseline:</p>
+              <ul>
+                <li>Mathematics, Physics, Chemistry, Earth Sciences</li>
+                <li>Computer Science fundamentals & computational logic</li>
+                <li>Italian Literature, History, Law, and English B1</li>
+                <li>Prepares students to choose their 3-year specialization track</li>
+              </ul>
+            </div>
+
+            <div class="info-card" style="border-color: rgba(56, 189, 248, 0.4); background: rgba(14, 165, 233, 0.08);">
+              <div class="info-card-header">
+                <div class="info-card-icon" style="background: var(--eu-blue); color: #fff;">3-5</div>
+                <div class="info-card-title">Triennio (Years 3–5 · Ages 16–19) ★ Class 4B</div>
+              </div>
+              <p>Specialization: <b>Informatica e Telecomunicazioni</b></p>
+              <ul>
+                <li><b>Telecommunications (TLC)</b>: 5 hrs/week (3 theory + 2 lab)</li>
+                <li><b>Sistemi e Reti (Systems & Networks)</b>: 4 hrs/week</li>
+                <li><b>Informatica (Computer Science & OOP)</b>: 6 hrs/week</li>
+                <li><b>TPSIT (Applied Technologies)</b>: 3 hrs/week</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-top: 4px;">
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon emerald">🎓</div>
+                <div class="info-card-title">Graduate Qualification & Outcomes</div>
+              </div>
+              <p>Graduates receive the <b>Diploma di Perito Industriale Capotecnico in Telecomunicazioni</b> (EQF Level 4). They can directly enter the European labor market as network & telecom technicians or pursue university STEM degrees.</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon gold">⚖️</div>
+                <div class="info-card-title">School-Work Alternance (PCTO) & Internships</div>
+              </div>
+              <p>Students complete mandatory 150+ hours of vocational internships in telecommunication providers, data centers, and enterprise IT departments, fostering workplace readiness.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           SLIDE 3: 4B INF SYLLABUS OVERVIEW
+           ============================================================== -->
+      <section class="slide" id="slide-3" data-title="Class 4B INF Syllabus Structure">
+        <div>
+          <div class="slide-eyebrow">
+            <span class="chip">Curriculum Structure</span>
+            <span class="chip">5 Core Pillars</span>
+          </div>
+          <h1 class="slide-title">Class 4B INF: Telecommunications Pillars</h1>
+          <p class="slide-subtitle">
+            The 4th year is the pivotal transition where theoretical physics and mathematical analysis converge into real-world communication hardware, high-frequency lines, and protocols.
+          </p>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-3">
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon">01</div>
+                <div class="info-card-title">Signal Theory</div>
+              </div>
+              <p>Deterministic vs stochastic signals. Continuous (analog), sampled, and digital signals. Peak, RMS, average parameters and time-domain analysis.</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon">02</div>
+                <div class="info-card-title">Fourier Spectral Analysis</div>
+              </div>
+              <p>Fourier series decomposition of periodic composite waves into sinusoidal harmonics. Frequency spectrum, signal bandwidth, and filtering.</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon">03</div>
+                <div class="info-card-title">Transmission Media</div>
+              </div>
+              <p>Guided media (twisted pair Cat 6/6A, coaxial cables, Single-Mode and Multi-Mode optical fibers) & wireless RF propagation channels.</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon">04</div>
+                <div class="info-card-title">Modulation Systems</div>
+              </div>
+              <p>Analog (AM, FM) and digital shift keying (ASK, FSK, PSK, QAM). Nyquist-Shannon sampling theorem, quantization, and constellation diagrams.</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon">05</div>
+                <div class="info-card-title">Protocols & Architecture</div>
+              </div>
+              <p>OSI 7-layer and TCP/IP models, Ethernet framing (IEEE 802.3), MAC addressing, VLAN tagging (802.1Q), and packet routing fundamentals.</p>
+            </div>
+
+            <div class="info-card" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);">
+              <div class="info-card-header">
+                <div class="info-card-icon emerald">🔬</div>
+                <div class="info-card-title">Hands-on Laboratory</div>
+              </div>
+              <p>40% of class time is spent on bench testing with digital storage oscilloscopes (DSOs), arbitrary waveform generators, and Cisco Packet Tracer.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           SLIDE 4: MODULE 1 - SIGNAL CLASSIFICATION
+           ============================================================== -->
+      <section class="slide" id="slide-4" data-title="Module 1: Signal Classification & Time Domain">
+        <div>
+          <div class="slide-eyebrow">
+            <span class="chip">Syllabus Deep-Dive</span>
+            <span class="chip">Module 1</span>
+          </div>
+          <h1 class="slide-title">Signal Classification & Time-Domain Parameters</h1>
+          <p class="slide-subtitle">
+            Establishing the formal physical and mathematical properties of telecommunication waveforms before circuit transmission.
+          </p>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon">📈</div>
+                <div class="info-card-title">Deterministic vs. Stochastic Signals</div>
+              </div>
+              <p><b>Deterministic Signals:</b> Exactly predictable by closed-form math:
+                $$\displaystyle s(t) = A_0 \cos(2\pi f_0 t + \varphi_0)$$
+                Reproducible in labs using signal generators; ideal for bench calibration and frequency response measurements.
+              </p>
+              <p style="margin-top: 8px;"><b>Random / Aleatory Signals:</b> Non-deterministic instantaneous values (e.g. human speech, thermal noise $P_n = kTB$). Characterized via probability distributions, power spectral density, and variance.</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon">⚡</div>
+                <div class="info-card-title">Waveform Categories</div>
+              </div>
+              <ul>
+                <li><b>Analog Signals:</b> Continuous in time, continuous in amplitude (e.g. raw microphone output).</li>
+                <li><b>Sampled Signals:</b> Discrete in time (at sampling intervals $T_s$), continuous in voltage.</li>
+                <li><b>Digital Signals:</b> Discrete in both time and quantized discrete amplitude levels (binary bits $0$ and $1$).</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="grid-3" style="margin-top: 4px;">
+            <div class="info-card">
+              <div class="info-card-title" style="color: var(--cyan-400);">Peak & Period</div>
+              <p>Peak voltage $V_p$, Peak-to-Peak $V_{pp} = 2V_p$, and Period $T$ (seconds) where fundamental frequency is $f_0 = 1/T$ (Hz).</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-title" style="color: var(--cyan-400);">Average Value (DC)</div>
+              <p>Arithmetic mean over period $T$:
+                $$\displaystyle V_{avg} = \frac{1}{T}\int_0^T s(t)\,dt$$
+                Equals $0\,\text{V}$ for symmetrical AC waveforms.
+              </p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-title" style="color: var(--cyan-400);">RMS Effective Value</div>
+              <p>Equivalent thermal power dissipation:
+                $$\displaystyle V_{rms} = \sqrt{\frac{1}{T}\int_0^T s^2(t)\,dt} = \frac{V_p}{\sqrt{2}} \approx 0.707 V_p$$
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           SLIDE 5: MODULE 2 - FOURIER SERIES (LIVE INTERACTIVE SYNTH)
+           ============================================================== -->
+      <section class="slide" id="slide-5" data-title="Module 2: Fourier Analysis & Live Interactive Synth">
+        <div>
+          <div class="slide-eyebrow">
+            <span class="chip">Syllabus Deep-Dive</span>
+            <span class="chip chip-gold">Live Interactive Demo</span>
+          </div>
+          <h1 class="slide-title">Fourier Spectral Synthesis in Real-Time</h1>
+          <p class="slide-subtitle">
+            Jean-Baptiste Fourier's theorem states that any periodic wave can be reconstructed as a sum of sinusoidal harmonics. Test it live below!
+          </p>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon">𝝨</div>
+                <div class="info-card-title">Fourier Series Equation</div>
+              </div>
+              <p style="font-size: 13px;">
+                $$\displaystyle s(t) = a_0 + \sum_{n=1}^{\infty} \left[ a_n \cos(n \omega_0 t) + b_n \sin(n \omega_0 t) \right]$$
+              </p>
+              <ul style="font-size: 13px; margin-top: 8px;">
+                <li><b>Fundamental:</b> $f_0 = 1/T$ (first harmonic, determines pitch).</li>
+                <li><b>Harmonics:</b> Integer multiples $f_n = n \cdot f_0$.</li>
+                <li><b>Bandwidth $B$:</b> Transmission channel must transmit sufficient harmonics to prevent severe edge rounding.</li>
+              </ul>
+            </div>
+
+            <!-- INTERACTIVE CANVAS SYNTHESIZER -->
+            <div class="fourier-widget-container">
+              <div class="canvas-wrap">
+                <canvas id="fourierCanvas"></canvas>
+              </div>
+
+              <div class="fourier-controls">
+                <div class="wave-btn-group">
+                  <button type="button" class="wave-btn active" onclick="setFourierWave('square')">Square</button>
+                  <button type="button" class="wave-btn" onclick="setFourierWave('triangle')">Triangle</button>
+                  <button type="button" class="wave-btn" onclick="setFourierWave('sawtooth')">Sawtooth</button>
+                </div>
+
+                <div class="slider-group">
+                  <label for="harmonicsSlider" style="color: var(--slate-300);">Harmonics: <b id="harmonicsVal" style="color: var(--cyan-400);">5</b></label>
+                  <input type="range" id="harmonicsSlider" min="1" max="15" value="5" step="1" oninput="updateHarmonics(this.value)">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-card" style="margin-top: 4px; padding: 12px 20px;">
+            <p style="font-size: 13px; color: var(--slate-300);">
+              💡 <b>Didactic observation for Erasmus teachers:</b> Notice how odd harmonics ($1f, 3f, 5f\dots$) assemble with amplitude proportional to $1/n$ to sharpen the rise-time edges of the square wave, demonstrating why digital lines require broadband frequency response.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           SLIDE 6: MODULE 3 - TRANSMISSION MEDIA
+           ============================================================== -->
+      <section class="slide" id="slide-6" data-title="Module 3: Transmission Media & Fiber Optics">
+        <div>
+          <div class="slide-eyebrow">
+            <span class="chip">Syllabus Deep-Dive</span>
+            <span class="chip">Module 3</span>
+          </div>
+          <h1 class="slide-title">Transmission Media & Optical Physics</h1>
+          <p class="slide-subtitle">
+            Exploring guided copper media, optical waveguide physics, attenuation curves, and high-frequency dispersion phenomena.
+          </p>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-3">
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon">➿</div>
+                <div class="info-card-title">Twisted Pair (Cat 6/6A)</div>
+              </div>
+              <p>Differential balanced transmission canceling electromagnetic interference (crosstalk). Characteristic impedance $Z_0 \approx 100\,\Omega$. Limited by attenuation to 100 meters per IEEE standard.</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon">🔘</div>
+                <div class="info-card-title">Coaxial Cables</div>
+              </div>
+              <p>Concentric cylindrical shield offering high EMI immunity up to GHz range. $50\,\Omega$ impedance for RF transceivers; $75\,\Omega$ optimized for minimum video attenuation.</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon emerald">✨</div>
+                <div class="info-card-title">Single-Mode Fiber (SMF)</div>
+              </div>
+              <p>Narrow core ($9\,\mu\text{m}$), eliminating intermodal dispersion. Laser excitation at $1310\,\text{nm}$ and $1550\,\text{nm}$. Enables 100+ km backbone transmission links.</p>
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-top: 4px;">
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon gold">📐</div>
+                <div class="info-card-title">Optical Waveguide Physics</div>
+              </div>
+              <p>Based on <b>Total Internal Reflection</b> (Snell's Law):
+                $$\displaystyle n_{core} > n_{cladding} \implies \theta_c = \arcsin\left(\frac{n_{cladding}}{n_{core}}\right)$$
+                Light rays arriving at angles greater than critical angle $\theta_c$ are trapped within the glass core without leakage.
+              </p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon">📉</div>
+                <div class="info-card-title">Attenuation Mechanisms</div>
+              </div>
+              <p>Optical loss measured in $\text{dB/km}$:</p>
+              <ul>
+                <li><b>Rayleigh Scattering:</b> dominant at lower wavelengths ($\propto 1/\lambda^4$).</li>
+                <li><b>Infrared Absorption:</b> dominant above $1600\,\text{nm}$.</li>
+                <li><b>$1550\,\text{nm}$ Window:</b> global attenuation minimum (~$0.2\,\text{dB/km}$).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           SLIDE 7: MODULE 4 - MODULATION SYSTEMS
+           ============================================================== -->
+      <section class="slide" id="slide-7" data-title="Module 4: Modulation Systems & Digital Transmission">
+        <div>
+          <div class="slide-eyebrow">
+            <span class="chip">Syllabus Deep-Dive</span>
+            <span class="chip">Module 4</span>
+          </div>
+          <h1 class="slide-title">Modulation Systems & Nyquist-Shannon Sampling</h1>
+          <p class="slide-subtitle">
+            Why we modulate high-frequency carrier waves, analog AM/FM schemes, digital constellations, and the mathematical criteria for sampling.
+          </p>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon">📡</div>
+                <div class="info-card-title">Why Modulation is Mandatory</div>
+              </div>
+              <p>1. <b>Antenna Sizing constraint:</b> Optimal dipole size $\ell \approx \lambda/2 = c / (2f)$. At $1\,\text{kHz}$, $\ell = 150\,\text{km}$! Modulating at $2.4\,\text{GHz}$ shrinks the antenna to $6.25\,\text{cm}$.</p>
+              <p style="margin-top: 8px;">2. <b>Frequency Division Multiplexing (FDM):</b> Enables thousands of separate communication channels across the shared electromagnetic spectrum.</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon gold">⏱️</div>
+                <div class="info-card-title">Nyquist-Shannon Sampling Theorem</div>
+              </div>
+              <p>To reconstruct a continuous analog signal of bandwidth $f_{max}$ without aliasing distortion, the sampling rate $f_s$ must satisfy:
+                $$\displaystyle f_s \ge 2 f_{max}$$
+                In lab practice, telephony samples voice ($f_{max} = 3.4\,\text{kHz}$) at $8\,\text{kHz}$, and CD audio ($20\,\text{kHz}$) at $44.1\,\text{kHz}$.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid-3" style="margin-top: 4px;">
+            <div class="info-card">
+              <div class="info-card-title" style="color: var(--cyan-400);">Analog Modulation</div>
+              <p><b>AM:</b> carrier amplitude modulated by information ($B = 2f_m$).<br><b>FM:</b> Carson's rule $B \approx 2(\Delta f + f_m)$, superior SNR and noise resilience.</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-title" style="color: var(--cyan-400);">Binary Digital Shift Keying</div>
+              <p><b>ASK:</b> Amplitude Shift Keying.<br><b>FSK:</b> Frequency Shift Keying.<br><b>BPSK:</b> Phase Shift Keying ($0^\circ / 180^\circ$, 1 bit/symbol).</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-title" style="color: var(--cyan-400);">M-ary QAM Constellations</div>
+              <p>Quadrature Amplitude Modulation: combining phase & amplitude.<br><b>Bit rate:</b> $R_b = R_s \cdot \log_2(M)$. 64-QAM delivers 6 bits per transmitted symbol!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           SLIDE 8: MODULE 5 - NETWORKING & INSTRUMENTATION
+           ============================================================== -->
+      <section class="slide" id="slide-8" data-title="Module 5: Protocols & Lab Instrumentation Rules">
+        <div>
+          <div class="slide-eyebrow">
+            <span class="chip">Syllabus Deep-Dive</span>
+            <span class="chip">Module 5</span>
+          </div>
+          <h1 class="slide-title">Network Protocols & Measurement Instrumentation</h1>
+          <p class="slide-subtitle">
+            Interconnecting the physical signal layer with Ethernet architectures, TCP/IP networking, and digital oscilloscope calibration criteria.
+          </p>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon">🌐</div>
+                <div class="info-card-title">Layered Protocol Architecture</div>
+              </div>
+              <p><b>OSI 7-Layer vs. TCP/IP 4-Layer:</b></p>
+              <ul>
+                <li><b>Physical (L1):</b> Bit transmission, encoding (Manchester, 4B5B, PAM-4).</li>
+                <li><b>Data Link (L2):</b> IEEE 802.3 Ethernet framing, 48-bit MAC addressing, CSMA/CD, VLAN tagging (802.1Q).</li>
+                <li><b>Network (L3):</b> IPv4/IPv6 packet routing, subnetting (CIDR), ICMP.</li>
+                <li><b>Transport (L4):</b> TCP reliable streams vs. UDP low-latency datagrams.</li>
+              </ul>
+            </div>
+
+            <div class="info-card" style="border-color: rgba(255, 204, 0, 0.4);">
+              <div class="info-card-header">
+                <div class="info-card-icon gold">🎯</div>
+                <div class="info-card-title">Digital Oscilloscope "Rule of 5"</div>
+              </div>
+              <p>To measure high-speed digital clocks without distorting rise time $t_r$ and harmonics:</p>
+              <div style="background: rgba(0, 0, 0, 0.35); padding: 10px 14px; border-radius: 8px; margin: 8px 0; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--eu-gold);">
+                B<sub>scope</sub> ≥ 5 × B<sub>signal</sub>
+              </div>
+              <p style="font-size: 13px;">Captures up to the 5th harmonic with &lt;3% amplitude attenuation error. Scope rise time is governed by $t_r \approx 0.35 / B_{scope}$.</p>
+            </div>
+          </div>
+
+          <div class="grid-3" style="margin-top: 4px;">
+            <div class="info-card">
+              <div class="info-card-title" style="color: var(--cyan-400);">Sampling Rate Criterion</div>
+              <p>Real-time DSO sampling rate must be $f_{sample} \ge 4 \text{ to } 10 \times B_{scope}$ to accurately reconstruct fast transient spikes.</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-title" style="color: var(--cyan-400);">Probe Compensation</div>
+              <p>$10\times$ passive probes reduce circuit capacitive loading by a factor of 10, requiring periodic trimmer capacitor calibration.</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-title" style="color: var(--cyan-400);">Spectrum Analyzers</div>
+              <p>Hardware FFT analyzers transform time-domain traces into RF power spectral density plots in $\text{dBm}$ across frequency bins.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           SLIDE 9: PEDAGOGY - LABORATORY METHODOLOGY
+           ============================================================== -->
+      <section class="slide" id="slide-9" data-title="Pedagogical Methodology: Didattica Laboratoriale">
+        <div>
+          <div class="slide-eyebrow">
+            <span class="chip">Pedagogical Framework</span>
+            <span class="chip emerald">Learning by Doing</span>
+          </div>
+          <h1 class="slide-title">"Didattica Laboratoriale" - Hands-on Pedagogy</h1>
+          <p class="slide-subtitle">
+            Theory is proven in practice: how students in 4B INF apply theoretical equations to real electronic test benches and software emulators.
+          </p>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-3">
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon">👥</div>
+                <div class="info-card-title">Pair Benches</div>
+              </div>
+              <p>Students work in pairs at dedicated hardware stations equipped with digital storage oscilloscopes, function generators, multimeters, and breadboard prototypes.</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon emerald">💻</div>
+                <div class="info-card-title">Hybrid Simulation</div>
+              </div>
+              <p>Circuit modeling in <b>LTspice</b> and network architecture emulation in <b>Cisco Packet Tracer</b> precede physical assembly, ensuring zero equipment blowouts.</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon gold">📑</div>
+                <div class="info-card-title">Technical Reports</div>
+              </div>
+              <p>Each experiment culminates in a formal engineering report (<i>Relazione Tecnica</i>) detailing circuit schematic, experimental data tables, graph plots, and error analysis.</p>
+            </div>
+          </div>
+
+          <div class="info-card" style="margin-top: 4px; background: rgba(56, 189, 248, 0.08); border-color: rgba(56, 189, 248, 0.3);">
+            <div class="info-card-header">
+              <div class="info-card-icon">📋</div>
+              <div class="info-card-title">Sample 4th-Year Laboratory Practicums</div>
+            </div>
+            <div class="grid-2" style="font-size: 13px;">
+              <div>
+                <p><b>1. Harmonic Verification on DSO:</b> Students generate a $10\,\text{kHz}$ square wave, enable on-board FFT, and calculate attenuation ratios of odd harmonics to confirm Fourier theory.</p>
+                <p style="margin-top: 6px;"><b>2. Time-Domain Reflectometry (TDR):</b> Injecting nanosecond pulses into coaxial lines to locate open/short faults and measure cable velocity factors.</p>
+              </div>
+              <div>
+                <p><b>3. Optical Power Budget:</b> Measuring insertion loss of ST/SC connectors and fiber patch cords with calibrated optical power meters ($\text{dBm}$).</p>
+                <p style="margin-top: 6px;"><b>4. VLAN & Router-on-a-Stick:</b> Configuring Cisco switches and Linux routers to segment broadcast domains and test inter-VLAN throughput.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           SLIDE 10: OUR DIGITAL TEACHING PLATFORM
+           ============================================================== -->
+      <section class="slide" id="slide-10" data-title="Our Digital Teaching Platform: fmorea.github.io">
+        <div>
+          <div class="slide-eyebrow">
+            <span class="chip">Educational Innovation</span>
+            <span class="chip chip-gold">fmorea.github.io</span>
+          </div>
+          <h1 class="slide-title">Our Open-Source Teaching & Exam Platform</h1>
+          <p class="slide-subtitle">
+            An innovative, client-side digital learning environment designed by Prof. Fernando Morea for classroom assessment, microlearning, and QR-code revision.
+          </p>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-3">
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon">⚡</div>
+                <div class="info-card-title">100% Serverless on GitHub Pages</div>
+              </div>
+              <p>Zero backend maintenance, zero server hosting costs. Static files (HTML5, CSS, vanilla JS) load instantly on any device with lightning-fast caching.</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon emerald">📱</div>
+                <div class="info-card-title">Smart QR-Code Revision</div>
+              </div>
+              <p>Compresses full student exam answer sheets via <b>LZ-String</b> into a high-density QR code. Scanning opens dedicated question explanations without any database storage!</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon gold">🛡️</div>
+                <div class="info-card-title">EU AI Act & Privacy by Design</div>
+              </div>
+              <p>Full compliance with <b>EU AI Act 2024/1689</b>, AgID 17/2025, and MIM 153/2026. Absolutely no student personal data uploaded or processed by external AI.</p>
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-top: 4px;">
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon">🗣️</div>
+                <div class="info-card-title">Local Neural TTS (Kokoro ONNX)</div>
+              </div>
+              <p>Didactic slides feature synthesized spoken audio generated entirely offline with neural Kokoro ONNX models (Italian voice <i>im_nicola</i> & English models), fostering multi-sensory learning.</p>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon">📄</div>
+                <div class="info-card-title">High-Fidelity PDF Certification</div>
+              </div>
+              <p>Client-side generation of authenticated score certificates using <b>jsPDF</b>, timestamped with total platform active learning time and scannable verification barcodes.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           SLIDE 11: ERASMUS+ COLLABORATION OPPORTUNITIES
+           ============================================================== -->
+      <section class="slide" id="slide-11" data-title="Erasmus+ Bilateral Cooperation">
+        <div>
+          <div class="slide-eyebrow">
+            <span class="chip chip-gold">🇪🇺 European Partnerships</span>
+            <span class="chip">Key Action 1 & 2</span>
+          </div>
+          <h1 class="slide-title">Erasmus+ Collaboration Opportunities</h1>
+          <p class="slide-subtitle">
+            How we can build lasting bilateral bridges between your European educational institution and IIS Luigi Lagrange in Milan.
+          </p>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="info-card" style="border-color: rgba(255, 204, 0, 0.3);">
+              <div class="info-card-header">
+                <div class="info-card-icon gold">🧑‍🏫</div>
+                <div class="info-card-title">1. Teacher Job Shadowing (KA1 Mobility)</div>
+              </div>
+              <p>European STEM & IT teachers are invited to join our classes:</p>
+              <ul>
+                <li>Observe 4B INF laboratory methodologies and measurement setups</li>
+                <li>Co-teach bilingual (CLIL) lessons in Telecommunications in English</li>
+                <li>Exchange evaluation rubrics, exam datasets, and didactic syllabi</li>
+              </ul>
+            </div>
+
+            <div class="info-card" style="border-color: rgba(56, 189, 248, 0.3);">
+              <div class="info-card-header">
+                <div class="info-card-icon">🧳</div>
+                <div class="info-card-title">2. VET Student Mobilities</div>
+              </div>
+              <p>Mutual exchange of vocational students for 3–8 week internships:</p>
+              <ul>
+                <li>Our technical students hosted in your regional IT/telecom enterprises</li>
+                <li>Hosting your students in Milan's vibrant high-tech industrial cluster</li>
+                <li>Cross-recognition of technical learning outcomes via EQF & ECVET</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-top: 4px;">
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon emerald">📡</div>
+                <div class="info-card-title">3. Joint Bilateral STEM Projects</div>
+              </div>
+              <p>Collaborative eTwinning or KA2 small-scale partnerships:</p>
+              <ul>
+                <li>Shared IoT telemetry networks (LoRaWAN weather stations, air quality sensors)</li>
+                <li>Cross-border cybersecurity & network configuration challenges</li>
+                <li>Joint student webinars and technical presentations in English</li>
+              </ul>
+            </div>
+
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon">🌐</div>
+                <div class="info-card-title">4. Open Educational Resources (OER)</div>
+              </div>
+              <p>All our didactic software, slide generators, and quiz question banks are released as Open Source on GitHub, ready for translation and adoption in your school.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           SLIDE 12: CONCLUSION, CONTACTS & QR CODE
+           ============================================================== -->
+      <section class="slide" id="slide-12" data-title="Conclusion & Contact Details">
+        <div>
+          <div class="slide-eyebrow">
+            <span class="chip chip-gold">Thank You for Visiting!</span>
+            <span class="chip">Let's Connect</span>
+          </div>
+          <h1 class="slide-title">Conclusion & Bilateral Contacts</h1>
+          <p class="slide-subtitle">
+            We look forward to collaborating with your school on Erasmus+ mobilities, teacher job shadowing, and innovative STEM education!
+          </p>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2" style="align-items: center;">
+            <div class="info-card">
+              <div class="info-card-header">
+                <div class="info-card-icon gold">📫</div>
+                <div class="info-card-title">Institutional Coordinates</div>
+              </div>
+              <p><b>School:</b> IIS "Luigi Lagrange"</p>
+              <p><b>Address:</b> Via Litta Modignani 65, 20161 Milano, Italy</p>
+              <p style="margin-top: 6px;"><b>Contact Person:</b> Prof. Fernando Morea</p>
+              <p><b>Department:</b> Computer Science & Telecommunications</p>
+              <p style="margin-top: 8px;"><b>School Portal:</b> <a href="https://www.iis-lagrange.edu.it" target="_blank" style="color: var(--cyan-400); text-decoration: none;">www.iis-lagrange.edu.it</a></p>
+              <p><b>Course Platform:</b> <a href="https://fmorea.github.io/" target="_blank" style="color: var(--cyan-400); text-decoration: none;">fmorea.github.io</a></p>
+              <p><b>GitHub Repo:</b> <a href="https://github.com/fmorea/fmorea.github.io" target="_blank" style="color: var(--cyan-400); text-decoration: none;">github.com/fmorea/fmorea.github.io</a></p>
+            </div>
+
+            <!-- QR CODE BOX FOR VISITING TEACHERS -->
+            <div class="qr-card-final">
+              <div id="slide-final-qr"></div>
+              <p style="font-weight: 700; font-size: 14px; color: #003399; margin-top: 4px;">fmorea.github.io</p>
+              <p style="font-size: 11px; color: #64748b; margin-top: 2px;">
+                Scan with your phone to take this platform with you!
+              </p>
+              <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+                <a href="../index.html" class="nav-icon-btn active" style="font-size: 12px; text-decoration: none; padding: 6px 14px;">
+                  ← Open Platform
+                </a>
+                <button type="button" class="nav-icon-btn" onclick="goToSlide(1)" style="font-size: 12px; padding: 6px 14px; background: #e2e8f0; color: #0f172a; border-color: #cbd5e1;">
+                  ↺ Replay
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-card" style="margin-top: 4px; text-align: center; padding: 12px;">
+            <p style="font-size: 13px; color: var(--slate-300);">
+              🇪🇺 <i>"Enriching lives, opening minds through European educational cooperation."</i>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           DECK FOOTER BAR
+           ============================================================== -->
+      <footer class="deck-footer">
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="progressBarFill"></div>
+        </div>
+
+        <div class="slide-counter">
+          <span>Slide <b id="currentSlideNum">1</b> of <span id="totalSlidesNum">12</span></span>
+          <span style="color: rgba(255,255,255,0.2);">|</span>
+          <span id="currentSlideTitle" style="color: var(--slate-300); font-size: 12px;">Welcome & Erasmus+ Context</span>
+        </div>
+
+        <div class="slide-nav-buttons">
+          <button type="button" class="btn-slide-nav" id="btn-prev" onclick="prevSlide()" disabled>
+            ◀ Previous
+          </button>
+          <button type="button" class="btn-slide-nav btn-primary" id="btn-next" onclick="nextSlide()">
+            Next ▶
+          </button>
+        </div>
+      </footer>
+
+    </div>
+  </main>
+
+  <!-- TABLE OF CONTENTS DRAWER / MODAL -->
+  <div id="toc-drawer" onclick="closeTocOnBackdrop(event)">
+    <div class="toc-modal">
+      <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px;">
+        <h2 style="font-size: 18px; color: #fff; font-weight: 800;">Slide Overview</h2>
+        <button type="button" onclick="closeToc()" class="nav-icon-btn" style="padding: 4px 10px;">✕ Close</button>
+      </div>
+      <div class="toc-grid" id="tocGrid"></div>
+    </div>
+  </div>
+
+  <!-- PRESENTATION SCRIPT -->
+  <script>
+    /* ==============================================================
+       SLIDE DECK ENGINE & STATE
+       ============================================================== */
+    var totalSlides = 12;
+    var currentSlide = 1;
+    var isNarrating = false;
+
+    // Slide spoken narrative summaries for Web Speech API (English)
+    var SLIDE_NARRATIVES = {
+      1: "Welcome to IIS Luigi Lagrange in Milan. This presentation introduces our fourth-year Telecommunications curriculum, laboratory methodology, and Erasmus-plus bilateral exchange opportunities for visiting European teachers.",
+      2: "The Italian technical high school framework spans five years. Class 4B is in the specialized three-year cycle for Computer Science and Telecommunications, leading to an EQF level 4 qualification.",
+      3: "Our fourth-year curriculum is structured around five core pillars: signal theory, Fourier spectral analysis, physical transmission media, analog and digital modulation, and network protocol architectures.",
+      4: "Module one focuses on signal classification and time-domain analysis. We examine deterministic versus random signals, continuous, sampled, and digital waveforms, and key parameters like peak, average, and root-mean-square values.",
+      5: "Module two explores Fourier decomposition. Any composite periodic signal can be represented as a sum of sinusoidal harmonics. You can interact with the live wave synthesizer on screen to adjust harmonics in real time.",
+      6: "Module three investigates transmission media: twisted pair copper cables, coaxial lines, and fiber optics based on Snell's law and total internal reflection, alongside attenuation and dispersion mechanisms.",
+      7: "Module four covers modulation systems. We analyze why carrier modulation is required to shrink physical antennas, analog AM and FM, digital constellations like QAM, and the Nyquist-Shannon sampling theorem.",
+      8: "Module five bridges hardware with networking protocols, examining the OSI and TCP/IP stacks, Ethernet framing, and the golden rule of measurement: oscilloscope bandwidth must be at least five times the signal bandwidth.",
+      9: "Our pedagogical methodology emphasizes learning by doing. Students work in pairs at professional lab benches, utilizing oscilloscopes, arbitrary function generators, LTspice simulations, and Cisco Packet Tracer.",
+      10: "We also showcase our open-source digital teaching platform at fmorea dot github dot io, featuring serverless client-side testing, smart QR-code revision, neural audio synthesis, and strict compliance with the EU AI Act.",
+      11: "We warmly invite European partner institutions to collaborate with us through Erasmus-plus teacher job shadowing, bilateral VET student internships, joint STEM eTwinning projects, and open educational resources.",
+      12: "Thank you for visiting IIS Luigi Lagrange in Milan. Please scan the QR code on screen to bookmark this platform, or reach out to course coordinator Professor Fernando Morea for international cooperation."
+    };
+
+    function updateSlideView() {
+      // Hide all slides
+      var slides = document.querySelectorAll('.slide');
+      for (var i = 0; i < slides.length; i++) {
+        slides[i].classList.remove('active');
+      }
+
+      // Show current slide
+      var target = document.getElementById('slide-' + currentSlide);
+      if (target) {
+        target.classList.add('active');
+        var title = target.getAttribute('data-title') || ('Slide ' + currentSlide);
+        document.getElementById('currentSlideTitle').textContent = title;
+      }
+
+      // Update counters & progress bar
+      document.getElementById('currentSlideNum').textContent = currentSlide;
+      var pct = (currentSlide / totalSlides) * 100;
+      document.getElementById('progressBarFill').style.width = pct + '%';
+
+      // Update Prev / Next buttons
+      document.getElementById('btn-prev').disabled = (currentSlide === 1);
+      var nextBtn = document.getElementById('btn-next');
+      if (currentSlide === totalSlides) {
+        nextBtn.innerHTML = 'Finish ↺';
+      } else {
+        nextBtn.innerHTML = 'Next ▶';
+      }
+
+      // If narrating, speak current slide narrative
+      if (isNarrating) {
+        speakCurrentSlide();
+      }
+
+      // On slide 5, ensure Fourier canvas animation is active
+      if (currentSlide === 5) {
+        startFourierAnimation();
+      }
+
+      // On slide 12, render final QR code
+      if (currentSlide === 12) {
+        renderFinalQRCode();
+      }
+
+      // Render math formulas if KaTeX is loaded
+      if (window.renderMathInElement && target) {
+        try {
+          renderMathInElement(target, {
+            delimiters: [
+              { left: '$$', right: '$$', display: true },
+              { left: '$', right: '$', display: false }
+            ],
+            throwOnError: false
+          });
+        } catch (eMath) {}
+      }
+    }
+
+    function goToSlide(n) {
+      if (n >= 1 && n <= totalSlides) {
+        currentSlide = n;
+        updateSlideView();
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+        updateSlideView();
+      } else {
+        // Replay from start
+        currentSlide = 1;
+        updateSlideView();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        updateSlideView();
+      }
+    }
+
+    /* KEYBOARD SHORTCUTS */
+    window.addEventListener('keydown', function(e) {
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        goToSlide(1);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        goToSlide(totalSlides);
+      } else if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault();
+        toggleFullscreen();
+      } else if (e.key === 'o' || e.key === 'O') {
+        e.preventDefault();
+        openToc();
+      } else if (e.key === 'Escape') {
+        closeToc();
+      }
+    });
+
+    /* FULLSCREEN TOGGLE */
+    function toggleFullscreen() {
+      var elem = document.documentElement;
+      var fsIcon = document.getElementById('fs-icon');
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        if (elem.requestFullscreen) {
+          elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) {
+          elem.webkitRequestFullscreen();
+        }
+        if (fsIcon) fsIcon.textContent = '⛶';
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+        if (fsIcon) fsIcon.textContent = '⛶';
+      }
+    }
+
+    /* TABLE OF CONTENTS MODAL */
+    function openToc() {
+      var grid = document.getElementById('tocGrid');
+      grid.innerHTML = '';
+      var slides = document.querySelectorAll('.slide');
+      for (var i = 0; i < slides.length; i++) {
+        var num = i + 1;
+        var sTitle = slides[i].getAttribute('data-title') || ('Slide ' + num);
+        var item = document.createElement('div');
+        item.className = 'toc-item' + (num === currentSlide ? ' current' : '');
+        item.onclick = (function(n) {
+          return function() {
+            goToSlide(n);
+            closeToc();
+          };
+        })(num);
+        item.innerHTML = 
+          '<div class="toc-item-number">Slide ' + num + '</div>' +
+          '<div class="toc-item-title">' + sTitle + '</div>';
+        grid.appendChild(item);
+      }
+      document.getElementById('toc-drawer').classList.add('open');
+    }
+
+    function closeToc() {
+      document.getElementById('toc-drawer').classList.remove('open');
+    }
+
+    function closeTocOnBackdrop(e) {
+      if (e.target && e.target.id === 'toc-drawer') {
+        closeToc();
+      }
+    }
+
+    /* WEB SPEECH API AUDIO NARRATION (ENGLISH) */
+    function toggleSpeech() {
+      if (!('speechSynthesis' in window)) {
+        alert("Speech synthesis is not supported in this browser.");
+        return;
+      }
+      if (isNarrating) {
+        stopSpeech();
+      } else {
+        isNarrating = true;
+        document.getElementById('btn-tts').classList.add('active');
+        document.getElementById('sound-waves').classList.add('playing');
+        document.getElementById('tts-label').textContent = 'Pause';
+        speakCurrentSlide();
+      }
+    }
+
+    function stopSpeech() {
+      isNarrating = false;
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      var ttsBtn = document.getElementById('btn-tts');
+      var waves = document.getElementById('sound-waves');
+      var label = document.getElementById('tts-label');
+      if (ttsBtn) ttsBtn.classList.remove('active');
+      if (waves) waves.classList.remove('playing');
+      if (label) label.textContent = 'Listen';
+    }
+
+    function speakCurrentSlide() {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+
+      var text = SLIDE_NARRATIVES[currentSlide] || '';
+      if (!text) return;
+
+      var utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.98;
+
+      // Select an English voice if available
+      var voices = window.speechSynthesis.getVoices();
+      for (var v = 0; v < voices.length; v++) {
+        if (voices[v].lang.indexOf('en') === 0) {
+          utterance.voice = voices[v];
+          break;
+        }
+      }
+
+      utterance.onend = function() {
+        var waves = document.getElementById('sound-waves');
+        if (waves) waves.classList.remove('playing');
+      };
+      utterance.onerror = function() {
+        stopSpeech();
+      };
+
+      var waves = document.getElementById('sound-waves');
+      if (waves) waves.classList.add('playing');
+      window.speechSynthesis.speak(utterance);
+    }
+
+    /* FOURIER LIVE INTERACTIVE CANVAS SYNTHESIZER */
+    var fourierWaveType = 'square';
+    var fourierHarmonics = 5;
+    var fourierAnimId = null;
+    var fourierPhase = 0;
+
+    function setFourierWave(type) {
+      fourierWaveType = type;
+      var btns = document.querySelectorAll('.wave-btn');
+      for (var b = 0; b < btns.length; b++) {
+        btns[b].classList.remove('active');
+        if (btns[b].textContent.toLowerCase().indexOf(type) !== -1) {
+          btns[b].classList.add('active');
+        }
+      }
+    }
+
+    function updateHarmonics(val) {
+      fourierHarmonics = parseInt(val, 10);
+      document.getElementById('harmonicsVal').textContent = fourierHarmonics;
+    }
+
+    function startFourierAnimation() {
+      if (fourierAnimId) cancelAnimationFrame(fourierAnimId);
+      drawFourier();
+    }
+
+    function drawFourier() {
+      var canvas = document.getElementById('fourierCanvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var w = canvas.offsetWidth;
+      var h = canvas.offsetHeight;
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+      }
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Draw subtle oscilloscope grid lines
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      ctx.lineWidth = 1;
+      var gridSpacing = 30;
+      for (var x = 0; x < w; x += gridSpacing) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+      }
+      for (var y = 0; y < h; y += gridSpacing) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+
+      // Centerline
+      var midY = h / 2;
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
+      ctx.beginPath();
+      ctx.moveTo(0, midY);
+      ctx.lineTo(w, midY);
+      ctx.stroke();
+
+      // Synthesize waveform
+      var numPoints = w;
+      var baseFreq = 0.018;
+      var amplitude = h * 0.32;
+
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+
+      for (var i = 0; i < numPoints; i++) {
+        var t = i + fourierPhase;
+        var yVal = 0;
+
+        if (fourierWaveType === 'square') {
+          // Square wave: odd harmonics, amplitude = 1/n
+          for (var n = 1; n <= fourierHarmonics * 2; n += 2) {
+            yVal += (4 / Math.PI) * (1 / n) * Math.sin(n * baseFreq * t);
+          }
+        } else if (fourierWaveType === 'triangle') {
+          // Triangle wave: odd harmonics, amplitude = (-1)^((n-1)/2) / n^2
+          for (var k = 1; k <= fourierHarmonics; k++) {
+            var nVal = 2 * k - 1;
+            var sign = Math.pow(-1, k - 1);
+            yVal += (8 / (Math.PI * Math.PI)) * (sign / (nVal * nVal)) * Math.sin(nVal * baseFreq * t);
+          }
+        } else if (fourierWaveType === 'sawtooth') {
+          // Sawtooth: all harmonics, amplitude = 1/n
+          for (var s = 1; s <= fourierHarmonics; s++) {
+            yVal += (2 / Math.PI) * (1 / s) * Math.sin(s * baseFreq * t);
+          }
+        }
+
+        var px = i;
+        var py = midY - yVal * amplitude;
+        if (i === 0) {
+          ctx.moveTo(px, py);
+        } else {
+          ctx.lineTo(px, py);
+        }
+      }
+      ctx.stroke();
+
+      // Legend in top-right of canvas
+      ctx.fillStyle = '#ffcc00';
+      ctx.font = '11px JetBrains Mono, monospace';
+      ctx.fillText(fourierWaveType.toUpperCase() + ' (N=' + fourierHarmonics + ')', w - 140, 20);
+
+      fourierPhase += 1.5;
+      fourierAnimId = requestAnimationFrame(drawFourier);
+    }
+
+    /* FINAL SLIDE QR CODE */
+    var qrRendered = false;
+    function renderFinalQRCode() {
+      if (qrRendered) return;
+      var qrBox = document.getElementById('slide-final-qr');
+      if (!qrBox) return;
+
+      var targetUrl = 'https://fmorea.github.io/';
+      if (window.location && window.location.origin && window.location.origin.indexOf('http') === 0) {
+        // Resolve parent URL
+        targetUrl = window.location.origin + window.location.pathname.replace(/\/erasmus\/?$/, '/');
+      }
+
+      if (typeof QRCode !== 'undefined') {
+        try {
+          new QRCode(qrBox, {
+            text: targetUrl,
+            width: 140,
+            height: 140,
+            correctLevel: QRCode.CorrectLevel.M
+          });
+          qrRendered = true;
+        } catch (e) {
+          qrBox.innerHTML = '<a href="' + targetUrl + '" target="_blank">' + targetUrl + '</a>';
+        }
+      }
+    }
+
+    /* TOUCH SWIPE CONTROLS FOR SMARTPHONES */
+    var touchStartX = 0;
+    var touchEndX = 0;
+    document.addEventListener('touchstart', function(e) {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    document.addEventListener('touchend', function(e) {
+      touchEndX = e.changedTouches[0].screenX;
+      var diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) nextSlide();
+        else prevSlide();
+      }
+    }, { passive: true });
+
+    /* INITIALIZATION */
+    window.addEventListener('DOMContentLoaded', function() {
+      updateSlideView();
+      if (window.speechSynthesis) {
+        window.speechSynthesis.onvoiceschanged = function() {};
+      }
+    });
+  </script>
+</body>
+</html>
