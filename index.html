@@ -1063,6 +1063,27 @@ nav .nav-logo {
       box-shadow: 0 16px 35px rgba(15, 23, 42, .12);
     }
 
+    .course-card-erasmus {
+      border-color: #bfdbfe;
+      background: #ffffff;
+      background: -webkit-linear-gradient(top, #ffffff 0%, #f0f7ff 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #f0f7ff 100%);
+    }
+    .course-card-erasmus:hover {
+      border-color: #2563eb;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.12);
+    }
+    .erasmus-mode-card {
+      border-color: #bfdbfe;
+      background: #ffffff;
+      background: -webkit-linear-gradient(top, #ffffff 0%, #f0f7ff 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #f0f7ff 100%);
+    }
+    .erasmus-mode-card:hover {
+      border-color: #2563eb;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.12);
+    }
+
     .mode-card-icon {
       display: inline-block;
       display: grid;
@@ -1705,6 +1726,28 @@ nav .nav-logo {
       </div>
       <div class="course-grid" id="materie-selector" aria-label="Classi disponibili"></div>
       <p class="platform-storage-notice hidden mt-4 rounded-lg border p-3 text-xs text-amber-900" role="status" style="border-color: #fcd34d; background: #fffbeb;"></p>
+
+      <!-- QR CODE DELLA PIATTAFORMA SULLA HOME -->
+      <div id="home-qrcode-container" class="mt-8 p-5 rounded-2xl border border-slate-200 bg-slate-50 flex flex-wrap items-center justify-between" style="gap: 20px;">
+        <div style="flex: 1 1 280px; min-width: 240px;">
+          <span class="rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800" style="padding: 4px 10px; display: inline-block; margin-bottom: 8px;">
+            <span aria-hidden="true">📱</span> <span data-i18n="qrcode_badge">Accesso Rapido Mobile</span>
+          </span>
+          <h3 class="text-lg font-bold text-slate-900" style="margin-bottom: 4px;" data-i18n="qrcode_title">QR Code della Piattaforma</h3>
+          <p class="text-sm text-slate-600" style="margin-bottom: 10px;" data-i18n="qrcode_desc">
+            Inquadra questo codice con la fotocamera del tuo smartphone o tablet per aprire e utilizzare direttamente la piattaforma didattica.
+          </p>
+          <div style="font-family: monospace; font-size: 13px; color: #2563eb; font-weight: 600; word-break: break-all;">
+            <a href="https://fmorea.github.io/" target="_blank" id="home-qrcode-link" style="color: #2563eb; text-decoration: none;">
+              🔗 https://fmorea.github.io/
+            </a>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #ffffff; padding: 14px; border-radius: 14px; border: 1px solid #cbd5e1; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05); text-align: center;">
+          <div id="home-site-qrcode" style="display: inline-block; min-width: 128px; min-height: 128px;"></div>
+          <span class="text-xs text-slate-400 font-mono mt-2" style="font-size: 11px;" data-i18n="qrcode_scan_label">Scansiona per collegarti</span>
+        </div>
+      </div>
     </div>
 
     <!-- 2. SCELTA DELL'ATTIVITA -->
@@ -1732,6 +1775,12 @@ nav .nav-logo {
           <span class="font-bold text-xl" data-i18n="mode_exam_title">Simulazione d’esame</span>
           <span class="course-card-details" data-i18n="mode_exam_desc">Mettiti alla prova con i quesiti a tempo e consulta il risultato al termine.</span>
           <span class="font-bold text-blue-700 mt-3" data-i18n="mode_exam_action">Inizia la simulazione →</span>
+        </button>
+        <button type="button" id="mode-erasmus-card" onclick="openErasmusPresentation()" class="mode-card erasmus-mode-card hidden" aria-label="Presentazione Erasmus in lingua inglese">
+          <span class="mode-card-icon" aria-hidden="true" style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;">🇪🇺</span>
+          <span class="font-bold text-xl" data-i18n="mode_erasmus_title">ERASMUS</span>
+          <span class="course-card-details" data-i18n="mode_erasmus_desc">Presentazione in lingua inglese sul corso 4B TLC per docenti e colleghi in visita Erasmus+.</span>
+          <span class="font-bold text-blue-700 mt-3" data-i18n="mode_erasmus_action">Apri presentazione (EN) →</span>
         </button>
       </div>
     </div>
@@ -2649,6 +2698,15 @@ nav .nav-logo {
         mode_exam_title: "Simulazione d’esame",
         mode_exam_desc: "Mettiti alla prova con i quesiti a tempo e consulta il risultato al termine.",
         mode_exam_action: "Inizia la simulazione →",
+        mode_erasmus_title: "Presentazione Erasmus+",
+        mode_erasmus_desc: "Presentazione in lingua inglese per docenti e partner internazionali Erasmus+ sul corso 4B TLC.",
+        mode_erasmus_action: "Apri presentazione (EN) →",
+        home_erasmus_title: "Presentazione Erasmus+ (4B INF)",
+        home_erasmus_desc: "Telecomunicazioni · Presentazione in inglese per docenti in visita Erasmus+",
+        qrcode_badge: "Accesso Rapido Mobile",
+        qrcode_title: "QR Code della Piattaforma",
+        qrcode_desc: "Inquadra questo codice con la fotocamera del tuo smartphone o tablet per aprire e utilizzare direttamente la piattaforma didattica.",
+        qrcode_scan_label: "Scansiona per collegarti",
         lesson_badge: "Lezione e ripasso",
         learning_title: "Materiale didattico",
         lesson_heading: "Schede della lezione",
@@ -2763,6 +2821,15 @@ nav .nav-logo {
         mode_exam_title: "Exam Simulation",
         mode_exam_desc: "Test your knowledge with timed questions and view comprehensive results.",
         mode_exam_action: "Start simulation →",
+        mode_erasmus_title: "Erasmus+ Presentation",
+        mode_erasmus_desc: "English presentation of the 4B Telecommunications curriculum for visiting Erasmus+ teachers & international partners.",
+        mode_erasmus_action: "Open presentation (EN) →",
+        home_erasmus_title: "Erasmus+ Presentation (4B INF)",
+        home_erasmus_desc: "Telecommunications · English presentation for visiting Erasmus+ teachers",
+        qrcode_badge: "Quick Mobile Access",
+        qrcode_title: "Platform QR Code",
+        qrcode_desc: "Scan this code with your smartphone or tablet camera to open the learning platform directly.",
+        qrcode_scan_label: "Scan to connect",
         lesson_badge: "Lesson & Review",
         learning_title: "Learning Material",
         lesson_heading: "Lesson Slides",
@@ -3655,7 +3722,9 @@ nav .nav-logo {
         emptyCard.className = 'rounded-xl border p-5 text-center text-sm text-slate-600';
         setElementText(emptyCard, ('Non è stato trovato nessun corso. Controlla la connessione o aggiorna le classi.'));
         container.appendChild(emptyCard);
+        renderErasmusHomeCard(container);
         updateMateriaInfo();
+        initHomeSiteQRCode();
         return;
       }
 
@@ -3692,9 +3761,11 @@ mat.domande.length + ' quesiti disponibili'));
           container.appendChild(card);
         })(BANCA_DATI_MATERIE[i]);
       }
+      renderErasmusHomeCard(container);
       updateMateriaInfo();
       restoreActiveExamIfAvailable();
       restoreActiveLessonIfAvailable();
+      initHomeSiteQRCode();
     }
 
     function setPlatformEntered(entered) {
@@ -3730,7 +3801,90 @@ selectedMateria.domande.length + ' quesiti'));
       updateMateriaInfo();
     }
 
+    function openErasmusPresentation() {
+      window.location.href = 'erasmus/';
+    }
+
+    function renderErasmusHomeCard(container) {
+      if (!container) container = document.getElementById('materie-selector');
+      if (!container) return;
+      if (document.getElementById('materia-card-erasmus')) return;
+
+      var card = document.createElement('button');
+      card.type = 'button';
+      card.id = 'materia-card-erasmus';
+      card.className = 'course-card course-card-erasmus';
+      card.setAttribute('aria-label', 'ERASMUS - Presentazione in lingua inglese per docenti in visita');
+      card.onclick = function() {
+        openErasmusPresentation();
+      };
+
+      var classLabel = document.createElement('span');
+      classLabel.className = 'course-card-class';
+      classLabel.style.backgroundColor = '#eff6ff';
+      classLabel.style.color = '#1d4ed8';
+      classLabel.style.borderColor = '#bfdbfe';
+      setElementText(classLabel, '🇪🇺 ERASMUS');
+
+      var title = document.createElement('span');
+      title.className = 'course-card-title';
+      title.setAttribute('data-i18n', 'home_erasmus_title');
+      setElementText(title, t('home_erasmus_title', 'Presentazione Erasmus+ (4B INF)'));
+
+      var details = document.createElement('span');
+      details.className = 'course-card-details';
+      details.setAttribute('data-i18n', 'home_erasmus_desc');
+      setElementText(details, t('home_erasmus_desc', 'Telecomunicazioni · Presentazione in inglese per docenti in visita Erasmus+'));
+
+      card.appendChild(classLabel);
+      card.appendChild(title);
+      card.appendChild(details);
+      container.appendChild(card);
+    }
+
+    function initHomeSiteQRCode() {
+      var qrContainer = document.getElementById('home-site-qrcode');
+      if (!qrContainer) return;
+      if (qrContainer.children.length > 0) return;
+
+      var siteUrl = 'https://fmorea.github.io/';
+      if (window.location && window.location.origin && window.location.origin.indexOf('http') === 0) {
+        siteUrl = window.location.origin + window.location.pathname;
+      }
+
+      var linkEl = document.getElementById('home-qrcode-link');
+      if (linkEl) {
+        linkEl.href = siteUrl;
+        setElementText(linkEl, '🔗 ' + siteUrl);
+      }
+
+      if (typeof QRCode !== 'undefined') {
+        try {
+          new QRCode(qrContainer, {
+            text: siteUrl,
+            width: 128,
+            height: 128,
+            correctLevel: QRCode.CorrectLevel.M
+          });
+        } catch (e) {
+          try {
+            new QRCode(qrContainer, {
+              text: siteUrl,
+              width: 128,
+              height: 128,
+              correctLevel: QRCode.CorrectLevel.L
+            });
+          } catch (e2) {
+            qrContainer.innerHTML = '<div style="font-size:11px;color:#64748b;padding:8px;">QRCode: ' + siteUrl + '</div>';
+          }
+        }
+      } else {
+        qrContainer.innerHTML = '<div style="font-size:11px;color:#64748b;padding:8px;"><a href="' + siteUrl + '" target="_blank">' + siteUrl + '</a></div>';
+      }
+    }
+
     function updateMateriaInfo() {
+      var modeErasmusCard = document.getElementById('mode-erasmus-card');
       if (!selectedMateria) {
         var emptyCount = document.getElementById('info-domande');
         var emptyTime = document.getElementById('info-tempo');
@@ -3740,6 +3894,7 @@ selectedMateria.domande.length + ' quesiti'));
         if (emptyTime) setElementText(emptyTime, ('--'));
         if (emptyThreshold) setElementText(emptyThreshold, ('--'));
         if (emptyErrors) setElementText(emptyErrors, ('0 errori'));
+        if (modeErasmusCard) modeErasmusCard.classList.add('hidden');
         renderSelectedMateriaMaterial();
         return;
       }
@@ -3752,6 +3907,18 @@ selectedMateria.domande.length + ' quesiti'));
       if (threshold) setElementText(threshold, (selectedMateria.sogliaSuperamento + '%'));
       var maxErr = Math.floor(selectedMateria.domande.length * (1 - selectedMateria.sogliaSuperamento / 100));
       if (errors) setElementText(errors, ('max ' + maxErr + ' error' + (maxErr === 1 ? 'e' : 'i')));
+
+      var courseKey = selectedMateria.corsoKey || '';
+      var is4B = (courseKey === '4b_inf_telecomunicazioni') ||
+                 (selectedMateria.corso && selectedMateria.corso.classe === '4B');
+      if (modeErasmusCard) {
+        if (is4B) {
+          modeErasmusCard.classList.remove('hidden');
+        } else {
+          modeErasmusCard.classList.add('hidden');
+        }
+      }
+
       renderSelectedMateriaMaterial();
     }
 
@@ -3760,6 +3927,7 @@ selectedMateria.domande.length + ' quesiti'));
       document.getElementById('app').classList.remove('lesson-mode');
       document.getElementById('step-mode').classList.add('hidden');
       document.getElementById('step-registration').classList.remove('hidden');
+      initHomeSiteQRCode();
     }
 
     function getTeachingMaterialPath(materia) {
@@ -6059,6 +6227,7 @@ materia.descrizione || materia.tempoMinuti + ' minuti · ' + materia.domande.len
       } else {
         setPlatformEntered(false);
         document.getElementById('step-registration').classList.remove('hidden');
+        initHomeSiteQRCode();
       }
     }
 
@@ -6773,6 +6942,7 @@ materia.descrizione || materia.tempoMinuti + ' minuti · ' + materia.domande.len
       initStudySlideshowControls();
       initStudyZoomControls();
       initStudyAudioControls();
+      initHomeSiteQRCode();
       window.addEventListener('beforeunload', persistActiveExam);
       window.addEventListener('pagehide', persistActiveExam);
       window.addEventListener('beforeunload', persistPlatformTime);
