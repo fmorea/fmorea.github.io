@@ -667,7 +667,187 @@
       }
     }
 
+    /* AUDIO CONTROLLER BAR IN HEADER */
+    .deck-audio-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--slate-100);
+      border: 1px solid var(--slate-300);
+      border-radius: 9999px;
+      padding: 4px 12px 4px 6px;
+      transition: all 0.2s ease;
+    }
+    .deck-audio-bar:focus-within,
+    .deck-audio-bar.is-playing {
+      background: #eff6ff;
+      border-color: var(--primary-border);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+    }
+    .btn-audio-play {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 9999px;
+      height: 32px;
+      padding: 0 13px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .btn-audio-play:hover {
+      background: var(--primary-hover);
+      transform: scale(1.02);
+    }
+    .btn-audio-play.playing {
+      background: #059669;
+    }
+    .audio-time-display {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: var(--slate-600);
+      min-width: 76px;
+      text-align: center;
+    }
+    .audio-scrubber-wrap {
+      width: 100px;
+      height: 6px;
+      background: var(--slate-200);
+      border-radius: 9999px;
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .audio-scrubber-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--primary);
+      border-radius: 9999px;
+      transition: width 0.1s linear;
+    }
+    .audio-chip-btn {
+      background: #ffffff;
+      border: 1px solid var(--slate-300);
+      color: var(--slate-700);
+      border-radius: 9999px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+    .audio-chip-btn:hover {
+      background: var(--slate-50);
+      color: var(--primary);
+      border-color: var(--primary-border);
+    }
+    .audio-chip-btn.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+    .audio-auto-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--slate-600);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .audio-auto-label input {
+      cursor: pointer;
+      accent-color: var(--primary);
+    }
+    .audio-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--slate-500);
+      background: var(--slate-100);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      border: 1px solid var(--slate-200);
+      transition: all 0.2s ease;
+    }
+    .audio-status-badge.playing {
+      color: #065f46;
+      background: #ecfdf5;
+      border-color: #a7f3d0;
+    }
+
+    /* SUBTITLES / TRANSCRIPT OVERLAY BANNER */
+    .deck-subtitles-banner {
+      position: absolute;
+      bottom: 56px;
+      left: 24px;
+      right: 24px;
+      background: rgba(15, 23, 42, 0.94);
+      backdrop-filter: blur(10px);
+      color: #f8fafc;
+      padding: 12px 20px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+      z-index: 45;
+      display: none;
+      align-items: flex-start;
+      gap: 12px;
+      animation: fadeInSlide 0.2s ease forwards;
+    }
+    .deck-subtitles-banner.open {
+      display: flex;
+    }
+    .deck-subtitles-icon {
+      font-size: 16px;
+      line-height: 1.4;
+    }
+    .deck-subtitles-content {
+      flex: 1;
+      font-size: 13.5px;
+      line-height: 1.55;
+      font-weight: 500;
+      color: #f1f5f9;
+    }
+    .deck-subtitles-close {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      line-height: 1;
+      transition: color 0.15s ease;
+    }
+    .deck-subtitles-close:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
     /* RESPONSIVE DESIGN */
+    @media (max-width: 960px) {
+      .deck-audio-bar {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        margin-top: 6px;
+      }
+      header.deck-header {
+        flex-wrap: wrap;
+      }
+    }
+
     @media (max-width: 900px) {
       .grid-3 {
         grid-template-columns: repeat(2, 1fr);
@@ -703,6 +883,21 @@
       footer.deck-footer {
         padding: 10px 14px;
       }
+      .audio-scrubber-wrap {
+        width: 60px;
+      }
+      .audio-auto-label span {
+        display: none;
+      }
+      .deck-subtitles-banner {
+        left: 12px;
+        right: 12px;
+        bottom: 50px;
+        padding: 10px 14px;
+      }
+      .deck-subtitles-content {
+        font-size: 12px;
+      }
     }
   </style>
 </head>
@@ -718,6 +913,33 @@
         <span class="badge-eu">★ ERASMUS+</span>
         <span>IIS "Luigi Lagrange" Milano · 4B INF</span>
       </div>
+    </div>
+
+    <!-- AUDIO NARRATION PLAYER -->
+    <div class="deck-audio-bar" id="deckAudioBar" role="region" aria-label="Slide Narration Controls">
+      <button type="button" class="btn-audio-play" id="btnAudioPlay" onclick="togglePlayAudio()" title="Play / Pause slide narration (Key: A)">
+        <span id="audioPlayIcon" aria-hidden="true">▶</span>
+        <span id="audioPlayText">Listen</span>
+      </button>
+
+      <div class="audio-scrubber-wrap" id="audioScrubber" onclick="seekAudio(event)" title="Seek audio position" role="slider" aria-label="Audio scrubber" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="audio-scrubber-fill" id="audioScrubberFill"></div>
+      </div>
+
+      <div class="audio-time-display" id="audioTimeDisplay" aria-live="off">0:00 / 0:00</div>
+
+      <button type="button" class="audio-chip-btn" id="btnAudioSpeed" onclick="cycleAudioSpeed()" title="Playback speed">
+        <span id="audioSpeedText">1.0x</span>
+      </button>
+
+      <label class="audio-auto-label" title="Automatically play narration when switching slides">
+        <input type="checkbox" id="chkAutoPlay" onchange="toggleAutoPlay(this.checked)">
+        <span>Auto</span>
+      </label>
+
+      <button type="button" class="audio-chip-btn" id="btnAudioSubtitles" onclick="toggleSubtitles()" title="Show / Hide subtitles transcript (Key: T)">
+        <span>💬</span> Subtitles
+      </button>
     </div>
 
     <div class="controls-group">
@@ -738,6 +960,15 @@
   <!-- PRESENTATION MAIN VIEWPORT -->
   <main class="presentation-viewport">
     <div class="deck-container" id="presentationContainer">
+
+      <!-- SUBTITLES / TRANSCRIPT OVERLAY BANNER -->
+      <div class="deck-subtitles-banner" id="subtitlesBanner" role="status" aria-live="polite">
+        <div class="deck-subtitles-icon" aria-hidden="true">🎙️</div>
+        <div class="deck-subtitles-content" id="subtitlesContent">
+          Loading slide narration transcript...
+        </div>
+        <button type="button" class="deck-subtitles-close" onclick="toggleSubtitles(false)" title="Close subtitles">✕</button>
+      </div>
 
       <!-- ==============================================================
            SLIDE 1: WELCOME & ERASMUS+ MOBILITY
@@ -1380,7 +1611,7 @@
                 <div class="info-card-icon">🎧</div>
                 <div class="info-card-title">Local Offline Neural Audio (Kokoro)</div>
               </div>
-              <p>Didactic slides feature synthesized spoken audio generated entirely offline with neural Kokoro ONNX models (Italian voice <i>im_nicola</i> & English models), fostering multi-sensory learning.</p>
+              <p>Both our classroom slides and this Erasmus+ presentation feature synthesized spoken audio generated entirely offline with neural Kokoro ONNX models (English voice <i>am_adam</i> & Italian voice <i>im_nicola</i>), fostering multi-sensory learning.</p>
             </div>
 
             <div class="info-card">
@@ -1532,6 +1763,8 @@
           <span>Slide <b id="currentSlideNum">1</b> of <span id="totalSlidesNum">12</span></span>
           <span style="color: var(--slate-300);">|</span>
           <span id="currentSlideTitle" style="color: var(--slate-600); font-size: 12px;">Welcome & Erasmus+ Context</span>
+          <span style="color: var(--slate-300);">|</span>
+          <span id="audioStatusBadge" class="audio-status-badge" title="Neural audio narration status">🎧 Audio ready</span>
         </div>
 
         <div class="slide-nav-buttons">
@@ -1632,6 +1865,11 @@
           });
         } catch (eMath) {}
       }
+
+      // Synchronize slide narration audio
+      if (typeof loadSlideAudio === 'function') {
+        loadSlideAudio(currentSlide, audioAutoPlay);
+      }
     }
 
     function goToSlide(n) {
@@ -1673,6 +1911,15 @@
       } else if (e.key === 'End') {
         e.preventDefault();
         goToSlide(totalSlides);
+      } else if (e.key === 'a' || e.key === 'A') {
+        e.preventDefault();
+        togglePlayAudio();
+      } else if (e.key === 't' || e.key === 'T') {
+        e.preventDefault();
+        toggleSubtitles();
+      } else if (e.key === 'm' || e.key === 'M') {
+        e.preventDefault();
+        toggleMuteAudio();
       } else if (e.key === 'f' || e.key === 'F') {
         e.preventDefault();
         toggleFullscreen();
@@ -2355,8 +2602,353 @@
       }
     }, { passive: true });
 
+    /* ==============================================================
+       AUDIO NARRATION ENGINE (NEURAL KOKORO AUDIO + WEB SPEECH FALLBACK)
+       ============================================================== */
+    var SLIDE_AUDIO_MANIFEST = {
+      "1": {
+        "file": "audio/slide-01.ogg",
+        "duration": 29.2,
+        "title": "Welcome & Erasmus+ Context",
+        "text": "Welcome to Istituto di Istruzione Superiore Luigi Lagrange in Milan. We are delighted to welcome European educators and international partners participating in the Erasmus+ staff mobility programme. In this presentation, we introduce our fourth-year Telecommunications curriculum in class 4B INF, our laboratory teaching methodology, and bilateral collaboration opportunities. Every technical module in this deck includes an interactive simulator."
+      },
+      "2": {
+        "file": "audio/slide-02.ogg",
+        "duration": 37.54,
+        "title": "The Italian Technical High School System",
+        "text": "The Italian technical high school, or Istituto Tecnico Tecnologico, provides a comprehensive five-year pathway. The first two years form a common biennial foundation in sciences, mathematics, and humanities. In the three-year triennio, students in class 4B specialize in Computer Science and Telecommunications, with five weekly hours devoted to telecommunications theory and laboratory. Upon graduation at age nineteen, students earn an EQF Level 4 diploma as certified industrial technical experts, complemented by over one hundred and fifty hours of workplace internships."
+      },
+      "3": {
+        "file": "audio/slide-03.ogg",
+        "duration": 29.05,
+        "title": "Class 4B INF Syllabus Structure",
+        "text": "The fourth-year telecommunications syllabus is built around five core pillars: signal theory and time-domain analysis; Fourier spectral decomposition; guided transmission media and optical fibers; analog and digital modulation systems; and network architectures and protocols. Forty percent of instructional time is hands-on laboratory practice, where students work in pairs with digital storage oscilloscopes, signal generators, and network simulation software."
+      },
+      "4": {
+        "file": "audio/slide-04.ogg",
+        "duration": 30.07,
+        "title": "Module 1: Signal Classification & Interactive Generator",
+        "text": "Module one covers signal classification and time-domain parameters. Signals are classified as deterministic or random, continuous-time analog, sampled, or discrete digital. Key physical voltage metrics include peak voltage, peak-to-peak amplitude, DC average offset, and root mean square voltage. In the interactive generator below, you can select sine, square, or triangle waveforms and adjust amplitude, frequency, and offset to observe live physical telemetry."
+      },
+      "5": {
+        "file": "audio/slide-05.ogg",
+        "duration": 27.77,
+        "title": "Module 2: Fourier Analysis & Live Interactive Synth",
+        "text": "Module two explores Fourier analysis. According to Jean-Baptiste Fourier's theorem, any periodic signal can be decomposed into an infinite sum of harmonically related sinusoidal components. Understanding the harmonic spectrum is essential for determining bandwidth requirements in transmission channels. In the interactive synthesizer, you can dynamically vary the number of harmonics and observe the Gibbs phenomenon and waveform convergence in real time."
+      },
+      "6": {
+        "file": "audio/slide-06.ogg",
+        "duration": 26.89,
+        "title": "Module 3: Fiber Optics & Total Internal Reflection",
+        "text": "Module three examines transmission media, with an emphasis on fiber optics. Guided transmission relies on Snell's Law and total internal reflection at the boundary between the glass core and outer cladding. Total internal reflection occurs when the incidence angle exceeds the critical angle. In the simulator, you can adjust the launch angle and core refractive index to see how optical pulses travel down the waveguide without light escaping."
+      },
+      "7": {
+        "file": "audio/slide-07.ogg",
+        "duration": 29.28,
+        "title": "Module 4: Modulation Systems & Signal Transmission",
+        "text": "Module four introduces modulation techniques required to transmit information over transmission media and radio channels. We analyze analog schemes including amplitude modulation and frequency modulation, as well as digital shift keying schemes such as ASK and FSK. Carson's rule governs the necessary transmission bandwidth. In the simulator, you can toggle modulation modes and carrier frequencies to view the resulting modulated waveform."
+      },
+      "8": {
+        "file": "audio/slide-08.ogg",
+        "duration": 27.58,
+        "title": "Module 5: DSO Bandwidth & Rule of 5",
+        "text": "Module five focuses on measurement instruments in the electronics laboratory. When measuring high-speed digital clocks with a digital storage oscilloscope, engineers follow the Rule of 5. The oscilloscope's analog bandwidth must be at least five times the clock frequency in order to capture up to the fifth harmonic and avoid severe rise-time attenuation and edge rounding. The interactive oscilloscope below illustrates this bandwidth limitation live."
+      },
+      "9": {
+        "file": "audio/slide-09.ogg",
+        "duration": 29.0,
+        "title": "Pedagogical Methodology & Link Budget Calculator",
+        "text": "Our pedagogical methodology emphasizes learning by doing through structured laboratory experiments. Students work in collaborative pairs, conducting pre-lab simulations in LTspice and Cisco Packet Tracer, testing physical circuits on hardware benches, and producing professional engineering reports with decibel power budget calculations. The simulator below lets you calculate optical power attenuation and link margin across single-mode and multi-mode fibers."
+      },
+      "10": {
+        "file": "audio/slide-10.ogg",
+        "duration": 25.64,
+        "title": "Our Digital Teaching Platform: fmorea.github.io",
+        "text": "To facilitate continuous assessment and self-paced study, we built our open-source digital teaching platform, hosted serverless on GitHub Pages. It features offline neural audio synthesis using Kokoro ONNX models, high-density exam revision powered by compressed QR codes, instant client-side PDF certificates, and strict privacy by design in full compliance with the European AI Act."
+      },
+      "11": {
+        "file": "audio/slide-11.ogg",
+        "duration": 26.88,
+        "title": "Erasmus+ Bilateral Cooperation",
+        "text": "We warmly invite visiting European institutions to establish bilateral Erasmus+ partnerships with our school. Opportunities include teacher job shadowing under Key Action 1, reciprocal student vocational internships in Milan's IT sector, joint STEM telemetry and IoT projects, and shared open educational resources. Together, we can foster European cooperation and innovation in technical education."
+      },
+      "12": {
+        "file": "audio/slide-12.ogg",
+        "duration": 24.52,
+        "title": "Conclusion & Contact Details",
+        "text": "Thank you for exploring our Telecommunications curriculum and digital platform. You can scan the QR code to access the platform directly from your mobile phone, or get in touch with course coordinator Professor Fernando Morea at Istituto Lagrange in Milan. We look forward to collaborating with your school on future Erasmus+ mobilities. Enriching lives, opening minds through European cooperation."
+      }
+    };
+
+    var audioElement = new Audio();
+    var currentAudioSpeed = 1.0;
+    var audioAutoPlay = false;
+    var subtitlesVisible = false;
+    var isTtsActive = false;
+    var ttsUtterance = null;
+
+    // Load saved preferences
+    try {
+      if (localStorage.getItem('erasmus_audio_autoplay') === 'true') {
+        audioAutoPlay = true;
+      }
+      if (localStorage.getItem('erasmus_subtitles_visible') === 'true') {
+        subtitlesVisible = true;
+      }
+    } catch (eStorage) {}
+
+    function formatTime(seconds) {
+      if (isNaN(seconds) || seconds < 0) return '0:00';
+      var mins = Math.floor(seconds / 60);
+      var secs = Math.floor(seconds % 60);
+      return mins + ':' + (secs < 10 ? '0' : '') + secs;
+    }
+
+    function updateAudioTimeUI(curr, dur) {
+      var display = document.getElementById('audioTimeDisplay');
+      if (display) {
+        display.textContent = formatTime(curr) + ' / ' + formatTime(dur);
+      }
+      var scrubber = document.getElementById('audioScrubberFill');
+      if (scrubber && dur > 0) {
+        var pct = Math.min(100, Math.max(0, (curr / dur) * 100));
+        scrubber.style.width = pct + '%';
+        var wrap = document.getElementById('audioScrubber');
+        if (wrap) wrap.setAttribute('aria-valuenow', Math.round(pct));
+      }
+    }
+
+    function setAudioPlayingState(isPlaying) {
+      var btn = document.getElementById('btnAudioPlay');
+      var icon = document.getElementById('audioPlayIcon');
+      var text = document.getElementById('audioPlayText');
+      var bar = document.getElementById('deckAudioBar');
+      var badge = document.getElementById('audioStatusBadge');
+
+      if (isPlaying) {
+        if (btn) btn.classList.add('playing');
+        if (icon) icon.textContent = '⏸';
+        if (text) text.textContent = 'Pause';
+        if (bar) bar.classList.add('is-playing');
+        if (badge) {
+          badge.classList.add('playing');
+          badge.textContent = isTtsActive ? '🗣️ TTS Speaking...' : '🎧 Playing Narration...';
+        }
+      } else {
+        if (btn) btn.classList.remove('playing');
+        if (icon) icon.textContent = '▶';
+        if (text) text.textContent = 'Listen';
+        if (bar) bar.classList.remove('is-playing');
+        if (badge) {
+          badge.classList.remove('playing');
+          badge.textContent = '🎧 Audio ready';
+        }
+      }
+    }
+
+    function stopAllAudio() {
+      if (audioElement) {
+        try {
+          audioElement.pause();
+        } catch (e) {}
+      }
+      if ('speechSynthesis' in window && window.speechSynthesis.speaking) {
+        try {
+          window.speechSynthesis.cancel();
+        } catch (e) {}
+      }
+      isTtsActive = false;
+      ttsUtterance = null;
+      setAudioPlayingState(false);
+    }
+
+    function loadSlideAudio(slideNum, autoStart) {
+      stopAllAudio();
+      var info = SLIDE_AUDIO_MANIFEST[String(slideNum)];
+      if (!info) return;
+
+      var subBox = document.getElementById('subtitlesContent');
+      if (subBox) {
+        subBox.textContent = info.text;
+      }
+
+      updateAudioTimeUI(0, info.duration || 0);
+      audioElement.src = info.file;
+      audioElement.playbackRate = currentAudioSpeed;
+
+      if (autoStart) {
+        var playPromise = audioElement.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(function(err) {
+            console.log('Autoplay deferred (user gesture needed):', err);
+            setAudioPlayingState(false);
+          });
+        }
+      }
+    }
+
+    function togglePlayAudio() {
+      var info = SLIDE_AUDIO_MANIFEST[String(currentSlide)];
+      if (!info) return;
+
+      if (isTtsActive) {
+        if (window.speechSynthesis.speaking) {
+          if (window.speechSynthesis.paused) {
+            window.speechSynthesis.resume();
+            setAudioPlayingState(true);
+          } else {
+            window.speechSynthesis.pause();
+            setAudioPlayingState(false);
+          }
+          return;
+        }
+      }
+
+      if (!audioElement.paused && !audioElement.ended) {
+        audioElement.pause();
+      } else {
+        var playPromise = audioElement.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(function(error) {
+            console.warn('Native audio playback fallback to Web Speech:', error);
+            startTtsFallback(info.text);
+          });
+        }
+      }
+    }
+
+    function startTtsFallback(text) {
+      if (!('speechSynthesis' in window)) {
+        alert('Audio playback is not supported in this browser.');
+        return;
+      }
+      stopAllAudio();
+      isTtsActive = true;
+      ttsUtterance = new SpeechSynthesisUtterance(text);
+      ttsUtterance.lang = 'en-US';
+      ttsUtterance.rate = currentAudioSpeed;
+
+      var voices = window.speechSynthesis.getVoices();
+      for (var i = 0; i < voices.length; i++) {
+        if (voices[i].lang.indexOf('en') === 0) {
+          ttsUtterance.voice = voices[i];
+          break;
+        }
+      }
+
+      ttsUtterance.onstart = function() {
+        setAudioPlayingState(true);
+      };
+      ttsUtterance.onend = function() {
+        isTtsActive = false;
+        setAudioPlayingState(false);
+        updateAudioTimeUI(0, 0);
+      };
+      ttsUtterance.onerror = function() {
+        isTtsActive = false;
+        setAudioPlayingState(false);
+      };
+
+      window.speechSynthesis.speak(ttsUtterance);
+    }
+
+    function seekAudio(e) {
+      var scrubber = document.getElementById('audioScrubber');
+      if (!scrubber || !audioElement.duration) return;
+      var rect = scrubber.getBoundingClientRect();
+      var clickX = e.clientX - rect.left;
+      var pct = Math.max(0, Math.min(1, clickX / rect.width));
+      audioElement.currentTime = pct * audioElement.duration;
+    }
+
+    function cycleAudioSpeed() {
+      var speeds = [1.0, 1.25, 1.5, 0.85];
+      var idx = speeds.indexOf(currentAudioSpeed);
+      var nextIdx = (idx + 1) % speeds.length;
+      currentAudioSpeed = speeds[nextIdx];
+
+      audioElement.playbackRate = currentAudioSpeed;
+      if (isTtsActive && window.speechSynthesis.speaking) {
+        var info = SLIDE_AUDIO_MANIFEST[String(currentSlide)];
+        if (info) startTtsFallback(info.text);
+      }
+
+      var textEl = document.getElementById('audioSpeedText');
+      if (textEl) textEl.textContent = currentAudioSpeed + 'x';
+    }
+
+    function toggleAutoPlay(checked) {
+      audioAutoPlay = !!checked;
+      try {
+        localStorage.setItem('erasmus_audio_autoplay', audioAutoPlay ? 'true' : 'false');
+      } catch (e) {}
+    }
+
+    function toggleSubtitles(forceVal) {
+      var banner = document.getElementById('subtitlesBanner');
+      var btn = document.getElementById('btnAudioSubtitles');
+      if (typeof forceVal === 'boolean') {
+        subtitlesVisible = forceVal;
+      } else {
+        subtitlesVisible = !subtitlesVisible;
+      }
+
+      if (banner) {
+        banner.classList.toggle('open', subtitlesVisible);
+      }
+      if (btn) {
+        btn.classList.toggle('active', subtitlesVisible);
+      }
+      try {
+        localStorage.setItem('erasmus_subtitles_visible', subtitlesVisible ? 'true' : 'false');
+      } catch (e) {}
+    }
+
+    function toggleMuteAudio() {
+      audioElement.muted = !audioElement.muted;
+      var badge = document.getElementById('audioStatusBadge');
+      if (badge && audioElement.muted) {
+        badge.textContent = '🔇 Muted';
+      } else if (badge) {
+        badge.textContent = '🎧 Audio ready';
+      }
+    }
+
+    function initDeckAudio() {
+      audioElement.addEventListener('timeupdate', function() {
+        var dur = audioElement.duration || (SLIDE_AUDIO_MANIFEST[String(currentSlide)] ? SLIDE_AUDIO_MANIFEST[String(currentSlide)].duration : 0);
+        updateAudioTimeUI(audioElement.currentTime, dur);
+      });
+
+      audioElement.addEventListener('play', function() {
+        setAudioPlayingState(true);
+      });
+
+      audioElement.addEventListener('pause', function() {
+        if (!isTtsActive) setAudioPlayingState(false);
+      });
+
+      audioElement.addEventListener('ended', function() {
+        setAudioPlayingState(false);
+        var dur = SLIDE_AUDIO_MANIFEST[String(currentSlide)] ? SLIDE_AUDIO_MANIFEST[String(currentSlide)].duration : 0;
+        updateAudioTimeUI(0, dur);
+      });
+
+      audioElement.addEventListener('error', function(e) {
+        var badge = document.getElementById('audioStatusBadge');
+        if (badge) badge.textContent = '🗣️ TTS ready';
+      });
+
+      var chk = document.getElementById('chkAutoPlay');
+      if (chk) chk.checked = audioAutoPlay;
+
+      toggleSubtitles(subtitlesVisible);
+      loadSlideAudio(1, false);
+    }
+
     /* INITIALIZATION */
     window.addEventListener('DOMContentLoaded', function() {
+      initDeckAudio();
       updateSlideView();
     });
   </script>

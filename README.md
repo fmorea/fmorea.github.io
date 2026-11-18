@@ -8,7 +8,7 @@ Piattaforma telematica d'esame eseguibile direttamente da **GitHub Pages** (`fmo
 - **Mappe degli Argomenti**: la mappa viene creata su richiesta nel browser raggruppando i titoli completi delle schede, senza inviare contenuti a servizi esterni; ogni argomento apre le pagine del materiale da cui proviene.
 - **Compatibilità dei materiali**: Internet Explorer e i browser senza supporto WebP possono sfogliare le schede tramite immagini JPEG, con navigazione e zoom; audio e alcune funzioni avanzate possono non essere disponibili. Il PDF originale resta accessibile e viene usato come fallback se mancano le schede statiche.
 - **Percorso guidato**: prima si sceglie la classe, poi si sceglie se seguire una lezione o fare una simulazione d'esame.
-- **Presentazione Erasmus+ (4B INF)**: Presentazione interattiva e curata in lingua inglese per docenti e colleghi in visita Erasmus+ (`erasmus/`), accessibile sia dal quadratino **ERASMUS** nella home page, sia dal quadratino dedicato nella scelta attività della classe 4B INF. Include 12 schede tematiche sul curricolo di Telecomunicazioni dell'IIS Lagrange, sintesi vocale in inglese (Web Speech API), simulatore interattivo di sintesi armonica di Fourier su Canvas HTML5, navigazione da tastiera/touch e layout stampabile in PDF.
+- **Presentazione Erasmus+ (4B INF)**: Presentazione interattiva e curata in lingua inglese per docenti e colleghi in visita Erasmus+ (`erasmus/`), accessibile sia dal quadratino **ERASMUS** nella home page, sia dal quadratino dedicato nella scelta attività della classe 4B INF. Include 12 schede tematiche sul curricolo di Telecomunicazioni dell'IIS Lagrange, audio narrazione neurale offline generata con Kokoro ONNX (`am_adam`) con fallback integrato su Web Speech API, barra controlli audio (Play/Pausa, scrubber temporale, regolazione velocità, auto-play all'avanzamento e sottotitoli sincronizzati), simulatori interattivi (generatore tempo-variante, Fourier, riflessione totale in fibra ottica con legge di Snell, modulazioni AM/FM/ASK/FSK, banda oscilloscopio regola del 5 e calcolo link budget ottico in dB), navigazione da tastiera/touch e layout stampabile in PDF.
 - **QR Code della Piattaforma**: Nella pagina principale della home è presente un QR Code dinamico per inquadrare e aprire all'istante la piattaforma da smartphone o tablet.
 - **Tempo Attivo in Piattaforma**: il conteggio parte dalla home e continua solo mentre la pagina è visibile e attiva; il tempo viene salvato nel browser, mostrato nell'indicatore con orologio e riportato nel certificato PDF. Quando viene inserito un nominativo, include anche il tempo anonimo trascorso nella home. Il dato è locale al dispositivo e non è verificato da un server.
 - **Ripristino della simulazione**: risposte, domanda corrente e tempo residuo vengono salvati localmente durante la prova; dopo un refresh la simulazione si riapre dal punto raggiunto e il conto alla rovescia considera anche il tempo trascorso.
@@ -46,6 +46,12 @@ Per associare subito al manifest le tracce già presenti senza sintetizzare nuov
 python appunti/build_speech.py --link-existing-only
 ```
 Le tracce vengono associate e salvate una alla volta; i blocchi di sintesi sono dimensionati per ridurre le chiamate al modello.
+
+Per generare o aggiornare le tracce audio della **presentazione Erasmus+** (`erasmus/audio/`):
+```powershell
+python erasmus/build_erasmus_speech.py
+```
+Il comando crea o rigenera le tracce OGG per le 12 schede e sincronizza `erasmus/audio/manifest.json`.
 
 Il conteggio delle ore è locale al browser e al dispositivo: non è sincronizzato tra dispositivi né verificato da un server. Il tempo viene conteggiato a piattaforma aperta, in primo piano e con la finestra attiva.
 

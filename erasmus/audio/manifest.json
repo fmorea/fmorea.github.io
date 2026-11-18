@@ -1,0 +1,91 @@
+{
+  "title": "Erasmus+ Presentation Audio Narration",
+  "voice": "am_adam",
+  "lang": "en-us",
+  "slides": {
+    "1": {
+      "number": 1,
+      "title": "Welcome & Erasmus+ Context",
+      "file": "audio/slide-01.ogg",
+      "duration": 29.2,
+      "text": "Welcome to Istituto di Istruzione Superiore Luigi Lagrange in Milan. We are delighted to welcome European educators and international partners participating in the Erasmus+ staff mobility programme. In this presentation, we introduce our fourth-year Telecommunications curriculum in class 4B INF, our laboratory teaching methodology, and bilateral collaboration opportunities. Every technical module in this deck includes an interactive simulator."
+    },
+    "2": {
+      "number": 2,
+      "title": "The Italian Technical High School System",
+      "file": "audio/slide-02.ogg",
+      "duration": 37.54,
+      "text": "The Italian technical high school, or Istituto Tecnico Tecnologico, provides a comprehensive five-year pathway. The first two years form a common biennial foundation in sciences, mathematics, and humanities. In the three-year triennio, students in class 4B specialize in Computer Science and Telecommunications, with five weekly hours devoted to telecommunications theory and laboratory. Upon graduation at age nineteen, students earn an EQF Level 4 diploma as certified industrial technical experts, complemented by over one hundred and fifty hours of workplace internships."
+    },
+    "3": {
+      "number": 3,
+      "title": "Class 4B INF Syllabus Structure",
+      "file": "audio/slide-03.ogg",
+      "duration": 29.05,
+      "text": "The fourth-year telecommunications syllabus is built around five core pillars: signal theory and time-domain analysis; Fourier spectral decomposition; guided transmission media and optical fibers; analog and digital modulation systems; and network architectures and protocols. Forty percent of instructional time is hands-on laboratory practice, where students work in pairs with digital storage oscilloscopes, signal generators, and network simulation software."
+    },
+    "4": {
+      "number": 4,
+      "title": "Module 1: Signal Classification & Interactive Generator",
+      "file": "audio/slide-04.ogg",
+      "duration": 30.07,
+      "text": "Module one covers signal classification and time-domain parameters. Signals are classified as deterministic or random, continuous-time analog, sampled, or discrete digital. Key physical voltage metrics include peak voltage, peak-to-peak amplitude, DC average offset, and root mean square voltage. In the interactive generator below, you can select sine, square, or triangle waveforms and adjust amplitude, frequency, and offset to observe live physical telemetry."
+    },
+    "5": {
+      "number": 5,
+      "title": "Module 2: Fourier Analysis & Live Interactive Synth",
+      "file": "audio/slide-05.ogg",
+      "duration": 27.77,
+      "text": "Module two explores Fourier analysis. According to Jean-Baptiste Fourier's theorem, any periodic signal can be decomposed into an infinite sum of harmonically related sinusoidal components. Understanding the harmonic spectrum is essential for determining bandwidth requirements in transmission channels. In the interactive synthesizer, you can dynamically vary the number of harmonics and observe the Gibbs phenomenon and waveform convergence in real time."
+    },
+    "6": {
+      "number": 6,
+      "title": "Module 3: Fiber Optics & Total Internal Reflection",
+      "file": "audio/slide-06.ogg",
+      "duration": 26.89,
+      "text": "Module three examines transmission media, with an emphasis on fiber optics. Guided transmission relies on Snell's Law and total internal reflection at the boundary between the glass core and outer cladding. Total internal reflection occurs when the incidence angle exceeds the critical angle. In the simulator, you can adjust the launch angle and core refractive index to see how optical pulses travel down the waveguide without light escaping."
+    },
+    "7": {
+      "number": 7,
+      "title": "Module 4: Modulation Systems & Signal Transmission",
+      "file": "audio/slide-07.ogg",
+      "duration": 29.28,
+      "text": "Module four introduces modulation techniques required to transmit information over transmission media and radio channels. We analyze analog schemes including amplitude modulation and frequency modulation, as well as digital shift keying schemes such as ASK and FSK. Carson's rule governs the necessary transmission bandwidth. In the simulator, you can toggle modulation modes and carrier frequencies to view the resulting modulated waveform."
+    },
+    "8": {
+      "number": 8,
+      "title": "Module 5: DSO Bandwidth & Rule of 5",
+      "file": "audio/slide-08.ogg",
+      "duration": 27.58,
+      "text": "Module five focuses on measurement instruments in the electronics laboratory. When measuring high-speed digital clocks with a digital storage oscilloscope, engineers follow the Rule of 5. The oscilloscope's analog bandwidth must be at least five times the clock frequency in order to capture up to the fifth harmonic and avoid severe rise-time attenuation and edge rounding. The interactive oscilloscope below illustrates this bandwidth limitation live."
+    },
+    "9": {
+      "number": 9,
+      "title": "Pedagogical Methodology & Link Budget Calculator",
+      "file": "audio/slide-09.ogg",
+      "duration": 29.01,
+      "text": "Our pedagogical methodology emphasizes learning by doing through structured laboratory experiments. Students work in collaborative pairs, conducting pre-lab simulations in LTspice and Cisco Packet Tracer, testing physical circuits on hardware benches, and producing professional engineering reports with decibel power budget calculations. The simulator below lets you calculate optical power attenuation and link margin across single-mode and multi-mode fibers."
+    },
+    "10": {
+      "number": 10,
+      "title": "Our Digital Teaching Platform: fmorea.github.io",
+      "file": "audio/slide-10.ogg",
+      "duration": 25.59,
+      "text": "To facilitate continuous assessment and self-paced study, we built our open-source digital teaching platform, hosted serverless on GitHub Pages. It features offline neural audio synthesis using Kokoro ONNX models, high-density exam revision powered by compressed QR codes, instant client-side PDF certificates, and strict privacy by design in full compliance with the European AI Act."
+    },
+    "11": {
+      "number": 11,
+      "title": "Erasmus+ Bilateral Cooperation",
+      "file": "audio/slide-11.ogg",
+      "duration": 26.87,
+      "text": "We warmly invite visiting European institutions to establish bilateral Erasmus+ partnerships with our school. Opportunities include teacher job shadowing under Key Action 1, reciprocal student vocational internships in Milan's IT sector, joint STEM telemetry and IoT projects, and shared open educational resources. Together, we can foster European cooperation and innovation in technical education."
+    },
+    "12": {
+      "number": 12,
+      "title": "Conclusion & Contact Details",
+      "file": "audio/slide-12.ogg",
+      "duration": 24.52,
+      "text": "Thank you for exploring our Telecommunications curriculum and digital platform. You can scan the QR code to access the platform directly from your mobile phone, or get in touch with course coordinator Professor Fernando Morea at Istituto Lagrange in Milan. We look forward to collaborating with your school on future Erasmus+ mobilities. Enriching lives, opening minds through European cooperation."
+    }
+  }
+}
