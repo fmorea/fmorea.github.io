@@ -1177,20 +1177,21 @@
 
         <div class="slide-body">
           <div class="grid-2">
-            <!-- THEORY SUMMARY -->
+            <!-- THEORY SUMMARY & HISTORICAL ANECDOTE -->
             <div class="info-card">
               <div class="info-card-header">
-                <div class="info-card-icon">📈</div>
-                <div class="info-card-title">Mathematical Formulation</div>
+                <div class="info-card-icon">🕰️</div>
+                <div class="info-card-title">From Galileo's Pulse to AC Electricity</div>
               </div>
-              <p style="font-size: 13px;">
-                $$\displaystyle s(t) = A_0 \cos(2\pi f_0 t) + V_{offset}$$
+              <p style="font-size: 12.5px; line-height: 1.5; color: var(--slate-700);">
+                In 1581, a young <b>Galileo Galilei</b> watched a swinging chandelier in the Cathedral of Pisa, timing its rhythm with his own pulse and discovering that harmonic oscillations maintain a constant period regardless of amplitude!
               </p>
-              <ul style="font-size: 12.5px; margin-top: 6px;">
-                <li><b>Peak Voltage $V_p$:</b> Maximum excursion from baseline ($|A_0|$).</li>
-                <li><b>Peak-to-Peak $V_{pp}$:</b> $2 \cdot A_0$ (total peak span).</li>
-                <li><b>DC Average $V_{avg}$:</b> Equals offset voltage ($V_{offset}$).</li>
-                <li><b>RMS Voltage $V_{rms}$:</b> $\sqrt{V_{offset}^2 + A_0^2/2}$ (effective thermal work).</li>
+              <div style="margin: 8px 0; padding: 8px 12px; background: #ffffff; border: 1px solid var(--primary-border); border-radius: 8px; font-size: 13px;">
+                $$\displaystyle s(t) = A_0 \cos(2\pi f_0 t) + V_{offset}$$
+              </div>
+              <ul style="font-size: 12px; margin-top: 4px; line-height: 1.5;">
+                <li><b>Peak $V_p$ & Span $V_{pp}$:</b> How far the pendulum swings from center and its total crest-to-trough travel.</li>
+                <li><b>RMS ($V_{rms}$):</b> The real "muscle" of the wave—the equivalent DC battery voltage delivering identical thermal heating work ($V_{p} / \sqrt{2}$).</li>
               </ul>
               <div style="margin-top: 8px; padding: 8px 10px; background: #ffffff; border: 1px solid var(--slate-200); border-radius: 8px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 11px;">
                 <div>V<sub>peak</sub>: <b id="scopeVp" style="color: var(--primary);">2.50 V</b></div>
@@ -1255,20 +1256,20 @@
           <div class="grid-2">
             <div class="info-card">
               <div class="info-card-header">
-                <div class="info-card-icon">𝝨</div>
-                <div class="info-card-title">Fourier Decomposition</div>
+                <div class="info-card-icon">🎼</div>
+                <div class="info-card-title">Napoleon's Cannons & The Musical Choir</div>
               </div>
-              <p style="font-size: 13px;">
-                $$\displaystyle s(t) = a_0 + \sum_{n=1}^{\infty} \left[ a_n \cos(n \omega_0 t) + b_n \sin(n \omega_0 t) \right]$$
+              <p style="font-size: 12.5px; line-height: 1.5; color: var(--slate-700);">
+                In 1807, <b>Jean-Baptiste Fourier</b> was studying heat diffusion in Napoleon's brass cannon barrels when he made a stunning claim: <i>any arbitrary periodic wave—even one with jagged vertical corners—can be assembled purely from smooth musical sine waves!</i>
               </p>
-              <ul style="font-size: 12.5px; margin-top: 6px;">
-                <li><b>Fundamental:</b> $f_0 = 1/T$ (first harmonic, sets fundamental tone).</li>
-                <li><b>Harmonics:</b> Integer multiples $f_n = n \cdot f_0$.</li>
-                <li><b>Square wave:</b> Only odd harmonics ($1f, 3f, 5f\dots$) with amplitude $1/n$.</li>
-                <li><b>Bandwidth $B$:</b> Channels must transmit up to harmonic $N$ to preserve rise-time!</li>
-              </ul>
-              <div style="margin-top: 10px; font-size: 12px; color: var(--slate-600); background: #ffffff; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--slate-200);">
-                💡 Drag the Harmonics slider to watch Gibbs phenomenon and edge sharpening.
+              <div style="margin: 8px 0; padding: 8px 12px; background: #ffffff; border: 1px solid var(--primary-border); border-radius: 8px; font-size: 12px;">
+                $$\displaystyle \text{Square}(t) = \frac{4}{\pi} \left( \sin(\omega t) + \frac{1}{3}\sin(3\omega t) + \frac{1}{5}\sin(5\omega t) + \dots \right)$$
+              </div>
+              <p style="font-size: 12px; line-height: 1.5; color: var(--slate-600);">
+                Academic titans—including our school's namesake <b>Joseph-Louis Lagrange</b>—initially rejected Fourier's paper, arguing smooth curves could never form sharp right angles. But Fourier was right: add enough odd harmonics, and square digital pulses emerge!
+              </p>
+              <div style="margin-top: 8px; font-size: 11.5px; color: var(--primary); background: #ffffff; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--slate-200);">
+                💡 Adjust Harmonics (N) below to hear & see the square edges sharpen!
               </div>
             </div>
 
@@ -1323,20 +1324,21 @@
             <!-- THEORY CARD -->
             <div class="info-card">
               <div class="info-card-header">
-                <div class="info-card-icon gold">📐</div>
-                <div class="info-card-title">Snell's Law & Critical Angle ($\theta_c$)</div>
+                <div class="info-card-icon gold">🌊</div>
+                <div class="info-card-title">Tyndall's Light Water Jet & Skipping Stones</div>
               </div>
-              <p style="font-size: 13px;">
-                $$\displaystyle n_{core} > n_{cladding} \implies \theta_c = \arcsin\left(\frac{n_2}{n_1}\right)$$
+              <p style="font-size: 12.5px; line-height: 1.5; color: var(--slate-700);">
+                Global subsea fiber optics carry over 95% of world internet data, but the physics began as a Victorian public spectacle! In 1854, <b>John Tyndall</b> shone an arc lamp into a draining water barrel in London, proving light could be trapped inside a curving water stream.
               </p>
-              <ul style="font-size: 12.5px; margin-top: 6px;">
-                <li><b>$\theta \ge \theta_c$: Total Internal Reflection (TIR)</b><br>100% of light is reflected back into the core with zero boundary leakage.</li>
-                <li><b>$\theta < \theta_c$: Refraction / Escaping Ray</b><br>Light refracts into cladding ($n_2$), causing rapid optical signal death.</li>
-                <li><b>Single-Mode ($9\,\mu\text{m}$):</b> Eliminates intermodal dispersion.</li>
-              </ul>
-              <div style="margin-top: 8px; padding: 8px 10px; background: #ffffff; border: 1px solid var(--slate-200); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; display: flex; justify-content: space-between;">
+              <div style="margin: 8px 0; padding: 8px 12px; background: #ffffff; border: 1px solid var(--primary-border); border-radius: 8px; font-size: 12.5px;">
+                $$\displaystyle \text{Light Trapping Criterion:} \quad \theta \ge \theta_c = \arcsin\left(\frac{n_{\text{cladding}}}{n_{\text{core}}}\right)$$
+              </div>
+              <p style="font-size: 12px; line-height: 1.5; color: var(--slate-600);">
+                <b>The Skipping Stone Analogy:</b> Throw a stone steeply into water, and it plunges under (optical loss into cladding). Skip it at a shallow grazing angle ($\theta \ge \theta_c$), and 100% bounces cleanly across the lake without losing a single photon!
+              </p>
+              <div style="margin-top: 8px; padding: 6px 10px; background: #ffffff; border: 1px solid var(--slate-200); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; display: flex; justify-content: space-between;">
                 <span>Critical θ<sub>c</sub>: <b id="fiberCritVal" style="color: var(--primary);">73.2°</b></span>
-                <span>Current θ: <b id="fiberCurrAngle" style="color: var(--primary);">80.0°</b></span>
+                <span>Launch θ: <b id="fiberCurrAngle" style="color: var(--primary);">80.0°</b></span>
               </div>
             </div>
 
@@ -1389,16 +1391,19 @@
             <!-- THEORY CARD -->
             <div class="info-card">
               <div class="info-card-header">
-                <div class="info-card-icon">📡</div>
-                <div class="info-card-title">Why We Modulate Radio Waves</div>
+                <div class="info-card-icon">✈️</div>
+                <div class="info-card-title">Marconi's Spark & The 75-km Antenna Dilemma</div>
               </div>
-              <ul style="font-size: 12.5px;">
-                <li><b>Antenna length formula:</b> $\ell \approx \lambda/4 = c / (4f)$. A $1\,\text{kHz}$ voice signal needs a $75\,\text{km}$ antenna! Transmitted at $100\,\text{MHz}$, $\ell = 75\,\text{cm}$.</li>
-                <li><b>AM (Amplitude):</b> $s(t) = [A_c + m(t)] \cos(2\pi f_c t)$, bandwidth $B_{AM} = 2f_m$.</li>
-                <li><b>FM (Frequency):</b> Carson's rule $B_{FM} \approx 2(\Delta f + f_m)$ with superior noise immunity.</li>
-                <li><b>ASK / FSK:</b> Digital binary shift keying for data telemetry.</li>
-              </ul>
-              <div style="margin-top: 8px; padding: 8px 10px; background: #ffffff; border: 1px solid var(--slate-200); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--primary);">
+              <p style="font-size: 12.5px; line-height: 1.5; color: var(--slate-700);">
+                Why can't we transmit human voice directly through the air? Physics dictates antenna size must match wavelength ($\ell \approx \lambda / 4$). Transmitting an audible 1 kHz note would require an antenna <b>75 kilometers tall</b>—nearly nine times higher than Mount Everest!
+              </p>
+              <div style="margin: 6px 0; padding: 6px 12px; background: #ffffff; border: 1px solid var(--primary-border); border-radius: 8px; font-size: 12px;">
+                $$\displaystyle \ell \approx \frac{c}{4 f_c} \quad \implies \text{At } 100\,\text{MHz (FM)}, \quad \ell = 75\,\text{cm!}$$
+              </div>
+              <p style="font-size: 12px; line-height: 1.5; color: var(--slate-600);">
+                <b>The Passenger Airplane Metaphor:</b> Our baseband voice cannot fly alone. We board it onto a high-frequency radio carrier wave ($f_c$). In <b>AM</b>, voice alters the wave's altitude; in <b>FM</b>, it alters its stride rhythm (Carson's rule: $B \approx 2(\Delta f + f_m)$), conferring immunity against thunderstorm static!
+              </p>
+              <div style="margin-top: 6px; padding: 6px 10px; background: #ffffff; border: 1px solid var(--slate-200); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--primary);">
                 Bandwidth formula: <b id="modBwFormula">B = 2 · f_m</b>
               </div>
             </div>
@@ -1455,19 +1460,20 @@
             <!-- THEORY CARD -->
             <div class="info-card">
               <div class="info-card-header">
-                <div class="info-card-icon" style="background: var(--primary); color: #fff;">🎯</div>
-                <div class="info-card-title">The DSO Bandwidth Criterion</div>
+                <div class="info-card-icon" style="background: var(--primary); color: #fff;">📸</div>
+                <div class="info-card-title">Braun's CRT & The High-Speed Camera Rule</div>
               </div>
-              <div style="background: #ffffff; padding: 8px 12px; border-radius: 8px; margin: 6px 0; border: 1px solid var(--primary-border); font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--primary); font-weight: 700;">
-                B<sub>scope</sub> ≥ 5 × f<sub>signal</sub>
+              <p style="font-size: 12.5px; line-height: 1.5; color: var(--slate-700);">
+                When <b>Karl Ferdinand Braun</b> invented the cathode ray tube in 1897, oscilloscopes tracked slow physical heartbeats. But in digital computing, clock pulses jump between 0 and 1 in nanoseconds. How fast must an oscilloscope be to see reality?
+              </p>
+              <div style="background: #ffffff; padding: 8px 12px; border-radius: 8px; margin: 6px 0; border: 1px solid var(--primary-border); font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--primary); font-weight: 700; text-align: center;">
+                B<sub>scope</sub> ≥ 5 × f<sub>signal</sub> &emsp; | &emsp; t<sub>rise</sub> ≈ 0.35 / B<sub>scope</sub>
               </div>
-              <ul style="font-size: 12.5px;">
-                <li><b>Harmonic capture:</b> 5th harmonic captures 98% of signal energy.</li>
-                <li><b>Rise time relation:</b> $t_r \approx 0.35 / B_{scope}$.</li>
-                <li><b>Rule violation:</b> Low bandwidth attenuates high harmonics, transforming digital pulses into slow sinusoids!</li>
-              </ul>
-              <div style="margin-top: 8px; padding: 8px 10px; background: #ffffff; border: 1px solid var(--slate-200); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px;">
-                Ratio B<sub>scope</sub> / f<sub>sig</sub>: <b id="scopeRatioVal" style="color: var(--primary);">5.0x</b>
+              <p style="font-size: 12px; line-height: 1.5; color: var(--slate-600);">
+                <b>The Blurry Shutter Dilemma:</b> If an oscilloscope's bandwidth is too narrow, it acts like a slow camera shutter trying to photograph a hummingbird's wings. High Fourier harmonics are stripped away, turning crisp square clock edges into rounded, sleepy sine waves!
+              </p>
+              <div style="margin-top: 6px; padding: 6px 10px; background: #ffffff; border: 1px solid var(--slate-200); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px;">
+                Bandwidth Ratio (B<sub>scope</sub> / f<sub>sig</sub>): <b id="scopeRatioVal" style="color: var(--primary);">5.0x</b>
               </div>
             </div>
 
@@ -1516,13 +1522,16 @@
           <div class="grid-2">
             <div class="info-card">
               <div class="info-card-header">
-                <div class="info-card-icon">👥</div>
-                <div class="info-card-title">Laboratory Workflow in 4B INF</div>
+                <div class="info-card-icon">👂</div>
+                <div class="info-card-title">Graham Bell's Ear & Laboratory Practice</div>
               </div>
-              <ul style="font-size: 12.5px;">
-                <li><b>Hardware benches:</b> Pairs of students work with digital storage oscilloscopes, signal generators, optical power meters, and Cisco hardware.</li>
-                <li><b>Pre-lab simulation:</b> Circuit modeling in LTspice and network design in Cisco Packet Tracer before touching physical hardware.</li>
-                <li><b>Formal Engineering Reports:</b> Every experiment concludes with a graded <i>Relazione Tecnica</i> analyzing experimental error and decibel loss budgets.</li>
+              <p style="font-size: 12px; line-height: 1.5; color: var(--slate-700);">
+                Why do telecom engineers speak in <b>Decibels (dB)</b>? In the 1920s, Bell System engineers honored <b>Alexander Graham Bell</b> by creating a logarithmic scale matching human hearing. Whispers and thunderclaps span a factor of 100,000,000! Decibels turn tedious decimal multiplications across kilometers of cable into simple addition and subtraction ($P_{out} = P_{in} - \text{Loss}$).
+              </p>
+              <ul style="font-size: 12px; margin-top: 6px; line-height: 1.45;">
+                <li><b>Inquiry benches:</b> Pairs of students measure physical fiber loss with optical power meters.</li>
+                <li><b>Simulation first:</b> Virtual modeling in LTspice and Cisco Packet Tracer before hardware.</li>
+                <li><b>Engineering report:</b> Rigorous calculation of margin budgets and experimental error.</li>
               </ul>
             </div>
 
@@ -2610,73 +2619,73 @@
         "file": "audio/slide-01.ogg",
         "duration": 29.2,
         "title": "Welcome & Erasmus+ Context",
-        "text": "Welcome to Istituto di Istruzione Superiore Luigi Lagrange in Milan. We are delighted to welcome European educators and international partners participating in the Erasmus+ staff mobility programme. In this presentation, we introduce our fourth-year Telecommunications curriculum in class 4B INF, our laboratory teaching methodology, and bilateral collaboration opportunities. Every technical module in this deck includes an interactive simulator."
+        "text": "Welcome to Istituto Lagrange in Milan! We are delighted to host visiting European colleagues through Erasmus Plus. Here in Northern Italy, technical education has deep historical roots. In this presentation, we take you inside our fourth-year telecommunications classroom, class 4B INF, where physics, history, and hands-on laboratory discovery come together. Every module in this deck includes an interactive simulator, so feel free to experiment as we go!"
       },
       "2": {
         "file": "audio/slide-02.ogg",
         "duration": 37.54,
         "title": "The Italian Technical High School System",
-        "text": "The Italian technical high school, or Istituto Tecnico Tecnologico, provides a comprehensive five-year pathway. The first two years form a common biennial foundation in sciences, mathematics, and humanities. In the three-year triennio, students in class 4B specialize in Computer Science and Telecommunications, with five weekly hours devoted to telecommunications theory and laboratory. Upon graduation at age nineteen, students earn an EQF Level 4 diploma as certified industrial technical experts, complemented by over one hundred and fifty hours of workplace internships."
+        "text": "Italy's Istituto Tecnico Tecnologico offers a distinctive five-year journey. Following a two-year scientific and cultural foundation, students enter the three-year triennio to specialize in Computer Science and Telecommunications. By age nineteen, our students do not just memorize theory; through over one hundred and fifty hours of industry internships, they graduate as certified technical specialists, ready for the European high-tech workforce or university engineering degrees."
       },
       "3": {
         "file": "audio/slide-03.ogg",
         "duration": 29.05,
         "title": "Class 4B INF Syllabus Structure",
-        "text": "The fourth-year telecommunications syllabus is built around five core pillars: signal theory and time-domain analysis; Fourier spectral decomposition; guided transmission media and optical fibers; analog and digital modulation systems; and network architectures and protocols. Forty percent of instructional time is hands-on laboratory practice, where students work in pairs with digital storage oscilloscopes, signal generators, and network simulation software."
+        "text": "Our fourth-year curriculum bridges classical physics with contemporary communication networks across five thematic pillars: signal geometry, Fourier analysis, optical guided media, analog and digital modulation, and network protocols. Nearly half of our class time is spent in the laboratory, where students verify physical principles with oscilloscopes and circuit prototypes rather than just taking formulas on faith."
       },
       "4": {
         "file": "audio/slide-04.ogg",
         "duration": 30.07,
         "title": "Module 1: Signal Classification & Interactive Generator",
-        "text": "Module one covers signal classification and time-domain parameters. Signals are classified as deterministic or random, continuous-time analog, sampled, or discrete digital. Key physical voltage metrics include peak voltage, peak-to-peak amplitude, DC average offset, and root mean square voltage. In the interactive generator below, you can select sine, square, or triangle waveforms and adjust amplitude, frequency, and offset to observe live physical telemetry."
+        "text": "Did you know that signal analysis began in a cathedral? In 1581, a young Galileo Galilei timed a swinging chandelier in Pisa using his own heartbeat, discovering that harmonic oscillations maintain a constant period regardless of their swing size! In telecommunications, we represent this with a simple cosine wave. Peak voltage is how far the wave swings, while RMS voltage measures the real muscle of the wave—the equivalent DC battery power that would heat a resistor. Play with the virtual oscilloscope below to see Galileo's harmonic motion in action!"
       },
       "5": {
         "file": "audio/slide-05.ogg",
         "duration": 27.77,
         "title": "Module 2: Fourier Analysis & Live Interactive Synth",
-        "text": "Module two explores Fourier analysis. According to Jean-Baptiste Fourier's theorem, any periodic signal can be decomposed into an infinite sum of harmonically related sinusoidal components. Understanding the harmonic spectrum is essential for determining bandwidth requirements in transmission channels. In the interactive synthesizer, you can dynamically vary the number of harmonics and observe the Gibbs phenomenon and waveform convergence in real time."
+        "text": "In 1807, Jean-Baptiste Fourier presented a radical idea to the French Academy of Sciences: any repeating wave, no matter how jagged, can be built purely by adding together gentle sinusoidal flutes! The great mathematicians of his time, including Laplace and our school's namesake Joseph-Louis Lagrange, were openly skeptical! Fourier was originally trying to understand heat diffusion in Napoleon's artillery cannons, but his mathematical insight became the bedrock of modern telecommunications. In the simulator below, dial in harmonics to watch a jagged square wave emerge from pure sine waves!"
       },
       "6": {
         "file": "audio/slide-06.ogg",
         "duration": 26.89,
         "title": "Module 3: Fiber Optics & Total Internal Reflection",
-        "text": "Module three examines transmission media, with an emphasis on fiber optics. Guided transmission relies on Snell's Law and total internal reflection at the boundary between the glass core and outer cladding. Total internal reflection occurs when the incidence angle exceeds the critical angle. In the simulator, you can adjust the launch angle and core refractive index to see how optical pulses travel down the waveguide without light escaping."
+        "text": "Today, fiber optic cables carry over ninety-five percent of global internet traffic. But the principle behind it was first demonstrated in 1854 as a Victorian parlor trick! The Irish physicist John Tyndall illuminated a stream of water pouring from a bucket, showing that light remained trapped inside the curving water jet. Just like a flat pebble skipping across a calm lake, light bounces off the boundary between the glass core and cladding without leaking, provided the launch angle stays above the critical angle. Test the skipping stone principle live in the optical simulator below!"
       },
       "7": {
         "file": "audio/slide-07.ogg",
         "duration": 29.28,
         "title": "Module 4: Modulation Systems & Signal Transmission",
-        "text": "Module four introduces modulation techniques required to transmit information over transmission media and radio channels. We analyze analog schemes including amplitude modulation and frequency modulation, as well as digital shift keying schemes such as ASK and FSK. Carson's rule governs the necessary transmission bandwidth. In the simulator, you can toggle modulation modes and carrier frequencies to view the resulting modulated waveform."
+        "text": "Imagine trying to transmit human speech across the continent using sound waves directly. At one kilohertz, an antenna would have to be seventy-five kilometers tall—higher than Mount Everest! Guglielmo Marconi and the radio pioneers solved this by inventing modulation. The human voice rides on top of a high-frequency carrier wave, like a passenger boarding an airplane. Whether we modulate the wave's height in AM, its rhythm in FM, or switch digital pulses in ASK and FSK, the carrier does the flying while our message arrives crystal clear. Try switching modulation modes below!"
       },
       "8": {
         "file": "audio/slide-08.ogg",
         "duration": 27.58,
         "title": "Module 5: DSO Bandwidth & Rule of 5",
-        "text": "Module five focuses on measurement instruments in the electronics laboratory. When measuring high-speed digital clocks with a digital storage oscilloscope, engineers follow the Rule of 5. The oscilloscope's analog bandwidth must be at least five times the clock frequency in order to capture up to the fifth harmonic and avoid severe rise-time attenuation and edge rounding. The interactive oscilloscope below illustrates this bandwidth limitation live."
+        "text": "When Karl Ferdinand Braun invented the cathode ray oscilloscope in 1897, signals were slow and analog. But in today's high-speed digital electronics, clock pulses jump between zero and five volts in mere nanoseconds. In the lab, students learn the Rule of Five: your oscilloscope's bandwidth must be at least five times faster than the clock frequency. If your scope is too slow, it acts like a blurry camera shutter, cutting off the high Fourier harmonics and turning sharp square clock pulses into sluggish rounded waves. Watch how bandwidth limits our view in the scope simulator below!"
       },
       "9": {
         "file": "audio/slide-09.ogg",
         "duration": 29.0,
         "title": "Pedagogical Methodology & Link Budget Calculator",
-        "text": "Our pedagogical methodology emphasizes learning by doing through structured laboratory experiments. Students work in collaborative pairs, conducting pre-lab simulations in LTspice and Cisco Packet Tracer, testing physical circuits on hardware benches, and producing professional engineering reports with decibel power budget calculations. The simulator below lets you calculate optical power attenuation and link margin across single-mode and multi-mode fibers."
+        "text": "Why do telecom engineers speak in decibels instead of watts? In the 1920s, telephone engineers named the decibel after Alexander Graham Bell to match the natural logarithmic response of the human ear. A quiet whisper and a thunderclap differ in power by one hundred million times! Decibels transform difficult decimal multiplications into simple additions and subtractions. In our lab, students calculate the link budget: transmitter power in dBm, minus fiber cable loss, equals receiver power. Try the link budget calculator below to test single-mode versus multi-mode reach!"
       },
       "10": {
         "file": "audio/slide-10.ogg",
         "duration": 25.64,
         "title": "Our Digital Teaching Platform: fmorea.github.io",
-        "text": "To facilitate continuous assessment and self-paced study, we built our open-source digital teaching platform, hosted serverless on GitHub Pages. It features offline neural audio synthesis using Kokoro ONNX models, high-density exam revision powered by compressed QR codes, instant client-side PDF certificates, and strict privacy by design in full compliance with the European AI Act."
+        "text": "To keep learning accessible, serverless, and private, we built our open-source platform on GitHub Pages. It features offline neural speech narration powered by Kokoro ONNX models, instant exam revision with high-density compressed QR codes, and authenticated student certificates generated client-side with jsPDF. Everything is designed with zero server overhead and full compliance with European privacy standards and the EU AI Act."
       },
       "11": {
         "file": "audio/slide-11.ogg",
         "duration": 26.88,
         "title": "Erasmus+ Bilateral Cooperation",
-        "text": "We warmly invite visiting European institutions to establish bilateral Erasmus+ partnerships with our school. Opportunities include teacher job shadowing under Key Action 1, reciprocal student vocational internships in Milan's IT sector, joint STEM telemetry and IoT projects, and shared open educational resources. Together, we can foster European cooperation and innovation in technical education."
+        "text": "We believe technical education thrives on international dialogue. Through Erasmus Plus Key Action 1 and 2, we warmly invite your school to collaborate with IIS Luigi Lagrange. Whether through teacher job shadowing, bilingual CLIL co-teaching, reciprocal vocational student internships in Milan's IT sector, or shared open educational resources, we can build enduring bilateral partnerships across Europe."
       },
       "12": {
         "file": "audio/slide-12.ogg",
         "duration": 24.52,
         "title": "Conclusion & Contact Details",
-        "text": "Thank you for exploring our Telecommunications curriculum and digital platform. You can scan the QR code to access the platform directly from your mobile phone, or get in touch with course coordinator Professor Fernando Morea at Istituto Lagrange in Milan. We look forward to collaborating with your school on future Erasmus+ mobilities. Enriching lives, opening minds through European cooperation."
+        "text": "Thank you so much for exploring our telecommunications curriculum and digital platform! You can scan the QR code to keep the interactive deck on your smartphone, or contact Professor Fernando Morea to explore Erasmus Plus cooperation. As the European motto reminds us: enriching lives, opening minds through education. We look forward to welcoming you to Milan!"
       }
     };
 

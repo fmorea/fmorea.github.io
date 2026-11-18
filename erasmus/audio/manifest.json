@@ -7,85 +7,85 @@
       "number": 1,
       "title": "Welcome & Erasmus+ Context",
       "file": "audio/slide-01.ogg",
-      "duration": 29.2,
-      "text": "Welcome to Istituto di Istruzione Superiore Luigi Lagrange in Milan. We are delighted to welcome European educators and international partners participating in the Erasmus+ staff mobility programme. In this presentation, we introduce our fourth-year Telecommunications curriculum in class 4B INF, our laboratory teaching methodology, and bilateral collaboration opportunities. Every technical module in this deck includes an interactive simulator."
+      "duration": 29.3,
+      "text": "Welcome to Istituto Lagrange in Milan! We are delighted to host visiting European colleagues through Erasmus Plus. Here in Northern Italy, technical education has deep historical roots. In this presentation, we take you inside our fourth-year telecommunications classroom, class 4B INF, where physics, history, and hands-on laboratory discovery come together. Every module in this deck includes an interactive simulator, so feel free to experiment as we go!"
     },
     "2": {
       "number": 2,
       "title": "The Italian Technical High School System",
       "file": "audio/slide-02.ogg",
-      "duration": 37.54,
-      "text": "The Italian technical high school, or Istituto Tecnico Tecnologico, provides a comprehensive five-year pathway. The first two years form a common biennial foundation in sciences, mathematics, and humanities. In the three-year triennio, students in class 4B specialize in Computer Science and Telecommunications, with five weekly hours devoted to telecommunications theory and laboratory. Upon graduation at age nineteen, students earn an EQF Level 4 diploma as certified industrial technical experts, complemented by over one hundred and fifty hours of workplace internships."
+      "duration": 29.28,
+      "text": "Italy's Istituto Tecnico Tecnologico offers a distinctive five-year journey. Following a two-year scientific and cultural foundation, students enter the three-year triennio to specialize in Computer Science and Telecommunications. By age nineteen, our students do not just memorize theory; through over one hundred and fifty hours of industry internships, they graduate as certified technical specialists, ready for the European high-tech workforce or university engineering degrees."
     },
     "3": {
       "number": 3,
       "title": "Class 4B INF Syllabus Structure",
       "file": "audio/slide-03.ogg",
-      "duration": 29.05,
-      "text": "The fourth-year telecommunications syllabus is built around five core pillars: signal theory and time-domain analysis; Fourier spectral decomposition; guided transmission media and optical fibers; analog and digital modulation systems; and network architectures and protocols. Forty percent of instructional time is hands-on laboratory practice, where students work in pairs with digital storage oscilloscopes, signal generators, and network simulation software."
+      "duration": 26.2,
+      "text": "Our fourth-year curriculum bridges classical physics with contemporary communication networks across five thematic pillars: signal geometry, Fourier analysis, optical guided media, analog and digital modulation, and network protocols. Nearly half of our class time is spent in the laboratory, where students verify physical principles with oscilloscopes and circuit prototypes rather than just taking formulas on faith."
     },
     "4": {
       "number": 4,
       "title": "Module 1: Signal Classification & Interactive Generator",
       "file": "audio/slide-04.ogg",
-      "duration": 30.07,
-      "text": "Module one covers signal classification and time-domain parameters. Signals are classified as deterministic or random, continuous-time analog, sampled, or discrete digital. Key physical voltage metrics include peak voltage, peak-to-peak amplitude, DC average offset, and root mean square voltage. In the interactive generator below, you can select sine, square, or triangle waveforms and adjust amplitude, frequency, and offset to observe live physical telemetry."
+      "duration": 36.26,
+      "text": "Did you know that signal analysis began in a cathedral? In 1581, a young Galileo Galilei timed a swinging chandelier in Pisa using his own heartbeat, discovering that harmonic oscillations maintain a constant period regardless of their swing size! In telecommunications, we represent this with a simple cosine wave. Peak voltage is how far the wave swings, while RMS voltage measures the real muscle of the wave—the equivalent DC battery power that would heat a resistor. Play with the virtual oscilloscope below to see Galileo's harmonic motion in action!"
     },
     "5": {
       "number": 5,
       "title": "Module 2: Fourier Analysis & Live Interactive Synth",
       "file": "audio/slide-05.ogg",
-      "duration": 27.77,
-      "text": "Module two explores Fourier analysis. According to Jean-Baptiste Fourier's theorem, any periodic signal can be decomposed into an infinite sum of harmonically related sinusoidal components. Understanding the harmonic spectrum is essential for determining bandwidth requirements in transmission channels. In the interactive synthesizer, you can dynamically vary the number of harmonics and observe the Gibbs phenomenon and waveform convergence in real time."
+      "duration": 37.92,
+      "text": "In 1807, Jean-Baptiste Fourier presented a radical idea to the French Academy of Sciences: any repeating wave, no matter how jagged, can be built purely by adding together gentle sinusoidal flutes! The great mathematicians of his time, including Laplace and our school's namesake Joseph-Louis Lagrange, were openly skeptical! Fourier was originally trying to understand heat diffusion in Napoleon's artillery cannons, but his mathematical insight became the bedrock of modern telecommunications. In the simulator below, dial in harmonics to watch a jagged square wave emerge from pure sine waves!"
     },
     "6": {
       "number": 6,
       "title": "Module 3: Fiber Optics & Total Internal Reflection",
       "file": "audio/slide-06.ogg",
-      "duration": 26.89,
-      "text": "Module three examines transmission media, with an emphasis on fiber optics. Guided transmission relies on Snell's Law and total internal reflection at the boundary between the glass core and outer cladding. Total internal reflection occurs when the incidence angle exceeds the critical angle. In the simulator, you can adjust the launch angle and core refractive index to see how optical pulses travel down the waveguide without light escaping."
+      "duration": 36.05,
+      "text": "Today, fiber optic cables carry over ninety-five percent of global internet traffic. But the principle behind it was first demonstrated in 1854 as a Victorian parlor trick! The Irish physicist John Tyndall illuminated a stream of water pouring from a bucket, showing that light remained trapped inside the curving water jet. Just like a flat pebble skipping across a calm lake, light bounces off the boundary between the glass core and cladding without leaking, provided the launch angle stays above the critical angle. Test the skipping stone principle live in the optical simulator below!"
     },
     "7": {
       "number": 7,
       "title": "Module 4: Modulation Systems & Signal Transmission",
       "file": "audio/slide-07.ogg",
-      "duration": 29.28,
-      "text": "Module four introduces modulation techniques required to transmit information over transmission media and radio channels. We analyze analog schemes including amplitude modulation and frequency modulation, as well as digital shift keying schemes such as ASK and FSK. Carson's rule governs the necessary transmission bandwidth. In the simulator, you can toggle modulation modes and carrier frequencies to view the resulting modulated waveform."
+      "duration": 37.13,
+      "text": "Imagine trying to transmit human speech across the continent using sound waves directly. At one kilohertz, an antenna would have to be seventy-five kilometers tall—higher than Mount Everest! Guglielmo Marconi and the radio pioneers solved this by inventing modulation. The human voice rides on top of a high-frequency carrier wave, like a passenger boarding an airplane. Whether we modulate the wave's height in AM, its rhythm in FM, or switch digital pulses in ASK and FSK, the carrier does the flying while our message arrives crystal clear. Try switching modulation modes below!"
     },
     "8": {
       "number": 8,
       "title": "Module 5: DSO Bandwidth & Rule of 5",
       "file": "audio/slide-08.ogg",
-      "duration": 27.58,
-      "text": "Module five focuses on measurement instruments in the electronics laboratory. When measuring high-speed digital clocks with a digital storage oscilloscope, engineers follow the Rule of 5. The oscilloscope's analog bandwidth must be at least five times the clock frequency in order to capture up to the fifth harmonic and avoid severe rise-time attenuation and edge rounding. The interactive oscilloscope below illustrates this bandwidth limitation live."
+      "duration": 36.3,
+      "text": "When Karl Ferdinand Braun invented the cathode ray oscilloscope in 1897, signals were slow and analog. But in today's high-speed digital electronics, clock pulses jump between zero and five volts in mere nanoseconds. In the lab, students learn the Rule of Five: your oscilloscope's bandwidth must be at least five times faster than the clock frequency. If your scope is too slow, it acts like a blurry camera shutter, cutting off the high Fourier harmonics and turning sharp square clock pulses into sluggish rounded waves. Watch how bandwidth limits our view in the scope simulator below!"
     },
     "9": {
       "number": 9,
       "title": "Pedagogical Methodology & Link Budget Calculator",
       "file": "audio/slide-09.ogg",
-      "duration": 29.01,
-      "text": "Our pedagogical methodology emphasizes learning by doing through structured laboratory experiments. Students work in collaborative pairs, conducting pre-lab simulations in LTspice and Cisco Packet Tracer, testing physical circuits on hardware benches, and producing professional engineering reports with decibel power budget calculations. The simulator below lets you calculate optical power attenuation and link margin across single-mode and multi-mode fibers."
+      "duration": 37.39,
+      "text": "Why do telecom engineers speak in decibels instead of watts? In the 1920s, telephone engineers named the decibel after Alexander Graham Bell to match the natural logarithmic response of the human ear. A quiet whisper and a thunderclap differ in power by one hundred million times! Decibels transform difficult decimal multiplications into simple additions and subtractions. In our lab, students calculate the link budget: transmitter power in dBm, minus fiber cable loss, equals receiver power. Try the link budget calculator below to test single-mode versus multi-mode reach!"
     },
     "10": {
       "number": 10,
       "title": "Our Digital Teaching Platform: fmorea.github.io",
       "file": "audio/slide-10.ogg",
-      "duration": 25.59,
-      "text": "To facilitate continuous assessment and self-paced study, we built our open-source digital teaching platform, hosted serverless on GitHub Pages. It features offline neural audio synthesis using Kokoro ONNX models, high-density exam revision powered by compressed QR codes, instant client-side PDF certificates, and strict privacy by design in full compliance with the European AI Act."
+      "duration": 28.85,
+      "text": "To keep learning accessible, serverless, and private, we built our open-source platform on GitHub Pages. It features offline neural speech narration powered by Kokoro ONNX models, instant exam revision with high-density compressed QR codes, and authenticated student certificates generated client-side with jsPDF. Everything is designed with zero server overhead and full compliance with European privacy standards and the EU AI Act."
     },
     "11": {
       "number": 11,
       "title": "Erasmus+ Bilateral Cooperation",
       "file": "audio/slide-11.ogg",
-      "duration": 26.87,
-      "text": "We warmly invite visiting European institutions to establish bilateral Erasmus+ partnerships with our school. Opportunities include teacher job shadowing under Key Action 1, reciprocal student vocational internships in Milan's IT sector, joint STEM telemetry and IoT projects, and shared open educational resources. Together, we can foster European cooperation and innovation in technical education."
+      "duration": 26.1,
+      "text": "We believe technical education thrives on international dialogue. Through Erasmus Plus Key Action 1 and 2, we warmly invite your school to collaborate with IIS Luigi Lagrange. Whether through teacher job shadowing, bilingual CLIL co-teaching, reciprocal vocational student internships in Milan's IT sector, or shared open educational resources, we can build enduring bilateral partnerships across Europe."
     },
     "12": {
       "number": 12,
       "title": "Conclusion & Contact Details",
       "file": "audio/slide-12.ogg",
-      "duration": 24.52,
-      "text": "Thank you for exploring our Telecommunications curriculum and digital platform. You can scan the QR code to access the platform directly from your mobile phone, or get in touch with course coordinator Professor Fernando Morea at Istituto Lagrange in Milan. We look forward to collaborating with your school on future Erasmus+ mobilities. Enriching lives, opening minds through European cooperation."
+      "duration": 22.53,
+      "text": "Thank you so much for exploring our telecommunications curriculum and digital platform! You can scan the QR code to keep the interactive deck on your smartphone, or contact Professor Fernando Morea to explore Erasmus Plus cooperation. As the European motto reminds us: enriching lives, opening minds through education. We look forward to welcoming you to Milan!"
     }
   }
 }
