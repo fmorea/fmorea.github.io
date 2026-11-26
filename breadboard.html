@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="it" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Porta Logica XOR a 5 Transistor (2N2222) — Breadboard OLED & Simulatore</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* Sfondo OLED nero puro */
+    body {
+      background-color: #000000;
+      color: #f4f4f5;
+    }
+
+    /* Animazione pallini luminosi di corrente lungo i cavi attivi */
+    @keyframes beadFlow {
+      to {
+        stroke-dashoffset: -36;
+      }
+    }
+    .flow-beads {
+      stroke-dasharray: 2 16;
+      stroke-linecap: round;
+      animation: beadFlow 0.75s linear infinite;
+    }
+    .flow-beads-slow {
+      stroke-dasharray: 2 18;
+      stroke-linecap: round;
+      animation: beadFlow 1.15s linear infinite;
+    }
+
+    /* Evidenziazione pulsante per il passo attivo nella guida */
+    @keyframes stepPulse {
+      0%, 100% { filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.85)); }
+      50% { filter: drop-shadow(0 0 14px rgba(0, 212, 255, 1)); }
+    }
+    .step-active {
+      animation: stepPulse 1.5s ease-in-out infinite;
+    }
+    .dim-heavy {
+      opacity: 0.14 !important;
+      transition: opacity 0.2s ease;
+    }
+    .dim-soft {
+      opacity: 0.32 !important;
+      transition: opacity 0.2s ease;
+    }
+    .comp-hit {
+      cursor: pointer;
+      transition: opacity 0.2s ease, filter 0.18s ease;
+    }
+    .comp-hit:hover {
+      filter: brightness(1.18);
+    }
+
+    /* Scrollbar OLED minimal */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #09090b;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #27272a;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3f3f46;
+    }
+  </style>
+</head>
+<body class="bg-black text-zinc-100 font-sans antialiased min-h-screen flex flex-col selection:bg-cyan-500/30 selection:text-cyan-200">
+
+  <!-- HEADER COMPATTA OLED -->
+  <header class="border-b border-zinc-800 bg-black/95 backdrop-blur-md sticky top-0 z-30">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-700 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.3">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h4c3 0 6 2 8 5-2 3-5 5-8 5H4m2-10c1.5 2 1.5 8 0 10M16 12h4" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-base font-extrabold tracking-tight text-white leading-tight">
+            Porta Logica XOR a 5 Transistor (2N2222)
+          </h1>
+          <p class="text-[11px] sm:text-xs text-zinc-400">
+            2 Pulsanti (2 pin) &bull; 3 LED (A, B, Uscita Y) &bull; 9 Cavi ad alta visibilità a 90&deg;
+          </p>
+        </div>
+      </div>
+
+      <!-- Legenda Colori Cavi ad Alto Contrasto -->
+      <div class="flex flex-wrap items-center gap-2 text-[11px] font-mono">
+        <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-zinc-950 border border-zinc-800">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#ff3b30]"></span> +9V
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-zinc-950 border border-zinc-800">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#00d4ff]"></span> GND
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-zinc-950 border border-zinc-800">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#ffd60a]"></span> Segnale A
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-zinc-950 border border-zinc-800">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#30d158]"></span> Segnale B
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-zinc-950 border border-zinc-800">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#ff2d95]"></span> Interni XOR
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENUTO PRINCIPALE -->
+  <main class="flex-1 max-w-[1600px] w-full mx-auto px-3 sm:px-5 py-4 grid grid-cols-1 xl:grid-cols-12 gap-4 items-start">
+
+    <!-- COLONNA PRINCIPALE: BREADBOARD GRANDE + CONTROLLI VISIBILITÀ -->
+    <section class="xl:col-span-8 2xl:col-span-9 flex flex-col gap-3">
+
+      <!-- Barra Controlli Rapidi Breadboard (Ingressi + Solo Cavi + Zoom) -->
+      <div class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-3">
+        <!-- Pulsanti Rapidi A e B -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="top-btn-a" onclick="toggleInput('A')" class="px-3.5 py-2 rounded-xl border-2 text-xs font-bold flex items-center gap-2 transition-all cursor-pointer bg-black border-zinc-700 text-zinc-200 hover:border-[#ffd60a]">
+            <span id="top-dot-a" class="w-3 h-3 rounded-full bg-zinc-700 border border-zinc-500"></span>
+            <span>Pulsante A</span>
+            <span id="top-val-a" class="font-mono text-[11px] px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-400">0</span>
+          </button>
+
+          <button id="top-btn-b" onclick="toggleInput('B')" class="px-3.5 py-2 rounded-xl border-2 text-xs font-bold flex items-center gap-2 transition-all cursor-pointer bg-black border-zinc-700 text-zinc-200 hover:border-[#30d158]">
+            <span id="top-dot-b" class="w-3 h-3 rounded-full bg-zinc-700 border border-zinc-500"></span>
+            <span>Pulsante B</span>
+            <span id="top-val-b" class="font-mono text-[11px] px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-400">0</span>
+          </button>
+
+          <!-- Indicatore Compatto LED Y -->
+          <div id="top-led-y-pill" class="px-3 py-2 rounded-xl border border-zinc-800 bg-black flex items-center gap-2 text-xs font-mono">
+            <span id="top-dot-y" class="w-3 h-3 rounded-full bg-zinc-700 border border-zinc-500"></span>
+            <span class="text-zinc-400">LED Y:</span>
+            <strong id="top-val-y" class="text-zinc-300">SPENTO</strong>
+          </div>
+        </div>
+
+        <!-- Controlli Visibilità Cavi & Zoom -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="btn-wires-only" onclick="toggleWiresOnly()" class="px-3 py-2 rounded-xl border border-zinc-700 bg-black hover:border-cyan-400 text-xs font-semibold text-zinc-200 flex items-center gap-2 transition-all cursor-pointer">
+            <span id="wires-only-dot" class="w-2.5 h-2.5 rounded-full bg-zinc-600"></span>
+            <span>Solo Cavi</span>
+          </button>
+
+          <div class="flex items-center bg-black border border-zinc-800 rounded-xl p-0.5 text-xs font-mono">
+            <button onclick="setZoom(1)" id="zoom-100" class="px-2.5 py-1.5 rounded-lg bg-zinc-800 text-white font-bold cursor-pointer">100%</button>
+            <button onclick="setZoom(1.3)" id="zoom-130" class="px-2.5 py-1.5 rounded-lg text-zinc-400 hover:text-white cursor-pointer">130%</button>
+            <button onclick="setZoom(1.6)" id="zoom-160" class="px-2.5 py-1.5 rounded-lg text-zinc-400 hover:text-white cursor-pointer">160%</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenitore Breadboard SVG ad Alta Visibilità -->
+      <div class="bg-zinc-950 border border-zinc-800 rounded-2xl p-2 sm:p-3 relative shadow-2xl">
+        <div id="breadboard-scroll" class="w-full overflow-x-auto overflow-y-hidden rounded-xl bg-black border border-zinc-900 p-1.5">
+          <div id="zoom-container" class="origin-top-left transition-all duration-200" style="width: 100%; min-width: 860px;">
+            <svg id="breadboard-svg" viewBox="0 0 1180 510" class="w-full h-auto select-none block" role="img" aria-label="Breadboard interattiva porta XOR a 5 transistor con 3 LED">
+              <!-- Generato dinamicamente via JavaScript -->
+            </svg>
+          </div>
+        </div>
+
+        <!-- Barra Ispettore Live (Mostra coordinate esatte al passaggio/click) -->
+        <div class="mt-2.5 rounded-xl bg-black border border-zinc-800 px-3.5 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div id="inspector-bar" class="flex items-center gap-2.5 text-zinc-300">
+            <span class="px-2 py-0.5 rounded-md bg-zinc-900 border border-zinc-700 text-cyan-400 font-mono font-bold">INFO</span>
+            <span>Clicca <strong>Pulsante A</strong> o <strong>B</strong> (anche sulla breadboard!) per accendere i LED. Passa il mouse su qualsiasi <strong>cavo</strong> per isolarlo e leggerne i fori esatti.</span>
+          </div>
+          <button id="btn-clear-focus" onclick="clearFocusedWire()" class="hidden px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-300 hover:text-white text-[11px] font-mono cursor-pointer">
+            Mostra tutti i cavi &times;
+          </button>
+        </div>
+      </div>
+
+      <!-- Spiegazione Rapida Visiva dei 3 LED -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-xs">
+        <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-3">
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-bold text-[#ffd60a] font-mono">1. PULSANTE A + LED A</span>
+            <span class="text-[11px] text-zinc-500 font-mono">Col 4–5</span>
+          </div>
+          <p class="text-zinc-400 leading-relaxed">
+            Premendo <strong>A</strong>, il <strong>LED A (giallo)</strong> si accende subito e il segnale giallo arriva alle basi di <strong>Q1</strong> (NAND) e <strong>Q4</strong> (OR) tramite R1 e R3 (10k&Omega;).
+          </p>
+        </div>
+        <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-3">
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-bold text-[#30d158] font-mono">2. PULSANTE B + LED B</span>
+            <span class="text-[11px] text-zinc-500 font-mono">Col 9–10</span>
+          </div>
+          <p class="text-zinc-400 leading-relaxed">
+            Premendo <strong>B</strong>, il <strong>LED B (verde)</strong> si accende subito e il segnale verde arriva alle basi di <strong>Q2</strong> (NAND) e <strong>Q5</strong> (OR) tramite R2 e R4 (10k&Omega;).
+          </p>
+        </div>
+        <div class="bg-zinc-950 border border-zinc-800 rounded-xl p-3">
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-bold text-[#ff6b35] font-mono">3. USCITA XOR (LED Y)</span>
+            <span class="text-[11px] text-zinc-500 font-mono">Col 29–30</span>
+          </div>
+          <p class="text-zinc-400 leading-relaxed">
+            <strong>LED Y</strong> si accende solo se A &ne; B. Se premi <strong>entrambi</strong>, LED A e LED B restano accesi ma lo stadio NAND spegne <strong>Q3</strong> e <strong>LED Y si spegne</strong>!
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLONNA LATERALE: TABS (SIMULATORE | GUIDA 7 PASSI | MAPPA CAVI & COMPONENTI) -->
+    <aside class="xl:col-span-4 2xl:col-span-3 bg-zinc-950 border border-zinc-800 rounded-2xl p-4 flex flex-col gap-4">
+
+      <!-- Navigazione Tabs -->
+      <div class="grid grid-cols-3 gap-1 bg-black p-1 rounded-xl border border-zinc-800" role="tablist">
+        <button id="tab-sim" onclick="setMode('sim')" class="py-2 px-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition-all cursor-pointer bg-white text-black">
+          Simulatore
+        </button>
+        <button id="tab-guide" onclick="setMode('guide')" class="py-2 px-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition-all cursor-pointer text-zinc-400 hover:text-white">
+          Guida (7)
+        </button>
+        <button id="tab-wires" onclick="setMode('wires')" class="py-2 px-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition-all cursor-pointer text-zinc-400 hover:text-white">
+          Mappa Cavi
+        </button>
+      </div>
+
+      <!-- TAB 1: SIMULATORE LIVE -->
+      <div id="panel-sim" class="flex flex-col gap-3.5">
+
+        <!-- Stato 3 LED in grande -->
+        <div class="grid grid-cols-3 gap-2">
+          <button onclick="toggleInput('A')" id="card-led-a" class="rounded-xl p-2.5 border border-zinc-800 bg-black text-center transition-all cursor-pointer hover:border-[#ffd60a]">
+            <div id="circle-led-a" class="w-6 h-6 mx-auto rounded-full bg-zinc-900 border-2 border-zinc-700 mb-1.5"></div>
+            <div class="text-[11px] font-mono font-bold text-zinc-300">LED A</div>
+            <div id="txt-led-a" class="text-[10px] font-mono text-zinc-500">SPENTO</div>
+          </button>
+
+          <button onclick="toggleInput('B')" id="card-led-b" class="rounded-xl p-2.5 border border-zinc-800 bg-black text-center transition-all cursor-pointer hover:border-[#30d158]">
+            <div id="circle-led-b" class="w-6 h-6 mx-auto rounded-full bg-zinc-900 border-2 border-zinc-700 mb-1.5"></div>
+            <div class="text-[11px] font-mono font-bold text-zinc-300">LED B</div>
+            <div id="txt-led-b" class="text-[10px] font-mono text-zinc-500">SPENTO</div>
+          </button>
+
+          <div id="card-led-y" class="rounded-xl p-2.5 border border-zinc-800 bg-black text-center transition-all">
+            <div id="circle-led-y" class="w-6 h-6 mx-auto rounded-full bg-zinc-900 border-2 border-zinc-700 mb-1.5"></div>
+            <div class="text-[11px] font-mono font-bold text-zinc-300">LED Y</div>
+            <div id="txt-led-y" class="text-[10px] font-mono text-zinc-500">SPENTO</div>
+          </div>
+        </div>
+
+        <!-- Stato Live 3 Stadi -->
+        <div class="rounded-xl bg-black border border-zinc-800 p-3 flex flex-col gap-2.5">
+          <div class="text-[11px] font-mono uppercase tracking-wider text-zinc-500 font-bold">Stato Real-Time dei 3 Stadi</div>
+
+          <div class="flex items-center justify-between gap-2 pb-2 border-b border-zinc-900 text-xs">
+            <div>
+              <div class="font-bold text-zinc-200">1. NAND (Q1, Q2)</div>
+              <div id="st-nand-desc" class="text-[11px] text-zinc-400">Q1 OFF, Q2 OFF &rarr; Col 17 a +9V</div>
+            </div>
+            <span id="st-nand-badge" class="px-2 py-0.5 rounded font-mono text-[11px] font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 shrink-0">ALTA (1)</span>
+          </div>
+
+          <div class="flex items-center justify-between gap-2 pb-2 border-b border-zinc-900 text-xs">
+            <div>
+              <div class="font-bold text-zinc-200">2. Switch (Q3)</div>
+              <div id="st-q3-desc" class="text-[11px] text-zinc-400">Massa attiva per Q4 e Q5</div>
+            </div>
+            <span id="st-q3-badge" class="px-2 py-0.5 rounded font-mono text-[11px] font-bold bg-fuchsia-500/15 text-fuchsia-300 border border-fuchsia-500/30 shrink-0">Q3 ON</span>
+          </div>
+
+          <div class="flex items-center justify-between gap-2 text-xs">
+            <div>
+              <div class="font-bold text-zinc-200">3. OR (Q4, Q5)</div>
+              <div id="st-or-desc" class="text-[11px] text-zinc-400">Nessun ramo attivo</div>
+            </div>
+            <span id="st-or-badge" class="px-2 py-0.5 rounded font-mono text-[11px] font-bold bg-zinc-900 text-zinc-400 border border-zinc-800 shrink-0">OFF</span>
+          </div>
+        </div>
+
+        <!-- Tavola di Verità Interattiva -->
+        <div class="rounded-xl bg-black border border-zinc-800 overflow-hidden">
+          <div class="px-3 py-2 border-b border-zinc-800 flex items-center justify-between">
+            <span class="text-xs font-bold text-zinc-200">Tavola di Verità (Clicca)</span>
+            <span class="text-[11px] font-mono text-zinc-500">Y = A &oplus; B</span>
+          </div>
+          <table class="w-full text-xs font-mono text-center">
+            <thead class="bg-zinc-950 text-zinc-400 border-b border-zinc-800">
+              <tr>
+                <th class="py-2">A</th>
+                <th class="py-2">B</th>
+                <th class="py-2">NAND</th>
+                <th class="py-2">Q3</th>
+                <th class="py-2">LED Y</th>
+              </tr>
+            </thead>
+            <tbody id="truth-body" class="divide-y divide-zinc-900">
+              <tr onclick="setInputs(0,0)" data-key="00" class="cursor-pointer hover:bg-zinc-900 transition-colors">
+                <td class="py-2">0</td><td>0</td><td>1</td><td>ON</td><td class="font-bold text-zinc-400">0 (OFF)</td>
+              </tr>
+              <tr onclick="setInputs(1,0)" data-key="10" class="cursor-pointer hover:bg-zinc-900 transition-colors">
+                <td class="py-2 text-[#ffd60a] font-bold">1</td><td>0</td><td>1</td><td>ON</td><td class="font-bold text-[#ff6b35]">1 (ON)</td>
+              </tr>
+              <tr onclick="setInputs(0,1)" data-key="01" class="cursor-pointer hover:bg-zinc-900 transition-colors">
+                <td class="py-2">0</td><td class="text-[#30d158] font-bold">1</td><td>1</td><td>ON</td><td class="font-bold text-[#ff6b35]">1 (ON)</td>
+              </tr>
+              <tr onclick="setInputs(1,1)" data-key="11" class="cursor-pointer hover:bg-zinc-900 transition-colors">
+                <td class="py-2 text-[#ffd60a] font-bold">1</td><td class="text-[#30d158] font-bold">1</td><td class="text-rose-400">0</td><td class="text-rose-400">OFF</td><td class="font-bold text-zinc-400">0 (OFF)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 2: GUIDA MONTAGGIO (7 PASSI) -->
+      <div id="panel-guide" class="hidden flex-col gap-3.5">
+        <div>
+          <div class="flex items-center justify-between text-xs font-mono mb-1.5">
+            <span id="guide-step-num" class="text-cyan-400 font-bold">PASSO 1 DI 7</span>
+            <span id="guide-wires-badge" class="text-zinc-400">0 Cavi</span>
+          </div>
+          <div class="w-full h-2 bg-zinc-900 rounded-full overflow-hidden border border-zinc-800">
+            <div id="guide-progress" class="h-full bg-cyan-400 transition-all duration-300" style="width: 14.28%"></div>
+          </div>
+        </div>
+
+        <div class="rounded-xl bg-black border border-zinc-800 p-3.5 flex flex-col gap-3">
+          <h3 id="guide-title" class="text-sm font-extrabold text-white"></h3>
+          <p id="guide-desc" class="text-xs text-zinc-300 leading-relaxed"></p>
+
+          <div class="rounded-xl bg-zinc-950 border border-zinc-800 p-3">
+            <div class="text-[10px] font-mono uppercase tracking-wider text-cyan-400 font-bold mb-2">
+              Inserisci ora (Da foro X a foro Y)
+            </div>
+            <ul id="guide-list" class="space-y-1.5 text-xs font-mono text-zinc-100"></ul>
+          </div>
+
+          <div id="guide-tip" class="rounded-xl bg-amber-500/10 border border-amber-500/30 p-2.5 text-[11px] text-amber-200 leading-relaxed"></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <button id="btn-guide-prev" onclick="changeStep(-1)" class="py-2.5 px-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-xs font-bold text-zinc-200 cursor-pointer disabled:opacity-35 disabled:cursor-not-allowed">
+            &larr; Indietro
+          </button>
+          <button id="btn-guide-next" onclick="changeStep(1)" class="py-2.5 px-3 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-extrabold cursor-pointer">
+            Avanti &rarr;
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 3: MAPPA CAVI & LISTA COMPONENTI -->
+      <div id="panel-wires" class="hidden flex-col gap-3.5">
+        <div class="rounded-xl bg-black border border-zinc-800 p-3">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-white">Mappa Cavi (9 Totali)</h3>
+            <span class="text-[10px] font-mono text-zinc-400">Clicca per isolare</span>
+          </div>
+          <div id="wire-map-list" class="space-y-1.5 max-h-[260px] overflow-y-auto pr-1">
+            <!-- Popolato da JS -->
+          </div>
+        </div>
+
+        <!-- Lista Componenti (BOM) -->
+        <div class="rounded-xl bg-black border border-zinc-800 overflow-hidden">
+          <div class="px-3 py-2 border-b border-zinc-800 text-xs font-extrabold uppercase tracking-wider text-white">
+            Lista Componenti Esatta
+          </div>
+          <table class="w-full text-[11px] text-left">
+            <tbody class="divide-y divide-zinc-900 text-zinc-200">
+              <tr>
+                <td class="py-1.5 px-3 font-mono font-bold text-cyan-400">5&times;</td>
+                <td class="py-1.5 px-1 font-semibold">Transistor 2N2222</td>
+                <td class="py-1.5 px-3 font-mono text-zinc-400">NPN (E-B-C)</td>
+              </tr>
+              <tr>
+                <td class="py-1.5 px-3 font-mono font-bold text-cyan-400">2&times;</td>
+                <td class="py-1.5 px-1 font-semibold">Pulsanti 2 pin</td>
+                <td class="py-1.5 px-3 text-zinc-400">Tattili NO</td>
+              </tr>
+              <tr>
+                <td class="py-1.5 px-3 font-mono font-bold text-cyan-400">3&times;</td>
+                <td class="py-1.5 px-1 font-semibold">LED 5mm</td>
+                <td class="py-1.5 px-3 text-zinc-400">Giallo, Verde, Rosso</td>
+              </tr>
+              <tr>
+                <td class="py-1.5 px-3 font-mono font-bold text-cyan-400">3&times;</td>
+                <td class="py-1.5 px-1 font-semibold">Resistenze 330&Omega;</td>
+                <td class="py-1.5 px-3 font-mono text-zinc-400">Arancio-Arancio-Marr</td>
+              </tr>
+              <tr>
+                <td class="py-1.5 px-3 font-mono font-bold text-cyan-400">5&times;</td>
+                <td class="py-1.5 px-1 font-semibold">Resistenze 10k&Omega;</td>
+                <td class="py-1.5 px-3 font-mono text-zinc-400">Marr-Nero-Arancio</td>
+              </tr>
+              <tr>
+                <td class="py-1.5 px-3 font-mono font-bold text-cyan-400">1&times;</td>
+                <td class="py-1.5 px-1 font-semibold">Batteria 9V</td>
+                <td class="py-1.5 px-3 font-mono text-zinc-400">+9V / GND</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </aside>
+  </main>
+
+  <!-- Tooltip Flottante ad Alto Contrasto -->
+  <div id="floating-tt" class="fixed z-50 pointer-events-none hidden max-w-xs bg-black/95 border border-zinc-600 text-white rounded-xl p-3 shadow-2xl text-xs">
+    <div id="tt-title" class="font-extrabold text-cyan-400 mb-0.5"></div>
+    <div id="tt-coords" class="font-mono text-[11px] text-[#ffd60a] mb-1"></div>
+    <div id="tt-desc" class="text-zinc-300 leading-snug"></div>
+  </div>
+
+  <script>
+    /*************************************************************************
+     * 1. GEOMETRIA BREADBOARD 30 COLONNE (ALTA LEGGIBILITÀ)
+     *************************************************************************/
+    const BB = {
+      cols: 30,
+      startX: 72,
+      colStep: 35.5,
+      yTopVcc: 44,
+      yTopGnd: 74,
+      yRowsTop: { a: 124, b: 152, c: 180, d: 208, e: 236 },
+      yRowsBot: { f: 300, g: 328, h: 356, i: 384, j: 412 },
+      yBotVcc: 454,
+      yBotGnd: 482,
+    };
+
+    function holeXY(coord) {
+      if (coord.startsWith('TV')) return { x: BB.startX + (parseInt(coord.slice(2), 10) - 1) * BB.colStep, y: BB.yTopVcc };
+      if (coord.startsWith('TG')) return { x: BB.startX + (parseInt(coord.slice(2), 10) - 1) * BB.colStep, y: BB.yTopGnd };
+      if (coord.startsWith('BV')) return { x: BB.startX + (parseInt(coord.slice(2), 10) - 1) * BB.colStep, y: BB.yBotVcc };
+      if (coord.startsWith('BG')) return { x: BB.startX + (parseInt(coord.slice(2), 10) - 1) * BB.colStep, y: BB.yBotGnd };
+      const r = coord[0];
+      const c = parseInt(coord.slice(1), 10);
+      return {
+        x: BB.startX + (c - 1) * BB.colStep,
+        y: BB.yRowsTop[r] !== undefined ? BB.yRowsTop[r] : BB.yRowsBot[r]
+      };
+    }
+
+    // Genera un percorso SVG a 90° con angoli arrotondati (r = raggio curva)
+    function roundedOrthoPath(points, r = 10) {
+      if (points.length < 2) return '';
+      let d = `M ${points[0].x} ${points[0].y}`;
+      for (let i = 1; i < points.length - 1; i++) {
+        const p0 = points[i - 1];
+        const p1 = points[i];
+        const p2 = points[i + 1];
+        const v1 = { x: p1.x - p0.x, y: p1.y - p0.y };
+        const v2 = { x: p2.x - p1.x, y: p2.y - p1.y };
+        const len1 = Math.hypot(v1.x, v1.y);
+        const len2 = Math.hypot(v2.x, v2.y);
+        const rad = Math.min(r, len1 / 2, len2 / 2);
+        const ax = p1.x - (v1.x / len1) * rad;
+        const ay = p1.y - (v1.y / len1) * rad;
+        const bx = p1.x + (v2.x / len2) * rad;
+        const by = p1.y + (v2.y / len2) * rad;
+        d += ` L ${ax} ${ay} Q ${p1.x} ${p1.y} ${bx} ${by}`;
+      }
+      const last = points[points.length - 1];
+      d += ` L ${last.x} ${last.y}`;
+      return d;
+    }
+
+    /*************************************************************************
+     * 2. STATO APPLICAZIONE
+     *************************************************************************/
+    const state = {
+      mode: 'sim', // 'sim' | 'guide' | 'wires'
+      inputA: 0,
+      inputB: 0,
+      currentStep: 0, // 0..6 (7 passi)
+      wiresOnly: false,
+      zoom: 1,
+      hoveredWireId: null,
+      pinnedWireId: null,
+    };
+
+    /*************************************************************************
+     * 3. DEFINIZIONE COMPONENTI & CAVI (ZERO CONFLITTI, 100% COERENTE)
+     *************************************************************************/
+    const COLORS = {
+      vcc: '#ff3b30',
+      gnd: '#00d4ff',
+      sigA: '#ffd60a',
+      sigB: '#30d158',
+      internal: '#ff2d95',
+    };
+
+    // Tutti i 9 cavi con tracciato ortogonale pulito (mai sopra i corpi dei transistor!)
+    const WIRES = [
+      {
+        id: 'W_GND_Q2', label: 'GND-1', step: 3, color: COLORS.gnd, group: 'GND',
+        from: 'a13', to: 'TG13',
+        name: 'Cavo GND-1 (Massa Q2)',
+        coords: 'Foro a13 → Rail GND (col 13)',
+        desc: 'Collega l’emettitore di Q2 (E = d13) al rail GND superiore.',
+        getPoints: () => [holeXY('a13'), holeXY('TG13')]
+      },
+      {
+        id: 'W_GND_Q3', label: 'GND-2', step: 4, color: COLORS.gnd, group: 'GND',
+        from: 'a20', to: 'TG20',
+        name: 'Cavo GND-2 (Massa Q3)',
+        coords: 'Foro a20 → Rail GND (col 20)',
+        desc: 'Collega l’emettitore di Q3 (E = c20) al rail GND superiore.',
+        getPoints: () => [holeXY('a20'), holeXY('TG20')]
+      },
+      {
+        id: 'W_NAND_Q3', label: 'M1', step: 4, color: COLORS.internal, group: 'Interno',
+        from: 'e17', to: 'e21',
+        name: 'Cavo M1 (NAND → Base Q3)',
+        coords: 'Foro e17 (Q1-C) → Foro e21 (Q3-B)',
+        desc: 'Porta l’uscita dello stadio NAND (col 17) direttamente alla base di Q3 (col 21).',
+        getPoints: () => {
+          const p1 = holeXY('e17'), p2 = holeXY('e21');
+          const yMid = 258; // Corre ordinato nel bordo superiore del solco centrale
+          return [p1, { x: p1.x, y: yMid }, { x: p2.x, y: yMid }, p2];
+        }
+      },
+      {
+        id: 'W_Q3_OR1', label: 'M2', step: 5, color: COLORS.internal, group: 'Interno',
+        from: 'e22', to: 'e24',
+        name: 'Cavo M2 (Q3-C → Emettitore Q4)',
+        coords: 'Foro e22 (Q3-C) → Foro e24 (Q4-E)',
+        desc: 'Fornisce la massa controllata da Q3 all’emettitore di Q4 (e tramite M3 anche a Q5).',
+        getPoints: () => {
+          const p1 = holeXY('e22'), p2 = holeXY('e24');
+          const yMid = 258;
+          return [p1, { x: p1.x, y: yMid }, { x: p2.x, y: yMid }, p2];
+        }
+      },
+      {
+        id: 'W_OR_E', label: 'M3', step: 5, color: COLORS.internal, group: 'Interno',
+        from: 'a24', to: 'a27',
+        name: 'Cavo M3 (Emettitori OR: Q4-E → Q5-E)',
+        coords: 'Foro a24 (Q4-E) → Foro a27 (Q5-E)',
+        desc: 'Collega in parallelo gli emettitori di Q4 e Q5.',
+        getPoints: () => {
+          const p1 = holeXY('a24'), p2 = holeXY('a27');
+          const yTop = 104;
+          return [p1, { x: p1.x, y: yTop }, { x: p2.x, y: yTop }, p2];
+        }
+      },
+      {
+        id: 'W_OR_C', label: 'M4', step: 5, color: COLORS.internal, group: 'Interno',
+        from: 'a26', to: 'a29',
+        name: 'Cavo M4 (Collettori OR: Q4-C → Q5-C / LED Y)',
+        coords: 'Foro a26 (Q4-C) → Foro a29 (Q5-C & LED Y−)',
+        desc: 'Unisce i collettori di Q4 e Q5 al catodo (−) del LED Y sulla colonna 29.',
+        getPoints: () => {
+          const p1 = holeXY('a26'), p2 = holeXY('a29');
+          const yTop = 90;
+          return [p1, { x: p1.x, y: yTop }, { x: p2.x, y: yTop }, p2];
+        }
+      },
+      {
+        id: 'W_A1', label: 'A1', step: 6, color: COLORS.sigA, group: 'Segnale A',
+        from: 'e4', to: 'g16',
+        name: 'Cavo A1 (Pulsante A → Base Q1 via R1)',
+        coords: 'Foro e4 (Col 4) → Foro g16 (Col 16 sotto)',
+        desc: 'Porta il segnale A (+9V) dal Pulsante A alla resistenza R1 (10kΩ) della base di Q1.',
+        getPoints: () => {
+          const p1 = holeXY('e4'), p2 = holeXY('g16');
+          return [p1, { x: p1.x, y: p2.y }, p2];
+        }
+      },
+      {
+        id: 'W_A2', label: 'A2', step: 6, color: COLORS.sigA, group: 'Segnale A',
+        from: 'h16', to: 'h25',
+        name: 'Cavo A2 (Segnale A → Base Q4 via R3)',
+        coords: 'Foro h16 (Col 16 sotto) → Foro h25 (Col 25 sotto)',
+        desc: 'Prosegue il segnale A fino alla resistenza R3 (10kΩ) della base di Q4 (stadio OR).',
+        getPoints: () => {
+          const p1 = holeXY('h16'), p2 = holeXY('h25');
+          return [p1, p2];
+        }
+      },
+      {
+        id: 'W_B1', label: 'B1', step: 6, color: COLORS.sigB, group: 'Segnale B',
+        from: 'e9', to: 'i14',
+        name: 'Cavo B1 (Pulsante B → Base Q2 via R2)',
+        coords: 'Foro e9 (Col 9) → Foro i14 (Col 14 sotto)',
+        desc: 'Porta il segnale B (+9V) dal Pulsante B alla resistenza R2 (10kΩ) della base di Q2.',
+        getPoints: () => {
+          const p1 = holeXY('e9'), p2 = holeXY('i14');
+          return [p1, { x: p1.x, y: p2.y }, p2];
+        }
+      },
+      {
+        id: 'W_B2', label: 'B2', step: 6, color: COLORS.sigB, group: 'Segnale B',
+        from: 'j14', to: 'j28',
+        name: 'Cavo B2 (Segnale B → Base Q5 via R4)',
+        coords: 'Foro j14 (Col 14 sotto) → Foro j28 (Col 28 sotto)',
+        desc: 'Prosegue il segnale B fino alla resistenza R4 (10kΩ) della base di Q5 (stadio OR).',
+        getPoints: () => {
+          const p1 = holeXY('j14'), p2 = holeXY('j28');
+          return [p1, p2];
+        }
+      },
+    ];
+
+    // Componenti fisici sulla breadboard
+    const PARTS = [
+      // PASSO 1: Pulsante A + LED A (Col 4-5)
+      {
+        id: 'BTN_A', type: 'button', step: 1, inputKey: 'A', color: COLORS.sigA,
+        from: 'TV4', to: 'a4', label: 'A',
+        name: 'Pulsante A (2 pin)',
+        coords: 'Pin 1: +9V (col 4) | Pin 2: a4',
+        desc: 'Chiude +9V sulla colonna 4: accende LED A e attiva il segnale giallo A.'
+      },
+      {
+        id: 'LED_A', type: 'led', step: 1, ledKey: 'A', colorOn: '#ffd60a', glow: 'rgba(255,214,10,0.65)',
+        anode: 'c4', cathode: 'c5', label: 'LED A',
+        name: 'LED A (Giallo — Stato A)',
+        coords: 'Anodo (+ lungo): c4 | Catodo (− piatto): c5',
+        desc: 'Si accende immediatamente ogni volta che premi il Pulsante A.'
+      },
+      {
+        id: 'R_LA', type: 'resistor', step: 1, label: '330Ω',
+        from: 'a5', to: 'TG5', bands: ['#f97316', '#f97316', '#92400e', '#eab308'],
+        name: 'Resistenza LED A (330Ω)',
+        coords: 'Foro a5 → Rail GND (col 5)',
+        desc: 'Protegge il LED A limitando la corrente verso massa.'
+      },
+
+      // PASSO 2: Pulsante B + LED B (Col 9-10)
+      {
+        id: 'BTN_B', type: 'button', step: 2, inputKey: 'B', color: COLORS.sigB,
+        from: 'TV9', to: 'a9', label: 'B',
+        name: 'Pulsante B (2 pin)',
+        coords: 'Pin 1: +9V (col 9) | Pin 2: a9',
+        desc: 'Chiude +9V sulla colonna 9: accende LED B e attiva il segnale verde B.'
+      },
+      {
+        id: 'LED_B', type: 'led', step: 2, ledKey: 'B', colorOn: '#30d158', glow: 'rgba(48,209,88,0.65)',
+        anode: 'c9', cathode: 'c10', label: 'LED B',
+        name: 'LED B (Verde — Stato B)',
+        coords: 'Anodo (+ lungo): c9 | Catodo (− piatto): c10',
+        desc: 'Si accende immediatamente ogni volta che premi il Pulsante B.'
+      },
+      {
+        id: 'R_LB', type: 'resistor', step: 2, label: '330Ω',
+        from: 'a10', to: 'TG10', bands: ['#f97316', '#f97316', '#92400e', '#eab308'],
+        name: 'Resistenza LED B (330Ω)',
+        coords: 'Foro a10 → Rail GND (col 10)',
+        desc: 'Protegge il LED B limitando la corrente verso massa.'
+      },
+
+      // PASSO 3: Stadio NAND (Q2, Q1, R_pu)
+      {
+        id: 'Q2', type: 'transistor', step: 3, label: 'Q2',
+        e: 'd13', b: 'd14', c: 'd15',
+        name: 'Transistor Q2 (2N2222 — NAND B)',
+        coords: 'E = d13 | B = d14 | C = d15',
+        desc: 'Condivide la colonna 15 con Q1-E (nessun cavo tra Q2 e Q1!).'
+      },
+      {
+        id: 'Q1', type: 'transistor', step: 3, label: 'Q1',
+        e: 'b15', b: 'b16', c: 'b17',
+        name: 'Transistor Q1 (2N2222 — NAND A)',
+        coords: 'E = b15 | B = b16 | C = b17',
+        desc: 'In serie con Q2. Se premi A e B insieme, porta a 0V la colonna 17 spegnendo Q3.'
+      },
+      {
+        id: 'R_PU', type: 'resistor', step: 3, label: '10kΩ',
+        from: 'TV17', to: 'a17', bands: ['#92400e', '#09090b', '#f97316', '#eab308'],
+        name: 'Resistenza Pull-Up R_pu (10kΩ)',
+        coords: 'Rail +9V (col 17) → Foro a17',
+        desc: 'Mantiene alta la base di Q3 finché Q1 e Q2 non conducono entrambi.'
+      },
+
+      // PASSO 4: Transistor Interruttore Q3
+      {
+        id: 'Q3', type: 'transistor', step: 4, label: 'Q3',
+        e: 'c20', b: 'c21', c: 'c22',
+        name: 'Transistor Q3 (2N2222 — Switch Massa)',
+        coords: 'E = c20 | B = c21 | C = c22',
+        desc: 'Abilita la massa allo stadio OR. Si spegne SOLO quando A=1 e B=1.'
+      },
+
+      // PASSO 5: Stadio OR (Q4, Q5)
+      {
+        id: 'Q4', type: 'transistor', step: 5, label: 'Q4',
+        e: 'c24', b: 'c25', c: 'c26',
+        name: 'Transistor Q4 (2N2222 — OR Ingresso A)',
+        coords: 'E = c24 | B = c25 | C = c26',
+        desc: 'Accende il LED Y quando A=1 e Q3 è attivo.'
+      },
+      {
+        id: 'Q5', type: 'transistor', step: 5, label: 'Q5',
+        e: 'c27', b: 'c28', c: 'c29',
+        name: 'Transistor Q5 (2N2222 — OR Ingresso B)',
+        coords: 'E = c27 | B = c28 | C = c29',
+        desc: 'Accende il LED Y quando B=1 e Q3 è attivo. Condivide col 29 con LED Y−.'
+      },
+
+      // PASSO 6: Resistenze di Base (R1-R4 a cavallo del solco centrale)
+      {
+        id: 'R1', type: 'resistor', step: 6, label: 'R1 10k',
+        from: 'e16', to: 'f16', bands: ['#92400e', '#09090b', '#f97316', '#eab308'],
+        name: 'Resistenza Base Q1 (R1 — 10kΩ)',
+        coords: 'Foro e16 (Q1-B) → Foro f16 (Cavo A1)',
+        desc: 'Scavalca il solco centrale e protegge la base di Q1.'
+      },
+      {
+        id: 'R2', type: 'resistor', step: 6, label: 'R2 10k',
+        from: 'e14', to: 'f14', bands: ['#92400e', '#09090b', '#f97316', '#eab308'],
+        name: 'Resistenza Base Q2 (R2 — 10kΩ)',
+        coords: 'Foro e14 (Q2-B) → Foro f14 (Cavo B1)',
+        desc: 'Scavalca il solco centrale e protegge la base di Q2.'
+      },
+      {
+        id: 'R3', type: 'resistor', step: 6, label: 'R3 10k',
+        from: 'e25', to: 'f25', bands: ['#92400e', '#09090b', '#f97316', '#eab308'],
+        name: 'Resistenza Base Q4 (R3 — 10kΩ)',
+        coords: 'Foro e25 (Q4-B) → Foro f25 (Cavo A2)',
+        desc: 'Scavalca il solco centrale e protegge la base di Q4.'
+      },
+      {
+        id: 'R4', type: 'resistor', step: 6, label: 'R4 10k',
+        from: 'e28', to: 'f28', bands: ['#92400e', '#09090b', '#f97316', '#eab308'],
+        name: 'Resistenza Base Q5 (R4 — 10kΩ)',
+        coords: 'Foro e28 (Q5-B) → Foro f28 (Cavo B2)',
+        desc: 'Scavalca il solco centrale e protegge la base di Q5.'
+      },
+
+      // PASSO 7: LED Y (Uscita XOR) + Resistenza 330Ω
+      {
+        id: 'LED_Y', type: 'led', step: 7, ledKey: 'Y', colorOn: '#ff5500', glow: 'rgba(255,85,0,0.75)',
+        anode: 'e30', cathode: 'e29', label: 'LED Y',
+        name: 'LED Y (Rosso/Arancio — Uscita XOR)',
+        coords: 'Anodo (+ lungo): e30 | Catodo (− piatto): e29',
+        desc: 'Si accende SOLO quando A e B sono diversi! Catodo già su col 29 con Q5-C.'
+      },
+      {
+        id: 'R_LY', type: 'resistor', step: 7, label: '330Ω',
+        from: 'TV30', to: 'a30', bands: ['#f97316', '#f97316', '#92400e', '#eab308'],
+        name: 'Resistenza LED Y (330Ω)',
+        coords: 'Rail +9V (col 30) → Foro a30',
+        desc: 'Limita la corrente nel LED di uscita XOR a 9V.'
+      },
+    ];
+
+    /*************************************************************************
+     * 4. GUIDA MONTAGGIO IN 7 PASSI
+     *************************************************************************/
+    const STEPS = [
+      {
+        num: 1, title: '1. Pulsante A + LED A (Giallo)', wires: 0,
+        desc: 'Monta il primo pulsante a 2 pin e il suo LED di stato giallo subito accanto. Così vedrai sempre quando l’ingresso A è attivo.',
+        items: [
+          'Pulsante A (2 pin): da Rail +9V (col 4) a foro a4',
+          'LED A (Giallo): Anodo (+ lungo) in c4 → Catodo (−) in c5',
+          'Resistenza 330Ω: da foro a5 a Rail GND (col 5)'
+        ],
+        tip: '💡 Verifica LED: la gambetta più lunga è sempre l’Anodo (+), il lato piatto della plastica è il Catodo (−).'
+      },
+      {
+        num: 2, title: '2. Pulsante B + LED B (Verde)', wires: 0,
+        desc: 'Ripeti lo stesso schema identico per il Pulsante B e il LED B verde sulle colonne 9 e 10.',
+        items: [
+          'Pulsante B (2 pin): da Rail +9V (col 9) a foro a9',
+          'LED B (Verde): Anodo (+ lungo) in c9 → Catodo (−) in c10',
+          'Resistenza 330Ω: da foro a10 a Rail GND (col 10)'
+        ],
+        tip: '✨ Se colleghi già la batteria 9V ai rail superiori, premendo A si accende il LED giallo e premendo B si accende il LED verde!'
+      },
+      {
+        num: 3, title: '3. Stadio NAND (Q2, Q1, R_pu)', wires: 1,
+        desc: 'Inserisci Q2 e Q1 sfalsati sulla colonna 15: in questo modo Q2-C (d15) e Q1-E (b15) si collegano internamente SENZA usare cavi!',
+        items: [
+          'Q2 (2N2222, lato piatto in basso): E=d13, B=d14, C=d15',
+          'Q1 (2N2222, lato piatto in basso): E=b15, B=b16, C=b17',
+          'Resistenza R_pu (10kΩ): da Rail +9V (col 17) a foro a17',
+          'Cavo Ciano GND-1: da foro a13 a Rail GND (col 13)'
+        ],
+        tip: '⚠️ Piedinatura 2N2222: con la faccia piatta rivolta verso il basso (verso di te), i pin da sinistra a destra sono sempre E - B - C.'
+      },
+      {
+        num: 4, title: '4. Transistor Interruttore Q3', wires: 2,
+        desc: 'Inserisci Q3 nelle colonne 20–22. Il cavo magenta M1 porta il segnale dallo stadio NAND alla base di Q3.',
+        items: [
+          'Q3 (2N2222): E=c20, B=c21, C=c22',
+          'Cavo Ciano GND-2: da foro a20 a Rail GND (col 20)',
+          'Cavo Magenta M1: da foro e17 (Q1-C) a foro e21 (Q3-B)'
+        ],
+        tip: '💡 Q3 è il "guardiano": blocca la massa allo stadio OR quando premi entrambi i pulsanti A e B.'
+      },
+      {
+        num: 5, title: '5. Stadio OR (Q4 e Q5 in parallelo)', wires: 3,
+        desc: 'Posiziona Q4 e Q5 affiancati e unisci i loro emettitori (M3) e collettori (M4) con 3 cavi magenta puliti a 90°.',
+        items: [
+          'Q4 (2N2222): E=c24, B=c25, C=c26',
+          'Q5 (2N2222): E=c27, B=c28, C=c29',
+          'Cavo Magenta M2: da foro e22 (Q3-C) a foro e24 (Q4-E)',
+          'Cavo Magenta M3: da foro a24 (Q4-E) a foro a27 (Q5-E)',
+          'Cavo Magenta M4: da foro a26 (Q4-C) a foro a29 (Q5-C)'
+        ],
+        tip: '✨ Nota come i cavi M3 e M4 passano puliti nella riga alta (a) senza coprire i transistor!'
+      },
+      {
+        num: 6, title: '6. Resistenze Base (10kΩ) & Cavi A/B', wires: 4,
+        desc: 'Inserisci le 4 resistenze da 10kΩ a cavallo del solco centrale (righe e→f), poi collega i 2 cavi Gialli (A) e i 2 cavi Verdi (B) nella metà inferiore.',
+        items: [
+          'R1 (10kΩ): e16 → f16  |  R2 (10kΩ): e14 → f14',
+          'R3 (10kΩ): e25 → f25  |  R4 (10kΩ): e28 → f28',
+          'Cavi Gialli A: A1 (e4 → g16) e A2 (h16 → h25)',
+          'Cavi Verdi B: B1 (e9 → i14) e B2 (j14 → j28)'
+        ],
+        tip: '💡 Portare i cavi A e B nella metà inferiore (righe g–j) evita ogni groviglio sopra i transistor!'
+      },
+      {
+        num: 7, title: '7. LED Y (Uscita XOR) + Resistenza 330Ω', wires: 0,
+        desc: 'Ultimo passo! Inserisci il LED rosso/arancio di uscita sulle colonne 29–30 e la sua resistenza da 330Ω verso +9V.',
+        items: [
+          'LED Y (Rosso/Arancio): Anodo (+ lungo) in e30 → Catodo (−) in e29',
+          'Resistenza 330Ω: da Rail +9V (col 30) a foro a30'
+        ],
+        tip: '🎉 Finito! Collega la batteria 9V ai rail superiori: premi A (LED A + LED Y accesi), premi B (LED B + LED Y accesi), premi A+B insieme (LED A + LED B accesi, LED Y SPENTO!).'
+      }
+    ];
+
+    /*************************************************************************
+     * 5. LOGICA ELETTRICA LIVE
+     *************************************************************************/
+    function calcCircuit(a, b) {
+      const nandLow = (a === 1 && b === 1);
+      const nandHigh = !nandLow;
+      const q3On = nandHigh;
+      const q4On = (a === 1) && q3On;
+      const q5On = (b === 1) && q3On;
+      const ledY = (a ^ b) === 1;
+      return {
+        a, b,
+        ledA: a === 1,
+        ledB: b === 1,
+        ledY,
+        q1On: a === 1 && b === 1,
+        q2On: b === 1,
+        nandHigh,
+        q3On,
+        q4On,
+        q5On
+      };
+    }
+
+    /*************************************************************************
+     * 6. RENDERING SVG AD ALTA VISIBILITÀ
+     *************************************************************************/
+    const NS = 'http://www.w3.org/2000/svg';
+    function el(tag, attrs = {}) {
+      const n = document.createElementNS(NS, tag);
+      for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+      return n;
+    }
+
+    function renderBreadboard() {
+      const svg = document.getElementById('breadboard-svg');
+      svg.innerHTML = '';
+
+      const cs = calcCircuit(state.inputA, state.inputB);
+      const isGuide = state.mode === 'guide';
+      const stepNum = state.currentStep + 1;
+      const activeFocusWire = state.hoveredWireId || state.pinnedWireId;
+
+      // Filtri glow per LED e cavi evidenziati
+      const defs = el('defs');
+      defs.innerHTML = `
+        <filter id="glow-led" x="-120%" y="-120%" width="340%" height="340%">
+          <feGaussianBlur stdDeviation="11" result="b" />
+          <feMerge><feMergeNode in="b" /><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+        <filter id="glow-wire" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="4" result="b" />
+          <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+      `;
+      svg.appendChild(defs);
+
+      // 6.1 Base Breadboard (Grigio scuro/chiaro calibrato per contrasto OLED)
+      svg.appendChild(el('rect', {
+        x: 16, y: 12, width: 1148, height: 488, rx: 16,
+        fill: '#18181b', stroke: '#3f3f46', 'stroke-width': 2
+      }));
+
+      // Area interna fori (Grigio antracite pulito: fa esplodere i colori dei cavi!)
+      svg.appendChild(el('rect', {
+        x: 48, y: 24, width: 1094, height: 464, rx: 10,
+        fill: '#202024', stroke: '#2e2e34', 'stroke-width': 1
+      }));
+
+      // Solco centrale ben visibile
+      svg.appendChild(el('rect', {
+        x: 48, y: 256, width: 1094, height: 24, rx: 4,
+        fill: '#09090b', stroke: '#27272a', 'stroke-width': 1
+      }));
+
+      // Linee Rail (+9V Rosso, GND Ciano)
+      svg.appendChild(el('line', { x1: 60, y1: BB.yTopVcc - 13, x2: 1120, y2: BB.yTopVcc - 13, stroke: COLORS.vcc, 'stroke-width': 3.5, 'stroke-linecap': 'round' }));
+      svg.appendChild(el('line', { x1: 60, y1: BB.yTopGnd + 13, x2: 1120, y2: BB.yTopGnd + 13, stroke: COLORS.gnd, 'stroke-width': 3.5, 'stroke-linecap': 'round' }));
+      svg.appendChild(el('line', { x1: 60, y1: BB.yBotVcc - 13, x2: 1120, y2: BB.yBotVcc - 13, stroke: COLORS.vcc, 'stroke-width': 2, opacity: 0.35 }));
+      svg.appendChild(el('line', { x1: 60, y1: BB.yBotGnd + 13, x2: 1120, y2: BB.yBotGnd + 13, stroke: COLORS.gnd, 'stroke-width': 2, opacity: 0.35 }));
+
+      // Etichette Rail
+      [
+        { x: 32, y: BB.yTopVcc + 4, t: '+9V', c: COLORS.vcc },
+        { x: 32, y: BB.yTopGnd + 4, t: 'GND', c: COLORS.gnd },
+        { x: 32, y: BB.yBotVcc + 4, t: '+', c: COLORS.vcc },
+        { x: 32, y: BB.yBotGnd + 4, t: '−', c: COLORS.gnd },
+      ].forEach(l => {
+        const tx = el('text', { x: l.x, y: l.y, fill: l.c, 'font-size': 11, 'font-family': 'JetBrains Mono', 'font-weight': '800', 'text-anchor': 'middle' });
+        tx.textContent = l.t;
+        svg.appendChild(tx);
+      });
+
+      // Zone Didattiche sul solco centrale (nascoste in modalità "Solo Cavi")
+      if (!state.wiresOnly) {
+        const zones = [
+          { col: 4.5, t: 'INGRESSO A + LED A', c: COLORS.sigA },
+          { col: 9.5, t: 'INGRESSO B + LED B', c: COLORS.sigB },
+          { col: 15, t: 'STADIO 1: NAND (Q2+Q1)', c: '#e4e4e7' },
+          { col: 21, t: 'STADIO 2: Q3', c: COLORS.internal },
+          { col: 26.5, t: 'STADIO 3: OR (Q4,Q5) + LED Y', c: '#ff6b35' },
+        ];
+        zones.forEach(z => {
+          const x = BB.startX + (z.col - 1) * BB.colStep;
+          const tx = el('text', {
+            x, y: 272, fill: z.c, 'font-size': 9.5,
+            'font-family': 'JetBrains Mono', 'font-weight': '800', 'text-anchor': 'middle'
+          });
+          tx.textContent = z.t;
+          svg.appendChild(tx);
+        });
+      }
+
+      // Righe A-E, F-J
+      const rowEntries = [...Object.entries(BB.yRowsTop), ...Object.entries(BB.yRowsBot)];
+      rowEntries.forEach(([rName, y]) => {
+        [32, 1152].forEach(xPos => {
+          const tx = el('text', {
+            x: xPos, y: y + 4, fill: '#a1a1aa', 'font-size': 11,
+            'font-family': 'JetBrains Mono', 'font-weight': '700', 'text-anchor': 'middle'
+          });
+          tx.textContent = rName.toUpperCase();
+          svg.appendChild(tx);
+        });
+      });
+
+      // Numeri colonna (1–30) e Fori
+      const keyCols = new Set([4, 5, 9, 10, 13, 14, 15, 16, 17, 20, 21, 22, 24, 25, 26, 27, 28, 29, 30]);
+      for (let c = 1; c <= BB.cols; c++) {
+        const x = BB.startX + (c - 1) * BB.colStep;
+        [106, 434].forEach(yPos => {
+          const tx = el('text', {
+            x, y: yPos, fill: keyCols.has(c) ? '#ffffff' : '#71717a',
+            'font-size': keyCols.has(c) ? 10.5 : 9.5,
+            'font-family': 'JetBrains Mono', 'font-weight': keyCols.has(c) ? '800' : '500',
+            'text-anchor': 'middle'
+          });
+          tx.textContent = c;
+          svg.appendChild(tx);
+        });
+
+        // Fori Rail
+        [BB.yTopVcc, BB.yTopGnd, BB.yBotVcc, BB.yBotGnd].forEach(ry => {
+          svg.appendChild(el('rect', {
+            x: x - 4, y: ry - 4, width: 8, height: 8, rx: 1.8,
+            fill: '#09090b', stroke: '#52525b', 'stroke-width': 0.8
+          }));
+        });
+
+        // Fori A-E, F-J
+        rowEntries.forEach(([, ry]) => {
+          svg.appendChild(el('rect', {
+            x: x - 4.2, y: ry - 4.2, width: 8.4, height: 8.4, rx: 1.8,
+            fill: '#09090b', stroke: '#52525b', 'stroke-width': 0.9
+          }));
+        });
+      }
+
+      // 6.2 Disegno COMPONENTI (Resistenze -> Transistor -> Pulsanti -> LED)
+      const compGroup = el('g', { id: 'layer-components' });
+      const partOrder = ['resistor', 'transistor', 'button', 'led'];
+      partOrder.forEach(type => {
+        PARTS.filter(p => p.type === type).forEach(part => {
+          const g = el('g', { class: 'comp-hit' });
+
+          // Attenuazione per Guida, Solo Cavi o Focus Cavo
+          if (isGuide) {
+            if (part.step === stepNum) g.classList.add('step-active');
+            else if (part.step < stepNum) g.classList.add('dim-soft');
+            else g.classList.add('dim-heavy');
+          } else if (state.wiresOnly || activeFocusWire) {
+            g.classList.add('dim-soft');
+          }
+
+          if (part.type === 'resistor') drawResistor(g, part);
+          else if (part.type === 'transistor') drawTransistor(g, part, cs);
+          else if (part.type === 'button') drawButton(g, part, cs);
+          else if (part.type === 'led') drawLed(g, part, cs);
+
+          g.addEventListener('mouseenter', (e) => showTooltip(e, part));
+          g.addEventListener('mousemove', moveTooltip);
+          g.addEventListener('mouseleave', hideTooltip);
+          g.addEventListener('click', () => {
+            setInspector(part.label || part.id, part.name, part.coords, part.desc);
+            if (part.type === 'button' && state.mode === 'sim') {
+              toggleInput(part.inputKey);
+            }
+          });
+          compGroup.appendChild(g);
+        });
+      });
+      svg.appendChild(compGroup);
+
+      // 6.3 Disegno CAVI SPESSI A 90° CON HALO SCURO (SOPRA I COMPONENTI PER MASSIMA VISIBILITÀ!)
+      const wireGroup = el('g', { id: 'layer-wires' });
+      WIRES.forEach(w => {
+        const g = el('g', { class: 'comp-hit' });
+
+        if (isGuide) {
+          if (w.step === stepNum) g.classList.add('step-active');
+          else if (w.step < stepNum) g.classList.add('dim-soft');
+          else g.classList.add('dim-heavy');
+        } else if (activeFocusWire) {
+          if (activeFocusWire !== w.id) g.classList.add('dim-heavy');
+        }
+
+        const pts = w.getPoints();
+        const d = roundedOrthoPath(pts, 10);
+        const isHighlighted = activeFocusWire === w.id;
+
+        // 1. Area invisibile larga per facilitare hover/click col mouse e touch
+        g.appendChild(el('path', {
+          d, fill: 'none', stroke: 'transparent', 'stroke-width': 18, 'stroke-linecap': 'round'
+        }));
+
+        // 2. Halo/Outline nero puro spesso (stacca nettamente il cavo dalla breadboard!)
+        g.appendChild(el('path', {
+          d, fill: 'none', stroke: '#000000',
+          'stroke-width': isHighlighted ? 13 : 10.5,
+          'stroke-linecap': 'round', 'stroke-linejoin': 'round'
+        }));
+
+        // 3. Corpo cavo spesso ad alto contrasto (6px!)
+        g.appendChild(el('path', {
+          d, fill: 'none', stroke: w.color,
+          'stroke-width': isHighlighted ? 7.5 : 5.8,
+          'stroke-linecap': 'round', 'stroke-linejoin': 'round',
+          filter: isHighlighted ? 'url(#glow-wire)' : 'none'
+        }));
+
+        // 4. Terminali metallici ben visibili nei due fori
+        [pts[0], pts[pts.length - 1]].forEach(p => {
+          g.appendChild(el('circle', {
+            cx: p.x, cy: p.y, r: 5,
+            fill: '#ffffff', stroke: '#000000', 'stroke-width': 2
+          }));
+          g.appendChild(el('circle', {
+            cx: p.x, cy: p.y, r: 2.3, fill: w.color
+          }));
+        });
+
+        // 5. Badge Etichetta Cavo (es. "A1", "M1") sempre nitida
+        const midPt = pts.length === 2
+          ? { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 }
+          : (pts.length === 3
+            ? { x: (pts[1].x + pts[2].x) / 2, y: pts[1].y }
+            : { x: (pts[1].x + pts[2].x) / 2, y: pts[1].y });
+
+        if (!state.wiresOnly || isHighlighted) {
+          g.appendChild(el('rect', {
+            x: midPt.x - 16, y: midPt.y - 9, width: 32, height: 17, rx: 5,
+            fill: '#000000', stroke: w.color, 'stroke-width': 1.5
+          }));
+          const lbl = el('text', {
+            x: midPt.x, y: midPt.y + 3, fill: '#ffffff',
+            'font-size': 9.5, 'font-family': 'JetBrains Mono', 'font-weight': '800', 'text-anchor': 'middle'
+          });
+          lbl.textContent = w.label;
+          g.appendChild(lbl);
+        }
+
+        // Eventi Hover & Click per isolamento cavo
+        g.addEventListener('mouseenter', (e) => {
+          state.hoveredWireId = w.id;
+          showTooltip(e, w);
+          setInspector(w.label, w.name, w.coords, w.desc);
+          renderBreadboard();
+        });
+        g.addEventListener('mousemove', moveTooltip);
+        g.addEventListener('mouseleave', () => {
+          state.hoveredWireId = null;
+          hideTooltip();
+          renderBreadboard();
+        });
+        g.addEventListener('click', () => {
+          state.pinnedWireId = (state.pinnedWireId === w.id) ? null : w.id;
+          updateClearFocusButton();
+          renderWireMap();
+          renderBreadboard();
+        });
+
+        wireGroup.appendChild(g);
+      });
+      svg.appendChild(wireGroup);
+
+      // 6.4 Pallini Luminosi Animati sui Cavi Attivi (Modalità Simulatore)
+      if (!isGuide && !activeFocusWire) {
+        const flowG = el('g', { 'pointer-events': 'none' });
+        drawActiveFlows(flowG, cs);
+        svg.appendChild(flowG);
+      }
+    }
+
+    // Disegna Resistenza
+    function drawResistor(g, p) {
+      const a = holeXY(p.from), b = holeXY(p.to);
+      const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      const ang = Math.atan2(b.y - a.y, b.x - a.x) * (180 / Math.PI);
+
+      g.appendChild(el('line', { x1: a.x, y1: a.y, x2: b.x, y2: b.y, stroke: '#a1a1aa', 'stroke-width': 2.8 }));
+      [a, b].forEach(pt => g.appendChild(el('circle', { cx: pt.x, cy: pt.y, r: 3.5, fill: '#d4d4d8', stroke: '#000', 'stroke-width': 1 })));
+
+      const body = el('g', { transform: `translate(${mx},${my}) rotate(${ang})` });
+      body.appendChild(el('rect', { x: -16, y: -6, width: 32, height: 12, rx: 4, fill: '#d6c3a5', stroke: '#000', 'stroke-width': 1.2 }));
+      [-10, -4, 2, 9].forEach((bx, idx) => {
+        body.appendChild(el('rect', { x: bx, y: -5.5, width: 3, height: 11, fill: p.bands[idx] }));
+      });
+      g.appendChild(body);
+
+      if (!state.wiresOnly) {
+        const tx = el('text', {
+          x: mx + (a.x === b.x ? 18 : 0), y: my + (a.x === b.x ? 3 : -10),
+          fill: '#d4d4d8', 'font-size': 8.5, 'font-family': 'JetBrains Mono', 'font-weight': '700', 'text-anchor': 'middle'
+        });
+        tx.textContent = p.label;
+        g.appendChild(tx);
+      }
+    }
+
+    // Disegna Transistor 2N2222 con E-B-C ben stampati
+    function drawTransistor(g, p, cs) {
+      const pE = holeXY(p.e), pB = holeXY(p.b), pC = holeXY(p.c);
+      let active = false;
+      if (state.mode === 'sim') {
+        if (p.id === 'Q1') active = cs.q1On;
+        if (p.id === 'Q2') active = cs.q2On;
+        if (p.id === 'Q3') active = cs.q3On;
+        if (p.id === 'Q4') active = cs.q4On;
+        if (p.id === 'Q5') active = cs.q5On;
+      }
+
+      const by = pB.y - 24;
+      [pE, pB, pC].forEach(pt => {
+        g.appendChild(el('line', { x1: pt.x, y1: by + 12, x2: pt.x, y2: pt.y, stroke: '#a1a1aa', 'stroke-width': 2.6 }));
+        g.appendChild(el('circle', { cx: pt.x, cy: pt.y, r: 3.6, fill: '#e4e4e7', stroke: '#000', 'stroke-width': 1 }));
+      });
+
+      // Corpo TO-92 con lato piatto in basso
+      g.appendChild(el('path', {
+        d: `M ${pE.x - 9} ${by + 14} L ${pC.x + 9} ${by + 14} L ${pC.x + 9} ${by + 1} Q ${pB.x} ${by - 16} ${pE.x - 9} ${by + 1} Z`,
+        fill: '#09090b',
+        stroke: active ? '#30d158' : '#71717a',
+        'stroke-width': active ? 2.6 : 1.6
+      }));
+
+      // Nome transistor
+      const tName = el('text', {
+        x: pB.x, y: by + 1, fill: active ? '#30d158' : '#ffffff',
+        'font-size': 11, 'font-family': 'JetBrains Mono', 'font-weight': '800', 'text-anchor': 'middle'
+      });
+      tName.textContent = p.label;
+      g.appendChild(tName);
+
+      // Piedinatura E - B - C
+      [{ x: pE.x, l: 'E' }, { x: pB.x, l: 'B' }, { x: pC.x, l: 'C' }].forEach(pin => {
+        const pt = el('text', {
+          x: pin.x, y: by + 11.5, fill: '#a1a1aa',
+          'font-size': 8.5, 'font-family': 'JetBrains Mono', 'font-weight': '800', 'text-anchor': 'middle'
+        });
+        pt.textContent = pin.l;
+        g.appendChild(pt);
+      });
+    }
+
+    // Disegna Pulsante a 2 pin cliccabile direttamente sulla breadboard
+    function drawButton(g, p, cs) {
+      const a = holeXY(p.from), b = holeXY(p.to);
+      const my = (a.y + b.y) / 2;
+      const pressed = state.mode === 'sim' && (p.inputKey === 'A' ? cs.a === 1 : cs.b === 1);
+
+      g.appendChild(el('line', { x1: a.x, y1: a.y, x2: b.x, y2: b.y, stroke: '#d4d4d8', 'stroke-width': 3.5 }));
+      [a, b].forEach(pt => g.appendChild(el('circle', { cx: pt.x, cy: pt.y, r: 4, fill: '#fff', stroke: '#000', 'stroke-width': 1.2 })));
+
+      g.appendChild(el('rect', {
+        x: a.x - 19, y: my - 19, width: 38, height: 38, rx: 8,
+        fill: '#09090b', stroke: pressed ? p.color : '#71717a', 'stroke-width': pressed ? 2.8 : 2
+      }));
+      g.appendChild(el('circle', {
+        cx: a.x, cy: my, r: pressed ? 11.5 : 13,
+        fill: pressed ? p.color : '#27272a',
+        stroke: pressed ? '#ffffff' : '#a1a1aa', 'stroke-width': 1.6
+      }));
+      const tx = el('text', {
+        x: a.x, y: my + 4.5, fill: pressed ? '#000000' : '#ffffff',
+        'font-size': 12.5, 'font-family': 'JetBrains Mono', 'font-weight': '800', 'text-anchor': 'middle'
+      });
+      tx.textContent = p.label;
+      g.appendChild(tx);
+    }
+
+    // Disegna LED 5mm (Giallo A, Verde B, Rosso/Arancio Y) con simboli + e −
+    function drawLed(g, p, cs) {
+      const pA = holeXY(p.anode), pC = holeXY(p.cathode);
+      const mx = (pA.x + pC.x) / 2, my = (pA.y + pC.y) / 2;
+      let lit = false;
+      if (state.mode === 'sim') {
+        if (p.ledKey === 'A') lit = cs.ledA;
+        if (p.ledKey === 'B') lit = cs.ledB;
+        if (p.ledKey === 'Y') lit = cs.ledY;
+      }
+
+      // Gambe metalliche
+      g.appendChild(el('line', { x1: pA.x, y1: pA.y, x2: pC.x, y2: pC.y, stroke: '#d4d4d8', 'stroke-width': 3 }));
+      [pA, pC].forEach(pt => g.appendChild(el('circle', { cx: pt.x, cy: pt.y, r: 3.8, fill: '#fff', stroke: '#000', 'stroke-width': 1 })));
+
+      // Effetto Glow quando acceso
+      if (lit) {
+        g.appendChild(el('circle', { cx: mx, cy: my, r: 26, fill: p.glow, filter: 'url(#glow-led)' }));
+      }
+
+      // Cupola LED
+      g.appendChild(el('circle', {
+        cx: mx, cy: my, r: 13.5,
+        fill: lit ? p.colorOn : '#27272a',
+        stroke: lit ? '#ffffff' : '#71717a', 'stroke-width': 2
+      }));
+      g.appendChild(el('circle', {
+        cx: mx - 4, cy: my - 4, r: 4,
+        fill: lit ? '#ffffff' : 'rgba(255,255,255,0.2)'
+      }));
+
+      // Simboli + (Anodo) e − (Catodo) chiarissimi
+      const tPlus = el('text', {
+        x: pA.x, y: pA.y - 17, fill: COLORS.vcc,
+        'font-size': 12, 'font-family': 'JetBrains Mono', 'font-weight': '800', 'text-anchor': 'middle'
+      });
+      tPlus.textContent = '+';
+      g.appendChild(tPlus);
+
+      const tMinus = el('text', {
+        x: pC.x, y: pC.y - 17, fill: COLORS.gnd,
+        'font-size': 13, 'font-family': 'JetBrains Mono', 'font-weight': '800', 'text-anchor': 'middle'
+      });
+      tMinus.textContent = '−';
+      g.appendChild(tMinus);
+
+      if (!state.wiresOnly) {
+        const lbl = el('text', {
+          x: mx, y: my + 27, fill: lit ? p.colorOn : '#d4d4d8',
+          'font-size': 9.5, 'font-family': 'JetBrains Mono', 'font-weight': '800', 'text-anchor': 'middle'
+        });
+        lbl.textContent = p.label;
+        g.appendChild(lbl);
+      }
+    }
+
+    // Disegna pallini animati lungo i cavi attualmente percorsi da corrente
+    function drawActiveFlows(g, cs) {
+      const addBeads = (wireId, color = '#ffffff', slow = false) => {
+        const w = WIRES.find(x => x.id === wireId);
+        if (!w) return;
+        const d = roundedOrthoPath(w.getPoints(), 10);
+        g.appendChild(el('path', {
+          d, fill: 'none', stroke: color, 'stroke-width': 4.2,
+          class: slow ? 'flow-beads-slow' : 'flow-beads'
+        }));
+      };
+
+      if (cs.a) {
+        addBeads('W_A1', '#ffffff', true);
+        addBeads('W_A2', '#ffffff', true);
+      }
+      if (cs.b) {
+        addBeads('W_B1', '#ffffff', true);
+        addBeads('W_B2', '#ffffff', true);
+      }
+      if (cs.nandHigh) {
+        addBeads('W_NAND_Q3', '#ffffff', true);
+      } else {
+        // Quando A=1 e B=1, NAND scarica a massa su W_GND_Q2
+        addBeads('W_GND_Q2', '#ffffff', false);
+      }
+      if (cs.ledY) {
+        addBeads('W_GND_Q3', '#ffffff', false);
+        addBeads('W_Q3_OR1', '#ffffff', false);
+        if (cs.q4On) addBeads('W_OR_C', '#ffffff', false);
+        if (cs.q5On) addBeads('W_OR_E', '#ffffff', false);
+      }
+    }
+
+    /*************************************************************************
+     * 7. AGGIORNAMENTO INTERFACCIA (SIMULATORE, GUIDA, MAPPA CAVI)
+     *************************************************************************/
+    function toggleInput(which) {
+      if (which === 'A') state.inputA = state.inputA ? 0 : 1;
+      if (which === 'B') state.inputB = state.inputB ? 0 : 1;
+      updateUI();
+      renderBreadboard();
+    }
+
+    function setInputs(a, b) {
+      state.inputA = a;
+      state.inputB = b;
+      updateUI();
+      renderBreadboard();
+    }
+
+    function toggleWiresOnly() {
+      state.wiresOnly = !state.wiresOnly;
+      const btn = document.getElementById('btn-wires-only');
+      const dot = document.getElementById('wires-only-dot');
+      if (state.wiresOnly) {
+        btn.className = 'px-3 py-2 rounded-xl border border-cyan-400 bg-cyan-500/15 text-xs font-bold text-cyan-300 flex items-center gap-2 transition-all cursor-pointer';
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#00d4ff]';
+      } else {
+        btn.className = 'px-3 py-2 rounded-xl border border-zinc-700 bg-black hover:border-cyan-400 text-xs font-semibold text-zinc-200 flex items-center gap-2 transition-all cursor-pointer';
+        dot.className = 'w-2.5 h-2.5 rounded-full bg-zinc-600';
+      }
+      renderBreadboard();
+    }
+
+    function setZoom(level) {
+      state.zoom = level;
+      const container = document.getElementById('zoom-container');
+      container.style.width = `${Math.round(level * 100)}%`;
+
+      [1, 1.3, 1.6].forEach(z => {
+        const b = document.getElementById(`zoom-${Math.round(z * 100)}`);
+        if (z === level) {
+          b.className = 'px-2.5 py-1.5 rounded-lg bg-zinc-800 text-white font-bold cursor-pointer';
+        } else {
+          b.className = 'px-2.5 py-1.5 rounded-lg text-zinc-400 hover:text-white cursor-pointer';
+        }
+      });
+    }
+
+    function clearFocusedWire() {
+      state.pinnedWireId = null;
+      state.hoveredWireId = null;
+      updateClearFocusButton();
+      renderWireMap();
+      renderBreadboard();
+    }
+
+    function updateClearFocusButton() {
+      document.getElementById('btn-clear-focus').classList.toggle('hidden', !state.pinnedWireId);
+    }
+
+    function setMode(mode) {
+      state.mode = mode;
+      ['sim', 'guide', 'wires'].forEach(m => {
+        const t = document.getElementById(`tab-${m}`);
+        const p = document.getElementById(`panel-${m}`);
+        if (m === mode) {
+          t.className = 'py-2 px-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition-all cursor-pointer bg-white text-black';
+          p.classList.remove('hidden');
+          p.classList.add('flex');
+        } else {
+          t.className = 'py-2 px-1.5 rounded-lg text-[11px] sm:text-xs font-bold transition-all cursor-pointer text-zinc-400 hover:text-white';
+          p.classList.add('hidden');
+          p.classList.remove('flex');
+        }
+      });
+
+      if (mode === 'guide') renderGuide();
+      if (mode === 'wires') renderWireMap();
+      renderBreadboard();
+    }
+
+    function updateUI() {
+      const cs = calcCircuit(state.inputA, state.inputB);
+
+      // Pulsante Top A
+      const topA = document.getElementById('top-btn-a');
+      const dotA = document.getElementById('top-dot-a');
+      const valA = document.getElementById('top-val-a');
+      if (cs.a) {
+        topA.className = 'px-3.5 py-2 rounded-xl border-2 text-xs font-bold flex items-center gap-2 transition-all cursor-pointer bg-[#ffd60a]/15 border-[#ffd60a] text-[#ffd60a]';
+        dotA.className = 'w-3 h-3 rounded-full bg-[#ffd60a] shadow-[0_0_10px_#ffd60a]';
+        valA.className = 'font-mono text-[11px] px-1.5 py-0.5 rounded bg-[#ffd60a] text-black font-extrabold';
+        valA.textContent = '1';
+      } else {
+        topA.className = 'px-3.5 py-2 rounded-xl border-2 text-xs font-bold flex items-center gap-2 transition-all cursor-pointer bg-black border-zinc-700 text-zinc-200 hover:border-[#ffd60a]';
+        dotA.className = 'w-3 h-3 rounded-full bg-zinc-700 border border-zinc-500';
+        valA.className = 'font-mono text-[11px] px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-400';
+        valA.textContent = '0';
+      }
+
+      // Pulsante Top B
+      const topB = document.getElementById('top-btn-b');
+      const dotB = document.getElementById('top-dot-b');
+      const valB = document.getElementById('top-val-b');
+      if (cs.b) {
+        topB.className = 'px-3.5 py-2 rounded-xl border-2 text-xs font-bold flex items-center gap-2 transition-all cursor-pointer bg-[#30d158]/15 border-[#30d158] text-[#30d158]';
+        dotB.className = 'w-3 h-3 rounded-full bg-[#30d158] shadow-[0_0_10px_#30d158]';
+        valB.className = 'font-mono text-[11px] px-1.5 py-0.5 rounded bg-[#30d158] text-black font-extrabold';
+        valB.textContent = '1';
+      } else {
+        topB.className = 'px-3.5 py-2 rounded-xl border-2 text-xs font-bold flex items-center gap-2 transition-all cursor-pointer bg-black border-zinc-700 text-zinc-200 hover:border-[#30d158]';
+        dotB.className = 'w-3 h-3 rounded-full bg-zinc-700 border border-zinc-500';
+        valB.className = 'font-mono text-[11px] px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-400';
+        valB.textContent = '0';
+      }
+
+      // Pill Top LED Y
+      const dotY = document.getElementById('top-dot-y');
+      const valY = document.getElementById('top-val-y');
+      const pillY = document.getElementById('top-led-y-pill');
+      if (cs.ledY) {
+        pillY.className = 'px-3 py-2 rounded-xl border border-[#ff5500] bg-[#ff5500]/15 flex items-center gap-2 text-xs font-mono';
+        dotY.className = 'w-3 h-3 rounded-full bg-[#ff5500] shadow-[0_0_12px_#ff5500]';
+        valY.className = 'text-[#ff7b3b] font-extrabold';
+        valY.textContent = 'ACCESO (1)';
+      } else {
+        pillY.className = 'px-3 py-2 rounded-xl border border-zinc-800 bg-black flex items-center gap-2 text-xs font-mono';
+        dotY.className = 'w-3 h-3 rounded-full bg-zinc-700 border border-zinc-500';
+        valY.className = 'text-zinc-400';
+        valY.textContent = 'SPENTO (0)';
+      }
+
+      // 3 Card LED nel pannello laterale
+      const setLedCard = (prefix, on, hex, shadow) => {
+        const card = document.getElementById(`card-led-${prefix}`);
+        const circ = document.getElementById(`circle-led-${prefix}`);
+        const txt = document.getElementById(`txt-led-${prefix}`);
+        if (on) {
+          card.style.borderColor = hex;
+          circ.style.backgroundColor = hex;
+          circ.style.borderColor = '#ffffff';
+          circ.style.boxShadow = `0 0 14px ${shadow}`;
+          txt.style.color = hex;
+          txt.textContent = 'ACCESO';
+        } else {
+          card.style.borderColor = '#27272a';
+          circ.style.backgroundColor = '#18181b';
+          circ.style.borderColor = '#3f3f46';
+          circ.style.boxShadow = 'none';
+          txt.style.color = '#71717a';
+          txt.textContent = 'SPENTO';
+        }
+      };
+      setLedCard('a', cs.ledA, '#ffd60a', 'rgba(255,214,10,0.8)');
+      setLedCard('b', cs.ledB, '#30d158', 'rgba(48,209,88,0.8)');
+      setLedCard('y', cs.ledY, '#ff5500', 'rgba(255,85,0,0.85)');
+
+      // Stato 3 Stadi
+      const nDesc = document.getElementById('st-nand-desc');
+      const nBadge = document.getElementById('st-nand-badge');
+      if (cs.nandHigh) {
+        nDesc.textContent = (cs.a || cs.b) ? 'Solo 1 transistor attivo → Col 17 a +9V' : 'Q1 OFF, Q2 OFF → Col 17 a +9V';
+        nBadge.className = 'px-2 py-0.5 rounded font-mono text-[11px] font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 shrink-0';
+        nBadge.textContent = 'ALTA (1)';
+      } else {
+        nDesc.textContent = 'Q1 ON + Q2 ON → Scaricano a GND!';
+        nBadge.className = 'px-2 py-0.5 rounded font-mono text-[11px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 shrink-0';
+        nBadge.textContent = 'BASSA (0)';
+      }
+
+      const q3Desc = document.getElementById('st-q3-desc');
+      const q3Badge = document.getElementById('st-q3-badge');
+      if (cs.q3On) {
+        q3Desc.textContent = 'Massa attiva per Q4 e Q5';
+        q3Badge.className = 'px-2 py-0.5 rounded font-mono text-[11px] font-bold bg-fuchsia-500/15 text-fuchsia-300 border border-fuchsia-500/30 shrink-0';
+        q3Badge.textContent = 'Q3 ON';
+      } else {
+        q3Desc.textContent = 'Spento dal NAND → Blocca LED Y!';
+        q3Badge.className = 'px-2 py-0.5 rounded font-mono text-[11px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 shrink-0';
+        q3Badge.textContent = 'Q3 OFF';
+      }
+
+      const orDesc = document.getElementById('st-or-desc');
+      const orBadge = document.getElementById('st-or-badge');
+      if (cs.q4On) {
+        orDesc.textContent = 'Q4 conduce verso Q3 → LED Y ON';
+        orBadge.className = 'px-2 py-0.5 rounded font-mono text-[11px] font-bold bg-[#ff5500]/20 text-[#ff7b3b] border border-[#ff5500]/40 shrink-0';
+        orBadge.textContent = 'Q4 ON';
+      } else if (cs.q5On) {
+        orDesc.textContent = 'Q5 conduce verso Q3 → LED Y ON';
+        orBadge.className = 'px-2 py-0.5 rounded font-mono text-[11px] font-bold bg-[#ff5500]/20 text-[#ff7b3b] border border-[#ff5500]/40 shrink-0';
+        orBadge.textContent = 'Q5 ON';
+      } else if (cs.a && cs.b) {
+        orDesc.textContent = 'Q4/Q5 bloccati perché Q3 è OFF';
+        orBadge.className = 'px-2 py-0.5 rounded font-mono text-[11px] font-bold bg-zinc-900 text-zinc-400 border border-zinc-800 shrink-0';
+        orBadge.textContent = 'BLOCCATO';
+      } else {
+        orDesc.textContent = 'Nessun ramo attivo';
+        orBadge.className = 'px-2 py-0.5 rounded font-mono text-[11px] font-bold bg-zinc-900 text-zinc-400 border border-zinc-800 shrink-0';
+        orBadge.textContent = 'OFF';
+      }
+
+      // Evidenzia riga attiva nella Tavola di Verità
+      const key = `${cs.a}${cs.b}`;
+      document.querySelectorAll('#truth-body tr').forEach(tr => {
+        if (tr.dataset.key === key) tr.classList.add('bg-zinc-900', 'ring-1', 'ring-inset', 'ring-cyan-500/50');
+        else tr.classList.remove('bg-zinc-900', 'ring-1', 'ring-inset', 'ring-cyan-500/50');
+      });
+    }
+
+    function changeStep(delta) {
+      const next = state.currentStep + delta;
+      if (next >= 0 && next < STEPS.length) {
+        state.currentStep = next;
+        renderGuide();
+        renderBreadboard();
+      }
+    }
+
+    function renderGuide() {
+      const s = STEPS[state.currentStep];
+      document.getElementById('guide-step-num').textContent = `PASSO ${s.num} DI ${STEPS.length}`;
+      document.getElementById('guide-wires-badge').textContent = `${s.wires} ${s.wires === 1 ? 'Cavo' : 'Cavi'}`;
+      document.getElementById('guide-progress').style.width = `${(s.num / STEPS.length) * 100}%`;
+      document.getElementById('guide-title').textContent = s.title;
+      document.getElementById('guide-desc').textContent = s.desc;
+      document.getElementById('guide-tip').textContent = s.tip;
+
+      const ul = document.getElementById('guide-list');
+      ul.innerHTML = '';
+      s.items.forEach(txt => {
+        const li = document.createElement('li');
+        li.className = 'flex items-start gap-2';
+        li.innerHTML = `<span class="text-cyan-400 mt-0.5">▸</span><span>${txt}</span>`;
+        ul.appendChild(li);
+      });
+
+      document.getElementById('btn-guide-prev').disabled = state.currentStep === 0;
+      const nextBtn = document.getElementById('btn-guide-next');
+      if (state.currentStep === STEPS.length - 1) {
+        nextBtn.textContent = 'Prova nel Simulatore →';
+        nextBtn.onclick = () => setMode('sim');
+      } else {
+        nextBtn.textContent = 'Avanti →';
+        nextBtn.onclick = () => changeStep(1);
+      }
+    }
+
+    function renderWireMap() {
+      const box = document.getElementById('wire-map-list');
+      box.innerHTML = '';
+      WIRES.forEach(w => {
+        const pinned = state.pinnedWireId === w.id;
+        const btn = document.createElement('button');
+        btn.className = `w-full text-left p-2 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-2 ${
+          pinned ? 'bg-zinc-900 border-white' : 'bg-zinc-950 border-zinc-800 hover:border-zinc-600'
+        }`;
+        btn.innerHTML = `
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="w-3 h-3 rounded-full shrink-0 border border-black" style="background:${w.color}; box-shadow:0 0 8px ${w.color}88"></span>
+            <div class="min-w-0">
+              <div class="text-xs font-bold text-white truncate">${w.label}: ${w.from} → ${w.to}</div>
+              <div class="text-[10px] text-zinc-400 truncate">${w.name}</div>
+            </div>
+          </div>
+          <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black border border-zinc-800 text-zinc-400 shrink-0">${w.group}</span>
+        `;
+        btn.addEventListener('mouseenter', () => {
+          state.hoveredWireId = w.id;
+          setInspector(w.label, w.name, w.coords, w.desc);
+          renderBreadboard();
+        });
+        btn.addEventListener('mouseleave', () => {
+          state.hoveredWireId = null;
+          renderBreadboard();
+        });
+        btn.addEventListener('click', () => {
+          state.pinnedWireId = pinned ? null : w.id;
+          updateClearFocusButton();
+          renderWireMap();
+          renderBreadboard();
+        });
+        box.appendChild(btn);
+      });
+    }
+
+    /*************************************************************************
+     * 8. TOOLTIP & BARRA ISPETTORE
+     *************************************************************************/
+    const ttEl = document.getElementById('floating-tt');
+    function showTooltip(e, obj) {
+      document.getElementById('tt-title').textContent = obj.name;
+      document.getElementById('tt-coords').textContent = obj.coords;
+      document.getElementById('tt-desc').textContent = obj.desc;
+      ttEl.classList.remove('hidden');
+      moveTooltip(e);
+    }
+    function moveTooltip(e) {
+      const pad = 16;
+      let x = e.clientX + pad;
+      let y = e.clientY + pad;
+      if (x + 280 > window.innerWidth) x = e.clientX - 280;
+      if (y + 120 > window.innerHeight) y = e.clientY - 120;
+      ttEl.style.left = `${x}px`;
+      ttEl.style.top = `${y}px`;
+    }
+    function hideTooltip() {
+      ttEl.classList.add('hidden');
+    }
+    function setInspector(badge, name, coords, desc) {
+      document.getElementById('inspector-bar').innerHTML = `
+        <span class="px-2 py-0.5 rounded-md bg-zinc-900 border border-zinc-600 text-white font-mono font-extrabold shrink-0">${badge}</span>
+        <span><strong class="text-white">${name}</strong> &bull; <code class="text-[#ffd60a] font-mono font-bold">${coords}</code> &mdash; ${desc}</span>
+      `;
+    }
+
+    /*************************************************************************
+     * 9. AVVIO
+     *************************************************************************/
+    window.addEventListener('DOMContentLoaded', () => {
+      updateUI();
+      renderWireMap();
+      renderBreadboard();
+    });
+  </script>
+</body>
+</html>
