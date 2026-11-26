@@ -30,8 +30,8 @@ button[aria-pressed=true]:hover,#export:hover{background:#1d4ed8}
 </style>
 <div class="mast"><a href="https://fmorea.github.io/" target="_blank" rel="noopener">FMOREA</a></div><main><header><h1>Laboratorio <span>breadboard</span></h1><div class="tools"><button id="open">Apri progetto</button><button id="export">Salva progetto</button><input type="file" id="file" accept=".json,application/json" hidden><select id="preset" aria-label="Circuito"><option value="">Circuiti…</option><option value="empty">Breadboard vuota</option><option value="xor">Esempio XOR</option></select></div></header>
 <div class="bar"><nav class="tools" id="tools" aria-label="Strumenti"></nav><div><button id="undo">↶ Annulla</button> <button id="redo">↷ Ripeti</button></div></div>
-<div class="workspace"><div class="bench"><div class="benchhead"><strong>Piano di montaggio</strong><label>Zoom <select id="zoom"><option value="1">100%</option><option value="1.5">150%</option><option value="2">200%</option><option value="3">300%</option></select></label></div><div class="psu-controls"><strong>Alimentatore DC</strong><label>Tensione <input id="supply" type="number" value="9" min="0" max="24" step="any"> V</label><label>Limite <input id="limit" type="number" value="100" min="0.1" max="5000" step="any"> mA</label><button id="power" aria-pressed="true">Uscita ON</button></div>
-<div class="finger"><span>Scorri con un dito · Tocca per montare</span><button id="moveTouch" aria-pressed="false">Trascina componenti</button></div><div class="scroll"><svg id="board" viewBox="0 -110 1170 550" aria-label="Breadboard interattiva"><g id="substrate"></g><g id="overlay"></g><g id="objects"></g><g id="instrument" pointer-events="none"></g></svg></div><div class="status" id="status" role="status"></div></div><aside><section class="panel" id="panel"></section><section class="panel"><h2>Componenti montati</h2><div id="inventory"></div></section></aside></div><p class="error" id="error" role="status"></p><small>Simulazione in continua con modelli semplificati per LED e transistor NPN. I rail inferiori sono indipendenti. CV = tensione costante, CC = corrente limitata.</small></main><script>
+<div class="workspace"><div class="bench"><div class="benchhead"><strong>Piano di montaggio</strong><label>Zoom <select id="zoom"><option value="1">100%</option><option value="1.5">150%</option><option value="2">200%</option><option value="3">300%</option></select></label></div><div class="psu-controls"><strong>Alimentatore DC</strong><label>Tensione <input id="supply" type="number" value="9" min="0" max="24" step="any"> V</label><button id="power" aria-pressed="true">Uscita ON</button></div>
+<div class="finger"><span>Scorri con un dito · Tocca per montare</span><button id="moveTouch" aria-pressed="false">Trascina componenti</button></div><div class="scroll"><svg id="board" viewBox="0 -110 1170 550" aria-label="Breadboard interattiva"><g id="substrate"></g><g id="overlay"></g><g id="objects"></g><g id="instrument" pointer-events="none"></g></svg></div><div class="status" id="status" role="status"></div></div><aside><section class="panel" id="panel"></section><section class="panel"><h2>Componenti montati</h2><div id="inventory"></div></section></aside></div><p class="error" id="error" role="status"></p><small>Simulazione in continua con modelli semplificati per LED e transistor NPN. I rail inferiori sono indipendenti. CV = tensione costante.</small></main><script>
 const demo=
 [{"id":"W_GND_Q2","t":"wire","p":["a13","TG13"],"on":false},{"id":"W_GND_Q3","t":"wire","p":["a20","TG20"],"on":false},{"id":"W_NAND_Q3","t":"wire","p":["e17","e21"],"on":false},{"id":"W_Q3_OR1","t":"wire","p":["e22","e24"],"on":false},{"id":"W_OR_E","t":"wire","p":["a24","a27"],"on":false},{"id":"W_OR_C","t":"wire","p":["a26","a29"],"on":false},{"id":"W_A1","t":"wire","p":["e4","g16"],"on":false},{"id":"W_A2","t":"wire","p":["h16","h25"],"on":false},{"id":"W_B1","t":"wire","p":["e9","i14"],"on":false},{"id":"W_B2","t":"wire","p":["j14","j28"],"on":false},{"id":"BTN_A","t":"button","p":["TV4","a4"],"on":false},{"id":"LED_A","t":"led","p":["c4","c5"],"on":false},{"id":"R_LA","t":"resistor","p":["a5","TG5"],"bands":[3,3,1,10],"on":false},{"id":"BTN_B","t":"button","p":["TV9","a9"],"on":false},{"id":"LED_B","t":"led","p":["c9","c10"],"on":false},{"id":"R_LB","t":"resistor","p":["a10","TG10"],"bands":[3,3,1,10],"on":false},{"id":"Q2","t":"transistor","p":["d13","d14","d15"],"on":false},{"id":"Q1","t":"transistor","p":["b15","b16","b17"],"on":false},{"id":"R_PU","t":"resistor","p":["TV17","a17"],"bands":[1,0,3,10],"on":false},{"id":"Q3","t":"transistor","p":["c20","c21","c22"],"on":false},{"id":"Q4","t":"transistor","p":["c24","c25","c26"],"on":false},{"id":"Q5","t":"transistor","p":["c27","c28","c29"],"on":false},{"id":"R1","t":"resistor","p":["e16","f16"],"bands":[1,0,3,10],"on":false},{"id":"R2","t":"resistor","p":["e14","f14"],"bands":[1,0,3,10],"on":false},{"id":"R3","t":"resistor","p":["e25","f25"],"bands":[1,0,3,10],"on":false},{"id":"R4","t":"resistor","p":["e28","f28"],"bands":[1,0,3,10],"on":false},{"id":"LED_Y","t":"led","p":["e30","e29"],"on":false},{"id":"R_LY","t":"resistor","p":["TV30","a30"],"bands":[3,3,1,10],"on":false}]
 const $=id=>document.getElementById(id), names={wire:'Cavo',resistor:'Resistenza',button:'Interruttore',led:'LED',transistor:'NPN'};
@@ -48,16 +48,10 @@ function xy(h){const [,r,c]=h.match(/^(\D+)(\d+)$/);return [70+(c-1)*36,ys[rows.
 let net=node;
 let powered=true,actualV=0,actualI=0,regime='CV';
 function solve(){
- const target=$('supply').valueAsNumber,limit=$('limit').valueAsNumber/1000;
- if(!Number.isFinite(target)||target<0||target>24||!Number.isFinite(limit)||limit<.0001||limit>5)throw Error('Imposta 0–24 V e un limite tra 0,1 e 5000 mA.');
- operatingPoint(0);
- const shorted=net('TV1')===net('TG1');
- if(!powered||target===0||shorted){actualV=0;actualI=powered&&target>0&&shorted?limit:0;regime=!powered?'OFF':shorted&&target>0?'CC':'CV';return}
- operatingPoint(target);actualV=target;regime='CV';
- if(actualI<=limit)return;
- let low=0,high=target;
- for(let step=0;step<42;step++){const mid=(low+high)/2;operatingPoint(mid);if(actualI>limit)high=mid;else low=mid}
- actualV=low;operatingPoint(low);regime='CC'
+ const target=$('supply').valueAsNumber;
+ if(!Number.isFinite(target)||target<0||target>24)throw Error('Imposta una tensione tra 0 e 24 V.');
+ actualV=powered?target:0;regime=powered?'CV':'OFF';
+ operatingPoint(actualV);
 }
 function operatingPoint(v){
 const parent=new Map();function root(n){while(parent.has(n))n=parent.get(n);return n}
@@ -90,9 +84,9 @@ let tool='select', active='', draft=[],hover='',drag=null,notice='';
 const part=()=>parts.find(p=>p.id===active);
 const coords=Object.fromEntries(holes.map(h=>[h,xy(h)]));
 const terminals={wire:['Inizio','Fine'],resistor:['Primo terminale','Secondo terminale'],button:['Contatto 1','Contatto 2'],led:['Anodo (+)','Catodo (−)'],transistor:['Emettitore','Base','Collettore']};
-function snapshot(){return {parts:JSON.parse(JSON.stringify(parts)),supply:$('supply').value,limit:$('limit').value,powered}}
+function snapshot(){return {parts:JSON.parse(JSON.stringify(parts)),supply:$('supply').value,powered}}
 function checkpoint(){hist.push(snapshot());if(hist.length>100)hist.shift();future.length=0}
-function restore(from,to){if(!from.length)return;to.push(snapshot());const state=from.pop();parts=state.parts;$('supply').value=state.supply;$('limit').value=state.limit;powered=state.powered;setTool('select')}
+function restore(from,to){if(!from.length)return;to.push(snapshot());const state=from.pop();parts=state.parts;$('supply').value=state.supply;powered=state.powered;setTool('select')}
 function setTool(t){if(t!=='select'){moveTouch=false;svg.classList.remove('move-touch');$('moveTouch').setAttribute('aria-pressed','false')}probes=[];tool=t;draft=[];drag=null;hover='';active='';notice='';refresh()}
 function recalc(){voltages=null;try{solve();$('error').textContent=''}catch(e){$('error').textContent=e.message}}
 function line(x,y,u,v,color,width){return '<line x1="'+x+'" y1="'+y+'" x2="'+u+'" y2="'+v+'" stroke="'+color+'" stroke-width="'+width+'" stroke-linecap="round"/>'}
@@ -175,17 +169,17 @@ svg.onpointercancel=()=>{tap=null;drag=null;notice='';paint()};svg.onpointerleav
 const symbols={probe:'M3 16l8-8 4 4-8 8m6-11 7-7',select:'M5 2v14l4-4 4 6 3-2-4-6h6z',wire:'M2 15h6l8-10h6',resistor:'M1 10h5V6h12v8H6v-4m12 0h5',led:'M1 11h6V5l9 6-9 6v-6m9-7v14m0-7h7m-8-7 4-3m0 5 4-3',button:'M1 14h5l11-9m1 9h5',transistor:'M2 10h7m0-7v14m0-8 10-6V1M9 12l10 5v2m-5-3 5 1-2-4'};
 for(const [t,name] of Object.entries({select:'Seleziona',...names,probe:'Voltmetro'})){const b=document.createElement('button');b.dataset.tool=t;b.innerHTML='<svg aria-hidden="true" viewBox="0 0 24 20"><path d="'+symbols[t]+'" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';b.append(name);b.onclick=()=>setTool(t);$('tools').append(b)}
 $('preset').onchange=e=>{checkpoint();parts=e.target.value==='xor'?JSON.parse(JSON.stringify(demo)):[];e.target.value='';setTool('select')};
-$('undo').onclick=()=>restore(hist,future);$('redo').onclick=()=>restore(future,hist);$('supply').oninput=refresh;$('limit').oninput=refresh;$('power').onclick=()=>{checkpoint();powered=!powered;refresh()};
+$('undo').onclick=()=>restore(hist,future);$('redo').onclick=()=>restore(future,hist);$('supply').oninput=refresh;$('power').onclick=()=>{checkpoint();powered=!powered;refresh()};
 $('zoom').onchange=e=>{svg.style.width=(100*Number(e.target.value))+'%';svg.style.minWidth=(740*Number(e.target.value))+'px'};
 $('export').onclick=()=>{
  const supply=$('supply').valueAsNumber;if(!Number.isFinite(supply)||supply<0||supply>24){$('error').textContent='Correggi la tensione prima di salvare.';return}
- const limit=$('limit').valueAsNumber;if(!Number.isFinite(limit)||limit<.1||limit>5000){$('error').textContent='Correggi il limite di corrente prima di salvare.';return}const url=URL.createObjectURL(new Blob([JSON.stringify({version:1,supply,limit,powered,parts},null,2)],{type:'application/json'}));
+ const url=URL.createObjectURL(new Blob([JSON.stringify({version:1,supply,powered,parts},null,2)],{type:'application/json'}));
  const a=document.createElement('a');a.href=url;a.download='circuito-breadboard.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)
 };
 function readProject(text){
  const data=JSON.parse(text),used=new Set(),ids=new Set();
  if(data?.version!==1||!Number.isFinite(data.supply)||data.supply<0||data.supply>24||!Array.isArray(data.parts)||data.parts.length>holes.length/2)throw Error();
- if(data.limit!==undefined&&(!Number.isFinite(data.limit)||data.limit<.1||data.limit>5000)||data.powered!==undefined&&typeof data.powered!=='boolean')throw Error();
+ if(data.powered!==undefined&&typeof data.powered!=='boolean')throw Error();
  for(const p of data.parts){
  if(!p||!Object.prototype.hasOwnProperty.call(terminals,p.t)||typeof p.id!=='string'||!/^\w{1,48}$/.test(p.id)||ids.has(p.id)||!Array.isArray(p.p)||p.p.length!==terminals[p.t].length)throw Error();
  ids.add(p.id);for(const h of p.p){if(!holes.includes(h)||used.has(h))throw Error();used.add(h)}
@@ -194,7 +188,7 @@ function readProject(text){
  }return data
 }
 $('open').onclick=()=>$('file').click();
-$('file').onchange=async e=>{const input=e.target;try{if(!input.files.length)return;const f=input.files[0];if(f.size>200000)throw Error();const d=readProject(await f.text());checkpoint();parts=d.parts;$('supply').value=d.supply;$('limit').value=d.limit??100;powered=d.powered??true;setTool('select')}catch{$('error').textContent='Progetto non valido. Controlla il file JSON.'}finally{input.value=''}};
+$('file').onchange=async e=>{const input=e.target;try{if(!input.files.length)return;const f=input.files[0];if(f.size>200000)throw Error();const d=readProject(await f.text());checkpoint();parts=d.parts;$('supply').value=d.supply;powered=d.powered??true;setTool('select')}catch{$('error').textContent='Progetto non valido. Controlla il file JSON.'}finally{input.value=''}};
 $('substrate').innerHTML=base;
 document.onkeydown=e=>{if(e.key==='Escape'){setTool('select');return}if(['INPUT','SELECT'].includes(e.target.tagName))return;if(e.key==='Delete')erase();if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();e.shiftKey?restore(future,hist):restore(hist,future)}};
 refresh();
