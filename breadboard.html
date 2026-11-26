@@ -115,7 +115,7 @@ function paint(){
  if(Object.prototype.hasOwnProperty.call(terminals,tool)&&(draft.length||hover)){const hs=[...draft,...(hover?[hover]:[])];overlay+=hs.map(h=>circle(...coords[h],7,'#df7f22')).join('');if(hs.length>=2)body+=shape({id:'',t:tool,p:hs,bands:resistorBands.slice()},true)}
  if(tool==='probe')probes.forEach((h,i)=>{const [x,y]=coords[h];body+=circle(x,y,8,'none','stroke="'+(i?'#253743':'#bd382e')+'" stroke-width="3"')+label(x+11,y-10,i?'B':'A',14)});
  $('overlay').innerHTML=overlay;$('objects').innerHTML=body;
- $('status').textContent=notice||(wiring!==null?'Tocca un foro libero per collegare il morsetto '+(wiring===0?'positivo.':'negativo.'):tool==='probe'?(probes.length===1?'Tocca il foro B per misurare V(A) − V(B).':'Tocca il foro A per iniziare una misura di tensione.'):tool==='select'?'Seleziona un componente. Trascina il corpo per spostarlo o un terminale selezionato per ricollegarlo.':names[tool]+' · '+terminals[tool][draft.length]+' — scegli un foro libero. Inserimento continuo · Esc per selezionare.')+(hover?'   ·   '+hover+(voltages&&Number.isFinite(voltages(hover))?' · '+fmt(voltages(hover))+' V':''):'');
+ $('status').textContent=notice||(wiring!==null?'Tocca un foro libero per collegare il morsetto '+(wiring===0?'positivo.':'negativo.'):tool==='probe'?(probes.length===1?'Tocca il foro B per misurare V(A) − V(B).':'Tocca il foro A per iniziare una misura di tensione.'):tool==='select'?'Seleziona un componente. Trascina il corpo per spostarlo o un terminale selezionato per ricollegarlo.':tool==='wire'&&draft.length?'Cavo da '+draft[0]+' · Tocca un altro foro oppure il morsetto + o − dell’alimentatore.':names[tool]+' · '+terminals[tool][draft.length]+' — scegli un foro libero. Inserimento continuo · Esc per selezionare.')+(hover?'   ·   '+hover+(voltages&&Number.isFinite(voltages(hover))?' · '+fmt(voltages(hover))+' V':''):'');
 }
 function inventory(){
  const box=$('inventory');box.textContent='';
@@ -158,7 +158,15 @@ function refresh(){recalc();displaySupply();paint();inventory();for(const b of $
 }
 function erase(){if(!part())return;checkpoint();parts=parts.filter(p=>p.id!==active);active='';refresh()}
 function point(e){const q=svg.createSVGPoint();q.x=e.clientX;q.y=e.clientY;return q.matrixTransform(svg.getScreenCTM().inverse())}
-function nearest(q){let best='',dist=19;for(const [h,[x,y]] of Object.entries(coords)){const d=Math.hypot(q.x-x,q.y-y);if(d<dist){best=h;dist=d}}return best}
+function nearest(q){
+ if(tool==='wire'||wiring!==null){
+  for(const rail of ['TV','TG','BV','BG']){
+   const [start,y]=coords[rail+'1'],end=coords[rail+'30'][0];
+   if(Math.abs(q.y-y-9)<=5&&q.x>=52&&q.x<=1130)
+    return rail+Math.max(1,Math.min(30,1+Math.round((q.x-start)*29/(end-start))));
+  }
+ }
+ let best='',dist=19;for(const [h,[x,y]] of Object.entries(coords)){const d=Math.hypot(q.x-x,q.y-y);if(d<dist){best=h;dist=d}}return best}
 function free(h,ignore){return !leads.includes(h)&&!parts.some(p=>p.id!==ignore&&p.p.includes(h))}
 function place(h){if(!h)return;if(!free(h)||draft.includes(h)){notice='Foro occupato. Scegli un foro libero.';paint();return}notice='';draft.push(h);if(draft.length===terminals[tool].length){checkpoint();const prefix={wire:'W',led:'LED',button:'S',transistor:'Q',resistor:'R'}[tool];let i=1;while(parts.some(p=>p.id===prefix+i))i++;active=prefix+i;parts.push({id:active,t:tool,p:draft,bands:resistorBands.slice(),on:false});draft=[];hover='';refresh()}else paint()}
 function moved(q){const p=part();if(drag.pin!==null){const h=nearest(q);if(!h)return null;return p.p.map((v,i)=>i===drag.pin?h:v)}
@@ -167,7 +175,12 @@ function moved(q){const p=part();if(drag.pin!==null){const h=nearest(q);if(!h)re
  return p.p.map(h=>{const i=idx(h),col=i%30+dx,row=Math.floor(i/30)+dy;return col>=0&&col<30&&row>=0&&row<rows.length?rows[row]+(col+1):null})}
 let tap=null,moveTouch=false;
 $('moveTouch').onclick=()=>{moveTouch=!moveTouch;setTool('select');svg.classList.toggle('move-touch',moveTouch);$('moveTouch').setAttribute('aria-pressed',String(moveTouch))};
-function chooseLead(i){setTool('select');moveTouch=false;svg.classList.remove('move-touch');$('moveTouch').setAttribute('aria-pressed','false');wiring=i;refresh()}
+function chooseLead(i){
+ if(tool==='wire'&&draft.length===1){
+  const h=draft[0];
+  checkpoint();leads[i]=h;draft=[];hover='';active='';notice='Morsetto '+(i?'−':'+')+' collegato a '+h+'. Scegli il primo foro del prossimo cavo.';refresh();return;
+ }
+ setTool('select');moveTouch=false;svg.classList.remove('move-touch');$('moveTouch').setAttribute('aria-pressed','false');wiring=i;refresh()}
 $('plusLead').onclick=()=>chooseLead(0);$('minusLead').onclick=()=>chooseLead(1);
 function activate(e,allowDrag){const q=point(e);
  const socket=e.target.closest('[data-lead]');if(socket){chooseLead(Number(socket.dataset.lead));return}
