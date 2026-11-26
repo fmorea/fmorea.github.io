@@ -27,11 +27,12 @@ button[aria-pressed=true]:hover,#export:hover{background:#1d4ed8}
 
 .workspace,.bench,.scroll,aside{min-width:0}.scroll{overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}#board{touch-action:pan-x pan-y pinch-zoom}#board.move-touch{touch-action:none}.psu-controls,.finger{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid #cbd5e1}.psu-controls{background:#f8fafc}.psu-controls input{width:72px}.finger{display:none;font-size:13px}.psu-controls strong{color:#1e3a8a}
 @media(pointer:coarse),(max-width:760px){.finger{display:flex}.workspace{display:block}.bench{width:100%}.psu-controls{gap:7px}.psu-controls strong{flex-basis:100%}.benchhead select,.finger button,.psu-controls button{min-height:44px}.panel{margin-top:10px}}
+ .paperbox{margin-top:14px;border:1px solid #cbd5e1;border-radius:14px;overflow:hidden}.paperscroll{overflow:auto;background:#fff}#paper{max-width:none;min-width:0;touch-action:pan-x pan-y pinch-zoom;color:#233244}#paper path,#paper line,#paper rect,#paper circle{stroke:#233244;stroke-width:1.8}#paper rect,#paper circle{fill:#fff}#paper circle[fill]{fill:#233244}#paper path{fill:none}#paper text{fill:#162e49;font:13px Consolas,monospace;text-anchor:middle;paint-order:stroke;stroke:white;stroke-width:3px}#paper text.node{font-weight:bold}
 </style>
 <div class="mast"><a href="https://fmorea.github.io/" target="_blank" rel="noopener">FMOREA</a></div><main><header><h1>Laboratorio <span>breadboard</span></h1><div class="tools"><button id="open">Apri progetto</button><button id="export">Salva progetto</button><input type="file" id="file" accept=".json,application/json" hidden><select id="preset" aria-label="Circuito"><option value="">Circuiti…</option><option value="empty">Breadboard vuota</option><option value="xor">Esempio XOR</option></select></div></header>
 <div class="bar"><nav class="tools" id="tools" aria-label="Strumenti"></nav><div><button id="undo">↶ Annulla</button> <button id="redo">↷ Ripeti</button></div></div>
 <div class="workspace"><div class="bench"><div class="benchhead"><strong>Piano di montaggio</strong><label>Zoom <select id="zoom"><option value="1">100%</option><option value="1.5">150%</option><option value="2">200%</option><option value="3">300%</option></select></label></div><div class="psu-controls"><strong>Alimentatore DC</strong><button id="plusLead">Va</button><button id="minusLead">Vb</button><label>Tensione <input id="supply" type="number" value="9" min="0" max="24" step="any"> V</label><button id="power" aria-pressed="true">Uscita ON</button></div>
-<div class="finger"><span>Scorri con un dito · Tocca per montare</span><button id="moveTouch" aria-pressed="false">Trascina componenti</button></div><div class="scroll"><svg id="board" viewBox="0 -84 1170 524" aria-label="Breadboard interattiva"><g id="substrate"></g><g id="overlay"></g><g id="objects"></g><g id="instrument" pointer-events="none"></g></svg></div><div class="status" id="status" role="status"></div></div><aside><section class="panel" id="panel"></section><section class="panel"><h2>Componenti montati</h2><div id="inventory"></div></section></aside></div><p class="error" id="error" role="status"></p><small>Simulazione in continua con modelli semplificati per LED e transistor NPN. I rail inferiori sono indipendenti. CV = tensione costante.</small></main><script>
+<div class="finger"><span>Scorri con un dito · Tocca per montare</span><button id="moveTouch" aria-pressed="false">Trascina componenti</button></div><div class="scroll"><svg id="board" viewBox="0 -84 1170 524" aria-label="Breadboard interattiva"><g id="substrate"></g><g id="overlay"></g><g id="objects"></g><g id="instrument" pointer-events="none"></g></svg></div><div class="status" id="status" role="status"></div></div><aside><section class="panel" id="panel"></section><section class="panel"><h2>Componenti montati</h2><div id="inventory"></div></section></aside></div><section class="paperbox"><div class="benchhead"><strong>Schema elettrico</strong></div><div class="paperscroll"><svg id="paper" role="img" aria-label="Schema elettrico del circuito in continua"></svg></div><div id="paperHint" class="status"></div></section><p class="error" id="error" role="status"></p><small>Simulazione in continua con modelli semplificati per LED e transistor NPN. I rail inferiori sono indipendenti. CV = tensione costante.</small></main><script>
 const demo=
 [{"id":"W_GND_Q2","t":"wire","p":["a13","TG13"],"on":false},{"id":"W_GND_Q3","t":"wire","p":["a20","TG20"],"on":false},{"id":"W_NAND_Q3","t":"wire","p":["e17","e21"],"on":false},{"id":"W_Q3_OR1","t":"wire","p":["e22","e24"],"on":false},{"id":"W_OR_E","t":"wire","p":["a24","a27"],"on":false},{"id":"W_OR_C","t":"wire","p":["a26","a29"],"on":false},{"id":"W_A1","t":"wire","p":["e4","g16"],"on":false},{"id":"W_A2","t":"wire","p":["h16","h25"],"on":false},{"id":"W_B1","t":"wire","p":["e9","i14"],"on":false},{"id":"W_B2","t":"wire","p":["j14","j28"],"on":false},{"id":"BTN_A","t":"button","p":["TV4","a4"],"on":false},{"id":"LED_A","t":"led","p":["c4","c5"],"on":false},{"id":"R_LA","t":"resistor","p":["a5","TG5"],"bands":[3,3,1,10],"on":false},{"id":"BTN_B","t":"button","p":["TV9","a9"],"on":false},{"id":"LED_B","t":"led","p":["c9","c10"],"on":false},{"id":"R_LB","t":"resistor","p":["a10","TG10"],"bands":[3,3,1,10],"on":false},{"id":"Q2","t":"transistor","p":["d13","d14","d15"],"on":false},{"id":"Q1","t":"transistor","p":["b15","b16","b17"],"on":false},{"id":"R_PU","t":"resistor","p":["TV17","a17"],"bands":[1,0,3,10],"on":false},{"id":"Q3","t":"transistor","p":["c20","c21","c22"],"on":false},{"id":"Q4","t":"transistor","p":["c24","c25","c26"],"on":false},{"id":"Q5","t":"transistor","p":["c27","c28","c29"],"on":false},{"id":"R1","t":"resistor","p":["e16","f16"],"bands":[1,0,3,10],"on":false},{"id":"R2","t":"resistor","p":["e14","f14"],"bands":[1,0,3,10],"on":false},{"id":"R3","t":"resistor","p":["e25","f25"],"bands":[1,0,3,10],"on":false},{"id":"R4","t":"resistor","p":["e28","f28"],"bands":[1,0,3,10],"on":false},{"id":"LED_Y","t":"led","p":["e30","e29"],"on":false},{"id":"R_LY","t":"resistor","p":["TV30","a30"],"bands":[3,3,1,10],"on":false}]
 const $=id=>document.getElementById(id), names={wire:'Cavo',resistor:'Resistenza',button:'Interruttore',led:'LED',transistor:'NPN'};
@@ -135,7 +136,73 @@ function displaySupply(){
  }).join('');
  $('power').textContent=powered?'Uscita ON':'Uscita OFF';$('power').setAttribute('aria-pressed',String(powered))
 }
-function refresh(){recalc();displaySupply();paint();inventory();for(const b of $('tools').children)b.setAttribute('aria-pressed',String(b.dataset.tool===tool));$('undo').disabled=!hist.length;$('redo').disabled=!future.length;
+// Ogni montante rappresenta un nodo. I pallini distinguono le giunzioni dagli incroci.
+function renderSchematic(){
+ const diagram=$('paper'), parent=new Map();
+ function root(n){while(parent.has(n))n=parent.get(n);return n}
+ for(const p of parts.filter(p=>p.t==='wire')){
+  const a=root(node(p.p[0])),b=root(node(p.p[1]));if(a!==b)parent.set(a,b);
+ }
+ const pin=h=>root(node(h));
+ const source=leads.map((h,i)=>h?pin(h):'open'+i);
+ const branches=parts.filter(p=>p.t!=='wire').map(p=>({...p,n:p.p.map(pin)}));
+ const graph=new Map();
+ function add(n){if(!graph.has(n))graph.set(n,new Set())}
+ function connect(ns){for(const a of ns){add(a);for(const b of ns)if(a!==b)graph.get(a).add(b)}}
+ branches.forEach(p=>connect(p.n));source.forEach(add);
+ for(const p of parts.filter(p=>p.t==='wire'))add(pin(p.p[0]));
+ const order=[],seen=new Set();
+ function visit(n){if(seen.has(n))return;seen.add(n);order.push(n);graph.get(n).forEach(visit)}
+ visit(source[0]);graph.forEach((_,n)=>visit(n));
+ const x=n=>66+order.indexOf(n)*148,uses=new Map(order.map(n=>[n,[]]));
+ const text=(px,py,s,cls='')=>'<text class="'+cls+'" x="'+px+'" y="'+py+'">'+s+'</text>';
+ const path=d=>'<path d="'+d+'"/>';
+ const drawLine=(a,b,c,d)=>path('M '+a+' '+b+' L '+c+' '+d);
+ const arrow=(a,b,c,d)=>drawLine(a,b,c,d)+path('M '+(c-5)+' '+(d+1)+' L '+c+' '+d+' L '+(c-1)+' '+(d+5));
+ let symbols='',dots='',wires='',row=72;
+ function tie(n,y){uses.get(n).push(y);dots+='<circle cx="'+x(n)+'" cy="'+y+'" r="3.6" fill="#233244"/>'}
+ function bipole(p,isSource=false){
+  const [n,m]=p.n,xa=x(n),xb=x(m),same=n===m,mid=same?xa+64:Math.min(xa,xb)+74+148*Math.floor((Math.abs(xb-xa)/148-1)/2),y=row;
+  const sign=xb<xa?-1:1;
+  const left=mid-25*sign,right=mid+25*sign;
+  tie(n,y);tie(m,same?y+31:y);
+  wires+=drawLine(xa,y,left,y);
+  wires+=same?path('M '+right+' '+y+' v31 H '+xb):drawLine(right,y,xb,y);
+  let mark='';
+  if(isSource){
+   mark='<circle r="19"/>'+path('M -13 0 h8 M -9 -4 v8 M 6 0 h8')+path('M -25 0 h6 M 19 0 h6');
+  }else if(p.t==='resistor'){
+   mark=path('M -25 0 h6 M 19 0 h6')+'<rect x="-19" y="-7" width="38" height="14"/>';
+  }else if(p.t==='button'){
+   mark=path('M -25 0 h10 M 15 0 h10 M -14 -1 L 14 '+(p.on?0:-12))+'<circle cx="-15" r="2.7"/><circle cx="15" r="2.7"/>';
+  }else{
+   mark=path('M -25 0 h17 M -8 -9 L 8 0 L -8 9 Z M 8 -10 v20 M 8 0 h17')+arrow(1,-12,10,-21)+arrow(9,-12,18,-21);
+  }
+  const caption=isSource?'Alimentatore · '+fmt(actualV)+' V':p.id+(p.t==='resistor'?' · '+fmt(resistance(p.bands))+' Ω':'');
+  symbols+='<g '+(isSource?'':'data-part="'+p.id+'"')+'>'+text(mid,y-27,caption)+'<g transform="translate('+mid+' '+y+') scale('+sign+' 1)">'+mark+'</g></g>';
+  row+=same?100:74;
+ }
+ bipole({n:source},true);
+ const far=x(order[order.length-1])+100;
+ for(const p of branches){
+  if(p.t!=='transistor'){bipole(p);continue}
+  const [e,b,c]=p.n,y=row+12;
+  for(const [n,dy] of [[e,31],[b,0],[c,-31]]){tie(n,y+dy);wires+=drawLine(x(n),y+dy,far+(dy?18:-10),y+dy)}
+  symbols+='<g data-part="'+p.id+'">'+text(far+42,y-9,p.id)+
+   '<g transform="translate('+far+' '+y+')">'+path('M -10 -14 v28 M -10 -5 L 18 -22 v-9 M -10 5 L 18 22 v9')+
+   path('M 14 14 L 18 22 L 9 21 Z')+text(26,-23,'C')+text(-20,-5,'B')+text(26,32,'E')+'</g></g>';row+=94;
+ }
+ const rails=order.map((n,i)=>{
+  const idx=source.indexOf(n),name=n===source[0]&&n===source[1]?'Va = Vb':idx<0?'N'+(i+1):idx?'Vb':'Va';
+  const yy=uses.get(n);return text(x(n),20,name,'node')+drawLine(x(n),29,x(n),yy.length?Math.max(...yy):48);
+ }).join('');
+ const width=far+(branches.some(p=>p.t==='transistor')?105:15);
+ diagram.setAttribute('viewBox','0 0 '+width+' '+row);
+ diagram.style.width=width+'px';diagram.innerHTML=rails+wires+symbols+dots;
+ $('paperHint').textContent=parts.length||leads.some(Boolean)?'I pallini indicano le giunzioni. I ponticelli e le piste collegate condividono lo stesso nodo.':'Collega i morsetti o posa un componente per costruire lo schema.';
+}
+
+function refresh(){recalc();renderSchematic();displaySupply();paint();inventory();for(const b of $('tools').children)b.setAttribute('aria-pressed',String(b.dataset.tool===tool));$('undo').disabled=!hist.length;$('redo').disabled=!future.length;
  const selected=part(),p=selected||(tool==='resistor'?{t:'resistor',bands:resistorBands}:null);panel.textContent='';const title=document.createElement('h2');panel.append(title);
  if(wiring!==null){title.textContent=wiring===0?'Morsetto Va':'Morsetto Vb';panel.append('Scegli un foro libero sulla breadboard. ');
  if(leads[wiring]){const btn=document.createElement('button');btn.textContent='Scollega cavo';btn.onclick=()=>{checkpoint();leads[wiring]=null;setTool('select')};panel.append(btn)}return}
