@@ -5,10 +5,12 @@
 body{background:#e9ece4;color:var(--ink);font-family:Inter,Arial,sans-serif}
 main{max-width:1540px}header{border-bottom:3px solid var(--olive);padding:4px 0 17px;margin-bottom:16px}h1{font-family:"Arial Narrow",Arial,sans-serif;letter-spacing:-.045em;font-weight:760}h1 span{color:#45553d}
 button,select,input{background:#fafbf7;color:var(--ink);border-color:#8e998a;border-radius:3px;font:600 14px system-ui,sans-serif;min-height:38px}button:hover,select:hover{background:#e2e8d9;border-color:#53634b}button[aria-pressed=true]{background:#42573a;color:white;border-color:#263d24;box-shadow:inset 0 -3px #c0d68f}button:focus-visible,select:focus-visible{outline-color:#277498}button:disabled{opacity:.5}.bar{gap:12px}.tools button{display:inline-flex;align-items:center;gap:8px}.tools button svg{width:23px;min-width:0;height:19px;pointer-events:none}.bench,.panel{border:1px solid #899582;border-radius:4px}.bench{background:#eff1ea}.scroll{padding:clamp(10px,2vw,28px);background-color:#dce2d7;background-image:linear-gradient(#acb8a860 1px,transparent 1px),linear-gradient(90deg,#acb8a860 1px,transparent 1px);background-size:16px 16px}.status{background:#f7f8f1;border-top:1px solid var(--rule);color:#34462f;font:14px/1.5 "IBM Plex Mono",Consolas,monospace}.panel{background:#f5f6ee;border-left:5px solid var(--olive)}.panel h2{color:#34462f}.panel button{margin:4px 6px 0 0}.readout{color:#264e5c}.error{color:#9d3816}small{color:#4e594f}#board text{font-family:Consolas,monospace}#board g[data-id]:hover{filter:drop-shadow(0 0 1px #0d698d)}
+ 
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) 265px;gap:14px;align-items:start}.bench,.panel{box-shadow:0 2px 8px #26382210}.benchhead{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:#f4f5ed;border-bottom:1px solid var(--rule)}.benchhead strong,.panel h2{font:700 14px/1.4 system-ui;letter-spacing:.02em}.benchhead label{font:13px Consolas,monospace}.benchhead select{min-height:30px;padding:2px}.scroll{padding:18px 4px;min-height:190px}.panel{margin:0 0 12px;padding:14px;border-left-width:3px}.panel p,.panel{font-size:14px;line-height:1.5}.band{width:calc(50% - 8px)}.panel select{width:100%;padding:6px}.benchhead,.status,.panel h2{color:#354733}#inventory{display:grid;gap:3px;max-height:240px;overflow:auto}#inventory button{display:flex;justify-content:space-between;text-align:left;margin:0;border:0;border-bottom:1px solid #c4cbbd;border-radius:0;font:13px Consolas,monospace;min-height:30px}#inventory span{color:inherit;opacity:.82}.component-preview{display:flex;height:32px;background:linear-gradient(#edd3a1,#c8aa75);margin:10px auto;width:128px;border:1px solid #aa915f;border-radius:10px;align-items:stretch;gap:10px;padding:0 12px}.component-preview i{width:9px}.component-preview i:last-child{margin-left:auto}.readout{white-space:pre-line}.bench svg{min-width:740px}#objects text{paint-order:stroke;stroke:#fafaf2;stroke-width:3px;stroke-linejoin:round;font-weight:700}@media(max-width:1040px){.workspace{grid-template-columns:1fr}aside{display:grid;grid-template-columns:1fr 1fr;gap:12px}}@media(max-width:620px){aside{display:block}.tools{gap:4px}header .tools{row-gap:8px}.bar button{padding:6px}.scroll{padding:10px 2px}}
 </style>
-<main><header><h1>Laboratorio <span>breadboard</span></h1><div class="tools"><label>Alimentazione <input id="supply" type="number" value="9" min="0" max="24" step="any"> V</label><select id="preset" aria-label="Circuito"><option value="">Circuiti…</option><option value="empty">Breadboard vuota</option><option value="xor">Esempio XOR</option></select></div></header>
+<main><header><h1>Laboratorio <span>breadboard</span></h1><div class="tools"><button id="open">Apri progetto</button><button id="export">Salva progetto</button><input type="file" id="file" accept=".json,application/json" hidden><label>Alimentazione <input id="supply" type="number" value="9" min="0" max="24" step="any"> V</label><select id="preset" aria-label="Circuito"><option value="">Circuiti…</option><option value="empty">Breadboard vuota</option><option value="xor">Esempio XOR</option></select></div></header>
 <div class="bar"><nav class="tools" id="tools" aria-label="Strumenti"></nav><div><button id="undo">↶ Annulla</button> <button id="redo">↷ Ripeti</button></div></div>
-<div class="bench"><div class="scroll"><svg id="board" viewBox="0 0 1170 440" aria-label="Breadboard interattiva"></svg></div><div class="status" id="status" role="status"></div></div><section class="panel" id="panel"></section><p class="error" id="error" role="status"></p><small>Simulazione in continua con modelli semplificati per LED e transistor NPN. I rail inferiori sono indipendenti.</small></main><script>
+<div class="workspace"><div class="bench"><div class="benchhead"><strong>Piano di montaggio</strong><label>Zoom <select id="zoom"><option value="1">100%</option><option value="1.5">150%</option><option value="2">200%</option><option value="3">300%</option></select></label></div><div class="scroll"><svg id="board" viewBox="0 0 1170 440" aria-label="Breadboard interattiva"><g id="substrate"></g><g id="overlay"></g><g id="objects"></g></svg></div><div class="status" id="status" role="status"></div></div><aside><section class="panel" id="panel"></section><section class="panel"><h2>Componenti montati</h2><div id="inventory"></div></section></aside></div><p class="error" id="error" role="status"></p><small>Simulazione in continua con modelli semplificati per LED e transistor NPN. I rail inferiori sono indipendenti.</small></main><script>
 const demo=
 [{"id":"W_GND_Q2","t":"wire","p":["a13","TG13"],"on":false},{"id":"W_GND_Q3","t":"wire","p":["a20","TG20"],"on":false},{"id":"W_NAND_Q3","t":"wire","p":["e17","e21"],"on":false},{"id":"W_Q3_OR1","t":"wire","p":["e22","e24"],"on":false},{"id":"W_OR_E","t":"wire","p":["a24","a27"],"on":false},{"id":"W_OR_C","t":"wire","p":["a26","a29"],"on":false},{"id":"W_A1","t":"wire","p":["e4","g16"],"on":false},{"id":"W_A2","t":"wire","p":["h16","h25"],"on":false},{"id":"W_B1","t":"wire","p":["e9","i14"],"on":false},{"id":"W_B2","t":"wire","p":["j14","j28"],"on":false},{"id":"BTN_A","t":"button","p":["TV4","a4"],"on":false},{"id":"LED_A","t":"led","p":["c4","c5"],"on":false},{"id":"R_LA","t":"resistor","p":["a5","TG5"],"bands":[3,3,1,10],"on":false},{"id":"BTN_B","t":"button","p":["TV9","a9"],"on":false},{"id":"LED_B","t":"led","p":["c9","c10"],"on":false},{"id":"R_LB","t":"resistor","p":["a10","TG10"],"bands":[3,3,1,10],"on":false},{"id":"Q2","t":"transistor","p":["d13","d14","d15"],"on":false},{"id":"Q1","t":"transistor","p":["b15","b16","b17"],"on":false},{"id":"R_PU","t":"resistor","p":["TV17","a17"],"bands":[1,0,3,10],"on":false},{"id":"Q3","t":"transistor","p":["c20","c21","c22"],"on":false},{"id":"Q4","t":"transistor","p":["c24","c25","c26"],"on":false},{"id":"Q5","t":"transistor","p":["c27","c28","c29"],"on":false},{"id":"R1","t":"resistor","p":["e16","f16"],"bands":[1,0,3,10],"on":false},{"id":"R2","t":"resistor","p":["e14","f14"],"bands":[1,0,3,10],"on":false},{"id":"R3","t":"resistor","p":["e25","f25"],"bands":[1,0,3,10],"on":false},{"id":"R4","t":"resistor","p":["e28","f28"],"bands":[1,0,3,10],"on":false},{"id":"LED_Y","t":"led","p":["e30","e29"],"on":false},{"id":"R_LY","t":"resistor","p":["TV30","a30"],"bands":[3,3,1,10],"on":false}]
 const $=id=>document.getElementById(id), names={wire:'Cavo',resistor:'Resistenza',button:'Interruttore',led:'LED',transistor:'NPN'};
@@ -22,9 +24,11 @@ const resistance=b=>(10*b[0]+b[1])*10**(b[2]<10?b[2]:9-b[2]);
 let parts=[],voltages,currents;
 function node(h){const [,r,c]=h.match(/^(\D+)(\d+)$/);return r.length===2?r:(r<'f'?'T':'B')+c}
 function xy(h){const [,r,c]=h.match(/^(\D+)(\d+)$/);return [70+(c-1)*36,ys[rows.indexOf(r)]]}
+let net=node;
 function solve(){
 const parent=new Map();function root(n){while(parent.has(n))n=parent.get(n);return n}
 for(const p of parts.filter(p=>p.t==='wire'||p.t==='button'&&p.on)){const [a,b]=p.p.map(h=>root(node(h)));if(a!==b)parent.set(a,b)}
+net=h=>root(node(h));
 const hi=root('TV'),lo=root('TG'),v=$('supply').valueAsNumber;
 if(!Number.isFinite(v)||v<0||v>24)throw Error('Inserisci una tensione fra 0 e 24 V.');
 if(hi===lo&&v!==0)throw Error('Cortocircuito tra i rail di alimentazione.');
@@ -46,14 +50,16 @@ for(let k=x.length-1;k>=0;k--){for(let j=k+1;j<x.length;j++)f[k]-=a[k][j]*f[j];f
 const damp=Math.max(1,...f.map(n=>Math.abs(n)/.09));x.forEach((_,i)=>x[i]-=f[i]/damp)}
 throw Error('Punto di lavoro non convergente. Controlla i collegamenti.')}
 const svg=$('board'), panel=$('panel'), hist=[],future=[];
+let probes=[];
 let resistorBands=[1,0,2,10];
 let tool='select', active='', draft=[],hover='',drag=null,notice='';
 const part=()=>parts.find(p=>p.id===active);
 const coords=Object.fromEntries(holes.map(h=>[h,xy(h)]));
 const terminals={wire:['Inizio','Fine'],resistor:['Primo terminale','Secondo terminale'],button:['Contatto 1','Contatto 2'],led:['Anodo (+)','Catodo (−)'],transistor:['Emettitore','Base','Collettore']};
-function checkpoint(){hist.push(structuredClone(parts));if(hist.length>100)hist.shift();future.length=0}
-function restore(from,to){if(!from.length)return;to.push(structuredClone(parts));parts=from.pop();setTool('select')}
-function setTool(t){tool=t;draft=[];drag=null;hover='';active='';notice='';refresh()}
+function snapshot(){return {parts:JSON.parse(JSON.stringify(parts)),supply:$('supply').value}}
+function checkpoint(){hist.push(snapshot());if(hist.length>100)hist.shift();future.length=0}
+function restore(from,to){if(!from.length)return;to.push(snapshot());const state=from.pop();parts=state.parts;$('supply').value=state.supply;setTool('select')}
+function setTool(t){probes=[];tool=t;draft=[];drag=null;hover='';active='';notice='';refresh()}
 function recalc(){voltages=null;try{solve();$('error').textContent=''}catch(e){$('error').textContent=e.message}}
 function line(x,y,u,v,color,width){return '<line x1="'+x+'" y1="'+y+'" x2="'+u+'" y2="'+v+'" stroke="'+color+'" stroke-width="'+width+'" stroke-linecap="round"/>'}
 function circle(x,y,r,color,extra=''){return '<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="'+color+'" '+extra+'/>'}
@@ -75,18 +81,35 @@ function shape(p,ghost=false){
 function paint(){
  svg.style.cursor=tool==='select'?'default':'crosshair';
  let overlay='',pos=drag?.candidate;
- if(hover){const n=node(hover);overlay+=holes.filter(h=>node(h)===n).map(h=>circle(...coords[h],6,'#93b05580')).join('')}
- let body=parts.map(p=>shape(pos&&p.id===active?{...p,p:pos}:p)).join('');
- if(tool!=='select'&&(draft.length||hover)){const hs=[...draft,...(hover?[hover]:[])];overlay+=hs.map(h=>circle(...coords[h],7,'#df7f22')).join('');if(hs.length>=2)body+=shape({id:'',t:tool,p:hs,bands:resistorBands.slice()},true)}
- svg.innerHTML=base+overlay+body;
- $('status').textContent=notice||(tool==='select'?'Seleziona un componente. Trascina il corpo per spostarlo o un terminale selezionato per ricollegarlo.':names[tool]+' · '+terminals[tool][draft.length]+' — scegli un foro libero. Inserimento continuo · Esc per selezionare.')+(hover?'   ·   '+hover:'');
+ if(hover){const n=net(hover);overlay+=holes.filter(h=>net(h)===n).map(h=>circle(...coords[h],6,'#93b05580')).join('')}
+ let body=[...parts.filter(p=>p.t==='wire'),...parts.filter(p=>p.t!=='wire')].map(p=>shape(pos&&p.id===active?{...p,p:pos}:p)).join('');
+ if(Object.prototype.hasOwnProperty.call(terminals,tool)&&(draft.length||hover)){const hs=[...draft,...(hover?[hover]:[])];overlay+=hs.map(h=>circle(...coords[h],7,'#df7f22')).join('');if(hs.length>=2)body+=shape({id:'',t:tool,p:hs,bands:resistorBands.slice()},true)}
+ if(tool==='probe')probes.forEach((h,i)=>{const [x,y]=coords[h];body+=circle(x,y,8,'none','stroke="'+(i?'#253743':'#bd382e')+'" stroke-width="3"')+label(x+11,y-10,i?'B':'A',14)});
+ $('overlay').innerHTML=overlay;$('objects').innerHTML=body;
+ $('status').textContent=notice||(tool==='probe'?(probes.length===1?'Tocca il foro B per misurare V(A) − V(B).':'Tocca il foro A per iniziare una misura di tensione.'):tool==='select'?'Seleziona un componente. Trascina il corpo per spostarlo o un terminale selezionato per ricollegarlo.':names[tool]+' · '+terminals[tool][draft.length]+' — scegli un foro libero. Inserimento continuo · Esc per selezionare.')+(hover?'   ·   '+hover+(voltages&&Number.isFinite(voltages(hover))?' · '+fmt(voltages(hover))+' V':''):'');
 }
-function refresh(){recalc();paint();for(const b of $('tools').children)b.setAttribute('aria-pressed',String(b.dataset.tool===tool));$('undo').disabled=!hist.length;$('redo').disabled=!future.length;
- const p=part();panel.replaceChildren();const title=document.createElement('h2');panel.append(title);title.textContent=p?p.id+' · '+names[p.t]:tool==='select'?'Banco di montaggio':names[tool];
+function inventory(){
+ const box=$('inventory');box.textContent='';
+ if(!parts.length){box.textContent='La scheda è vuota.';return}
+ for(const p of parts){const b=document.createElement('button'),v=document.createElement('span');b.textContent=p.id;
+ v.textContent=p.t==='resistor'?fmt(resistance(p.bands))+' Ω':names[p.t];b.append(v);b.setAttribute('aria-pressed',String(p.id===active));
+ b.onclick=()=>{tool='select';active=p.id;draft=[];hover='';notice='';refresh()};box.append(b)}
+}
+function refresh(){recalc();paint();inventory();for(const b of $('tools').children)b.setAttribute('aria-pressed',String(b.dataset.tool===tool));$('undo').disabled=!hist.length;$('redo').disabled=!future.length;
+ const selected=part(),p=selected||(tool==='resistor'?{t:'resistor',bands:resistorBands}:null);panel.textContent='';const title=document.createElement('h2');panel.append(title);
+ if(tool==='probe'){
+ title.textContent='Voltmetro DC';const [a,b]=probes;
+ const ready=b&&voltages&&Number.isFinite(voltages(a))&&Number.isFinite(voltages(b));
+ const out=document.createElement('p');out.className='readout';out.textContent=ready?fmt(voltages(a)-voltages(b))+' V':b?'Misura indisponibile':'— V';
+ panel.append(out,'A (+) '+(a||'…')+'   /   B (−) '+(b||'…'));return}
+ title.textContent=selected?p.id+' · '+names[p.t]:tool==='select'?'Banco di montaggio':names[tool];
  if(!p){panel.append(tool==='select'?'Scegli uno strumento per iniziare il montaggio.':'Indica sulla breadboard, in ordine: '+terminals[tool].join(' → ')+'. Il componente viene inserito all’ultimo clic.');return}
- if(p.t==='resistor'){for(let k=0;k<4;k++){const l=document.createElement('label'),s=document.createElement('select');l.className='band';l.append(['Prima cifra','Seconda cifra','Moltiplicatore','Tolleranza'][k],s);panel.append(l);labels.forEach((n,i)=>{if(k===0&&(i===0||i>9)||k===1&&i>9||k===3&&!(i in toler))return;s.add(new Option(n,i))});s.value=p.bands[k];s.style.borderBottom='5px solid '+palette[p.bands[k]];s.onchange=()=>{checkpoint();p.bands[k]=+s.value;resistorBands=p.bands.slice();refresh();panel.querySelectorAll('select')[k].focus()}}
+ if(p.t==='resistor'){const sample=document.createElement('div');sample.className='component-preview';
+ for(const band of p.bands){const stripe=document.createElement('i');stripe.style.backgroundColor=palette[band];sample.append(stripe)}panel.append(sample);
+ for(let k=0;k<4;k++){const l=document.createElement('label'),s=document.createElement('select');l.className='band';l.append(['Prima cifra','Seconda cifra','Moltiplicatore','Tolleranza'][k],s);panel.append(l);labels.forEach((n,i)=>{if(k===0&&(i===0||i>9)||k===1&&i>9||k===3&&!(i in toler))return;s.add(new Option(n,i))});s.value=p.bands[k];s.style.borderBottom='5px solid '+palette[p.bands[k]];s.onchange=()=>{if(selected)checkpoint();p.bands[k]=+s.value;resistorBands=p.bands.slice();refresh();panel.querySelectorAll('select')[k].focus()}}
  const r=resistance(p.bands),t=toler[p.bands[3]],out=document.createElement('p');out.textContent=fmt(r)+' Ω ±'+fmt(t)+'% · '+fmt(r*(1-t/100))+' – '+fmt(r*(1+t/100))+' Ω';panel.append(out)}
- const read=document.createElement('p');read.className='readout';read.textContent=p.p.map((h,i)=>terminals[p.t][i]+' '+h+(voltages?' · '+fmt(voltages(h))+' V':'')).join('   /   ')+(voltages&&currents.has(p.id)?'   /   '+fmt(currents.get(p.id)*1000)+' mA':'');panel.append(read);
+ if(!selected){panel.append('Scegli i due fori per montare questa resistenza.');return}
+ const read=document.createElement('p');read.className='readout';read.textContent=p.p.map((h,i)=>terminals[p.t][i]+' '+h+(voltages?' · '+fmt(voltages(h))+' V':'')).join('\n')+(voltages&&currents.has(p.id)?'   /   '+fmt(currents.get(p.id)*1000)+' mA':'');panel.append(read);
  function action(text,fn){const b=document.createElement('button');b.textContent=text;b.onclick=fn;panel.append(b)}
  if(p.t==='button')action(p.on?'Apri interruttore':'Chiudi interruttore',()=>{checkpoint();p.on=!p.on;refresh()});
  action('Elimina componente',erase)
@@ -100,14 +123,34 @@ function moved(q){const p=part();if(drag.pin!==null){const h=nearest(q);if(!h)re
  const [sx,sy]=coords[p.p[0]],target=nearest({x:sx+q.x-drag.start.x,y:sy+q.y-drag.start.y});if(!target)return null;
  const idx=h=>holes.indexOf(h),dx=idx(target)%30-idx(p.p[0])%30,dy=Math.floor(idx(target)/30)-Math.floor(idx(p.p[0])/30);
  return p.p.map(h=>{const i=idx(h),col=i%30+dx,row=Math.floor(i/30)+dy;return col>=0&&col<30&&row>=0&&row<rows.length?rows[row]+(col+1):null})}
-svg.onpointerdown=e=>{if(e.button!==0)return;const q=point(e);if(tool!=='select'){hover='';place(nearest(q));return}const hit=e.target.closest('[data-id]');active=hit?.dataset.id||'';notice='';if(active){drag={start:q,pin:e.target.hasAttribute('data-pin')?Number(e.target.dataset.pin):null,candidate:null};svg.setPointerCapture(e.pointerId)}refresh()};
-svg.onpointermove=e=>{const q=point(e);hover=nearest(q);if(drag){const a=moved(q);drag.candidate=a&&a.every(h=>h&&free(h,active))&&new Set(a).size===a.length?a:null;notice=drag.candidate?'Rilascia per posizionare.':'Posizione non disponibile.'}paint()};
+svg.onpointerdown=e=>{if(e.button!==0)return;const q=point(e);if(tool==='probe'){const h=nearest(q);if(h){if(probes.length===2)probes=[];probes.push(h);refresh()}return}
+ if(tool!=='select'){hover='';place(nearest(q));return}const hit=e.target.closest('[data-id]');active=hit?.dataset.id||'';notice='';if(active){drag={start:q,pin:e.target.hasAttribute('data-pin')?Number(e.target.dataset.pin):null,candidate:null};svg.setPointerCapture(e.pointerId)}refresh()};
+svg.onpointermove=e=>{const q=point(e),h=nearest(q);if(!drag&&hover===h)return;hover=h;if(drag){const a=moved(q);drag.candidate=a&&a.every(h=>h&&free(h,active))&&new Set(a).size===a.length?a:null;notice=drag.candidate?'Rilascia per posizionare.':'Posizione non disponibile.'}paint()};
 svg.onpointerup=()=>{if(!drag)return;const p=part(),a=drag.candidate;if(a&&a.some((h,i)=>h!==p.p[i])){checkpoint();p.p=a}drag=null;notice='';refresh()};
 svg.onpointercancel=()=>{drag=null;notice='';paint()};svg.onpointerleave=()=>{hover='';paint()};
-const symbols={select:'M5 2v14l4-4 4 6 3-2-4-6h6z',wire:'M2 15h6l8-10h6',resistor:'M1 10h5V6h12v8H6v-4m12 0h5',led:'M1 11h6V5l9 6-9 6v-6m9-7v14m0-7h7m-8-7 4-3m0 5 4-3',button:'M1 14h5l11-9m1 9h5',transistor:'M2 10h7m0-7v14m0-8 10-6V1M9 12l10 5v2m-5-3 5 1-2-4'};
-for(const [t,name] of Object.entries({select:'Seleziona',...names})){const b=document.createElement('button');b.dataset.tool=t;b.innerHTML='<svg aria-hidden="true" viewBox="0 0 24 20"><path d="'+symbols[t]+'" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';b.append(name);b.onclick=()=>setTool(t);$('tools').append(b)}
-$('preset').onchange=e=>{checkpoint();parts=e.target.value==='xor'?structuredClone(demo):[];e.target.value='';setTool('select')};
+const symbols={probe:'M3 16l8-8 4 4-8 8m6-11 7-7',select:'M5 2v14l4-4 4 6 3-2-4-6h6z',wire:'M2 15h6l8-10h6',resistor:'M1 10h5V6h12v8H6v-4m12 0h5',led:'M1 11h6V5l9 6-9 6v-6m9-7v14m0-7h7m-8-7 4-3m0 5 4-3',button:'M1 14h5l11-9m1 9h5',transistor:'M2 10h7m0-7v14m0-8 10-6V1M9 12l10 5v2m-5-3 5 1-2-4'};
+for(const [t,name] of Object.entries({select:'Seleziona',...names,probe:'Voltmetro'})){const b=document.createElement('button');b.dataset.tool=t;b.innerHTML='<svg aria-hidden="true" viewBox="0 0 24 20"><path d="'+symbols[t]+'" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';b.append(name);b.onclick=()=>setTool(t);$('tools').append(b)}
+$('preset').onchange=e=>{checkpoint();parts=e.target.value==='xor'?JSON.parse(JSON.stringify(demo)):[];e.target.value='';setTool('select')};
 $('undo').onclick=()=>restore(hist,future);$('redo').onclick=()=>restore(future,hist);$('supply').oninput=refresh;
+$('zoom').onchange=e=>{svg.style.width=(100*Number(e.target.value))+'%';svg.style.minWidth=(740*Number(e.target.value))+'px'};
+$('export').onclick=()=>{
+ const supply=$('supply').valueAsNumber;if(!Number.isFinite(supply)||supply<0||supply>24){$('error').textContent='Correggi la tensione prima di salvare.';return}
+ const url=URL.createObjectURL(new Blob([JSON.stringify({version:1,supply,parts},null,2)],{type:'application/json'}));
+ const a=document.createElement('a');a.href=url;a.download='circuito-breadboard.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)
+};
+function readProject(text){
+ const data=JSON.parse(text),used=new Set(),ids=new Set();
+ if(data?.version!==1||!Number.isFinite(data.supply)||data.supply<0||data.supply>24||!Array.isArray(data.parts)||data.parts.length>holes.length/2)throw Error();
+ for(const p of data.parts){
+ if(!p||!Object.prototype.hasOwnProperty.call(terminals,p.t)||typeof p.id!=='string'||!/^\w{1,48}$/.test(p.id)||ids.has(p.id)||!Array.isArray(p.p)||p.p.length!==terminals[p.t].length)throw Error();
+ ids.add(p.id);for(const h of p.p){if(!holes.includes(h)||used.has(h))throw Error();used.add(h)}
+ if(typeof p.on!=='boolean')throw Error();
+ if(p.t==='resistor'&&(!Array.isArray(p.bands)||p.bands.length!==4||!p.bands.every(Number.isInteger)||p.bands[0]<1||p.bands[0]>9||p.bands[1]<0||p.bands[1]>9||p.bands[2]<0||p.bands[2]>11||!Object.prototype.hasOwnProperty.call(toler,p.bands[3])))throw Error()
+ }return data
+}
+$('open').onclick=()=>$('file').click();
+$('file').onchange=async e=>{const input=e.target;try{if(!input.files.length)return;const f=input.files[0];if(f.size>200000)throw Error();const d=readProject(await f.text());checkpoint();parts=d.parts;$('supply').value=d.supply;setTool('select')}catch{$('error').textContent='Progetto non valido. Controlla il file JSON.'}finally{input.value=''}};
+$('substrate').innerHTML=base;
 document.onkeydown=e=>{if(e.key==='Escape'){setTool('select');return}if(['INPUT','SELECT'].includes(e.target.tagName))return;if(e.key==='Delete')erase();if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();e.shiftKey?restore(future,hist):restore(hist,future)}};
 refresh();
 </script></html>
