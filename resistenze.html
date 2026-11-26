@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resistenze a 4 bande</title>
+<style>
+* { box-sizing: border-box }
+body { margin: 0; padding: clamp(16px, 5vw, 40px); background: #edf2f7; color: #18243a; font: 16px system-ui, sans-serif }
+main { max-width: 780px; margin: auto; padding: clamp(18px, 4vw, 32px); background: white; border: 1px solid #dae3ed; border-radius: 22px }
+h1 { margin: 0; font-size: clamp(25px, 5vw, 38px); letter-spacing: -.04em }
+p { margin: 8px 0 0; line-height: 1.5 }
+.diagram { position: relative; display: grid; place-items: center; min-height: 126px; margin: 20px 0; background: #f0f4f8; border-radius: 14px }
+.filo { position: absolute; width: 88%; height: 5px; border-radius: 4px; background: #788696 }
+.corpo { position: relative; width: 66%; height: 62px; overflow: hidden; border: 1px solid #a5895f; border-radius: 21px; background: linear-gradient(#f5e3c4, #d0ae7e); box-shadow: 0 4px 8px #23304725 }
+.banda { position: absolute; inset-block: 0; width: 8%; box-shadow: inset 0 8px 10px #ffffff30, inset 0 -8px 10px #0003 }
+.controlli { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px }
+label { font-size: .88rem; font-weight: 700 }
+select { display: block; width: 100%; min-height: 44px; margin-top: 6px; padding: 6px; border: 1px solid #9eacc0; border-radius: 8px; background: white; color: #18243a; font: inherit; cursor: pointer }
+select:focus-visible { outline: 3px solid #2865bf; outline-offset: 2px }
+.risultato { margin-top: 20px; padding: 16px 20px; border-radius: 14px; background: #14263f; color: #fff }
+output { display: block; font-size: clamp(26px, 6vw, 44px); font-weight: 750 }
+.risultato p { color: #dae6f5 }
+@media (max-width: 600px) { .controlli { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
+</style>
+</head>
+<body>
+<main>
+<h1>Resistenze a 4 bande</h1>
+<p>Scegli i colori da sinistra a destra. La banda più distanziata indica la tolleranza.</p>
+<div class="diagram" id="schema" role="img" aria-label="Bande marrone, nero, rosso e oro">
+  <div class="filo"></div>
+  <div class="corpo">
+    <span class="banda" style="left:12%;background:#6b3826"></span>
+    <span class="banda" style="left:28%;background:#202328"></span>
+    <span class="banda" style="left:44%;background:#ce303a"></span>
+    <span class="banda" style="left:78%;background:#c69930"></span>
+  </div>
+</div>
+<div class="controlli">
+  <label>1ª banda · Prima cifra
+    <select id="prima">
+      <option value="1" selected>Marrone · 1</option><option value="2">Rosso · 2</option>
+      <option value="3">Arancione · 3</option><option value="4">Giallo · 4</option>
+      <option value="5">Verde · 5</option><option value="6">Blu · 6</option>
+      <option value="7">Viola · 7</option><option value="8">Grigio · 8</option>
+      <option value="9">Bianco · 9</option>
+    </select>
+  </label>
+  <label>2ª banda · Seconda cifra
+    <select id="seconda">
+      <option value="0" selected>Nero · 0</option><option value="1">Marrone · 1</option>
+      <option value="2">Rosso · 2</option><option value="3">Arancione · 3</option>
+      <option value="4">Giallo · 4</option><option value="5">Verde · 5</option>
+      <option value="6">Blu · 6</option><option value="7">Viola · 7</option>
+      <option value="8">Grigio · 8</option><option value="9">Bianco · 9</option>
+    </select>
+  </label>
+  <label>3ª banda · Moltiplicatore
+    <select id="fattore">
+      <option value="0">Nero · ×1</option><option value="1">Marrone · ×10</option>
+      <option value="2" selected>Rosso · ×100</option><option value="3">Arancione · ×1 000</option>
+      <option value="4">Giallo · ×10 000</option><option value="5">Verde · ×100 000</option>
+      <option value="6">Blu · ×1 000 000</option><option value="7">Viola · ×10 000 000</option>
+      <option value="8">Grigio · ×100 000 000</option><option value="9">Bianco · ×1 000 000 000</option>
+      <option value="10">Oro · ×0,1</option><option value="11">Argento · ×0,01</option>
+    </select>
+  </label>
+  <label>4ª banda · Tolleranza
+    <select id="tolleranza">
+      <option value="1" data-percento="1">Marrone · ±1%</option>
+      <option value="2" data-percento="2">Rosso · ±2%</option>
+      <option value="5" data-percento="0.5">Verde · ±0,5%</option>
+      <option value="6" data-percento="0.25">Blu · ±0,25%</option>
+      <option value="7" data-percento="0.1">Viola · ±0,1%</option>
+      <option value="8" data-percento="0.05">Grigio · ±0,05%</option>
+      <option value="10" data-percento="5" selected>Oro · ±5%</option>
+      <option value="11" data-percento="10">Argento · ±10%</option>
+    </select>
+  </label>
+</div>
+<section class="risultato" aria-live="polite" aria-atomic="true">
+  <output id="valore" for="prima seconda fattore tolleranza">1 kΩ ±5%</output>
+  <p id="calcolo">10 × 100 = 1000 Ω</p>
+  <p id="intervallo">Da 950 Ω a 1050 Ω</p>
+</section>
+</main>
+<script>
+const colori = ["#202328", "#6b3826", "#ce303a", "#ec761c", "#f2cb32", "#228451",
+  "#2865bf", "#8349a2", "#7a828d", "#fffdf5", "#c69930", "#aeb8c5"];
+const campi = Array.from(document.querySelectorAll("select"));
+const bande = document.querySelectorAll(".banda");
+const [prima, seconda, fattore, tolleranza] = campi;
+const fmt = new Intl.NumberFormat("it-IT", { maximumFractionDigits: 10 }).format;
+
+function conUnita(ohm) {
+  if (ohm >= 1e9) return fmt(ohm / 1e9) + " GΩ";
+  if (ohm >= 1e6) return fmt(ohm / 1e6) + " MΩ";
+  if (ohm >= 1e3) return fmt(ohm / 1e3) + " kΩ";
+  return fmt(ohm) + " Ω";
+}
+
+function aggiorna() {
+  const indice = Number(fattore.value);
+  const esponente = indice < 10 ? indice : 9 - indice;
+  const moltiplicatore = Math.pow(10, esponente);
+  const cifre = 10 * Number(prima.value) + Number(seconda.value);
+  const ohm = cifre * moltiplicatore;
+  const percentuale = Number(tolleranza.selectedOptions[0].dataset.percento);
+  const scarto = ohm * percentuale / 100;
+
+  campi.forEach((campo, i) => {
+    bande[i].style.backgroundColor = colori[Number(campo.value)];
+  });
+  const nomi = campi.map(campo => campo.selectedOptions[0].text.split(" · ")[0]);
+  document.getElementById("schema").setAttribute("aria-label", "Bande da sinistra: " + nomi.join(", "));
+  document.getElementById("valore").textContent = conUnita(ohm) + " ±" + fmt(percentuale) + "%";
+  document.getElementById("calcolo").textContent = cifre + " × " + fmt(moltiplicatore) + " = " + fmt(ohm) + " Ω";
+  document.getElementById("intervallo").textContent = "Da " + fmt(ohm - scarto) + " Ω a " + fmt(ohm + scarto) + " Ω";
+}
+
+campi.forEach(campo => campo.addEventListener("change", aggiorna));
+aggiorna();
+</script>
+</body>
+</html>
