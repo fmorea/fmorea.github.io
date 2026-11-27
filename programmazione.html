@@ -1,0 +1,2274 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FMOREA · Laboratorio C con Nano e GCC</title>
+  <style>
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    :root {
+      --ink: #1e293b;
+      --muted: #64748b;
+      --rule: #cbd5e1;
+      --accent: #2563eb;
+      --accent-dark: #1d4ed8;
+      --nano-bg: #1a1a2e;
+      --nano-bar: #16213e;
+      --nano-hl: #0f3460;
+      --nano-cursor: #e94560;
+      --term-bg: #0d1117;
+      --term-green: #39ff14;
+      --term-yellow: #fbbf24;
+      --term-red: #ef4444;
+      --term-blue: #60a5fa;
+      --term-gray: #6b7280;
+      --term-white: #e2e8f0;
+    }
+    body {
+      margin: 0;
+      padding: clamp(6px,1.2vw,16px);
+      background: #b00000;
+      color: var(--ink);
+      font: 16px/1.5 Averta, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+    .mast {
+      background: #8e0000;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.2);
+      max-width: 1600px;
+      width: 100%;
+      margin: 0 auto 12px;
+      padding: 8px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .mast-brand { color:#fff; text-decoration:none; font-size:28px; font-weight:800; letter-spacing:-.3px; line-height:1.1; }
+    .mast-nav { display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+    .mast-nav a { color:rgba(255,255,255,.92); text-decoration:none; font-size:13px; font-weight:700; padding:6px 12px; border-radius:999px; border:1px solid rgba(255,255,255,.25); background:rgba(255,255,255,.08); transition:background .15s,border-color .15s; }
+    .mast-nav a:hover { background:rgba(255,255,255,.18); border-color:rgba(255,255,255,.5); }
+    .mast-nav a[aria-current="page"] { background:#fff; color:#8e0000; border-color:#fff; }
+    main { width:100%; max-width:1600px; margin:0 auto; background:#fff; border:1px solid var(--rule); border-radius:16px; box-shadow:0 10px 25px -5px rgba(0,0,0,.14); padding:clamp(14px,2vw,28px); min-height:calc(100vh - 110px); }
+
+    /* Page header */
+    .page-head { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; padding-bottom:14px; border-bottom:1px solid #dbeafe; margin-bottom:18px; }
+    .page-head h1 { margin:0; font-size:clamp(22px,2.5vw,31px); letter-spacing:-.025em; font-weight:800; color:#0f172a; }
+    .subtitle { margin:2px 0 0; font-size:13.5px; color:var(--muted); }
+
+    /* Layout grid */
+    .lab-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    @media (max-width:900px) { .lab-grid { grid-template-columns:1fr; } }
+
+    /* Cards */
+    .card { background:#fff; border:1px solid var(--rule); border-radius:14px; box-shadow:0 2px 8px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; }
+    .card-head { background:#f8fafc; border-bottom:1px solid var(--rule); padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; }
+    .card-head h2 { margin:0; font-size:14px; font-weight:700; color:#0f172a; display:flex; align-items:center; gap:7px; }
+    .card-head .badge { font-size:11px; font-weight:700; padding:2px 7px; border-radius:999px; }
+    .badge-nano { background:#0f3460; color:#a5f3fc; }
+    .badge-gcc  { background:#14532d; color:#bbf7d0; }
+
+    /* File tabs */
+    .file-tabs { display:flex; align-items:center; gap:0; background:var(--nano-bar); padding:4px 8px 0; overflow-x:auto; }
+    .file-tab { font-family:ui-monospace,Consolas,"Courier New",monospace; font-size:12px; color:#94a3b8; padding:5px 12px; border-radius:6px 6px 0 0; cursor:pointer; border:1px solid transparent; border-bottom:none; white-space:nowrap; transition:background .15s,color .15s; user-select:none; }
+    .file-tab.active { background:var(--nano-bg); color:#e2e8f0; border-color:#334155; }
+    .file-tab:hover:not(.active) { background:rgba(255,255,255,.07); color:#cbd5e1; }
+    .file-tab-add { font-size:16px; color:#64748b; padding:3px 8px; cursor:pointer; border-radius:4px; transition:color .15s; margin-left:4px; }
+    .file-tab-add:hover { color:#94a3b8; }
+
+    /* GNU Nano editor */
+    .nano-wrap { background:var(--nano-bg); flex:1; display:flex; flex-direction:column; min-height:0; }
+    .nano-titlebar {
+      background:var(--nano-bar);
+      color:#94a3b8;
+      font-family:ui-monospace,Consolas,"Courier New",monospace;
+      font-size:12px;
+      padding:3px 8px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      border-bottom:1px solid #1e293b;
+      user-select:none;
+    }
+    .nano-titlebar-center { font-weight:700; color:#e2e8f0; letter-spacing:.02em; }
+    .nano-titlebar-modified { color:var(--nano-cursor); font-size:11px; }
+    .nano-editor-area { display:flex; flex:1; min-height:0; overflow:hidden; }
+    .nano-gutter {
+      background:#111827;
+      color:#374151;
+      font-family:ui-monospace,Consolas,"Courier New",monospace;
+      font-size:13px;
+      line-height:1.55;
+      padding:8px 6px;
+      text-align:right;
+      min-width:38px;
+      user-select:none;
+      border-right:1px solid #1f2937;
+      overflow:hidden;
+    }
+    .nano-editor {
+      flex:1;
+      background:var(--nano-bg);
+      color:#e2e8f0;
+      font-family:ui-monospace,Consolas,"Courier New",monospace;
+      font-size:13px;
+      line-height:1.55;
+      padding:8px 10px;
+      border:none;
+      outline:none;
+      resize:none;
+      tab-size:4;
+      white-space:pre;
+      overflow:auto;
+      caret-color:var(--nano-cursor);
+      spellcheck:false;
+    }
+    .nano-editor::selection { background:var(--nano-hl); }
+    .nano-statusbar {
+      background:var(--nano-bar);
+      color:#94a3b8;
+      font-family:ui-monospace,Consolas,"Courier New",monospace;
+      font-size:12px;
+      padding:2px 8px;
+      border-top:1px solid #1e293b;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      user-select:none;
+      min-height:22px;
+    }
+    .nano-statusbar-msg { color:var(--nano-cursor); font-weight:700; }
+    .nano-shortcutbar {
+      background:#111827;
+      display:flex;
+      flex-wrap:wrap;
+      gap:0;
+      padding:3px 4px;
+      border-top:1px solid #1f2937;
+    }
+    .nano-shortcut { font-family:ui-monospace,Consolas,"Courier New",monospace; font-size:11px; color:#cbd5e1; padding:2px 6px; white-space:nowrap; }
+    .nano-shortcut span { background:#1e3a5f; color:#93c5fd; border-radius:3px; padding:1px 4px; margin-right:2px; font-weight:700; }
+
+    /* File manager sidebar */
+    .file-sidebar { background:#0d1117; border-right:1px solid #1f2937; min-width:130px; max-width:160px; display:flex; flex-direction:column; overflow:hidden; }
+    .file-sidebar-head { font-family:ui-monospace,Consolas,monospace; font-size:11px; color:#6b7280; padding:6px 8px 4px; border-bottom:1px solid #1f2937; text-transform:uppercase; letter-spacing:.06em; display:flex; align-items:center; justify-content:space-between; }
+    .file-list { flex:1; overflow-y:auto; }
+    .file-entry { font-family:ui-monospace,Consolas,monospace; font-size:12px; color:#94a3b8; padding:4px 10px; cursor:pointer; display:flex; align-items:center; gap:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; border-left:3px solid transparent; transition:background .12s; }
+    .file-entry:hover { background:rgba(255,255,255,.05); color:#e2e8f0; }
+    .file-entry.active { background:rgba(37,99,235,.12); color:#93c5fd; border-left-color:var(--accent); }
+    .file-entry.modified::after { content:'●'; color:var(--nano-cursor); font-size:10px; margin-left:auto; flex-shrink:0; }
+    .file-entry-icon { font-size:13px; flex-shrink:0; }
+
+    /* Terminal */
+    .term-wrap { background:var(--term-bg); flex:1; display:flex; flex-direction:column; min-height:0; }
+    .term-titlebar { background:#161b22; color:#6b7280; font-family:ui-monospace,Consolas,monospace; font-size:12px; padding:5px 10px; border-bottom:1px solid #21262d; display:flex; align-items:center; gap:8px; user-select:none; }
+    .term-dot { width:11px; height:11px; border-radius:50%; display:inline-block; }
+    .term-output { flex:1; overflow-y:auto; padding:10px 12px; font-family:ui-monospace,Consolas,"Courier New",monospace; font-size:13px; line-height:1.6; color:var(--term-white); }
+    .term-output::-webkit-scrollbar { width:6px; }
+    .term-output::-webkit-scrollbar-track { background:#1a1a2e; }
+    .term-output::-webkit-scrollbar-thumb { background:#334155; border-radius:3px; }
+    .term-line { white-space:pre-wrap; word-break:break-all; }
+    .term-line.prompt { color:var(--term-green); }
+    .term-line.info  { color:var(--term-blue); }
+    .term-line.warn  { color:var(--term-yellow); }
+    .term-line.err   { color:var(--term-red); }
+    .term-line.ok    { color:#34d399; }
+    .term-line.gray  { color:var(--term-gray); }
+    .term-line.bold  { font-weight:700; }
+    .term-input-row { display:flex; align-items:center; padding:6px 10px; border-top:1px solid #21262d; background:#0d1117; gap:6px; }
+    .term-prompt-label { font-family:ui-monospace,Consolas,monospace; font-size:13px; color:var(--term-green); white-space:nowrap; flex-shrink:0; }
+    .term-input { flex:1; background:transparent; border:none; outline:none; font-family:ui-monospace,Consolas,monospace; font-size:13px; color:var(--term-white); caret-color:var(--term-green); }
+    .term-input::placeholder { color:#374151; }
+
+    /* Controls bar */
+    .controls-bar { display:flex; align-items:center; gap:7px; flex-wrap:wrap; padding:8px 14px; border-bottom:1px solid var(--rule); background:#f8fafc; }
+    .btn { font-family:inherit; font-size:13px; font-weight:700; padding:7px 13px; border-radius:9px; border:1px solid var(--rule); background:#fff; color:#334155; cursor:pointer; min-height:34px; transition:background .14s,border-color .14s,color .14s; display:inline-flex; align-items:center; gap:5px; }
+    .btn:hover { background:#f1f5f9; border-color:#94a3b8; }
+    .btn-primary { background:#2563eb; color:#fff; border-color:#1d4ed8; }
+    .btn-primary:hover { background:#1d4ed8; border-color:#1e40af; }
+    .btn-danger { background:#dc2626; color:#fff; border-color:#b91c1c; }
+    .btn-danger:hover { background:#b91c1c; }
+    .btn-green { background:#16a34a; color:#fff; border-color:#15803d; }
+    .btn-green:hover { background:#15803d; }
+    .btn-sm { font-size:12px; padding:5px 10px; min-height:28px; }
+    .sep { width:1px; height:20px; background:var(--rule); margin:0 2px; }
+    select.ctl { font-family:inherit; font-size:13px; padding:5px 8px; border-radius:8px; border:1px solid var(--rule); background:#fff; color:#334155; min-height:34px; }
+
+    /* Template picker */
+    .template-row { display:flex; align-items:center; gap:7px; flex-wrap:wrap; padding:7px 14px; background:#eff6ff; border-bottom:1px solid #bfdbfe; font-size:12.5px; color:#1e3a8a; }
+    .template-row strong { font-weight:700; }
+    .tpl-btn { font-size:12px; font-weight:700; padding:4px 10px; border-radius:7px; border:1px solid #93c5fd; background:#dbeafe; color:#1e40af; cursor:pointer; white-space:nowrap; transition:background .12s; }
+    .tpl-btn:hover { background:#bfdbfe; }
+    .tpl-btn.active { background:#1d4ed8; color:#fff; border-color:#1d4ed8; }
+
+    /* Theory / reference panel */
+    .ref-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-top:14px; }
+    @media (max-width:1100px) { .ref-grid { grid-template-columns:1fr 1fr; } }
+    @media (max-width:700px) { .ref-grid { grid-template-columns:1fr; } }
+    .ref-block { background:#f8fafc; border:1px solid var(--rule); border-radius:11px; padding:12px 14px; }
+    .ref-block h3 { margin:0 0 7px; font-size:13px; font-weight:800; color:#0f172a; }
+    .ref-block pre { margin:0; font-family:ui-monospace,Consolas,monospace; font-size:12px; color:#334155; line-height:1.5; white-space:pre-wrap; word-break:break-word; }
+    .ref-block code { background:#e2e8f0; border-radius:4px; padding:0 3px; font-size:11.5px; }
+
+    /* Syntax highlighting colors (applied via JS) */
+    .kw  { color:#c792ea; }
+    .typ { color:#82aaff; }
+    .num { color:#f78c6c; }
+    .str { color:#c3e88d; }
+    .cmt { color:#546e7a; font-style:italic; }
+    .pp  { color:#89ddff; }
+    .fn  { color:#82aaff; }
+
+    /* Run/output section */
+    .run-panel { background:var(--term-bg); border-top:2px solid #21262d; }
+    .run-panel-head { background:#161b22; color:#6b7280; font-family:ui-monospace,Consolas,monospace; font-size:12px; padding:5px 10px; border-bottom:1px solid #21262d; display:flex; align-items:center; justify-content:space-between; }
+    .run-output { font-family:ui-monospace,Consolas,monospace; font-size:13px; color:#e2e8f0; padding:8px 12px; min-height:52px; max-height:140px; overflow-y:auto; white-space:pre-wrap; word-break:break-word; }
+
+    /* Warnings / info banners */
+    .info-banner { background:#eff6ff; border:1px solid #bfdbfe; border-radius:9px; padding:9px 14px; font-size:13px; color:#1e3a8a; margin-bottom:14px; display:flex; align-items:flex-start; gap:8px; }
+    .info-banner svg { flex-shrink:0; margin-top:1px; }
+
+    details.theory { margin-top:18px; border:1px solid var(--rule); border-radius:11px; }
+    details.theory > summary { font-size:14px; font-weight:700; color:#334155; padding:10px 14px; cursor:pointer; list-style:none; display:flex; align-items:center; gap:7px; }
+    details.theory > summary::-webkit-details-marker { display:none; }
+    details.theory[open] > summary { border-bottom:1px solid var(--rule); }
+    details.theory > .theory-body { padding:14px; }
+
+    @media (max-width:640px) {
+      .mast-brand { font-size:22px; }
+      .nano-editor, .term-output, .run-output { font-size:12px; }
+      .file-sidebar { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="mast">
+    <a class="mast-brand" href="index.html">FMOREA</a>
+    <nav class="mast-nav" aria-label="Navigazione piattaforma">
+      <a href="index.html">← Piattaforma</a>
+      <a href="resistenze.html">Resistenze</a>
+      <a href="breadboard.html">Breadboard</a>
+      <a href="arduino.html">Arduino Uno</a>
+      <a href="programmazione.html" aria-current="page">Laboratorio C</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-head">
+      <div>
+        <h1>Laboratorio C con GNU Nano e GCC</h1>
+        <p class="subtitle">Scrivi codice C nel simulatore Nano, compila con GCC simulato e osserva output ed errori — tutto statico, tutto nel browser.</p>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-primary" id="btnCompile" title="Ctrl+Shift+B">▶ Compila &amp; Esegui</button>
+        <button class="btn btn-danger btn-sm" id="btnClear">🗑 Pulisci terminale</button>
+      </div>
+    </div>
+
+    <div class="info-banner">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>Il compilatore è simulato: riproduce il comportamento di <strong>gcc</strong> per errori comuni di C (tipi, dichiarazioni, parentesi, ritorno main) ed esegue il programma interpretando le chiamate <code>printf / scanf / strlen / strcmp / strcpy / rand</code>. Perfetto per esercitarsi prima del lab.</span>
+    </div>
+
+    <!-- Template / file controls -->
+    <div class="template-row">
+      <strong>Template:</strong>
+      <button class="tpl-btn active" data-tpl="hello">Hello World</button>
+      <button class="tpl-btn" data-tpl="variabili">Variabili &amp; tipi</button>
+      <button class="tpl-btn" data-tpl="ifelse">if / else</button>
+      <button class="tpl-btn" data-tpl="while">ciclo while</button>
+      <button class="tpl-btn" data-tpl="for">ciclo for</button>
+      <button class="tpl-btn" data-tpl="array">Array</button>
+      <button class="tpl-btn" data-tpl="funzioni">Funzioni</button>
+      <button class="tpl-btn" data-tpl="stringhe">Stringhe</button>
+      <button class="tpl-btn" data-tpl="puntatori">Puntatori</button>
+      <button class="tpl-btn" data-tpl="struct">Struct</button>
+      <button class="tpl-btn" data-tpl="scanf">scanf interattivo</button>
+      <div class="sep"></div>
+      <button class="btn btn-sm" id="btnNewFile">+ Nuovo file</button>
+    </div>
+
+    <!-- Main lab grid: editor left, terminal right -->
+    <div class="lab-grid" style="margin-top:0;">
+
+      <!-- LEFT: GNU NANO editor -->
+      <div class="card" style="min-height:520px;">
+        <div class="card-head">
+          <h2>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:#6366f1;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+            GNU Nano 7.2 · Editor C
+            <span class="badge badge-nano">nano</span>
+          </h2>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <select class="ctl" id="fontSizeSel" title="Dimensione font">
+              <option value="11">11px</option>
+              <option value="12">12px</option>
+              <option value="13" selected>13px</option>
+              <option value="14">14px</option>
+              <option value="16">16px</option>
+            </select>
+            <button class="btn btn-sm" id="btnDownload" title="Scarica file .c">⬇ Scarica .c</button>
+          </div>
+        </div>
+        <!-- File tabs -->
+        <div class="file-tabs" id="fileTabs"></div>
+        <!-- Nano UI -->
+        <div class="nano-wrap">
+          <div class="nano-titlebar">
+            <span id="nanoVersion">GNU nano 7.2</span>
+            <span class="nano-titlebar-center" id="nanoFilename">main.c</span>
+            <span class="nano-titlebar-modified" id="nanoModified"></span>
+          </div>
+          <div class="nano-editor-area">
+            <!-- File sidebar -->
+            <div class="file-sidebar" id="fileSidebar">
+              <div class="file-sidebar-head">
+                <span>Progetto</span>
+              </div>
+              <div class="file-list" id="fileList"></div>
+            </div>
+            <!-- Actual editor -->
+            <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+              <div style="display:flex;flex:1;min-height:0;">
+                <div class="nano-gutter" id="nanoGutter"></div>
+                <textarea class="nano-editor" id="nanoEditor" spellcheck="false" autocorrect="off" autocapitalize="off" wrap="off" aria-label="Editor di codice C"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="nano-statusbar">
+            <span id="nanoPos">Ln 1, Col 1</span>
+            <span class="nano-statusbar-msg" id="nanoMsg"></span>
+            <span id="nanoInfo">UTF-8 · C</span>
+          </div>
+          <div class="nano-shortcutbar">
+            <span class="nano-shortcut"><span>^G</span> Aiuto</span>
+            <span class="nano-shortcut"><span>^O</span> Salva</span>
+            <span class="nano-shortcut"><span>^X</span> Chiudi</span>
+            <span class="nano-shortcut"><span>^K</span> Taglia riga</span>
+            <span class="nano-shortcut"><span>^U</span> Incolla</span>
+            <span class="nano-shortcut"><span>^\\</span> Sostituisci</span>
+            <span class="nano-shortcut"><span>^W</span> Cerca</span>
+            <span class="nano-shortcut"><span>^C</span> Posizione</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: GCC terminal -->
+      <div class="card" style="min-height:520px;">
+        <div class="card-head">
+          <h2>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:#22c55e;"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            Terminale GCC
+            <span class="badge badge-gcc">gcc</span>
+          </h2>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <span id="termStatus" style="font-size:12px;color:#64748b;"></span>
+            <button class="btn btn-sm btn-green" id="btnRun">▶ Esegui</button>
+          </div>
+        </div>
+        <!-- Terminal -->
+        <div class="term-wrap">
+          <div class="term-titlebar">
+            <div style="display:flex;gap:5px;">
+              <span class="term-dot" style="background:#ff5f57;"></span>
+              <span class="term-dot" style="background:#febc2e;"></span>
+              <span class="term-dot" style="background:#28c840;"></span>
+            </div>
+            <span style="margin-left:8px;flex:1;text-align:center;font-size:11px;">lab@fmorea:~/C$</span>
+          </div>
+          <div class="term-output" id="termOutput"></div>
+          <div class="term-input-row" id="termInputRow" style="display:none;">
+            <span class="term-prompt-label" id="termPromptLabel">Inserisci: </span>
+            <input class="term-input" id="termInput" type="text" autocomplete="off" spellcheck="false" placeholder="digita e premi Invio…">
+          </div>
+          <div class="term-input-row">
+            <span class="term-prompt-label">lab@fmorea:~/C$ </span>
+            <input class="term-input" id="cmdInput" type="text" autocomplete="off" spellcheck="false" placeholder="gcc main.c -o main -Wall  oppure  ./main">
+          </div>
+        </div>
+      </div>
+    </div><!-- /lab-grid -->
+
+    <!-- Reference / theory section -->
+    <details class="theory" open>
+      <summary>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Riferimento rapido · Sintassi C, operatori, funzioni stdlib
+      </summary>
+      <div class="theory-body">
+        <div class="ref-grid">
+
+          <div class="ref-block">
+            <h3>Struttura minima</h3>
+            <pre><span class="pp">#include &lt;stdio.h&gt;</span>
+
+<span class="typ">int</span> <span class="fn">main</span>() {
+    <span class="fn">printf</span>(<span class="str">"Ciao!\n"</span>);
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre>
+          </div>
+
+          <div class="ref-block">
+            <h3>Tipi fondamentali</h3>
+            <pre><span class="typ">int</span>    i = <span class="num">42</span>;
+<span class="typ">float</span>  f = <span class="num">3.14f</span>;
+<span class="typ">double</span> d = <span class="num">2.718</span>;
+<span class="typ">char</span>   c = <span class="str">'A'</span>;
+<span class="typ">char</span>   s[<span class="num">50</span>] = <span class="str">"testo"</span>;
+<span class="kw">const</span> <span class="typ">int</span> MAX = <span class="num">100</span>;</pre>
+          </div>
+
+          <div class="ref-block">
+            <h3>Operatori</h3>
+            <pre>+ - * / %     aritmetici
+== != &lt; &gt; &lt;= &gt;=  confronto
+&amp;&amp; || !       logici
+&amp; | ^ ~ &lt;&lt; &gt;&gt;  bit-a-bit
+= += -= *= /=  assegnazione
+i++ i-- ++i   incremento</pre>
+          </div>
+
+          <div class="ref-block">
+            <h3>if / else / switch</h3>
+            <pre><span class="kw">if</span> (x &gt; <span class="num">0</span>) {
+  <span class="cmt">/* positivo */</span>
+} <span class="kw">else if</span> (x &lt; <span class="num">0</span>) {
+  <span class="cmt">/* negativo */</span>
+} <span class="kw">else</span> { <span class="cmt">/* zero */</span> }
+
+<span class="kw">switch</span> (n) {
+  <span class="kw">case</span> <span class="num">1</span>: ...; <span class="kw">break</span>;
+  <span class="kw">default</span>: ...;
+}</pre>
+          </div>
+
+          <div class="ref-block">
+            <h3>Cicli</h3>
+            <pre><span class="kw">for</span> (<span class="typ">int</span> i=<span class="num">0</span>; i&lt;n; i++) { }
+
+<span class="kw">while</span> (cond) { }
+
+<span class="kw">do</span> { } <span class="kw">while</span> (cond);
+
+<span class="kw">break</span>;    <span class="cmt">// esci dal ciclo</span>
+<span class="kw">continue</span>; <span class="cmt">// prossima iterazione</span></pre>
+          </div>
+
+          <div class="ref-block">
+            <h3>Funzioni</h3>
+            <pre><span class="typ">int</span> <span class="fn">somma</span>(<span class="typ">int</span> a, <span class="typ">int</span> b) {
+    <span class="kw">return</span> a + b;
+}
+<span class="cmt">// prototipo prima di main:</span>
+<span class="typ">int</span> <span class="fn">somma</span>(<span class="typ">int</span>, <span class="typ">int</span>);
+
+<span class="cmt">// void = nessun ritorno</span>
+<span class="typ">void</span> <span class="fn">stampa</span>(<span class="typ">int</span> x) {
+    <span class="fn">printf</span>(<span class="str">"%d\n"</span>, x);
+}</pre>
+          </div>
+
+          <div class="ref-block">
+            <h3>Array &amp; stringhe</h3>
+            <pre><span class="typ">int</span> v[<span class="num">5</span>] = {<span class="num">1,2,3,4,5</span>};
+v[<span class="num">0</span>] = <span class="num">10</span>;   <span class="cmt">// primo elemento</span>
+
+<span class="typ">char</span> s[<span class="num">20</span>] = <span class="str">"ciao"</span>;
+<span class="fn">strlen</span>(s)        <span class="cmt">// lunghezza</span>
+<span class="fn">strcpy</span>(dst, src) <span class="cmt">// copia</span>
+<span class="fn">strcmp</span>(a, b)     <span class="cmt">// confronto</span>
+<span class="fn">strcat</span>(dst, src) <span class="cmt">// concatena</span></pre>
+          </div>
+
+          <div class="ref-block">
+            <h3>Puntatori</h3>
+            <pre><span class="typ">int</span>  x = <span class="num">5</span>;
+<span class="typ">int</span> *p = &amp;x;   <span class="cmt">// indirizzo di x</span>
+*p = <span class="num">10</span>;       <span class="cmt">// modifica x via p</span>
+
+<span class="cmt">// array e puntatori:</span>
+<span class="typ">int</span> a[<span class="num">3</span>] = {<span class="num">1,2,3</span>};
+<span class="typ">int</span> *q = a;    <span class="cmt">// q punta a a[0]</span>
+*(q+<span class="num">1</span>) == a[<span class="num">1</span>] <span class="cmt">// vero</span></pre>
+          </div>
+
+          <div class="ref-block">
+            <h3>printf / scanf</h3>
+            <pre><span class="cmt">// Formato:  %d int  %f float</span>
+<span class="cmt">//           %c char %s string</span>
+<span class="cmt">//           %ld long  %lf double</span>
+<span class="fn">printf</span>(<span class="str">"%d + %d = %d\n"</span>, a, b, a+b);
+<span class="fn">printf</span>(<span class="str">"Pi = %.2f\n"</span>, <span class="num">3.14159</span>);
+
+<span class="typ">int</span> n;
+<span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;n); <span class="cmt">// legge intero</span>
+<span class="fn">scanf</span>(<span class="str">"%s"</span>,  s); <span class="cmt">// legge parola</span></pre>
+          </div>
+
+          <div class="ref-block">
+            <h3>Struct</h3>
+            <pre><span class="kw">struct</span> Studente {
+    <span class="typ">char</span>  nome[<span class="num">30</span>];
+    <span class="typ">int</span>   voto;
+    <span class="typ">float</span> media;
+};
+<span class="kw">struct</span> Studente s;
+<span class="fn">strcpy</span>(s.nome, <span class="str">"Anna"</span>);
+s.voto = <span class="num">8</span>;</pre>
+          </div>
+
+          <div class="ref-block">
+            <h3>math.h / stdlib.h</h3>
+            <pre><span class="pp">#include &lt;math.h&gt;</span>
+<span class="fn">sqrt</span>(x)  <span class="fn">pow</span>(x,y)  <span class="fn">fabs</span>(x)
+<span class="fn">floor</span>(x) <span class="fn">ceil</span>(x)   <span class="fn">round</span>(x)
+
+<span class="pp">#include &lt;stdlib.h&gt;</span>
+<span class="fn">rand</span>()         <span class="cmt">// 0…RAND_MAX</span>
+<span class="fn">rand</span>()%<span class="num">6</span>+<span class="num">1</span>     <span class="cmt">// dado 1-6</span>
+<span class="fn">srand</span>(<span class="fn">time</span>(<span class="num">0</span>)) <span class="cmt">// seme casuale</span></pre>
+          </div>
+
+          <div class="ref-block">
+            <h3>Comandi GCC utili</h3>
+            <pre><span style="color:#34d399;">gcc</span> main.c -o main -Wall
+<span style="color:#34d399;">gcc</span> main.c -o main -Wall -Wextra
+<span style="color:#34d399;">gcc</span> -std=c99 main.c -o out -lm
+<span style="color:#34d399;">./main</span>
+<span style="color:#34d399;">./main</span> &lt; input.txt
+
+<span style="color:var(--term-gray);">-Wall   avvisi principali
+-Wextra avvisi extra
+-lm     collega math.h
+-std=c99 standard C99</span></pre>
+          </div>
+
+        </div>
+      </div>
+    </details>
+
+  </main>
+
+  <script>
+  'use strict';
+  /* =====================================================================
+     FMOREA · Laboratorio C — GNU Nano + GCC simulator
+     Tutto statico: nessuna dipendenza esterna
+     ===================================================================== */
+
+  // ── Templates ──────────────────────────────────────────────────────────
+  const TEMPLATES = {
+    hello: {
+      name: 'main.c',
+      code: `#include <stdio.h>
+
+int main() {
+    printf("Ciao, mondo!\\n");
+    printf("Benvenuto nel laboratorio C.\\n");
+    return 0;
+}
+`
+    },
+    variabili: {
+      name: 'variabili.c',
+      code: `#include <stdio.h>
+
+int main() {
+    int    intero   = 42;
+    float  reale    = 3.14f;
+    double preciso  = 2.71828;
+    char   carattere = 'A';
+    char   stringa[30] = "FMOREA";
+
+    printf("Intero:     %d\\n", intero);
+    printf("Float:      %.2f\\n", reale);
+    printf("Double:     %.5f\\n", preciso);
+    printf("Carattere:  %c (ASCII %d)\\n", carattere, carattere);
+    printf("Stringa:    %s\\n", stringa);
+    printf("Somma:      %d + %.2f = %.2f\\n", intero, reale, intero + reale);
+    return 0;
+}
+`
+    },
+    ifelse: {
+      name: 'ifelse.c',
+      code: `#include <stdio.h>
+
+int main() {
+    int voto = 7;
+
+    if (voto >= 9) {
+        printf("Ottimo (%d/10)\\n", voto);
+    } else if (voto >= 7) {
+        printf("Buono (%d/10)\\n", voto);
+    } else if (voto >= 6) {
+        printf("Sufficiente (%d/10)\\n", voto);
+    } else {
+        printf("Insufficiente (%d/10)\\n", voto);
+    }
+
+    /* Operatore ternario */
+    char *esito = (voto >= 6) ? "Promosso" : "Rimandato";
+    printf("Esito: %s\\n", esito);
+    return 0;
+}
+`
+    },
+    while: {
+      name: 'while.c',
+      code: `#include <stdio.h>
+
+int main() {
+    /* Conta da 1 a 5 */
+    int i = 1;
+    printf("Conteggio:\\n");
+    while (i <= 5) {
+        printf("  %d\\n", i);
+        i++;
+    }
+
+    /* Ciclo do-while: eseguito almeno una volta */
+    int n = 10;
+    int somma = 0;
+    do {
+        somma += n;
+        n--;
+    } while (n > 0);
+    printf("Somma 1..10 = %d\\n", somma);
+    return 0;
+}
+`
+    },
+    for: {
+      name: 'for.c',
+      code: `#include <stdio.h>
+
+int main() {
+    /* Tabellina del 7 */
+    printf("Tabellina del 7:\\n");
+    for (int i = 1; i <= 10; i++) {
+        printf("  7 x %2d = %3d\\n", i, 7 * i);
+    }
+
+    /* Somma dei primi n quadrati */
+    int somma = 0;
+    for (int k = 1; k <= 10; k++) {
+        somma += k * k;
+    }
+    printf("Somma quadrati 1..10 = %d\\n", somma);
+    return 0;
+}
+`
+    },
+    array: {
+      name: 'array.c',
+      code: `#include <stdio.h>
+
+int main() {
+    int voti[6] = {7, 8, 6, 9, 7, 8};
+    int n = 6;
+    int somma = 0;
+    int max = voti[0], min = voti[0];
+
+    for (int i = 0; i < n; i++) {
+        somma += voti[i];
+        if (voti[i] > max) max = voti[i];
+        if (voti[i] < min) min = voti[i];
+    }
+
+    printf("Voti:  ");
+    for (int i = 0; i < n; i++) printf("%d ", voti[i]);
+    printf("\\n");
+    printf("Media: %.2f\\n", (float)somma / n);
+    printf("Max:   %d\\n", max);
+    printf("Min:   %d\\n", min);
+    return 0;
+}
+`
+    },
+    funzioni: {
+      name: 'funzioni.c',
+      code: `#include <stdio.h>
+
+/* Prototipi */
+int  fattoriale(int n);
+int  fibonacci(int n);
+void stampaBarra(int n);
+
+int main() {
+    for (int i = 0; i <= 7; i++) {
+        printf("%d! = %d\\n", i, fattoriale(i));
+    }
+    printf("\\nFibonacci: ");
+    for (int i = 0; i < 10; i++) {
+        printf("%d ", fibonacci(i));
+    }
+    printf("\\n");
+    return 0;
+}
+
+int fattoriale(int n) {
+    if (n <= 1) return 1;
+    return n * fattoriale(n - 1);
+}
+
+int fibonacci(int n) {
+    if (n <= 1) return n;
+    return fibonacci(n-1) + fibonacci(n-2);
+}
+
+void stampaBarra(int n) {
+    for (int i = 0; i < n; i++) printf("*");
+    printf("\\n");
+}
+`
+    },
+    stringhe: {
+      name: 'stringhe.c',
+      code: `#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char nome[30]    = "LAGRANGE";
+    char cognome[30] = "IIS";
+    char completo[70];
+
+    printf("Nome:       %s\\n", nome);
+    printf("Lunghezza:  %d caratteri\\n", (int)strlen(nome));
+
+    /* Copia e concatena */
+    strcpy(completo, cognome);
+    strcat(completo, " ");
+    strcat(completo, nome);
+    printf("Completo:   %s\\n", completo);
+
+    /* Confronto */
+    if (strcmp(nome, "LAGRANGE") == 0) {
+        printf("Confronto:  nome corrisponde a LAGRANGE\\n");
+    }
+
+    /* Maiuscola/minuscola manuale */
+    char s[] = "ciao MONDO";
+    printf("Originale:  %s\\n", s);
+    for (int i = 0; s[i]; i++) {
+        if (s[i] >= 'a' && s[i] <= 'z') s[i] -= 32;
+    }
+    printf("Uppercase:  %s\\n", s);
+    return 0;
+}
+`
+    },
+    puntatori: {
+      name: 'puntatori.c',
+      code: `#include <stdio.h>
+
+void raddoppia(int *p);
+void scambia(int *a, int *b);
+
+int main() {
+    int x = 10;
+    int *p = &x;
+
+    printf("x = %d, indirizzo di x = %%p\\n", x);
+    printf("*p = %d (valore puntato da p)\\n", *p);
+
+    raddoppia(p);
+    printf("Dopo raddoppia: x = %d\\n", x);
+
+    int a = 5, b = 20;
+    printf("Prima: a=%d b=%d\\n", a, b);
+    scambia(&a, &b);
+    printf("Dopo:  a=%d b=%d\\n", a, b);
+
+    /* Puntatori e array */
+    int arr[4] = {10, 20, 30, 40};
+    int *q = arr;
+    printf("Array via puntatore: ");
+    for (int i = 0; i < 4; i++) printf("%d ", *(q+i));
+    printf("\\n");
+    return 0;
+}
+
+void raddoppia(int *p) { *p = *p * 2; }
+void scambia(int *a, int *b) { int t = *a; *a = *b; *b = t; }
+`
+    },
+    struct: {
+      name: 'struct.c',
+      code: `#include <stdio.h>
+#include <string.h>
+
+struct Studente {
+    char  nome[30];
+    int   voto;
+    float media;
+};
+
+void stampaStudente(struct Studente s);
+
+int main() {
+    struct Studente classe[3];
+
+    strcpy(classe[0].nome, "Anna");
+    classe[0].voto  = 9;
+    classe[0].media = 8.7f;
+
+    strcpy(classe[1].nome, "Bruno");
+    classe[1].voto  = 7;
+    classe[1].media = 7.2f;
+
+    strcpy(classe[2].nome, "Carla");
+    classe[2].voto  = 8;
+    classe[2].media = 8.1f;
+
+    printf("%-10s  %5s  %6s\\n", "Nome", "Voto", "Media");
+    printf("-----------------------------\\n");
+    for (int i = 0; i < 3; i++) {
+        stampaStudente(classe[i]);
+    }
+    return 0;
+}
+
+void stampaStudente(struct Studente s) {
+    printf("%-10s  %5d  %6.2f\\n", s.nome, s.voto, s.media);
+}
+`
+    },
+    scanf: {
+      name: 'scanf.c',
+      code: `#include <stdio.h>
+
+int main() {
+    int n;
+    printf("Quanti numeri vuoi inserire? ");
+    scanf("%d", &n);
+
+    int somma = 0;
+    for (int i = 0; i < n; i++) {
+        int x;
+        printf("  Numero %d: ", i + 1);
+        scanf("%d", &x);
+        somma += x;
+    }
+
+    printf("Somma = %d\\n", somma);
+    if (n > 0) printf("Media = %.2f\\n", (float)somma / n);
+    return 0;
+}
+`
+    }
+  };
+
+  // ── File system (virtual) ──────────────────────────────────────────────
+  const files = {};   // name → { code, modified }
+  let activeFile = '';
+  let compiledSuccessfully = false;
+  let lastCompiledCode = '';
+
+  function newFile(name, code) {
+    files[name] = { code: code || `#include <stdio.h>\n\nint main() {\n    \n    return 0;\n}\n`, modified: false };
+  }
+
+  function getActiveCode() {
+    return document.getElementById('nanoEditor').value;
+  }
+
+  function saveActive() {
+    if (!activeFile) return;
+    files[activeFile].code = getActiveCode();
+    files[activeFile].modified = false;
+    renderFileUI();
+    nanoMsg('Scritto: ' + activeFile + '  [ ^O ]', 2000);
+  }
+
+  function switchFile(name) {
+    if (activeFile && files[activeFile]) {
+      files[activeFile].code = getActiveCode();
+    }
+    activeFile = name;
+    const ed = document.getElementById('nanoEditor');
+    ed.value = files[name].code;
+    files[name].modified = false;
+    document.getElementById('nanoFilename').textContent = name;
+    renderFileUI();
+    updateGutter();
+    updatePos();
+  }
+
+  function deleteFile(name) {
+    if (Object.keys(files).length <= 1) { nanoMsg('Impossibile eliminare l\'unico file.', 2000); return; }
+    delete files[name];
+    if (activeFile === name) switchFile(Object.keys(files)[0]);
+    renderFileUI();
+  }
+
+  function renderFileUI() {
+    const tabs = document.getElementById('fileTabs');
+    const list = document.getElementById('fileList');
+    tabs.innerHTML = '';
+    list.innerHTML = '';
+    for (const name of Object.keys(files)) {
+      // Tab
+      const tab = document.createElement('div');
+      tab.className = 'file-tab' + (name === activeFile ? ' active' : '') + (files[name].modified ? ' modified' : '');
+      tab.textContent = name + (files[name].modified ? ' ●' : '');
+      tab.onclick = () => switchFile(name);
+      tabs.appendChild(tab);
+      // Sidebar entry
+      const entry = document.createElement('div');
+      entry.className = 'file-entry' + (name === activeFile ? ' active' : '') + (files[name].modified ? ' modified' : '');
+      entry.innerHTML = '<span class="file-entry-icon">📄</span>' + name;
+      entry.onclick = () => switchFile(name);
+      list.appendChild(entry);
+    }
+    // Add button
+    const addBtn = document.createElement('div');
+    addBtn.className = 'file-tab-add';
+    addBtn.textContent = '+';
+    addBtn.title = 'Nuovo file';
+    addBtn.onclick = addNewFile;
+    tabs.appendChild(addBtn);
+    document.getElementById('nanoModified') .textContent = files[activeFile]?.modified ? '(modificato)' : '';
+  }
+
+  function addNewFile() {
+    let n = 1;
+    while (files['file' + n + '.c']) n++;
+    const name = 'file' + n + '.c';
+    newFile(name);
+    switchFile(name);
+  }
+
+  // ── GNU Nano editor behaviours ─────────────────────────────────────────
+  const editor = document.getElementById('nanoEditor');
+
+  function updateGutter() {
+    const lines = editor.value.split('\n').length;
+    const gutter = document.getElementById('nanoGutter');
+    let html = '';
+    for (let i = 1; i <= Math.max(lines, 1); i++) html += i + '\n';
+    gutter.textContent = html;
+  }
+
+  function updatePos() {
+    const val = editor.value;
+    const pos = editor.selectionStart;
+    const before = val.slice(0, pos);
+    const ln = before.split('\n').length;
+    const col = pos - before.lastIndexOf('\n');
+    document.getElementById('nanoPos').textContent = 'Ln ' + ln + ', Col ' + col;
+  }
+
+  let nanoMsgTimer = null;
+  function nanoMsg(msg, ms) {
+    const el = document.getElementById('nanoMsg');
+    el.textContent = msg;
+    if (nanoMsgTimer) clearTimeout(nanoMsgTimer);
+    if (ms) nanoMsgTimer = setTimeout(() => { el.textContent = ''; }, ms);
+  }
+
+  editor.addEventListener('input', () => {
+    if (activeFile) {
+      files[activeFile].modified = true;
+      files[activeFile].code = editor.value;
+    }
+    updateGutter();
+    updatePos();
+    renderFileUI();
+    compiledSuccessfully = false;
+  });
+  editor.addEventListener('keyup', updatePos);
+  editor.addEventListener('click', updatePos);
+  editor.addEventListener('scroll', () => {
+    document.getElementById('nanoGutter').scrollTop = editor.scrollTop;
+  });
+
+  // Tab key → 4 spaces
+  editor.addEventListener('keydown', e => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const start = editor.selectionStart, end = editor.selectionEnd;
+      const val = editor.value;
+      editor.value = val.slice(0, start) + '    ' + val.slice(end);
+      editor.selectionStart = editor.selectionEnd = start + 4;
+      editor.dispatchEvent(new Event('input'));
+    }
+    // Ctrl+O → save
+    if (e.ctrlKey && e.key === 'o') { e.preventDefault(); saveActive(); }
+    // Ctrl+Shift+B → compile
+    if (e.ctrlKey && e.shiftKey && e.key === 'B') { e.preventDefault(); compileAndRun(); }
+    // Auto-close brackets/quotes
+    const pairs = { '(': ')', '[': ']', '{': '}', '"': '"', "'": "'" };
+    if (pairs[e.key] && !e.ctrlKey && !e.metaKey) {
+      const start = editor.selectionStart, end = editor.selectionEnd;
+      if (start === end) {
+        e.preventDefault();
+        const val = editor.value;
+        editor.value = val.slice(0, start) + e.key + pairs[e.key] + val.slice(end);
+        editor.selectionStart = editor.selectionEnd = start + 1;
+        editor.dispatchEvent(new Event('input'));
+      }
+    }
+    // Enter → auto-indent
+    if (e.key === 'Enter' && !e.ctrlKey && !e.shiftKey) {
+      const start = editor.selectionStart;
+      const lineStart = editor.value.lastIndexOf('\n', start - 1) + 1;
+      const line = editor.value.slice(lineStart, start);
+      const indent = line.match(/^(\s*)/)[1];
+      const addExtra = line.trimEnd().endsWith('{');
+      const val = editor.value;
+      e.preventDefault();
+      const extra = addExtra ? '    ' : '';
+      editor.value = val.slice(0, start) + '\n' + indent + extra + val.slice(editor.selectionEnd);
+      editor.selectionStart = editor.selectionEnd = start + 1 + indent.length + extra.length;
+      editor.dispatchEvent(new Event('input'));
+    }
+  });
+
+  // Font size selector
+  document.getElementById('fontSizeSel').addEventListener('change', function() {
+    editor.style.fontSize = this.value + 'px';
+    document.getElementById('nanoGutter').style.fontSize = this.value + 'px';
+  });
+
+  // ── C Compiler & Runtime simulator ────────────────────────────────────
+  /* Tokenizer & basic C interpreter */
+
+  function simpleTypecheck(code) {
+    const errors = [];
+    const lines = code.split('\n');
+
+    // Check for missing #include <stdio.h> when printf/scanf used
+    const usesStdio = /\b(printf|scanf|puts|gets|fgets)\b/.test(code);
+    const hasStdioH = /#include\s*[<"]stdio\.h[>"]/.test(code);
+    if (usesStdio && !hasStdioH) errors.push({ ln: 1, msg: 'implicit declaration of function: stdio.h non incluso (aggiungi #include <stdio.h>)' });
+
+    // Check for missing #include <string.h> when strlen/strcpy/strcmp used
+    const usesString = /\b(strlen|strcpy|strcmp|strcat|strstr|strchr)\b/.test(code);
+    const hasStringH = /#include\s*[<"]string\.h[>"]/.test(code);
+    if (usesString && !hasStringH) errors.push({ ln: 1, msg: 'implicit declaration: aggiungi #include <string.h> per strlen/strcpy/strcmp' });
+
+    // Check for missing #include <math.h>
+    const usesMath = /\b(sqrt|pow|fabs|floor|ceil|round|sin|cos|tan|log|exp)\b/.test(code);
+    const hasMathH = /#include\s*[<"]math\.h[>"]/.test(code);
+    if (usesMath && !hasMathH) errors.push({ ln: 1, msg: 'implicit declaration: aggiungi #include <math.h> e compila con -lm' });
+
+    // Check for missing main
+    if (!/\bint\s+main\s*\(/.test(code)) errors.push({ ln: 1, msg: 'undefined reference to `main\': funzione main() mancante' });
+
+    // Check unbalanced braces
+    let depth = 0, firstOpen = -1;
+    for (let i = 0; i < lines.length; i++) {
+      const l = stripCommentsFromLine(lines[i]);
+      for (const ch of l) {
+        if (ch === '{') { if (depth === 0) firstOpen = i + 1; depth++; }
+        if (ch === '}') { depth--; if (depth < 0) { errors.push({ ln: i + 1, msg: 'errore di sintassi: \'}\' inatteso (parentesi graffa di chiusura in eccesso)' }); depth = 0; } }
+      }
+    }
+    if (depth > 0) errors.push({ ln: firstOpen, msg: 'errore di sintassi: \'}\' mancante — le parentesi graffe non sono bilanciate' });
+
+    // Check unbalanced parens per line (heuristic)
+    for (let i = 0; i < lines.length; i++) {
+      const l = stripCommentsFromLine(lines[i]);
+      let p = 0;
+      let inStr = false, inChar = false;
+      for (let j = 0; j < l.length; j++) {
+        if (l[j] === '"' && !inChar) inStr = !inStr;
+        if (l[j] === "'" && !inStr) inChar = !inChar;
+        if (!inStr && !inChar) {
+          if (l[j] === '(') p++;
+          if (l[j] === ')') p--;
+        }
+      }
+      if (p !== 0 && l.trim() && !l.trim().endsWith(',') && !l.trim().endsWith('{') && !l.trim().endsWith(';') === false) {
+        // only warn on lines that look like statements
+      }
+    }
+
+    // Missing semicolons heuristic (simple statements without ;)
+    for (let i = 0; i < lines.length; i++) {
+      const l = lines[i].trim();
+      if (!l || l.startsWith('//') || l.startsWith('#') || l.startsWith('*') || l.startsWith('/*') || l.endsWith('*/')) continue;
+      if (l.endsWith('{') || l.endsWith('}') || l.endsWith(',') || l.endsWith(';') || l.endsWith('\\')) continue;
+      if (/^(if|else|for|while|do|switch|case|default|struct|enum|typedef)\b/.test(l)) continue;
+      if (/^(int|void|float|double|char|long|short|unsigned|signed)\s+\w+\s*\(/.test(l)) continue; // function decl
+      if (l === '' || l === '{' || l === '}') continue;
+      // Statements that should end in ; but don't (very heuristic)
+      const looksLikeStatement = /^(printf|scanf|return|strcpy|strcat|strlen|strcmp|printf|puts|free|malloc)\s*\(/.test(l) ||
+                                  /^\*?\w+(\[.*?\])?\s*(=|\+=|-=|\*=|\/=|%=|\+\+|--)/.test(l) ||
+                                  /^(int|float|double|char|long)\s+\w+\s*=/.test(l);
+      if (looksLikeStatement && !l.endsWith(';')) {
+        errors.push({ ln: i + 1, msg: 'errore di sintassi: \';\' mancante alla fine dell\'istruzione' });
+      }
+    }
+
+    // return 0 missing at end of main (heuristic)
+    const mainBody = code.match(/int\s+main\s*\([^)]*\)\s*\{([\s\S]*)/);
+    if (mainBody) {
+      const body = mainBody[1];
+      if (!/\breturn\s+\d+\s*;/.test(body) && !/\breturn\s+\w+\s*;/.test(body)) {
+        errors.push({ ln: lines.length, msg: 'warning: controllo: main() dovrebbe terminare con return 0;' });
+      }
+    }
+
+    return errors;
+  }
+
+  function stripCommentsFromLine(line) {
+    // Remove // comments and string literals (very simplified)
+    let result = '';
+    let inStr = false, inChar = false;
+    for (let i = 0; i < line.length; i++) {
+      if (line[i] === '"' && !inChar) { inStr = !inStr; result += ' '; continue; }
+      if (line[i] === "'" && !inStr) { inChar = !inChar; result += ' '; continue; }
+      if (inStr || inChar) { result += ' '; continue; }
+      if (line[i] === '/' && line[i+1] === '/') break;
+      result += line[i];
+    }
+    return result;
+  }
+
+  // Mini C interpreter (executes simple C programs)
+  function interpret(code, stdinLines) {
+    const output = [];
+    const warnings = [];
+    let stdinIdx = 0;
+    let stepLimit = 50000;
+    let steps = 0;
+
+    // Strip comments
+    let clean = code
+      .replace(/\/\*[\s\S]*?\*\//g, ' ')
+      .replace(/\/\/[^\n]*/g, '');
+
+    // Extract string literals to avoid parsing them
+    const strLiterals = [];
+    clean = clean.replace(/"((?:[^"\\]|\\.)*)"/g, (_, s) => {
+      strLiterals.push(s.replace(/\\n/g,'\n').replace(/\\t/g,'\t').replace(/\\r/g,'\r').replace(/\\\\/g,'\\').replace(/\\"/g,'"'));
+      return '"__STR' + (strLiterals.length-1) + '__"';
+    });
+
+    // Parse function definitions
+    const funcDefs = {};
+    const funcRe = /(?:int|void|float|double|char\s*\*?)\s+(\w+)\s*\(([^)]*)\)\s*\{/g;
+    let m;
+    while ((m = funcRe.exec(clean)) !== null) {
+      funcDefs[m[1]] = { params: m[2], bodyStart: m.index + m[0].length, raw: clean };
+    }
+
+    // Scope/env stack
+    function createEnv(parent) { return { vars: {}, parent }; }
+    function getVar(env, name) {
+      if (!env) return undefined;
+      if (name in env.vars) return env.vars[name];
+      return getVar(env.parent, name);
+    }
+    function setVar(env, name, val) {
+      if (!env) return;
+      if (name in env.vars) { env.vars[name] = val; return; }
+      if (env.parent && hasVar(env.parent, name)) { setVar(env.parent, name, val); return; }
+      env.vars[name] = val;
+    }
+    function hasVar(env, name) {
+      if (!env) return false;
+      if (name in env.vars) return true;
+      return hasVar(env.parent, name);
+    }
+    function declareVar(env, name, val) { env.vars[name] = val; }
+
+    // Expression evaluator
+    function evalExpr(expr, env) {
+      if (++steps > stepLimit) throw new Error('Limite istruzioni superato (ciclo infinito?)');
+      expr = expr.trim();
+      if (!expr) return 0;
+
+      // String literal
+      const strM = expr.match(/^"__STR(\d+)__"$/);
+      if (strM) return strLiterals[+strM[1]];
+
+      // Char literal
+      const charM = expr.match(/^'(.)'$/);
+      if (charM) return charM[1].charCodeAt(0);
+      const charEsc = expr.match(/^'\\(.)'$/);
+      if (charEsc) {
+        const esc = {n:10,t:9,r:13,'\\':92,"'":39,0:0}[charEsc[1]];
+        return esc !== undefined ? esc : charEsc[1].charCodeAt(0);
+      }
+
+      // Number literals
+      if (/^-?\d+(\.\d+)?([eE][+-]?\d+)?[fFlLuU]*$/.test(expr)) return parseFloat(expr);
+      if (/^0x[0-9a-fA-F]+$/.test(expr)) return parseInt(expr, 16);
+
+      // Parenthesised expression
+      if (expr.startsWith('(') && matchingClose(expr, 0) === expr.length - 1) {
+        return evalExpr(expr.slice(1, -1), env);
+      }
+
+      // sizeof
+      const sizeofM = expr.match(/^sizeof\s*\(([^)]+)\)$/);
+      if (sizeofM) {
+        const t = sizeofM[1].trim();
+        const sizes = {int:4,float:4,double:8,char:1,long:8,'long long':8,short:2};
+        return sizes[t] || 4;
+      }
+
+      // Ternary operator  a ? b : c
+      const ternIdx = findTernary(expr);
+      if (ternIdx >= 0) {
+        const colonIdx = findTernaryColon(expr, ternIdx);
+        if (colonIdx >= 0) {
+          const cond = evalExpr(expr.slice(0, ternIdx), env);
+          return cond ? evalExpr(expr.slice(ternIdx+1, colonIdx), env) : evalExpr(expr.slice(colonIdx+1), env);
+        }
+      }
+
+      // Binary operators (right to left for assignment, left to right otherwise)
+      for (const ops of [
+        ['||'],['&&'],['|'],['^'],['&'],
+        ['==','!='],['<=','>=','<','>'],
+        ['<<','>>'],
+        ['+','-'],['*','/','%']
+      ]) {
+        const idx = findBinaryOp(expr, ops);
+        if (idx >= 0) {
+          const op = findBinaryOpAt(expr, ops, idx);
+          const L = evalExpr(expr.slice(0, idx), env);
+          const R = evalExpr(expr.slice(idx + op.length), env);
+          switch(op) {
+            case '||': return (L || R) ? 1 : 0;
+            case '&&': return (L && R) ? 1 : 0;
+            case '|':  return (L | R);
+            case '^':  return (L ^ R);
+            case '&':  return (L & R);
+            case '==': return L === R ? 1 : 0;
+            case '!=': return L !== R ? 1 : 0;
+            case '<':  return L < R ? 1 : 0;
+            case '>':  return L > R ? 1 : 0;
+            case '<=': return L <= R ? 1 : 0;
+            case '>=': return L >= R ? 1 : 0;
+            case '<<': return L << R;
+            case '>>': return L >> R;
+            case '+':  return typeof L === 'string' || typeof R === 'string' ? String(L) + String(R) : L + R;
+            case '-':  return L - R;
+            case '*':  return L * R;
+            case '/':  if (R === 0) throw new Error('Divisione per zero'); return Number.isInteger(L) && Number.isInteger(R) ? Math.trunc(L/R) : L/R;
+            case '%':  if (R === 0) throw new Error('Modulo per zero'); return L % R;
+          }
+        }
+      }
+
+      // Unary operators
+      if (expr.startsWith('!')) return evalExpr(expr.slice(1), env) ? 0 : 1;
+      if (expr.startsWith('-')) return -evalExpr(expr.slice(1), env);
+      if (expr.startsWith('+')) return +evalExpr(expr.slice(1), env);
+      if (expr.startsWith('~')) return ~evalExpr(expr.slice(1), env);
+      if (expr.startsWith('*')) { return getVar(env, expr.slice(1).trim()) ?? 0; }
+      if (expr.startsWith('&')) { return '[addr:' + expr.slice(1).trim() + ']'; }
+
+      // Pre/post increment/decrement
+      const preM = expr.match(/^(\+\+|--)(\w+)$/);
+      if (preM) {
+        const v = (getVar(env, preM[2]) || 0) + (preM[1] === '++' ? 1 : -1);
+        setVar(env, preM[2], v);
+        return v;
+      }
+      const postM = expr.match(/^(\w+)(\+\+|--)$/);
+      if (postM) {
+        const old = getVar(env, postM[1]) || 0;
+        setVar(env, postM[1], old + (postM[2] === '++' ? 1 : -1));
+        return old;
+      }
+
+      // Cast
+      const castM = expr.match(/^\((?:int|float|double|char|long|unsigned)\s*\*?\)\s*(.+)$/);
+      if (castM) {
+        const val = evalExpr(castM[1], env);
+        const type = expr.match(/^\((\w+)/)[1];
+        if (type === 'int') return Math.trunc(typeof val === 'string' ? (val.charCodeAt(0) || 0) : val);
+        if (type === 'float' || type === 'double') return parseFloat(val) || 0;
+        return val;
+      }
+
+      // Array subscript
+      const arrM = expr.match(/^(\w+)\[(.+)\]$/);
+      if (arrM) {
+        const arr = getVar(env, arrM[0]) ?? getVar(env, arrM[1]);
+        if (Array.isArray(arr)) return arr[Math.trunc(evalExpr(arrM[2], env))] ?? 0;
+        if (typeof arr === 'string') return arr.charCodeAt(Math.trunc(evalExpr(arrM[2], env))) || 0;
+        return 0;
+      }
+
+      // Function calls
+      const fnCallM = expr.match(/^(\w+)\s*\((.*)?\)$/);
+      if (fnCallM) {
+        const fname = fnCallM[1];
+        const argsStr = fnCallM[2] || '';
+        const args = splitArgs(argsStr).map(a => evalExpr(a.trim(), env));
+        return callBuiltin(fname, args, env, stdinLines);
+      }
+
+      // Variable
+      const v = getVar(env, expr);
+      if (v !== undefined) return v;
+
+      // NULL
+      if (expr === 'NULL') return 0;
+
+      return 0;
+    }
+
+    function callBuiltin(fname, args, env, stdin) {
+      switch (fname) {
+        case 'printf': return evalPrintf(args, env); // returns char count
+        case 'puts': output.push(String(args[0] ?? '') + '\n'); return 0;
+        case 'putchar': output.push(String.fromCharCode(args[0])); return args[0];
+        case 'scanf': return evalScanf(args, env, stdin);
+        case 'strlen': return typeof args[0] === 'string' ? args[0].length : 0;
+        case 'strcmp': return String(args[0] ?? '').localeCompare(String(args[1] ?? ''), undefined, { sensitivity: 'base', caseFirst: 'upper' }) !== 0 ? (String(args[0]) < String(args[1]) ? -1 : 1) : 0;
+        case 'strcpy': case 'strncpy': { const dst = args[0]; setVar(env, '_last_strcpy', args[1]); return args[1]; }
+        case 'strcat': return String(args[0] ?? '') + String(args[1] ?? '');
+        case 'strstr': { const idx = String(args[0] ?? '').indexOf(String(args[1] ?? '')); return idx >= 0 ? idx : 0; }
+        case 'sprintf': return evalSprintf(args);
+        case 'atoi': return Math.trunc(parseFloat(String(args[0] ?? '')) || 0);
+        case 'atof': return parseFloat(String(args[0] ?? '')) || 0;
+        case 'abs': case 'fabs': return Math.abs(args[0] ?? 0);
+        case 'sqrt': return Math.sqrt(args[0] ?? 0);
+        case 'pow': return Math.pow(args[0] ?? 0, args[1] ?? 1);
+        case 'floor': return Math.floor(args[0] ?? 0);
+        case 'ceil': return Math.ceil(args[0] ?? 0);
+        case 'round': return Math.round(args[0] ?? 0);
+        case 'log': return Math.log(args[0] ?? 1);
+        case 'log10': return Math.log10(args[0] ?? 1);
+        case 'sin': return Math.sin(args[0] ?? 0);
+        case 'cos': return Math.cos(args[0] ?? 0);
+        case 'tan': return Math.tan(args[0] ?? 0);
+        case 'rand': return Math.trunc(Math.random() * 32767);
+        case 'srand': return 0;
+        case 'time': return Math.trunc(Date.now() / 1000);
+        case 'exit': throw { type: 'exit', code: args[0] ?? 0 };
+        case 'malloc': case 'calloc': return args[0] ?? 0;
+        case 'free': return 0;
+        case 'max': return Math.max(args[0] ?? 0, args[1] ?? 0);
+        case 'min': return Math.min(args[0] ?? 0, args[1] ?? 0);
+        default:
+          // User-defined function call
+          if (funcDefs[fname]) return callUserFunc(fname, args, env);
+          warnings.push('warning: chiamata a funzione non simulata: ' + fname + '()');
+          return 0;
+      }
+    }
+
+    function evalPrintf(args) {
+      if (!args.length) return 0;
+      const fmt = typeof args[0] === 'string' ? args[0] : String(args[0]);
+      const result = formatString(fmt, args.slice(1));
+      output.push(result);
+      return result.length;
+    }
+
+    function evalSprintf(args) {
+      if (args.length < 2) return 0;
+      const fmt = typeof args[1] === 'string' ? args[1] : String(args[1]);
+      return formatString(fmt, args.slice(2));
+    }
+
+    function evalScanf(args, env, stdin) {
+      if (!args.length) return 0;
+      const fmt = typeof args[0] === 'string' ? args[0] : String(args[0]);
+      const specs = [...fmt.matchAll(/%([diouxefgscsl]*[diouxefgcsp])/g)];
+      let count = 0;
+      for (let i = 0; i < specs.length; i++) {
+        const varName = extractScanfVarName(args[i + 1]);
+        if (!varName) continue;
+        const line = stdin[stdinIdx];
+        if (line === undefined) {
+          output.push('[EOF — input terminato]');
+          break;
+        }
+        const spec = specs[i][1];
+        let val;
+        if (spec.endsWith('d') || spec.endsWith('i') || spec.endsWith('o') || spec.endsWith('u') || spec.endsWith('x')) {
+          val = Math.trunc(parseFloat(stdin[stdinIdx]) || 0);
+        } else if (spec.endsWith('f') || spec.endsWith('e') || spec.endsWith('g')) {
+          val = parseFloat(stdin[stdinIdx]) || 0;
+        } else if (spec.endsWith('c')) {
+          val = (stdin[stdinIdx] || ' ').charCodeAt(0);
+        } else if (spec.endsWith('s')) {
+          val = (stdin[stdinIdx] || '').split(/\s+/)[0] || '';
+        } else {
+          val = stdin[stdinIdx];
+        }
+        stdinIdx++;
+        setVar(env, varName, val);
+        count++;
+      }
+      return count;
+    }
+
+    function extractScanfVarName(arg) {
+      if (typeof arg !== 'string') return null;
+      // arg might be like "[addr:varname]" or "&varname"
+      const m = arg.match(/\[addr:(\w+)\]/);
+      if (m) return m[1];
+      return null;
+    }
+
+    function formatString(fmt, args) {
+      let argIdx = 0;
+      return fmt.replace(/%(-?\d*\.?\d*)?([diouxXefgEGcsp%])/g, (_, flags, spec) => {
+        if (spec === '%') return '%';
+        const arg = args[argIdx++];
+        const width = parseInt((flags || '').replace(/\..*/, '')) || 0;
+        const prec = flags && flags.includes('.') ? parseInt(flags.split('.')[1]) || 0 : -1;
+        const leftAlign = (flags || '').startsWith('-');
+        let result;
+        const v = arg ?? 0;
+        switch (spec) {
+          case 'd': case 'i': result = Math.trunc(typeof v === 'string' ? (parseInt(v) || 0) : v).toString(); break;
+          case 'o': result = (Math.trunc(v) >>> 0).toString(8); break;
+          case 'u': result = (Math.trunc(v) >>> 0).toString(); break;
+          case 'x': result = (Math.trunc(v) >>> 0).toString(16); break;
+          case 'X': result = (Math.trunc(v) >>> 0).toString(16).toUpperCase(); break;
+          case 'f': result = (parseFloat(v) || 0).toFixed(prec >= 0 ? prec : 6); break;
+          case 'e': result = (parseFloat(v) || 0).toExponential(prec >= 0 ? prec : 6); break;
+          case 'g': result = (parseFloat(v) || 0).toPrecision(prec >= 0 ? Math.max(1, prec) : 6).replace(/\.?0+$/, ''); break;
+          case 'E': result = (parseFloat(v) || 0).toExponential(prec >= 0 ? prec : 6).toUpperCase(); break;
+          case 'G': result = (parseFloat(v) || 0).toPrecision(prec >= 0 ? Math.max(1, prec) : 6).replace(/\.?0+$/, '').toUpperCase(); break;
+          case 'c': result = typeof v === 'number' ? String.fromCharCode(Math.trunc(v)) : String(v)[0] || ''; break;
+          case 's': result = typeof v === 'string' ? v : String(v); if (prec >= 0) result = result.slice(0, prec); break;
+          case 'p': result = '0x' + (Math.trunc(v) >>> 0).toString(16).padStart(8, '0'); break;
+          default: result = String(v);
+        }
+        if (Math.abs(width) > 0) {
+          result = leftAlign ? result.padEnd(Math.abs(width)) : result.padStart(Math.abs(width));
+        }
+        return result;
+      });
+    }
+
+    function splitArgs(str) {
+      const args = [];
+      let depth = 0, cur = '', inStr = false, inChar = false;
+      for (let i = 0; i < str.length; i++) {
+        if (str[i] === '"' && !inChar) inStr = !inStr;
+        if (str[i] === "'" && !inStr) inChar = !inChar;
+        if (!inStr && !inChar) {
+          if (str[i] === '(' || str[i] === '[') depth++;
+          if (str[i] === ')' || str[i] === ']') depth--;
+          if (str[i] === ',' && depth === 0) { args.push(cur.trim()); cur = ''; continue; }
+        }
+        cur += str[i];
+      }
+      if (cur.trim()) args.push(cur.trim());
+      return args;
+    }
+
+    function matchingClose(s, open) {
+      const openCh = s[open], closeCh = openCh === '(' ? ')' : openCh === '[' ? ']' : '}';
+      let depth = 0;
+      for (let i = open; i < s.length; i++) {
+        if (s[i] === openCh) depth++;
+        if (s[i] === closeCh) { depth--; if (depth === 0) return i; }
+      }
+      return -1;
+    }
+
+    function findBinaryOp(expr, ops) {
+      let depth = 0, inStr = false, inChar = false;
+      for (let i = expr.length - 1; i >= 0; i--) {
+        const ch = expr[i];
+        if (ch === '"' && !inChar) inStr = !inStr;
+        if (ch === "'" && !inStr) inChar = !inChar;
+        if (inStr || inChar) continue;
+        if (ch === ')' || ch === ']') depth++;
+        if (ch === '(' || ch === '[') depth--;
+        if (depth !== 0) continue;
+        for (const op of ops) {
+          if (expr.slice(i, i + op.length) === op) {
+            // Make sure it's not == != <= >=
+            if (op === '<' && (expr[i+1] === '=' || expr[i+1] === '<')) continue;
+            if (op === '>' && (expr[i+1] === '=' || expr[i+1] === '>')) continue;
+            if (op === '=' && (expr[i-1] === '!' || expr[i-1] === '<' || expr[i-1] === '>' || expr[i-1] === '=')) continue;
+            if (op === '&' && expr[i+1] === '&') continue;
+            if (op === '|' && expr[i+1] === '|') continue;
+            if (op === '+' && i > 0 && /[=<>!+\-*\/%(,]/.test(expr[i-1])) continue;
+            if (op === '-' && i > 0 && /[=<>!+\-*\/%(,]/.test(expr[i-1])) continue;
+            return i;
+          }
+        }
+      }
+      return -1;
+    }
+
+    function findBinaryOpAt(expr, ops, idx) {
+      for (const op of ops) {
+        if (expr.slice(idx, idx + op.length) === op) return op;
+      }
+      return '';
+    }
+
+    function findTernary(expr) {
+      let depth = 0, inStr = false;
+      for (let i = 0; i < expr.length; i++) {
+        if (expr[i] === '"') inStr = !inStr;
+        if (inStr) continue;
+        if (expr[i] === '(' || expr[i] === '[') depth++;
+        if (expr[i] === ')' || expr[i] === ']') depth--;
+        if (expr[i] === '?' && depth === 0) return i;
+      }
+      return -1;
+    }
+
+    function findTernaryColon(expr, qIdx) {
+      let depth = 0, inStr = false;
+      for (let i = qIdx + 1; i < expr.length; i++) {
+        if (expr[i] === '"') inStr = !inStr;
+        if (inStr) continue;
+        if (expr[i] === '(' || expr[i] === '[') depth++;
+        if (expr[i] === ')' || expr[i] === ']') depth--;
+        if (expr[i] === ':' && depth === 0) return i;
+      }
+      return -1;
+    }
+
+    function callUserFunc(fname, argVals, callerEnv) {
+      const def = funcDefs[fname];
+      const env = createEnv(null);
+      const params = def.params.trim() ? def.params.split(',').map(p => p.trim().split(/\s+/).pop().replace(/[*\[\]]/g,'')) : [];
+      params.forEach((p, i) => declareVar(env, p, argVals[i] ?? 0));
+      try {
+        const body = extractBody(def.raw, def.bodyStart);
+        const result = execBlock(body, env);
+        if (result && result.type === 'return') return result.value;
+        return 0;
+      } catch (e) { if (e && e.type === 'exit') throw e; return 0; }
+    }
+
+    function extractBody(code, start) {
+      let depth = 1, i = start;
+      while (i < code.length && depth > 0) {
+        if (code[i] === '{') depth++;
+        if (code[i] === '}') depth--;
+        if (depth > 0) i++;
+      }
+      return code.slice(start, i);
+    }
+
+    // Statement executor
+    function execBlock(code, env) {
+      const stmts = tokenizeStatements(code);
+      for (const stmt of stmts) {
+        if (++steps > stepLimit) throw new Error('Limite istruzioni superato (ciclo infinito?)');
+        const result = execStatement(stmt.trim(), env);
+        if (result) return result;
+      }
+      return null;
+    }
+
+    function tokenizeStatements(code) {
+      const stmts = [];
+      let i = 0, cur = '', depth = 0, inStr = false, inChar = false;
+      while (i < code.length) {
+        const ch = code[i];
+        if (ch === '"' && !inChar) inStr = !inStr;
+        if (ch === "'" && !inStr) inChar = !inChar;
+        if (!inStr && !inChar) {
+          if (ch === '{') depth++;
+          if (ch === '}') { depth--; if (depth < 0) { i++; continue; } }
+          if (ch === ';' && depth === 0) {
+            stmts.push(cur + ';');
+            cur = '';
+            i++;
+            continue;
+          }
+          if (ch === '}' && depth === 0) {
+            if (cur.trim()) stmts.push(cur + '}');
+            cur = '';
+            i++;
+            continue;
+          }
+        }
+        cur += ch;
+        i++;
+      }
+      if (cur.trim()) stmts.push(cur);
+      return stmts.filter(s => s.trim());
+    }
+
+    function execStatement(stmt, env) {
+      stmt = stmt.trim();
+      if (!stmt || stmt === ';') return null;
+
+      // Strip leading/trailing whitespace and handle empty
+      if (stmt.startsWith('//') || stmt.startsWith('#')) return null;
+
+      // if statement
+      if (/^if\s*\(/.test(stmt)) return execIf(stmt, env);
+
+      // while loop
+      if (/^while\s*\(/.test(stmt)) return execWhile(stmt, env);
+
+      // do-while loop
+      if (/^do\s*\{/.test(stmt)) return execDoWhile(stmt, env);
+
+      // for loop
+      if (/^for\s*\(/.test(stmt)) return execFor(stmt, env);
+
+      // switch
+      if (/^switch\s*\(/.test(stmt)) return execSwitch(stmt, env);
+
+      // return
+      const retM = stmt.match(/^return\s*(.*?);?$/);
+      if (retM) return { type: 'return', value: retM[1].trim() ? evalExpr(retM[1].trim(), env) : 0 };
+
+      // break / continue
+      if (stmt === 'break;' || stmt === 'break') return { type: 'break' };
+      if (stmt === 'continue;' || stmt === 'continue') return { type: 'continue' };
+
+      // Block
+      if (stmt.startsWith('{')) {
+        const inner = stmt.slice(1, stmt.lastIndexOf('}'));
+        return execBlock(inner, createEnv(env));
+      }
+
+      // Variable declaration with initializer
+      // int x = ...; / float y = ...; / char s[N] = ...;
+      const declM = stmt.match(/^((?:unsigned\s+|signed\s+|long\s+|short\s+)?(?:int|float|double|char|long|void)(?:\s*\*)?)\s+(\w+)(?:\[(\d*)\])?\s*(?:=\s*(.+?))?;?$/);
+      if (declM) {
+        const type = declM[1].trim(), varName = declM[2], arrSize = declM[3], initExpr = declM[4];
+        if (arrSize !== undefined) {
+          // Array declaration
+          const size = arrSize ? parseInt(arrSize) : 0;
+          if (initExpr) {
+            // String init
+            const strLitM = initExpr.match(/^"__STR(\d+)__"$/);
+            if (strLitM) {
+              const s = strLiterals[+strLitM[1]];
+              const arr = Array.from(s).map(c => c.charCodeAt(0));
+              while (arr.length < (size || arr.length + 1)) arr.push(0);
+              declareVar(env, varName, arr);
+              declareVar(env, varName + '__str', s);
+              return null;
+            }
+            // Array initializer {1,2,3}
+            const arrInitM = initExpr.match(/^\{(.+)\}$/);
+            if (arrInitM) {
+              const vals = splitArgs(arrInitM[1]).map(v => evalExpr(v.trim(), env));
+              declareVar(env, varName, vals);
+              return null;
+            }
+          }
+          declareVar(env, varName, type === 'char' ? '' : new Array(size || 10).fill(0));
+        } else {
+          const val = initExpr ? evalExpr(initExpr, env) : (type === 'char' ? 0 : 0);
+          declareVar(env, varName, val);
+        }
+        return null;
+      }
+
+      // Multiple variable declaration: int a=1, b=2, c;
+      const multiDeclM = stmt.match(/^((?:unsigned\s+|signed\s+|long\s+|short\s+)?(?:int|float|double|char|long))\s+(.+);?$/);
+      if (multiDeclM) {
+        const parts = splitArgs(multiDeclM[2]);
+        for (const part of parts) {
+          const eqIdx = part.indexOf('=');
+          if (eqIdx >= 0) {
+            const name = part.slice(0, eqIdx).trim();
+            const val = evalExpr(part.slice(eqIdx + 1).trim(), env);
+            declareVar(env, name, val);
+          } else {
+            declareVar(env, part.trim(), 0);
+          }
+        }
+        return null;
+      }
+
+      // struct variable declaration
+      const structVarM = stmt.match(/^struct\s+(\w+)\s+(\w+)(?:\[(\d+)\])?;?$/);
+      if (structVarM) { declareVar(env, structVarM[2], {}); return null; }
+
+      // Assignment: a = expr; a += expr; a[i] = expr; a.b = expr;
+      const assignM = stmt.match(/^(\*?\w+(?:\[\w+\])?(?:\.\w+)?)\s*([+\-*\/&|^%]?=)\s*(.+?);?$/);
+      if (assignM && assignM[2] !== '==') {
+        const lhs = assignM[1], op = assignM[2], rhsExpr = assignM[3];
+        const rhs = evalExpr(rhsExpr, env);
+        const arrIdxM = lhs.match(/^(\w+)\[(.+)\]$/);
+        const dotM = lhs.match(/^(\w+)\.(\w+)$/);
+        if (arrIdxM) {
+          const arr = getVar(env, arrIdxM[1]);
+          const idx = evalExpr(arrIdxM[2], env);
+          if (Array.isArray(arr)) arr[idx] = applyOp(op, arr[idx] ?? 0, rhs);
+          else if (typeof arr === 'string') {
+            const a = Array.from(arr).map(c => c.charCodeAt(0));
+            a[idx] = applyOp(op, a[idx] ?? 0, rhs);
+            setVar(env, arrIdxM[1], a);
+          }
+        } else if (dotM) {
+          let obj = getVar(env, dotM[1]);
+          if (!obj || typeof obj !== 'object') { obj = {}; declareVar(env, dotM[1], obj); }
+          obj[dotM[2]] = applyOp(op, obj[dotM[2]] ?? 0, rhs);
+        } else {
+          const cur = getVar(env, lhs) ?? 0;
+          setVar(env, lhs, applyOp(op, cur, rhs));
+        }
+        return null;
+      }
+
+      // strcpy special: strcpy(dest, src)
+      const strcpyM = stmt.match(/^strcpy\s*\((\w+)\s*,\s*(.+)\);?$/);
+      if (strcpyM) {
+        const val = evalExpr(strcpyM[2], env);
+        setVar(env, strcpyM[1], val);
+        setVar(env, strcpyM[1] + '__str', String(val));
+        return null;
+      }
+
+      // scanf special: sets variables from stdin
+      const scanfM = stmt.match(/^scanf\s*\(\s*"__STR(\d+)__"\s*,(.+)\);?$/);
+      if (scanfM) {
+        const fmt = strLiterals[+scanfM[1]];
+        const varParts = splitArgs(scanfM[2]).map(v => v.trim());
+        const specs = [...fmt.matchAll(/%([diouxefgscsl]*[diouxefgcsp])/g)];
+        for (let i = 0; i < specs.length; i++) {
+          const varPart = varParts[i];
+          const varName = varPart.replace(/^&/, '').replace(/^\*/, '');
+          const line = stdinLines[stdinIdx];
+          if (line === undefined) { output.push('[attesa input — usa il campo sotto]'); break; }
+          const spec = specs[i][1];
+          let val;
+          if (/[dioux]/.test(spec)) val = Math.trunc(parseFloat(line) || 0);
+          else if (/[feg]/.test(spec)) val = parseFloat(line) || 0;
+          else if (spec === 'c') val = (line || ' ').charCodeAt(0);
+          else val = (line || '').split(/\s+/)[0] || '';
+          stdinIdx++;
+          setVar(env, varName, val);
+          if (spec === 's') setVar(env, varName + '__str', String(val));
+        }
+        return null;
+      }
+
+      // Increment/decrement standalone: i++; ++i;
+      const incM = stmt.match(/^(\w+)(\+\+|--);\s*$/);
+      if (incM) { const v = getVar(env, incM[1]) || 0; setVar(env, incM[1], v + (incM[2] === '++' ? 1 : -1)); return null; }
+      const preIncM = stmt.match(/^(\+\+|--)(\w+);\s*$/);
+      if (preIncM) { const v = (getVar(env, preIncM[2]) || 0) + (preIncM[1] === '++' ? 1 : -1); setVar(env, preIncM[2], v); return null; }
+
+      // Function call statement (expression statement)
+      const exprStmtM = stmt.match(/^(.+?);?\s*$/);
+      if (exprStmtM && exprStmtM[1].trim()) {
+        try { evalExpr(exprStmtM[1].trim(), env); } catch(e) { if (e && e.type) throw e; }
+      }
+      return null;
+    }
+
+    function applyOp(op, cur, rhs) {
+      switch (op) {
+        case '=': return rhs;
+        case '+=': return (typeof cur === 'string' ? cur + String(rhs) : cur + rhs);
+        case '-=': return cur - rhs;
+        case '*=': return cur * rhs;
+        case '/=': return rhs === 0 ? 0 : (Number.isInteger(cur) && Number.isInteger(rhs) ? Math.trunc(cur/rhs) : cur/rhs);
+        case '%=': return cur % rhs;
+        case '&=': return cur & rhs;
+        case '|=': return cur | rhs;
+        case '^=': return cur ^ rhs;
+        default: return rhs;
+      }
+    }
+
+    function execIf(stmt, env) {
+      const condEnd = matchingClose(stmt, stmt.indexOf('('));
+      const cond = stmt.slice(stmt.indexOf('(') + 1, condEnd);
+      const condVal = evalExpr(cond, env);
+      let rest = stmt.slice(condEnd + 1).trim();
+
+      // Extract then-branch
+      let thenPart, elsePart = null;
+      if (rest.startsWith('{')) {
+        const closeIdx = matchingClose(rest, 0);
+        thenPart = rest.slice(1, closeIdx);
+        rest = rest.slice(closeIdx + 1).trim();
+      } else {
+        const semiIdx = rest.indexOf(';');
+        thenPart = rest.slice(0, semiIdx + 1);
+        rest = rest.slice(semiIdx + 1).trim();
+      }
+
+      // Check for else
+      if (rest.startsWith('else')) {
+        rest = rest.slice(4).trim();
+        if (rest.startsWith('if')) {
+          elsePart = rest;
+        } else if (rest.startsWith('{')) {
+          const closeIdx = matchingClose(rest, 0);
+          elsePart = rest.slice(1, closeIdx);
+        } else {
+          const semiIdx = rest.indexOf(';');
+          elsePart = rest.slice(0, semiIdx + 1);
+        }
+      }
+
+      if (condVal) {
+        return execBlock(thenPart, createEnv(env));
+      } else if (elsePart !== null) {
+        if (elsePart.startsWith('if')) return execStatement(elsePart, env);
+        return execBlock(elsePart, createEnv(env));
+      }
+      return null;
+    }
+
+    function execWhile(stmt, env) {
+      const condEnd = matchingClose(stmt, stmt.indexOf('('));
+      const condExpr = stmt.slice(stmt.indexOf('(') + 1, condEnd);
+      let body = stmt.slice(condEnd + 1).trim();
+      if (body.startsWith('{')) body = body.slice(1, matchingClose(body, 0));
+
+      let iters = 0;
+      while (evalExpr(condExpr, env) && iters++ < 100000) {
+        if (++steps > stepLimit) throw new Error('Limite istruzioni superato');
+        const r = execBlock(body, createEnv(env));
+        if (r) {
+          if (r.type === 'break') break;
+          if (r.type === 'return') return r;
+          // continue → next iteration
+        }
+      }
+      return null;
+    }
+
+    function execDoWhile(stmt, env) {
+      const bodyStart = stmt.indexOf('{') + 1;
+      const bodyEnd = matchingClose(stmt, stmt.indexOf('{'));
+      const body = stmt.slice(bodyStart, bodyEnd);
+      const whilePart = stmt.slice(bodyEnd + 1).trim();
+      const condM = whilePart.match(/^while\s*\((.+)\)/);
+      const condExpr = condM ? condM[1] : '0';
+
+      let iters = 0;
+      do {
+        if (++steps > stepLimit) throw new Error('Limite istruzioni superato');
+        const r = execBlock(body, createEnv(env));
+        if (r) { if (r.type === 'break') break; if (r.type === 'return') return r; }
+        iters++;
+      } while (evalExpr(condExpr, env) && iters < 100000);
+      return null;
+    }
+
+    function execFor(stmt, env) {
+      const parensEnd = matchingClose(stmt, stmt.indexOf('('));
+      const header = stmt.slice(stmt.indexOf('(') + 1, parensEnd);
+      let body = stmt.slice(parensEnd + 1).trim();
+      if (body.startsWith('{')) body = body.slice(1, matchingClose(body, 0));
+
+      // Split header into init; cond; update
+      const parts = splitForHeader(header);
+      const forEnv = createEnv(env);
+
+      // Init
+      if (parts[0].trim()) execStatement(parts[0].trim() + (parts[0].trim().endsWith(';') ? '' : ';'), forEnv);
+
+      let iters = 0;
+      while (true) {
+        if (++steps > stepLimit) throw new Error('Limite istruzioni superato');
+        if (parts[1].trim() && !evalExpr(parts[1].trim(), forEnv)) break;
+        if (iters++ > 100000) break;
+        const r = execBlock(body, createEnv(forEnv));
+        if (r) { if (r.type === 'break') break; if (r.type === 'return') return r; }
+        if (parts[2].trim()) execStatement(parts[2].trim() + (parts[2].trim().endsWith(';') ? '' : ';'), forEnv);
+      }
+      return null;
+    }
+
+    function splitForHeader(header) {
+      const parts = [];
+      let cur = '', depth = 0;
+      for (const ch of header) {
+        if (ch === '(' || ch === '[') depth++;
+        if (ch === ')' || ch === ']') depth--;
+        if (ch === ';' && depth === 0) { parts.push(cur); cur = ''; continue; }
+        cur += ch;
+      }
+      parts.push(cur);
+      while (parts.length < 3) parts.push('');
+      return parts;
+    }
+
+    function execSwitch(stmt, env) {
+      const condEnd = matchingClose(stmt, stmt.indexOf('('));
+      const cond = evalExpr(stmt.slice(stmt.indexOf('(') + 1, condEnd), env);
+      let body = stmt.slice(condEnd + 1).trim();
+      if (body.startsWith('{')) body = body.slice(1, matchingClose(body, 0));
+
+      // Parse cases
+      const caseRe = /^(case\s+(.+?)|default)\s*:/;
+      const stmts = tokenizeStatements(body);
+      let active = false, matched = false;
+      for (const s of stmts) {
+        const cm = s.trim().match(/^(case\s+(.+?)|default)\s*:(.*)/s);
+        if (cm) {
+          if (cm[1] === 'default') { if (!matched) active = true; }
+          else {
+            const caseVal = evalExpr(cm[2].trim(), env);
+            if (caseVal == cond) { active = true; matched = true; }
+            else if (!matched) active = false;
+          }
+          const rest = cm[3];
+          if (rest && rest.trim()) {
+            const r = execStatement(rest.trim(), env);
+            if (r) { if (r.type === 'break') return null; if (r.type === 'return') return r; }
+          }
+          continue;
+        }
+        if (!active) continue;
+        const r = execStatement(s, env);
+        if (r) { if (r.type === 'break') return null; if (r.type === 'return') return r; }
+      }
+      return null;
+    }
+
+    // ── Main execution entry ────────────────────────────────────────────
+    try {
+      const mainDef = funcDefs['main'];
+      if (!mainDef) return { output: ['Errore: funzione main() non trovata.'], exitCode: 1, warnings };
+      const mainEnv = createEnv(null);
+      const mainBody = extractBody(mainDef.raw, mainDef.bodyStart);
+      const r = execBlock(mainBody, mainEnv);
+      const exitCode = (r && r.type === 'return') ? r.value : 0;
+      return { output: output.join('').split('\n'), exitCode: Math.trunc(exitCode || 0), warnings };
+    } catch (e) {
+      if (e && e.type === 'exit') return { output: output.join('').split('\n'), exitCode: e.code, warnings };
+      return { output: [...output.join('').split('\n'), 'Errore di runtime: ' + e.message], exitCode: 1, warnings };
+    }
+  }
+
+  // ── Terminal ────────────────────────────────────────────────────────────
+  const termOutput = document.getElementById('termOutput');
+  let termHistory = [], histIdx = -1;
+
+  function termLine(text, cls) {
+    const div = document.createElement('div');
+    div.className = 'term-line ' + (cls || '');
+    div.textContent = text;
+    termOutput.appendChild(div);
+    termOutput.scrollTop = termOutput.scrollHeight;
+  }
+
+  function termPrompt() {
+    termLine('lab@fmorea:~/C$ ', 'prompt');
+  }
+
+  function termClear() {
+    termOutput.innerHTML = '';
+  }
+
+  function initTerm() {
+    termClear();
+    termLine('GNU Nano Lab · Simulatore GCC per Linux C99', 'info bold');
+    termLine('gcc versione 13.2.0 (simulata) · linux/x86_64', 'gray');
+    termLine('', '');
+    termLine('  gcc main.c -o main -Wall     ← compila', 'gray');
+    termLine('  ./main                        ← esegui', 'gray');
+    termLine('  Oppure usa il tasto ▶ Compila & Esegui', 'gray');
+    termLine('', '');
+  }
+
+  // stdin queue for interactive scanf programs
+  let stdinQueue = [];
+  let waitingForInput = false;
+  let pendingResolve = null;
+  let pendingInputLabel = '';
+
+  function askInput(prompt) {
+    return new Promise(resolve => {
+      waitingForInput = true;
+      pendingResolve = resolve;
+      pendingInputLabel = prompt;
+      const row = document.getElementById('termInputRow');
+      document.getElementById('termPromptLabel').textContent = prompt + ' ';
+      row.style.display = 'flex';
+      document.getElementById('termInput').focus();
+    });
+  }
+
+  document.getElementById('termInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && waitingForInput && pendingResolve) {
+      const val = document.getElementById('termInput').value;
+      termLine(pendingInputLabel + ' ' + val, 'gray');
+      document.getElementById('termInput').value = '';
+      document.getElementById('termInputRow').style.display = 'none';
+      waitingForInput = false;
+      const resolve = pendingResolve;
+      pendingResolve = null;
+      resolve(val);
+    }
+  });
+
+  // Counts how many scanf calls need input
+  function countScanfCalls(code) {
+    const clean = code.replace(/\/\*[\s\S]*?\*\//g,' ').replace(/\/\/[^\n]*/g,'');
+    return (clean.match(/\bscanf\s*\(/g) || []).length;
+  }
+
+  async function compileAndRun(inputLines) {
+    const code = getActiveCode();
+    const fname = activeFile || 'main.c';
+
+    termLine('', '');
+    termLine('lab@fmorea:~/C$ gcc ' + fname + ' -o out -Wall -std=c99', 'prompt');
+
+    // Type-check / lint
+    const errors = simpleTypecheck(code);
+    const realErrors = errors.filter(e => !e.msg.startsWith('warning'));
+    const warnings = errors.filter(e => e.msg.startsWith('warning'));
+
+    for (const w of warnings) {
+      termLine(fname + ':' + w.ln + ': warning: ' + w.msg.replace(/^warning:\s*/,''), 'warn');
+    }
+
+    if (realErrors.length > 0) {
+      for (const err of realErrors) {
+        termLine(fname + ':' + err.ln + ': error: ' + err.msg, 'err');
+      }
+      termLine('Compilazione fallita: ' + realErrors.length + ' error(i).', 'err');
+      compiledSuccessfully = false;
+      document.getElementById('termStatus').textContent = '✗ Errore compilazione';
+      document.getElementById('termStatus').style.color = '#ef4444';
+      return;
+    }
+
+    termLine('Compilazione completata — out: formato ELF x86_64 (simulato)', 'ok');
+    compiledSuccessfully = true;
+    lastCompiledCode = code;
+    document.getElementById('termStatus').textContent = '✓ Compilato';
+    document.getElementById('termStatus').style.color = '#22c55e';
+
+    // Gather stdin
+    const needsInput = countScanfCalls(code) > 0;
+    let stdinLines = inputLines || [];
+
+    if (needsInput && stdinLines.length === 0) {
+      termLine('', '');
+      termLine('lab@fmorea:~/C$ ./out', 'prompt');
+      termLine('[Programma in esecuzione — fornisci input nel campo sotto]', 'info');
+
+      // Run with async input gathering
+      await runInteractive(code, fname);
+      return;
+    }
+
+    // Run immediately
+    termLine('lab@fmorea:~/C$ ./out', 'prompt');
+    const t0 = performance.now();
+    const result = interpret(code, stdinLines);
+    const dt = (performance.now() - t0).toFixed(1);
+
+    for (const w of result.warnings) termLine(w, 'warn');
+    for (const line of result.output) {
+      if (line !== undefined) termLine(line, '');
+    }
+    termLine('', '');
+    const exitMsg = result.exitCode === 0 ? 'ok' : 'err';
+    termLine('[Processo terminato con codice ' + result.exitCode + ' in ' + dt + ' ms]', exitMsg);
+    document.getElementById('termStatus').textContent = result.exitCode === 0 ? '✓ Eseguito (exit 0)' : '✗ Exit ' + result.exitCode;
+    document.getElementById('termStatus').style.color = result.exitCode === 0 ? '#22c55e' : '#ef4444';
+    nanoMsg('Eseguito · exit ' + result.exitCode, 2500);
+  }
+
+  async function runInteractive(code, fname) {
+    // Collect all needed inputs first by doing a dry run to count scanf calls
+    const scanfCount = countScanfCalls(code);
+    const inputs = [];
+
+    // Determine what to ask by scanning for printf before each scanf
+    // Simple strategy: ask for each scanf in order
+    const lines = code.split('\n');
+    const prompts = [];
+    for (let i = 0; i < lines.length; i++) {
+      if (/\bscanf\s*\(/.test(lines[i])) {
+        // Look backwards for a printf prompt
+        for (let j = i - 1; j >= Math.max(0, i - 3); j--) {
+          const pM = lines[j].match(/printf\s*\([^"]*"([^"]+)"\s*\)/);
+          if (pM) { prompts.push(pM[1].replace(/\\n/g,'').replace(/%[a-z]/g,'').trim()); break; }
+        }
+        if (prompts.length < inputs.length + 1) prompts.push('Input scanf n.' + (inputs.length + 1) + ':');
+      }
+    }
+
+    for (let i = 0; i < scanfCount; i++) {
+      const prompt = prompts[i] || ('Input ' + (i+1) + ':');
+      const val = await askInput(prompt);
+      inputs.push(val);
+    }
+
+    termLine('', '');
+    termLine('--- Output del programma ---', 'gray');
+
+    const t0 = performance.now();
+    const result = interpret(code, inputs);
+    const dt = (performance.now() - t0).toFixed(1);
+
+    for (const w of result.warnings) termLine(w, 'warn');
+    for (const line of result.output) {
+      if (line !== undefined) termLine(line, '');
+    }
+    termLine('', '');
+    const exitMsg = result.exitCode === 0 ? 'ok' : 'err';
+    termLine('[Processo terminato con codice ' + result.exitCode + ' in ' + dt + ' ms]', exitMsg);
+    document.getElementById('termStatus').textContent = result.exitCode === 0 ? '✓ Eseguito' : '✗ Exit ' + result.exitCode;
+    document.getElementById('termStatus').style.color = result.exitCode === 0 ? '#22c55e' : '#ef4444';
+    nanoMsg('Eseguito · exit ' + result.exitCode, 2500);
+  }
+
+  // ── Command line parser ─────────────────────────────────────────────────
+  const cmdInput = document.getElementById('cmdInput');
+  const cmdHistory = [];
+  let cmdHistIdx = -1;
+
+  cmdInput.addEventListener('keydown', async e => {
+    if (e.key === 'ArrowUp') { e.preventDefault(); if (cmdHistIdx < cmdHistory.length-1) { cmdHistIdx++; cmdInput.value = cmdHistory[cmdHistory.length-1-cmdHistIdx] || ''; } return; }
+    if (e.key === 'ArrowDown') { e.preventDefault(); if (cmdHistIdx > 0) { cmdHistIdx--; cmdInput.value = cmdHistory[cmdHistory.length-1-cmdHistIdx] || ''; } else { cmdHistIdx = -1; cmdInput.value = ''; } return; }
+    if (e.key !== 'Enter') return;
+
+    const cmd = cmdInput.value.trim();
+    if (!cmd) return;
+    cmdInput.value = '';
+    cmdHistIdx = -1;
+    cmdHistory.push(cmd);
+
+    termLine('lab@fmorea:~/C$ ' + cmd, 'prompt');
+    await execCmd(cmd);
+  });
+
+  async function execCmd(cmd) {
+    const parts = cmd.trim().split(/\s+/);
+    const prog = parts[0];
+
+    if (prog === 'clear' || prog === 'cls') { termClear(); return; }
+    if (prog === 'help') {
+      termLine('Comandi disponibili:', 'info');
+      termLine('  gcc <file.c> -o <out> [-Wall] [-std=c99] [-lm]   compila', '');
+      termLine('  ./out                                               esegui', '');
+      termLine('  ./main                                              esegui', '');
+      termLine('  ls                                                  lista file', '');
+      termLine('  cat <file>                                          mostra file', '');
+      termLine('  nano <file>                                         apri file', '');
+      termLine('  clear                                               pulisci', '');
+      termLine('  echo <testo>                                        stampa', '');
+      return;
+    }
+    if (prog === 'ls') {
+      for (const name of Object.keys(files)) {
+        termLine('  ' + name + (files[name].modified ? ' *' : ''), '');
+      }
+      return;
+    }
+    if (prog === 'cat') {
+      const name = parts[1];
+      if (!name) { termLine('Uso: cat <nomefile>', 'warn'); return; }
+      const f = files[name] || files[name + '.c'];
+      if (!f) { termLine('cat: ' + name + ': File non trovato', 'err'); return; }
+      const lines = f.code.split('\n');
+      lines.forEach((l, i) => termLine((i+1).toString().padStart(3) + '  ' + l, ''));
+      return;
+    }
+    if (prog === 'echo') { termLine(parts.slice(1).join(' '), ''); return; }
+    if (prog === 'nano') {
+      const name = parts[1];
+      if (!name) { termLine('Uso: nano <nomefile>', 'warn'); return; }
+      if (!files[name]) newFile(name);
+      switchFile(name);
+      termLine('Aperto in Nano: ' + name, 'info');
+      return;
+    }
+    if (prog === 'pwd') { termLine('/home/lab/C', ''); return; }
+    if (prog === 'whoami') { termLine('lab', ''); return; }
+    if (prog === 'uname') { termLine('Linux fmorea 6.6.0 #1 SMP x86_64 GNU/Linux', ''); return; }
+    if (prog === 'gcc' || prog === 'cc') {
+      // Parse: gcc file.c -o outname -Wall -std=c99 -lm
+      let srcFile = null, outName = 'out';
+      for (let i = 1; i < parts.length; i++) {
+        if (parts[i] === '-o') { outName = parts[++i] || 'out'; }
+        else if (!parts[i].startsWith('-')) srcFile = parts[i];
+      }
+      if (!srcFile) { termLine('gcc: nessun file sorgente specificato', 'err'); return; }
+      const f = files[srcFile] || files[srcFile.replace(/\.c$/, '') + '.c'];
+      if (!f) { termLine('gcc: ' + srcFile + ': No such file or directory', 'err'); return; }
+      // Switch to that file and compile
+      if (srcFile !== activeFile) switchFile(Object.keys(files).find(k => k === srcFile || k === srcFile + '.c') || activeFile);
+      await compileAndRun();
+      return;
+    }
+    if (prog.startsWith('./') || prog === 'out' || prog === 'main' || prog === 'a.out') {
+      if (!compiledSuccessfully) {
+        termLine('bash: ' + prog + ': Eseguibile non trovato o compilazione fallita — esegui prima: gcc ' + activeFile + ' -o out', 'err');
+        return;
+      }
+      await compileAndRun();
+      return;
+    }
+    termLine('bash: ' + prog + ': command not found', 'err');
+  }
+
+  // ── Template picker ─────────────────────────────────────────────────────
+  document.querySelectorAll('.tpl-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.tpl-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      const tpl = TEMPLATES[this.dataset.tpl];
+      if (!tpl) return;
+      // Create or switch to a file for this template
+      if (!files[tpl.name]) newFile(tpl.name, tpl.code);
+      else files[tpl.name].code = tpl.code;
+      switchFile(tpl.name);
+      nanoMsg('Template caricato: ' + tpl.name, 2000);
+    });
+  });
+
+  // ── Keyboard shortcuts ─────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.shiftKey && (e.key === 'B' || e.key === 'b')) {
+      e.preventDefault();
+      compileAndRun();
+    }
+  });
+
+  // ── Buttons ─────────────────────────────────────────────────────────────
+  document.getElementById('btnCompile').addEventListener('click', compileAndRun);
+  document.getElementById('btnRun').addEventListener('click', async () => {
+    if (!compiledSuccessfully) { await compileAndRun(); return; }
+    await compileAndRun();
+  });
+  document.getElementById('btnClear').addEventListener('click', initTerm);
+  document.getElementById('btnNewFile').addEventListener('click', addNewFile);
+
+  document.getElementById('btnDownload').addEventListener('click', () => {
+    const code = getActiveCode();
+    const blob = new Blob([code], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = activeFile || 'main.c';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    nanoMsg('File scaricato: ' + (activeFile || 'main.c'), 2000);
+  });
+
+  // Nano ^O shortcut in page
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.key === 'o' && document.activeElement === editor) {
+      e.preventDefault(); saveActive();
+    }
+  });
+
+  // ── Init ────────────────────────────────────────────────────────────────
+  const firstTpl = TEMPLATES['hello'];
+  newFile(firstTpl.name, firstTpl.code);
+  switchFile(firstTpl.name);
+  initTerm();
+  updateGutter();
+  updatePos();
+  editor.focus();
+  </script>
+</body>
+</html>
