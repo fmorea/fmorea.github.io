@@ -961,12 +961,12 @@ nav .nav-logo {
       *zoom: 1;
     }
     .tools-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 12px;
       margin-top: 10px;
       align-items: stretch;
     }
-    @media screen and (max-width: 960px) {
+    @media screen and (max-width: 1100px) {
       .tools-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -1917,6 +1917,26 @@ nav .nav-logo {
                   <span class="tool-badge-new" data-i18n="badge_new">Nuovo</span>
                 </span>
                 <span class="tool-card-desc" data-i18n="tool_arduino_desc">16 esperienze · sketch C++, pin I/O, PWM e seriale</span>
+              </span>
+              <span class="tool-card-arrow" aria-hidden="true">→</span>
+            </a>
+            <a href="programmazione.html" class="tool-card" id="home-tool-programmazione">
+              <span class="tool-card-icon" aria-hidden="true" style="background: #f0fdf4; border-color: #bbf7d0; color: #15803d;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+                  <rect x="2" y="3" width="20" height="14" rx="2" fill="#dcfce7" stroke="#16a34a"></rect>
+                  <polyline points="8 21 12 17 16 21"></polyline>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                  <polyline points="7 8 5 10 7 12" stroke="#15803d" stroke-width="2"></polyline>
+                  <polyline points="13 8 15 10 13 12" stroke="#15803d" stroke-width="2"></polyline>
+                  <line x1="10" y1="7" x2="10.5" y2="13" stroke="#15803d" stroke-width="1.5"></line>
+                </svg>
+              </span>
+              <span class="tool-card-body">
+                <span class="tool-card-head">
+                  <span class="tool-card-title" data-i18n="tool_programmazione_title">Laboratorio C</span>
+                  <span class="tool-badge-new" data-i18n="badge_new">Nuovo</span>
+                </span>
+                <span class="tool-card-desc" data-i18n="tool_programmazione_desc">Editor GNU Nano · compilatore GCC · 11 template C</span>
               </span>
               <span class="tool-card-arrow" aria-hidden="true">→</span>
             </a>
@@ -2948,6 +2968,8 @@ nav .nav-logo {
         tool_breadboard_desc: "Resistenze, LED, NPN, voltmetro e schema live",
         tool_arduino_title: "Laboratorio Arduino Uno",
         tool_arduino_desc: "16 esperienze · sketch C++, pin I/O, PWM e seriale",
+        tool_programmazione_title: "Laboratorio C",
+        tool_programmazione_desc: "Editor GNU Nano · compilatore GCC · 11 template C",
         qrcode_badge: "Accesso Rapido Mobile",
         qrcode_title: "QR Code della Piattaforma",
         qrcode_desc: "Inquadra questo codice con la fotocamera del tuo smartphone o tablet per aprire e utilizzare direttamente la piattaforma didattica.",
@@ -3079,6 +3101,8 @@ nav .nav-logo {
         tool_breadboard_desc: "Resistors, LEDs, NPN, voltmeter & live schematic",
         tool_arduino_title: "Arduino Uno Lab",
         tool_arduino_desc: "16 guided labs · C++ sketches, I/O pins, PWM & serial",
+        tool_programmazione_title: "C Programming Lab",
+        tool_programmazione_desc: "GNU Nano editor · GCC compiler · 11 C templates",
         qrcode_badge: "Quick Mobile Access",
         qrcode_title: "Platform QR Code",
         qrcode_desc: "Scan this code with your smartphone or tablet camera to open the learning platform directly.",
