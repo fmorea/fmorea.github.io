@@ -753,6 +753,7 @@
       .bench { padding: 8px; }
       .lesson-picker select { width: 100%; }
     }
+  .guide-wiring-table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0}.guide-wiring-table th,.guide-wiring-table td{padding:5px 6px;border-bottom:1px solid #dbeafe;text-align:left;white-space:nowrap}.guide-wiring-scroll{overflow:auto}.guide-wiring-table th{color:#1e3a8a;background:#eff6ff}
   .bench{position:relative}#unoCables{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;overflow:visible}.bb-wrap{overflow:visible}#mini-bb{touch-action:pan-y;border-radius:9px}#mini-bb.move-touch{touch-action:none}#bbTools,.bbEdits,#bbInventory,#bbJacks{display:flex;flex-wrap:wrap;gap:5px;margin:8px}#bbTools button svg{width:20px;height:16px;vertical-align:middle;margin-right:4px}#bbTools button,.bbEdits button,#bbPanel button,#bbInventory button,#bbJacks button{min-height:32px;padding:4px 8px;font-size:12px}#bbTools button[aria-pressed=true]{background:#174578;color:white}#bbPanel,#bbStatus,#bbError,.bbTip,.bb-wrap details{margin:6px 10px;font-size:13px}#bbPanel h2{font-size:15px}#bbPanel select{max-width:105px}#bbPanel label{display:inline-grid;margin:2px}#bbPanel .swatches{display:flex;gap:6px}#bbPanel .swatches button{width:26px}#bbError{color:#a21b24}#bbInventory button span{margin-left:5px}.upin[data-socket]{cursor:crosshair}
 .boardscroll{overflow-x:auto;overscroll-behavior-x:contain}.physicalBench{position:relative;min-width:600px;padding-top:12px}.physicalBench .bb-bar{margin-top:8px}#bbPanel .swatch-row{display:flex;gap:4px;margin:5px 0}#bbPanel .swatch{width:26px;min-height:23px;border:2px solid white;outline:1px solid #a6afba}#bbPanel .swatch[aria-pressed=true]{outline:2px solid #25354b}#bbPanel .component-preview{display:flex;gap:4px;background:#daba83;width:72px;height:18px;justify-content:center;border-radius:7px}#bbPanel .component-preview i{width:5px}#mini-bb{touch-action:pan-x pan-y}
 
@@ -907,16 +908,16 @@
             <g id="bbObjects"></g>
             <g id="bbInstrument" pointer-events="none"></g>
           </svg></div></div><div class="bb-wrap"><div id="bbTools" aria-label="Strumenti di montaggio"></div>
-<p class="bbTip">Per collegare la Uno, scegli Cavo, tocca una presa della scheda e poi un foro libero. Per montare un componente, tocca i fori dei suoi terminali.</p>
+<p class="bbTip">Il circuito della guida viene montato automaticamente a ogni cambio di esperienza. Per collegare la Uno, scegli Cavo, tocca una presa della scheda e poi un foro libero. Per montare un componente, tocca i fori dei suoi terminali.</p>
 <div id="bbStatus" role="status"></div><div id="bbError" role="status"></div>
-<div class="bbEdits"><button id="bbUndo">Annulla</button><button id="bbRedo">Ripeti</button><button id="bbMoveTouch">Trascina su touch</button></div>
+<div class="bbEdits"><button id="bbRestoreGuide" type="button">Ripristina circuito guida</button><button id="bbUndo">Annulla</button><button id="bbRedo">Ripeti</button><button id="bbMoveTouch">Trascina su touch</button></div>
 <div id="bbPanel"></div><details><summary>Componenti e cavetti montati</summary><div id="bbInventory"></div><div id="bbJacks"></div></details>              <div style="padding:10px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
                 <a class="btn-link btn-primary" id="bbOpen" href="https://fmorea.github.io/breadboard" target="_blank" rel="noopener">Esporta su Breadboard DC ↗</a>
                 <span style="font-size:13px;color:#475569">Apre in una nuova scheda il circuito nello stato attuale. In DC puoi commutare le uscite a mano.</span>
               </div>
             </div>
 
-            <div class="loads" id="loads"></div>
+            <div class="loads" id="loads"></div><div id="sevenPreview" hidden style="margin-top:10px;padding:8px 12px;border:1px solid #cbd5e1;border-radius:10px;background:white;display:flex;align-items:center;gap:14px"><svg viewBox="0 0 100 130" width="76" height="98" role="img" aria-label="Display a sette segmenti"><rect x="1" y="1" width="98" height="128" rx="7" fill="#20252a"/><path id="sega" d="M24 18H69" stroke="#403638" stroke-width="9" stroke-linecap="round" fill="none"/><path id="segb" d="M76 25V55" stroke="#403638" stroke-width="9" stroke-linecap="round" fill="none"/><path id="segc" d="M76 70V100" stroke="#403638" stroke-width="9" stroke-linecap="round" fill="none"/><path id="segd" d="M24 107H69" stroke="#403638" stroke-width="9" stroke-linecap="round" fill="none"/><path id="sege" d="M17 70V100" stroke="#403638" stroke-width="9" stroke-linecap="round" fill="none"/><path id="segf" d="M17 25V55" stroke="#403638" stroke-width="9" stroke-linecap="round" fill="none"/><path id="segg" d="M24 62H69" stroke="#403638" stroke-width="9" stroke-linecap="round" fill="none"/><circle id="segdp" cx="87" cy="112" r="4.5" fill="#403638"/></svg><div><strong>Display a sette segmenti</strong><div id="segmentStatus" class="subtitle"></div><small>Vista funzionale dei LED montati sul banco.</small></div></div>
           </div>
 
           <div class="inputs">
@@ -1018,7 +1019,7 @@
             <h2 class="lesson-title" id="title" style="margin-top:0;"></h2>
             <p id="why"></p>
             <h3 class="sec-title">Collegamenti</h3>
-            <p id="wires"></p>
+            <p id="wires"></p><details class="sim-notes"><summary>Coordinate dei fori del banco iniziale</summary><div id="guideHoles"></div><p>I cinque fori a–e di una stessa colonna sono comuni; lo stesso vale per f–j, separati dalla scanalatura. TV/TG e BV/BG sono le linee longitudinali.</p></details>
             <h3 class="sec-title">Prova al banco</h3>
             <p id="watch"></p>
             <div class="question">
@@ -1073,23 +1074,259 @@
 
   <script>
     const lessons = [
-      {"name": "Accendere il LED integrato", "pages": "297", "why": "Una scrittura digitale resta efficace finché un’altra istruzione cambia il livello del pin.", "wires": "LED L integrato direttamente su D13 con resistore SMD da ~1 kΩ sulla scheda. Nessun componente esterno: il circuito è completo a bordo della Uno R3. Collega solo il cavo USB.", "watch": "Avvia e lascia scorrere il tempo. D13 resta alto anche quando loop() ricomincia.", "challenge": "Cosa cambia spostando digitalWrite in setup()?", "answer": "La luce resta accesa in entrambi i casi. In setup() basta una sola scrittura.", "pins": [13], "code": "void setup() {\n  pinMode(13, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(13, HIGH);\n}", "kind": "led"},
-      {"name": "Tre secondi di luce", "pages": "296–297", "why": "Un periodo comprende sia la fase accesa sia la fase spenta. Le attese si esprimono in millisecondi.", "wires": "LED L integrato direttamente su D13 con resistore SMD da ~1 kΩ sulla scheda. Nessun componente esterno: il circuito è completo a bordo della Uno R3. Collega solo il cavo USB.", "watch": "A 3 s il LED si spegne. A 4 s inizia un nuovo periodo.", "challenge": "Come ottieni un periodo di 4 s con duty cycle del 25%?", "answer": "Imposta 1000 ms di luce e 3000 ms di buio.", "pins": [13], "code": "void setup() {\n  pinMode(13, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(13, HIGH);\n  delay(3000);\n  digitalWrite(13, LOW);\n  delay(1000);\n}", "kind": "led"},
-      {"name": "Leggere il lampeggio sul monitor", "pages": "298", "why": "Una stampa subito dopo la scrittura del pin rende leggibile la sequenza degli eventi.", "wires": "Usa il LED L integrato sulla Uno, già collegato a D13. Basta il cavo USB. Nell’IDE apri il monitor seriale a 9600 baud.", "watch": "Confronta ogni cambio del LED con il testo nel monitor seriale.", "challenge": "Perché il messaggio di spegnimento arriva un secondo dopo quello di accensione?", "answer": "La prima delay(1000) separa le due stampe. Il periodo completo dura 2 s.", "pins": [13], "code": "void setup() {\n  pinMode(13, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  digitalWrite(13, HIGH);\n  Serial.println(\"LED acceso\");\n  delay(1000);\n  digitalWrite(13, LOW);\n  Serial.println(\"LED spento\");\n  delay(1000);\n}", "kind": "led"},
-      {"name": "Alternare due LED", "pages": "298–299", "why": "Due uscite possono assumere livelli complementari nello stesso intervallo.", "wires": "D10 e D11 alimentano ciascuno un ramo con resistore da 330 Ω e anodo del LED. I due catodi vanno a GND.", "watch": "Osserva la coppia di uscite a 0, 3 e 6 s.", "challenge": "Qual è il periodo di un singolo LED?", "answer": "6 s. Ogni LED resta acceso per 3 s e spento per altri 3 s.", "pins": [10, 11], "code": "void setup() {\n  pinMode(10, OUTPUT);\n  pinMode(11, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(10, HIGH);\n  digitalWrite(11, LOW);\n  delay(3000);\n  digitalWrite(10, LOW);\n  digitalWrite(11, HIGH);\n  delay(3000);\n}", "kind": "led"},
-      {"name": "Memorizzare una pressione", "pages": "299–300", "why": "L’assenza di una scrittura LOW conserva lo stato dell’uscita anche dopo il rilascio.", "wires": "Collega 5 V al pulsante normalmente aperto e l’altro contatto a D12. Inserisci 10 kΩ tra D12 e GND (pull-down). Usa L su D13 come uscita.", "watch": "Premi e rilascia il pulsante. Per riportare l’uscita allo stato iniziale usa Reset.", "challenge": "Quale modifica fa seguire al LED lo stato del pulsante?", "answer": "Nel loop scrivi digitalWrite(13, digitalRead(12)); a ogni passaggio.", "pins": [13], "code": "void setup() {\n  pinMode(13, OUTPUT);\n  pinMode(12, INPUT);\n}\n\nvoid loop() {\n  if (digitalRead(12) == HIGH) {\n    digitalWrite(13, HIGH);\n  }\n}", "kind": "button"},
-      {"name": "Comandare una luce per cinque secondi", "pages": "300–301", "why": "Il pulsante avvia una pausa bloccante. La lettura successiva avviene soltanto al termine della pausa.", "wires": "Collega 5 V al pulsante normalmente aperto e l’altro contatto a D12. Inserisci 10 kΩ tra D12 e GND (pull-down). Usa L su D13 come uscita.", "watch": "Premi brevemente e rilascia. Ripeti tenendo premuto per più di 5 s.", "challenge": "Perché il LED può restare acceso oltre 5 s?", "answer": "Se D12 è ancora alto al controllo successivo, il programma attende altri 5 s prima di poter eseguire il ramo di spegnimento.", "pins": [13], "code": "void setup() {\n  pinMode(13, OUTPUT);\n  pinMode(12, INPUT);\n}\n\nvoid loop() {\n  if (digitalRead(12) == HIGH) {\n    digitalWrite(13, HIGH);\n    delay(5000);\n  } else {\n    digitalWrite(13, LOW);\n  }\n}", "kind": "button"},
-      {"name": "Un impulso all’avvio", "pages": "301–302", "why": "setup() si esegue una volta. Vi si può collocare un’azione che deve avvenire soltanto al reset.", "wires": "LED L integrato direttamente su D13 con resistore SMD da ~1 kΩ sulla scheda. Nessun componente esterno: il circuito è completo a bordo della Uno R3. Collega solo il cavo USB.", "watch": "D13 passa a LOW dopo 5 s. Lascia avanzare il tempo e poi riavvia con Reset e Avvia.", "challenge": "Che cosa accade spostando tutta la sequenza in loop()?", "answer": "La sequenza riparte subito dopo LOW. Per vedere il buio occorre anche un’attesa dopo lo spegnimento.", "pins": [13], "code": "void setup() {\n  pinMode(13, OUTPUT);\n  digitalWrite(13, HIGH);\n  delay(5000);\n  digitalWrite(13, LOW);\n}\n\nvoid loop() {\n  // Sequenza terminata.\n}", "kind": "led"},
-      {"name": "Eseguire una sequenza una sola volta", "pages": "302–303", "why": "La posizione delle attese stabilisce la durata di ciascuno stato.", "wires": "LED L integrato direttamente su D13 con resistore SMD da ~1 kΩ sulla scheda. Nessun componente esterno: il circuito è completo a bordo della Uno R3. Collega solo il cavo USB.", "watch": "Prevedi lo stato del LED a 4, 7, 12 e 16 s.", "challenge": "Quali stati leggi nei quattro istanti?", "answer": "Acceso, spento, acceso, spento. Dopo 15 s D13 rimane basso.", "pins": [13], "code": "void setup() {\n  pinMode(13, OUTPUT);\n  digitalWrite(13, HIGH);\n  delay(5000);\n  digitalWrite(13, LOW);\n  delay(5000);\n  digitalWrite(13, HIGH);\n  delay(5000);\n  digitalWrite(13, LOW);\n}\n\nvoid loop() {\n  // Attende il prossimo reset.\n}", "kind": "led"},
-      {"name": "Contare dieci lampeggi", "pages": "303–304", "why": "Il contatore assume i valori da 0 a 9. Ogni iterazione comprende una fase alta e una bassa.", "wires": "LED L integrato direttamente su D13 con resistore SMD da ~1 kΩ sulla scheda. Nessun componente esterno: il circuito è completo a bordo della Uno R3. Collega solo il cavo USB.", "watch": "Avanza fino a 20 s. L’ultima accensione inizia a 18 s.", "challenge": "Se la condizione diventa i <= 10, quanti lampeggi ottieni?", "answer": "Undici, perché anche il valore 10 soddisfa la condizione.", "pins": [13], "code": "void setup() {\n  pinMode(13, OUTPUT);\n  for (int i = 0; i < 10; i++) {\n    digitalWrite(13, HIGH);\n    delay(1000);\n    digitalWrite(13, LOW);\n    delay(1000);\n  }\n}\n\nvoid loop() {\n  // Fine del conteggio.\n}", "kind": "led"},
-      {"name": "Disegnare H con sette segmenti", "pages": "304–305", "why": "H si ottiene accendendo b, c, e, f e g. Cambiando la polarità del comune si inverte il livello attivo.", "wires": "D5 → punto, D6…D12 → a…g. Inserisci 330 Ω in serie a ciascun segmento. Collega il comune a GND per il catodo o a 5 V per l’anodo.", "watch": "Il display mostra H per 3 s e si spegne per 1,5 s. Cambia il tipo di comune per osservare lo stesso simbolo con livelli opposti.", "challenge": "Quali segmenti aggiungeresti per ottenere 8?", "answer": "Accendi anche a e d. Il punto decimale rimane spento.", "pins": [5, 6, 7, 8, 9, 10, 11, 12], "code": "const int on = HIGH;\nconst int off = LOW;\n\nvoid setup() {\n  pinMode(5, OUTPUT);\n  pinMode(6, OUTPUT);\n  pinMode(7, OUTPUT);\n  pinMode(8, OUTPUT);\n  pinMode(9, OUTPUT);\n  pinMode(10, OUTPUT);\n  pinMode(11, OUTPUT);\n  pinMode(12, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(5, off);\n  digitalWrite(6, off);\n  digitalWrite(7, on);\n  digitalWrite(8, on);\n  digitalWrite(9, off);\n  digitalWrite(10, on);\n  digitalWrite(11, on);\n  digitalWrite(12, on);\n  delay(3000);\n  digitalWrite(5, off);\n  digitalWrite(6, off);\n  digitalWrite(7, off);\n  digitalWrite(8, off);\n  digitalWrite(9, off);\n  digitalWrite(10, off);\n  digitalWrite(11, off);\n  digitalWrite(12, off);\n  delay(1500);\n}", "kind": "display"},
-      {"name": "Coordinare due semafori", "pages": "297 · sviluppo della traccia", "why": "Una fase associa un colore a ciascuna strada. Prima di dare il verde all’altra strada si attraversa una fase di tutto rosso.", "wires": "D2/D3/D4 → rosso/giallo/verde della strada A. D5/D6/D7 → rosso/giallo/verde della strada B. Ogni uscita alimenta un LED con 330 Ω in serie e catodo a GND.", "watch": "Segui un ciclo di 12 s e annota le due uscite attive a ogni cambio.", "challenge": "Per quanto tempo entrambe le strade hanno il rosso in un ciclo?", "answer": "Due intervalli di 0,5 s, per un totale di 1 s.", "pins": [2, 3, 4, 5, 6, 7], "code": "void setup() {\n  pinMode(2, OUTPUT);\n  pinMode(3, OUTPUT);\n  pinMode(4, OUTPUT);\n  pinMode(5, OUTPUT);\n  pinMode(6, OUTPUT);\n  pinMode(7, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(2, LOW);\n  digitalWrite(3, LOW);\n  digitalWrite(6, LOW);\n  digitalWrite(7, LOW);\n  digitalWrite(4, HIGH);\n  digitalWrite(5, HIGH);\n  delay(4000);\n  digitalWrite(4, LOW);\n  digitalWrite(3, HIGH);\n  digitalWrite(5, HIGH);\n  delay(1500);\n  digitalWrite(3, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(5, HIGH);\n  delay(500);\n  digitalWrite(5, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(7, HIGH);\n  delay(4000);\n  digitalWrite(7, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(6, HIGH);\n  delay(1500);\n  digitalWrite(6, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(5, HIGH);\n  delay(500);\n}", "kind": "road"},
-      {"name": "Sovrapporre verde e giallo", "pages": "297 · sviluppo della traccia", "why": "La seconda traccia distingue la fase verde e giallo insieme. Qui il verde resta acceso durante il preavviso.", "wires": "D2/D3/D4 → rosso/giallo/verde della strada A. D5/D6/D7 → rosso/giallo/verde della strada B. Ogni uscita alimenta un LED con 330 Ω in serie e catodo a GND.", "watch": "Confronta i pin al quarto secondo con quelli della guida precedente.", "challenge": "Quali LED sono accesi a 4,5 s?", "answer": "A mostra verde e giallo, B resta sul rosso.", "pins": [2, 3, 4, 5, 6, 7], "code": "void setup() {\n  pinMode(2, OUTPUT);\n  pinMode(3, OUTPUT);\n  pinMode(4, OUTPUT);\n  pinMode(5, OUTPUT);\n  pinMode(6, OUTPUT);\n  pinMode(7, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(2, LOW);\n  digitalWrite(3, LOW);\n  digitalWrite(6, LOW);\n  digitalWrite(7, LOW);\n  digitalWrite(4, HIGH);\n  digitalWrite(5, HIGH);\n  delay(4000);\n  digitalWrite(3, HIGH);\n  digitalWrite(4, HIGH);\n  digitalWrite(5, HIGH);\n  delay(1500);\n  digitalWrite(3, LOW);\n  digitalWrite(4, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(5, HIGH);\n  delay(500);\n  digitalWrite(5, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(7, HIGH);\n  delay(4000);\n  digitalWrite(2, HIGH);\n  digitalWrite(6, HIGH);\n  digitalWrite(7, HIGH);\n  delay(1500);\n  digitalWrite(6, LOW);\n  digitalWrite(7, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(5, HIGH);\n  delay(500);\n}", "kind": "road"},
-      {"name": "Descrivere le fasi sul monitor", "pages": "297 · sviluppo della traccia", "why": "Il monitor assegna un nome leggibile a ciascuna configurazione delle uscite.", "wires": "D2/D3/D4 → rosso/giallo/verde della strada A. D5/D6/D7 → rosso/giallo/verde della strada B. Ogni uscita alimenta un LED con 330 Ω in serie e catodo a GND.", "watch": "Controlla che ogni nuova riga corrisponda ai LED visibili.", "challenge": "Quanto passa fra il messaggio Verde A e il messaggio Verde B?", "answer": "6 s, cioè 4 s di verde, 1,5 s di giallo e 0,5 s di tutto rosso.", "pins": [2, 3, 4, 5, 6, 7], "code": "void setup() {\n  pinMode(2, OUTPUT);\n  pinMode(3, OUTPUT);\n  pinMode(4, OUTPUT);\n  pinMode(5, OUTPUT);\n  pinMode(6, OUTPUT);\n  pinMode(7, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  digitalWrite(2, LOW);\n  digitalWrite(3, LOW);\n  digitalWrite(6, LOW);\n  digitalWrite(7, LOW);\n  digitalWrite(4, HIGH);\n  digitalWrite(5, HIGH);\n  Serial.println(\"Verde A\");\n  delay(4000);\n  digitalWrite(4, LOW);\n  digitalWrite(3, HIGH);\n  digitalWrite(5, HIGH);\n  Serial.println(\"Giallo A\");\n  delay(1500);\n  digitalWrite(3, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(5, HIGH);\n  Serial.println(\"Tutto rosso\");\n  delay(500);\n  digitalWrite(5, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(7, HIGH);\n  Serial.println(\"Verde B\");\n  delay(4000);\n  digitalWrite(7, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(6, HIGH);\n  Serial.println(\"Giallo B\");\n  delay(1500);\n  digitalWrite(6, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(5, HIGH);\n  Serial.println(\"Tutto rosso\");\n  delay(500);\n}", "kind": "road"},
-      {"name": "Commutare fra giorno e notte", "pages": "297 · sviluppo della traccia", "why": "Uno switch seleziona il ciclo diurno oppure il lampeggio simultaneo dei gialli.", "wires": "D2/D3/D4 → rosso/giallo/verde della strada A. D5/D6/D7 → rosso/giallo/verde della strada B. Ogni uscita alimenta un LED con 330 Ω in serie e catodo a GND. Collega lo switch fra 5 V e D12 con pull-down da 10 kΩ verso GND.", "watch": "Attiva lo switch durante il verde. Il programma legge D12 all’inizio del ciclo successivo.", "challenge": "Qual è la massima attesa per entrare in modalità notte?", "answer": "Quasi 12 s se commuti subito dopo la lettura che avvia il ciclo diurno.", "pins": [2, 3, 4, 5, 6, 7], "code": "void setup() {\n  pinMode(2, OUTPUT);\n  pinMode(3, OUTPUT);\n  pinMode(4, OUTPUT);\n  pinMode(5, OUTPUT);\n  pinMode(6, OUTPUT);\n  pinMode(7, OUTPUT);\n  pinMode(12, INPUT);\n}\n\nvoid loop() {\n  if (digitalRead(12) == HIGH) {\n    digitalWrite(2, LOW);\n    digitalWrite(4, LOW);\n    digitalWrite(5, LOW);\n    digitalWrite(7, LOW);\n    digitalWrite(3, HIGH);\n    digitalWrite(6, HIGH);\n    delay(500);\n    digitalWrite(3, LOW);\n    digitalWrite(6, LOW);\n    delay(500);\n  } else {\n    digitalWrite(2, LOW);\n    digitalWrite(3, LOW);\n    digitalWrite(6, LOW);\n    digitalWrite(7, LOW);\n    digitalWrite(4, HIGH);\n    digitalWrite(5, HIGH);\n    delay(4000);\n    digitalWrite(4, LOW);\n    digitalWrite(3, HIGH);\n    digitalWrite(5, HIGH);\n    delay(1500);\n    digitalWrite(3, LOW);\n    digitalWrite(2, HIGH);\n    digitalWrite(5, HIGH);\n    delay(500);\n    digitalWrite(5, LOW);\n    digitalWrite(2, HIGH);\n    digitalWrite(7, HIGH);\n    delay(4000);\n    digitalWrite(7, LOW);\n    digitalWrite(2, HIGH);\n    digitalWrite(6, HIGH);\n    delay(1500);\n    digitalWrite(6, LOW);\n    digitalWrite(2, HIGH);\n    digitalWrite(5, HIGH);\n    delay(500);\n  }\n}", "kind": "night"},
-      {"name": "Confrontare una tensione con una soglia", "pages": "297 · sviluppo della traccia", "why": "L’ADC della Uno R3 rappresenta la tensione con un intero da 0 a 1023. Con riferimento a 5 V, la metà scala è circa 2,5 V.", "wires": "Collega gli estremi di un potenziometro da 10 kΩ a 5 V e GND e il cursore ad A0. Usa il LED integrato su D13.", "watch": "Sposta il cursore da 511 a 512 e osserva insieme lettura seriale e LED.", "challenge": "Come scegli una soglia prossima a 3 V?", "answer": "Con riferimento a 5 V, 3/5 × 1023 ≈ 614. Sostituisci 512 con 614 e riprova.", "pins": [13], "code": "void setup() {\n  pinMode(13, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int valore = analogRead(A0);\n  Serial.println(valore);\n  if (valore >= 512) {\n    digitalWrite(13, HIGH);\n  } else {\n    digitalWrite(13, LOW);\n  }\n  delay(200);\n}", "kind": "analog"},
-      {"name": "Regolare la luminosità in PWM", "pages": "292 · approfondimento", "why": "Il PWM alterna 0 e 5 V. Aumentando il duty cycle cresce la luminosità media del LED.", "wires": "Potenziometro fra 5 V e GND con cursore su A0. Collega D9 a un resistore da 330 Ω in serie al LED verso GND.", "watch": "Varia A0 e osserva il comando PWM. Il banco mostra la luminosità media.", "challenge": "Che comando ottieni per A0 = 512?", "answer": "128 su 255. La divisione intera per quattro converte la scala a 10 bit nella scala a 8 bit.", "pins": [9], "code": "void setup() {\n  pinMode(9, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int livello = analogRead(A0) / 4;\n  analogWrite(9, livello);\n  Serial.println(livello);\n  delay(200);\n}", "kind": "analog"}
-    ];
+  {
+    "name": "Accendere il LED integrato",
+    "pages": "297",
+    "why": "Una scrittura digitale resta efficace finché un’altra istruzione cambia il livello del pin.",
+    "wires": "Il LED L integrato è comandato da D13 (circuito a bordo della Uno R3). Per osservare anche il montaggio, il banco precarica un LED esterno con resistenza da 330 Ω in serie tra D13 e GND. Il ramo esterno è facoltativo sulla scheda reale e può essere rimosso.",
+    "watch": "Avvia o premi +10 ms: L si accende e resta acceso. D13 è un’uscita digitale a livello HIGH.",
+    "challenge": "Cosa cambia spostando digitalWrite in setup()?",
+    "answer": "La luce resta accesa in entrambi i casi. In setup() basta una sola scrittura.",
+    "pins": [
+      13
+    ],
+    "code": "void setup() {\n  pinMode(13, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(13, HIGH);\n}",
+    "kind": "led"
+  },
+  {
+    "name": "Tre secondi di luce",
+    "pages": "296–297",
+    "why": "Un periodo comprende sia la fase accesa sia la fase spenta. Le attese si esprimono in millisecondi.",
+    "wires": "Il LED L integrato è comandato da D13 (circuito a bordo della Uno R3). Per osservare anche il montaggio, il banco precarica un LED esterno con resistenza da 330 Ω in serie tra D13 e GND. Il ramo esterno è facoltativo sulla scheda reale e può essere rimosso.",
+    "watch": "A 3 s il LED si spegne. A 4 s inizia un nuovo periodo.",
+    "challenge": "Come ottieni un periodo di 4 s con duty cycle del 25%?",
+    "answer": "Imposta 1000 ms di luce e 3000 ms di buio.",
+    "pins": [
+      13
+    ],
+    "code": "void setup() {\n  pinMode(13, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(13, HIGH);\n  delay(3000);\n  digitalWrite(13, LOW);\n  delay(1000);\n}",
+    "kind": "led"
+  },
+  {
+    "name": "Leggere il lampeggio sul monitor",
+    "pages": "298",
+    "why": "Una stampa subito dopo la scrittura del pin rende leggibile la sequenza degli eventi.",
+    "wires": "Il LED L integrato è comandato da D13 (circuito a bordo della Uno R3). Per osservare anche il montaggio, il banco precarica un LED esterno con resistenza da 330 Ω in serie tra D13 e GND. Il ramo esterno è facoltativo sulla scheda reale e può essere rimosso.",
+    "watch": "Confronta ogni cambio del LED con il testo nel monitor seriale.",
+    "challenge": "Perché il messaggio di spegnimento arriva un secondo dopo quello di accensione?",
+    "answer": "La prima delay(1000) separa le due stampe. Il periodo completo dura 2 s.",
+    "pins": [
+      13
+    ],
+    "code": "void setup() {\n  pinMode(13, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  digitalWrite(13, HIGH);\n  Serial.println(\"LED acceso\");\n  delay(1000);\n  digitalWrite(13, LOW);\n  Serial.println(\"LED spento\");\n  delay(1000);\n}",
+    "kind": "led"
+  },
+  {
+    "name": "Alternare due LED",
+    "pages": "298–299",
+    "why": "Due uscite possono assumere livelli complementari nello stesso intervallo.",
+    "wires": "D10 e D11 alimentano ciascuno un ramo con resistore da 330 Ω (valore iniziale) e anodo del LED. I due catodi vanno a GND.",
+    "watch": "Avvia: D10 HIGH e D11 LOW da 0 a 3 s, poi D10 LOW e D11 HIGH da 3 a 6 s. A 6 s ricomincia il ciclo.",
+    "challenge": "Qual è il periodo di un singolo LED?",
+    "answer": "6 s. Ogni LED resta acceso per 3 s e spento per altri 3 s.",
+    "pins": [
+      10,
+      11
+    ],
+    "code": "void setup() {\n  pinMode(10, OUTPUT);\n  pinMode(11, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(10, HIGH);\n  digitalWrite(11, LOW);\n  delay(3000);\n  digitalWrite(10, LOW);\n  digitalWrite(11, HIGH);\n  delay(3000);\n}",
+    "kind": "led"
+  },
+  {
+    "name": "Memorizzare una pressione",
+    "pages": "299–300",
+    "why": "L’assenza di una scrittura LOW conserva lo stato dell’uscita anche dopo il rilascio.",
+    "wires": "5 V → linea positiva TV; GND → linea negativa TG. Pulsante tra TV27 e a27; cavetto D12 → b27; resistenza pull-down da 10 kΩ tra e27 e TG30. a27, b27 ed e27 sono elettricamente comuni. L è il LED integrato su D13. Il banco precarica anche un LED esterno di osservazione su D13 con 330 Ω in serie verso GND; il ramo è facoltativo.",
+    "watch": "Avvia, poi premi e rilascia il pulsante (o usa il controllo D12). L rimane acceso anche dopo il rilascio. Reset riporta l’uscita allo stato iniziale.",
+    "challenge": "Quale modifica fa seguire al LED lo stato del pulsante?",
+    "answer": "Nel loop scrivi digitalWrite(13, digitalRead(12)); a ogni passaggio.",
+    "pins": [
+      13
+    ],
+    "code": "void setup() {\n  pinMode(13, OUTPUT);\n  pinMode(12, INPUT);\n}\n\nvoid loop() {\n  if (digitalRead(12) == HIGH) {\n    digitalWrite(13, HIGH);\n  }\n}",
+    "kind": "button"
+  },
+  {
+    "name": "Comandare una luce per cinque secondi",
+    "pages": "300–301",
+    "why": "Il pulsante avvia una pausa bloccante. La lettura successiva avviene soltanto al termine della pausa.",
+    "wires": "5 V → linea positiva TV; GND → linea negativa TG. Pulsante tra TV27 e a27; cavetto D12 → b27; resistenza pull-down da 10 kΩ tra e27 e TG30. a27, b27 ed e27 sono elettricamente comuni. L è il LED integrato su D13. Il banco precarica anche un LED esterno di osservazione su D13 con 330 Ω in serie verso GND; il ramo è facoltativo.",
+    "watch": "Avvia, premi brevemente e rilascia il pulsante. Dopo circa 5 s dalla rilevazione della pressione L si spegne. Se tieni premuto, il programma può avviare altre attese.",
+    "challenge": "Perché il LED può restare acceso oltre 5 s?",
+    "answer": "Se D12 è ancora alto al controllo successivo, il programma attende altri 5 s prima di poter eseguire il ramo di spegnimento.",
+    "pins": [
+      13
+    ],
+    "code": "void setup() {\n  pinMode(13, OUTPUT);\n  pinMode(12, INPUT);\n}\n\nvoid loop() {\n  if (digitalRead(12) == HIGH) {\n    digitalWrite(13, HIGH);\n    delay(5000);\n  } else {\n    digitalWrite(13, LOW);\n  }\n}",
+    "kind": "button"
+  },
+  {
+    "name": "Un impulso all’avvio",
+    "pages": "301–302",
+    "why": "setup() si esegue una volta. Vi si può collocare un’azione che deve avvenire soltanto al reset.",
+    "wires": "Il LED L integrato è comandato da D13 (circuito a bordo della Uno R3). Per osservare anche il montaggio, il banco precarica un LED esterno con resistenza da 330 Ω in serie tra D13 e GND. Il ramo esterno è facoltativo sulla scheda reale e può essere rimosso.",
+    "watch": "D13 passa a LOW dopo 5 s. Lascia avanzare il tempo e poi riavvia con Reset e Avvia.",
+    "challenge": "Che cosa accade spostando tutta la sequenza in loop()?",
+    "answer": "La sequenza riparte subito dopo LOW. Per vedere il buio occorre anche un’attesa dopo lo spegnimento.",
+    "pins": [
+      13
+    ],
+    "code": "void setup() {\n  pinMode(13, OUTPUT);\n  digitalWrite(13, HIGH);\n  delay(5000);\n  digitalWrite(13, LOW);\n}\n\nvoid loop() {\n  // Sequenza terminata.\n}",
+    "kind": "led"
+  },
+  {
+    "name": "Eseguire una sequenza una sola volta",
+    "pages": "302–303",
+    "why": "La posizione delle attese stabilisce la durata di ciascuno stato.",
+    "wires": "Il LED L integrato è comandato da D13 (circuito a bordo della Uno R3). Per osservare anche il montaggio, il banco precarica un LED esterno con resistenza da 330 Ω in serie tra D13 e GND. Il ramo esterno è facoltativo sulla scheda reale e può essere rimosso.",
+    "watch": "Prevedi lo stato del LED a 4, 7, 12 e 16 s.",
+    "challenge": "Quali stati leggi nei quattro istanti?",
+    "answer": "Acceso, spento, acceso, spento. Dopo 15 s D13 rimane basso.",
+    "pins": [
+      13
+    ],
+    "code": "void setup() {\n  pinMode(13, OUTPUT);\n  digitalWrite(13, HIGH);\n  delay(5000);\n  digitalWrite(13, LOW);\n  delay(5000);\n  digitalWrite(13, HIGH);\n  delay(5000);\n  digitalWrite(13, LOW);\n}\n\nvoid loop() {\n  // Attende il prossimo reset.\n}",
+    "kind": "led"
+  },
+  {
+    "name": "Contare dieci lampeggi",
+    "pages": "303–304",
+    "why": "Il contatore assume i valori da 0 a 9. Ogni iterazione comprende una fase alta e una bassa.",
+    "wires": "Il LED L integrato è comandato da D13 (circuito a bordo della Uno R3). Per osservare anche il montaggio, il banco precarica un LED esterno con resistenza da 330 Ω in serie tra D13 e GND. Il ramo esterno è facoltativo sulla scheda reale e può essere rimosso.",
+    "watch": "Avanza fino a 20 s. L’ultima accensione inizia a 18 s.",
+    "challenge": "Se la condizione diventa i <= 10, quanti lampeggi ottieni?",
+    "answer": "Undici, perché anche il valore 10 soddisfa la condizione.",
+    "pins": [
+      13
+    ],
+    "code": "void setup() {\n  pinMode(13, OUTPUT);\n  for (int i = 0; i < 10; i++) {\n    digitalWrite(13, HIGH);\n    delay(1000);\n    digitalWrite(13, LOW);\n    delay(1000);\n  }\n}\n\nvoid loop() {\n  // Fine del conteggio.\n}",
+    "kind": "led"
+  },
+  {
+    "name": "Disegnare H con sette segmenti",
+    "pages": "304–305",
+    "why": "H si ottiene accendendo b, c, e, f e g. Cambiando la polarità del comune si inverte il livello attivo.",
+    "wires": "D5 → dp (punto decimale); D6…D12 → a…g. Ogni ramo ha una resistenza in serie. Collega il comune a GND (catodo comune) oppure a 5 V (anodo comune). Sul banco gli otto LED separati rappresentano elettricamente i segmenti; il riquadro Display visualizza la lettera risultante dalle correnti reali del circuito. La numerazione dei piedini del contenitore fisico dipende dal modello del display.",
+    "watch": "Avvia: H per 3 s, poi tutti i segmenti spenti per 1,5 s. Cambia il comune: il simulatore adatta lo sketch di esempio e il cablaggio, invertendo i livelli attivi. Modifica lo sketch dopo aver scelto il comune.",
+    "challenge": "Quali segmenti aggiungeresti per ottenere 8?",
+    "answer": "Accendi anche a e d. Il punto decimale rimane spento.",
+    "pins": [
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "code": "const int on = HIGH;\nconst int off = LOW;\n\nvoid setup() {\n  pinMode(5, OUTPUT);\n  pinMode(6, OUTPUT);\n  pinMode(7, OUTPUT);\n  pinMode(8, OUTPUT);\n  pinMode(9, OUTPUT);\n  pinMode(10, OUTPUT);\n  pinMode(11, OUTPUT);\n  pinMode(12, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(5, off);\n  digitalWrite(6, off);\n  digitalWrite(7, on);\n  digitalWrite(8, on);\n  digitalWrite(9, off);\n  digitalWrite(10, on);\n  digitalWrite(11, on);\n  digitalWrite(12, on);\n  delay(3000);\n  digitalWrite(5, off);\n  digitalWrite(6, off);\n  digitalWrite(7, off);\n  digitalWrite(8, off);\n  digitalWrite(9, off);\n  digitalWrite(10, off);\n  digitalWrite(11, off);\n  digitalWrite(12, off);\n  delay(1500);\n}",
+    "kind": "display"
+  },
+  {
+    "name": "Coordinare due semafori",
+    "pages": "297 · sviluppo della traccia",
+    "why": "Una fase associa un colore a ciascuna strada. Prima di dare il verde all’altra strada si attraversa una fase di tutto rosso.",
+    "wires": "D2/D3/D4 → rosso/giallo/verde della strada A. D5/D6/D7 → rosso/giallo/verde della strada B. Ogni uscita alimenta un LED con una resistenza in serie (330 Ω di default) e catodo a GND.",
+    "watch": "Segui un ciclo di 12 s e annota le due uscite attive a ogni cambio.",
+    "challenge": "Per quanto tempo entrambe le strade hanno il rosso in un ciclo?",
+    "answer": "Due intervalli di 0,5 s, per un totale di 1 s.",
+    "pins": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "code": "void setup() {\n  pinMode(2, OUTPUT);\n  pinMode(3, OUTPUT);\n  pinMode(4, OUTPUT);\n  pinMode(5, OUTPUT);\n  pinMode(6, OUTPUT);\n  pinMode(7, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(2, LOW);\n  digitalWrite(3, LOW);\n  digitalWrite(6, LOW);\n  digitalWrite(7, LOW);\n  digitalWrite(4, HIGH);\n  digitalWrite(5, HIGH);\n  delay(4000);\n  digitalWrite(4, LOW);\n  digitalWrite(3, HIGH);\n  digitalWrite(5, HIGH);\n  delay(1500);\n  digitalWrite(3, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(5, HIGH);\n  delay(500);\n  digitalWrite(5, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(7, HIGH);\n  delay(4000);\n  digitalWrite(7, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(6, HIGH);\n  delay(1500);\n  digitalWrite(6, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(5, HIGH);\n  delay(500);\n}",
+    "kind": "road"
+  },
+  {
+    "name": "Sovrapporre verde e giallo",
+    "pages": "297 · sviluppo della traccia",
+    "why": "Esercizio didattico sulle combinazioni di uscite: durante il preavviso si accendono contemporaneamente verde e giallo. Non è un modello normativo di segnaletica stradale.",
+    "wires": "D2/D3/D4 → rosso/giallo/verde della strada A. D5/D6/D7 → rosso/giallo/verde della strada B. Ogni uscita alimenta un LED con una resistenza in serie (330 Ω di default) e catodo a GND.",
+    "watch": "Confronta i pin al quarto secondo con quelli della guida precedente.",
+    "challenge": "Quali LED sono accesi a 4,5 s?",
+    "answer": "A mostra verde e giallo, B resta sul rosso.",
+    "pins": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "code": "void setup() {\n  pinMode(2, OUTPUT);\n  pinMode(3, OUTPUT);\n  pinMode(4, OUTPUT);\n  pinMode(5, OUTPUT);\n  pinMode(6, OUTPUT);\n  pinMode(7, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(2, LOW);\n  digitalWrite(3, LOW);\n  digitalWrite(6, LOW);\n  digitalWrite(7, LOW);\n  digitalWrite(4, HIGH);\n  digitalWrite(5, HIGH);\n  delay(4000);\n  digitalWrite(3, HIGH);\n  digitalWrite(4, HIGH);\n  digitalWrite(5, HIGH);\n  delay(1500);\n  digitalWrite(3, LOW);\n  digitalWrite(4, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(5, HIGH);\n  delay(500);\n  digitalWrite(5, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(7, HIGH);\n  delay(4000);\n  digitalWrite(2, HIGH);\n  digitalWrite(6, HIGH);\n  digitalWrite(7, HIGH);\n  delay(1500);\n  digitalWrite(6, LOW);\n  digitalWrite(7, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(5, HIGH);\n  delay(500);\n}",
+    "kind": "road"
+  },
+  {
+    "name": "Descrivere le fasi sul monitor",
+    "pages": "297 · sviluppo della traccia",
+    "why": "Il monitor assegna un nome leggibile a ciascuna configurazione delle uscite.",
+    "wires": "D2/D3/D4 → rosso/giallo/verde della strada A. D5/D6/D7 → rosso/giallo/verde della strada B. Ogni uscita alimenta un LED con una resistenza in serie (330 Ω di default) e catodo a GND.",
+    "watch": "Controlla che ogni nuova riga corrisponda ai LED visibili.",
+    "challenge": "Quanto passa fra il messaggio Verde A e il messaggio Verde B?",
+    "answer": "6 s, cioè 4 s di verde, 1,5 s di giallo e 0,5 s di tutto rosso.",
+    "pins": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "code": "void setup() {\n  pinMode(2, OUTPUT);\n  pinMode(3, OUTPUT);\n  pinMode(4, OUTPUT);\n  pinMode(5, OUTPUT);\n  pinMode(6, OUTPUT);\n  pinMode(7, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  digitalWrite(2, LOW);\n  digitalWrite(3, LOW);\n  digitalWrite(6, LOW);\n  digitalWrite(7, LOW);\n  digitalWrite(4, HIGH);\n  digitalWrite(5, HIGH);\n  Serial.println(\"Verde A\");\n  delay(4000);\n  digitalWrite(4, LOW);\n  digitalWrite(3, HIGH);\n  digitalWrite(5, HIGH);\n  Serial.println(\"Giallo A\");\n  delay(1500);\n  digitalWrite(3, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(5, HIGH);\n  Serial.println(\"Tutto rosso\");\n  delay(500);\n  digitalWrite(5, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(7, HIGH);\n  Serial.println(\"Verde B\");\n  delay(4000);\n  digitalWrite(7, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(6, HIGH);\n  Serial.println(\"Giallo B\");\n  delay(1500);\n  digitalWrite(6, LOW);\n  digitalWrite(2, HIGH);\n  digitalWrite(5, HIGH);\n  Serial.println(\"Tutto rosso\");\n  delay(500);\n}",
+    "kind": "road"
+  },
+  {
+    "name": "Commutare fra giorno e notte",
+    "pages": "297 · sviluppo della traccia",
+    "why": "Uno switch seleziona il ciclo diurno oppure il lampeggio simultaneo dei gialli.",
+    "wires": "D2/D3/D4 → rosso/giallo/verde della strada A. D5/D6/D7 → rosso/giallo/verde della strada B. Ogni uscita alimenta un LED con una resistenza in serie (330 Ω di default) e catodo a GND. Switch: TV27–a27; D12 → b27; pull-down 10 kΩ e27–TG30.",
+    "watch": "Attiva lo switch durante il verde. Il programma legge D12 all’inizio del ciclo successivo.",
+    "challenge": "Qual è la massima attesa per entrare in modalità notte?",
+    "answer": "Quasi 12 s se commuti subito dopo la lettura che avvia il ciclo diurno.",
+    "pins": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "code": "void setup() {\n  pinMode(2, OUTPUT);\n  pinMode(3, OUTPUT);\n  pinMode(4, OUTPUT);\n  pinMode(5, OUTPUT);\n  pinMode(6, OUTPUT);\n  pinMode(7, OUTPUT);\n  pinMode(12, INPUT);\n}\n\nvoid loop() {\n  if (digitalRead(12) == HIGH) {\n    digitalWrite(2, LOW);\n    digitalWrite(4, LOW);\n    digitalWrite(5, LOW);\n    digitalWrite(7, LOW);\n    digitalWrite(3, HIGH);\n    digitalWrite(6, HIGH);\n    delay(500);\n    digitalWrite(3, LOW);\n    digitalWrite(6, LOW);\n    delay(500);\n  } else {\n    digitalWrite(2, LOW);\n    digitalWrite(3, LOW);\n    digitalWrite(6, LOW);\n    digitalWrite(7, LOW);\n    digitalWrite(4, HIGH);\n    digitalWrite(5, HIGH);\n    delay(4000);\n    digitalWrite(4, LOW);\n    digitalWrite(3, HIGH);\n    digitalWrite(5, HIGH);\n    delay(1500);\n    digitalWrite(3, LOW);\n    digitalWrite(2, HIGH);\n    digitalWrite(5, HIGH);\n    delay(500);\n    digitalWrite(5, LOW);\n    digitalWrite(2, HIGH);\n    digitalWrite(7, HIGH);\n    delay(4000);\n    digitalWrite(7, LOW);\n    digitalWrite(2, HIGH);\n    digitalWrite(6, HIGH);\n    delay(1500);\n    digitalWrite(6, LOW);\n    digitalWrite(2, HIGH);\n    digitalWrite(5, HIGH);\n    delay(500);\n  }\n}",
+    "kind": "night"
+  },
+  {
+    "name": "Confrontare una tensione con una soglia",
+    "pages": "297 · sviluppo della traccia",
+    "why": "L’ADC della Uno R3 rappresenta la tensione con un intero da 0 a 1023. Con riferimento a 5 V, la metà scala è circa 2,5 V.",
+    "wires": "Collega gli estremi di un potenziometro da 10 kΩ a 5 V e GND e il cursore ad A0. Sul banco il potenziometro è rappresentato da due resistenze variabili equivalenti, Pot_alto (TV27–a27) e Pot_basso (e27–TG30); A0 è collegato a b27. Usa il LED L integrato su D13. Il banco precarica anche un LED esterno di osservazione su D13 con 330 Ω in serie verso GND; il ramo è facoltativo.",
+    "watch": "Avvia, poi imposta 511 e 512, avanzando di almeno 200 ms dopo ciascuna modifica. L si accende a partire da 512. La lettura seriale mostra il valore effettivo di A0.",
+    "challenge": "Come scegli una soglia prossima a 3 V?",
+    "answer": "Con riferimento a 5 V, 3/5 × 1023 ≈ 614. Sostituisci 512 con 614 e riprova.",
+    "pins": [
+      13
+    ],
+    "code": "void setup() {\n  pinMode(13, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int valore = analogRead(A0);\n  Serial.println(valore);\n  if (valore >= 512) {\n    digitalWrite(13, HIGH);\n  } else {\n    digitalWrite(13, LOW);\n  }\n  delay(200);\n}",
+    "kind": "analog"
+  },
+  {
+    "name": "Regolare la luminosità in PWM",
+    "pages": "292 · approfondimento",
+    "why": "Il PWM alterna 0 e 5 V. Aumentando il duty cycle cresce la luminosità media del LED.",
+    "wires": "Collega gli estremi di un potenziometro da 10 kΩ a 5 V e GND e il cursore ad A0. Sul banco il potenziometro è rappresentato da due resistenze variabili equivalenti, Pot_alto (TV27–a27) e Pot_basso (e27–TG30); A0 è collegato a b27. D9 alimenta il LED esterno tramite una resistenza in serie; il catodo va a GND.",
+    "watch": "Avvia, varia il cursore e attendi almeno 200 ms. Il valore PWM va da 0 a 255. Il simulatore risolve il circuito nelle fasi a 0 e 5 V e ne media le correnti; la luminosità è indicativa, non sono visualizzati i singoli impulsi.",
+    "challenge": "Che comando ottieni per A0 = 512?",
+    "answer": "128 su 255. La divisione intera per quattro converte la scala a 10 bit nella scala a 8 bit.",
+    "pins": [
+      9
+    ],
+    "code": "void setup() {\n  pinMode(9, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int livello = analogRead(A0) / 4;\n  analogWrite(9, livello);\n  Serial.println(livello);\n  delay(200);\n}",
+    "kind": "analog"
+  }
+];
 
     const $ = id => document.getElementById(id);
     const bandPalette = ['#1e2228','#6b3826','#d62828','#f07119','#f3c623','#1f8a4c','#2563eb','#7e3af2','#7a828d','#f8fafc','#c99a2e','#b4bec9'];
@@ -1376,13 +1613,13 @@
           checkPin(p);
           if (io.modes[p] === 1) return io.pins[p] > 0 ? 1 : 0;
           const measured=nativeBoard.read('D'+p); if(measured!==null)return +(measured>=2.5);
-          const pressed = p === 12 ? io.button : Boolean(io.pinInputs[p]);
+          const pressed = p === 12 && ['button','night'].includes(lesson.kind) ? false : p === 12 ? io.button : Boolean(io.pinInputs[p]);
           return io.modes[p] === 2 ? (pressed ? 0 : 1) : (pressed ? 1 : 0);
         },
         analogRead: (p) => {
           const ch = p >= 14 && p <= 19 ? p - 14 : p;
           if (!Number.isInteger(ch) || ch < 0 || ch > 5) throw Error('Ingresso analogico valido: A0…A5');
-          const measured=nativeBoard.read('A'+ch);return measured===null?(ch===0?io.adc:0):Math.max(0,Math.min(1023,Math.round(measured*1023/5)));
+          const measured=nativeBoard.read('A'+ch);return measured===null?(ch===0&&lesson.kind!=='analog'?io.adc:0):Math.max(0,Math.min(1023,Math.round(measured*1023/5)));
         },
         pinMode: (p, m) => {
           checkPin(p);
@@ -1655,66 +1892,20 @@
     }
 
     function schematic(l, seriesOhms) {
-      const rows = [];
-      const rLabel = formatOhms(seriesOhms);
-      function wire(d) { return '<path d="' + d + '" fill="none" stroke="#1e3a8a" stroke-width="2"/>'; }
-      function txt(x, y, s) { return '<text x="' + x + '" y="' + y + '" fill="#0f172a" font-family="ui-monospace,Consolas,monospace" font-size="12" font-weight="700">' + s + '</text>'; }
-      function led(p, name) {
-        return txt(8, 24, 'D' + p) + wire('M40 20H62m42 0h49m18 0h49') +
-          '<rect x="62" y="14" width="42" height="12" rx="2" fill="#fef3c7" stroke="#92400e" stroke-width="1.6"/>' +
-          txt(60, 43, rLabel) +
-          wire('M153 12v16l16 -8z M170 10v20 M161 9l7 -7m-4 0h4v4 M172 9l7 -7m-4 0h4v4') +
-          txt(222, 24, 'GND') + txt(270, 24, name);
-      }
-      if (l.kind === 'display') {
-        rows.push(txt(9, 23, 'Pin') + txt(85, 23, 'D5  D6  D7  D8  D9  D10 D11 D12'));
-        rows.push(txt(9, 19, 'Segm. + ' + rLabel) + txt(95, 19, 'dp  a   b   c   d   e   f   g'));
-      } else if (l.pins.length === 6) {
-        l.pins.forEach((p, i) => rows.push(led(p, (i < 3 ? 'A ' : 'B ') + ['rosso', 'giallo', 'verde'][i % 3])));
-      } else if (l.pins.length === 2 || l.pins[0] === 9) {
-        l.pins.forEach(p => rows.push(led(p, 'LED')));
-      } else {
-        // Built-in LED circuit: D13 → 1kΩ SMD resistor → LED L → GND (all on-board)
-        rows.push(
-          txt(10, 28, 'D13') +
-          wire('M42 24H72') +
-          // SMD resistor symbol
-          '<rect x="72" y="17" width="38" height="14" rx="3" fill="#c8a060" stroke="#7a4e1e" stroke-width="1.2"/>' +
-          '<rect x="77" y="17" width="4" height="14" fill="#d62828" opacity="0.85"/>' +
-          '<rect x="84" y="17" width="4" height="14" fill="#1e293b" opacity="0.85"/>' +
-          '<rect x="91" y="17" width="4" height="14" fill="#1f8a4c" opacity="0.85"/>' +
-          txt(72, 43, '~1 kΩ SMD') +
-          wire('M110 24H143 M162 24H200') +
-          // LED symbol (triangle + bar)
-          '<path d="M143 14 L143 34 L162 24 Z" fill="#f59e0b" stroke="#92400e" stroke-width="1.4"/>' +
-          '<line x1="162" y1="13" x2="162" y2="35" stroke="#92400e" stroke-width="2.5"/>' +
-          // LED rays
-          '<line x1="166" y1="11" x2="172" y2="7" stroke="#f59e0b" stroke-width="1.4"/>' +
-          '<line x1="169" y1="15" x2="176" y2="13" stroke="#f59e0b" stroke-width="1.4"/>' +
-          txt(140, 43, 'LED L') +
-          wire('M200 24H230') +
-          txt(234, 28, 'GND') +
-          // Label below
-          txt(50, 60, 'Circuito integrato sulla scheda · nessun componente esterno richiesto')
-        );
-      }
-      if (['button', 'night'].includes(l.kind)) {
-        rows.push(
-          txt(8, 23, '5 V') + wire('M40 19h25m0 0l25 -12m4 12h48m0 0h42m40 0h45') +
-          '<circle cx="142" cy="19" r="3" fill="#1e3a8a"/>' + wire('M142 19v15h-30') + txt(78, 38, 'D12') +
-          '<rect x="184" y="13" width="40" height="12" rx="2" fill="#fef3c7" stroke="#92400e" stroke-width="1.6"/>' +
-          txt(181, 42, '10 kΩ') + txt(273, 23, 'GND')
-        );
-      }
-      if (l.kind === 'analog') {
-        rows.push(
-          txt(8, 22, '5 V') + wire('M40 18h54m77 0h46') +
-          '<rect x="94" y="12" width="77" height="12" rx="2" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.6"/>' +
-          wire('M90 38h32l12 -13m-7 2l7 -2 -1 7') + txt(62, 42, 'A0') + txt(221, 22, 'GND') + txt(270, 22, '10 kΩ pot')
-        );
-      }
-      return '<svg role="img" aria-label="Schema dei collegamenti" viewBox="0 0 340 ' + (rows.length * 49 + 8) + '">' +
-        rows.map((r, i) => '<g transform="translate(0 ' + (6 + 49 * i) + ')">' + r + '</g>').join('') + '</svg>';
+      let rows=[];
+      const W=(d)=>`<path d="${d}" fill="none" stroke="#334155" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>`;
+      const T=(x,y,t,extra='')=>`<text x="${x}" y="${y}" fill="#0f172a" font-family="system-ui,sans-serif" font-size="11" ${extra}>${t}</text>`;
+      const R=(x,y,r)=>`<rect x="${x}" y="${y-6}" width="46" height="12" fill="#fff" stroke="#334155" stroke-width="1.7"/>`+T(x+23,y+21,r,'text-anchor="middle"');
+      const G=(x,y)=>W(`M${x} ${y}v5m-8 0h16m-5 4h10m-3 4h6`);
+      const D=(x,y,reverse=false)=>`<g transform="translate(${x} ${y}) ${reverse?'scale(-1 1)':''}">${W('M-10 -8V8L8 0Z M9 -9V9 M-1 -11l7 -8m-4 0h4v4 M9 -11l7 -8m-4 0h4v4')}</g>`;
+      const row=(height,content)=>rows.push({height,content});
+      const display=l.kind==='display',ca=display&&$('pol').selectedIndex===1;
+      if(l.pins.includes(13)) row(78,T(10,12,'LED L integrato · schema funzionale')+T(10,38,'D13')+W('M39 34H58')+`<rect x="58" y="23" width="58" height="22" rx="3" fill="#fff" stroke="#334155"/>`+T(87,37,'Buffer','text-anchor="middle"')+W('M116 34H137 M183 34H211 M230 34H290')+R(137,34,'~1 kΩ')+D(221,34)+G(290,34)+T(221,56,'L','text-anchor="middle"'));
+      l.pins.forEach((p,i)=>{const label=display?['dp','a','b','c','d','e','f','g'][i]:l.pins.length===6?((i<3?'A ':'B ')+['rosso','giallo','verde'][i%3]):'LED';row(58,T(8,28,'D'+p)+W('M40 24H65 M111 24H144 M163 24H235')+R(65,24,formatOhms(seriesOhms))+D(154,24,ca)+T(178,16,label)+(ca?T(238,28,'5 V · comune'):G(235,24)+T(249,28,display?'GND · comune':'GND')));});
+      if(display)row(30,T(10,16,ca?'Anodo comune: LOW accende il segmento.':'Catodo comune: HIGH accende il segmento.'));
+      if(['button','night'].includes(l.kind))row(85,T(10,13,'Ingresso D12 · pull-down')+T(10,34,'5 V')+W('M36 30H65 M65 30L91 17 M96 30H145 M145 30H202 M145 30V50H166 M212 50H268')+`<circle cx="65" cy="30" r="2" fill="#334155"/><circle cx="96" cy="30" r="2" fill="#334155"/><circle cx="145" cy="30" r="3" fill="#334155"/>`+T(204,34,'D12')+R(166,50,'10 kΩ')+G(268,50)+T(280,54,'GND'));
+      if(l.kind==='analog')row(86,T(10,13,'Potenziometro 10 kΩ · partitore')+T(10,38,'5 V')+W('M36 34H70 M116 34H142 M188 34H264 M142 34V62H196')+R(70,34,'R alto')+R(142,34,'R basso')+`<circle cx="142" cy="34" r="3" fill="#334155"/>`+T(201,66,'A0')+G(264,34)+T(276,38,'GND')+T(70,78,'R alto + R basso = 10 kΩ'));
+      let y=6;return '<svg role="img" aria-label="Schema elettrico della guida" viewBox="0 0 340 '+(rows.reduce((n,r)=>n+r.height,12))+'">'+rows.map(r=>{let g=`<g transform="translate(0 ${y})">${r.content}</g>`;y+=r.height;return g}).join('')+'</svg>';
     }
 
     // Costruzione Uno R3 headers
@@ -1768,7 +1959,7 @@
     let seriesOhms = 330;
 
     function usesExternalResistor(l) {
-      return l.kind === 'display' || l.kind === 'road' || l.kind === 'night' || l.pins.length === 2 || l.pins[0] === 9;
+      return l.pins.length > 0;
     }
 
     function pause() {
@@ -1822,13 +2013,17 @@
       draw();
     }
 
+    let chipSignature = '';
     function updateElectricalIntegration() {
       const chips = $('resistorChips');
-      chips.textContent = '';
+      const nextChipSignature = lesson.name + '/' + seriesOhms;
+      const rebuildChips = chipSignature !== nextChipSignature;
+      if (rebuildChips) { chips.replaceChildren(); chipSignature = nextChipSignature; }
       const usesExt = usesExternalResistor(lesson);
       $('resistorTunerWrap').hidden = !usesExt;
 
       function addChip(ohms, labelPrefix) {
+        if (!rebuildChips) return;
         const bands = resistanceToBands(ohms);
         const a = document.createElement('a');
         a.className = 'resistor-mini';
@@ -1851,7 +2046,7 @@
       if (!usesExt && !['button', 'night', 'analog'].includes(lesson.kind)) addChip(330, 'Rif. LED esterno:');
 
       const activePin = lesson.pins[0];
-      const duty = io ? (io.pins[activePin] / 255) : 1;
+      const duty = io ? (io.pins[activePin] / 255) : 0;
       const iMaxMa = ((5 - 2) / seriesOhms) * 1000;
       const iAvgMa = iMaxMa * duty;
       const pMw = Math.pow(iMaxMa / 1000, 2) * seriesOhms * 1000 * duty;
@@ -1859,7 +2054,7 @@
       if (usesExt) {
         $('elecReadout').textContent =
           'Pin Uno 5 V (Vf LED ≈ 2,0 V) · R = ' + formatOhms(seriesOhms) +
-          ' → I picco = ' + fmt(iMaxMa, 1) + ' mA · I media attuale = ' + fmt(iAvgMa, 1) + ' mA · P = ' + fmt(pMw, 1) + ' mW';
+          ' → I teorica a 5 V = ' + fmt(iMaxMa, 1) + ' mA. Correnti calcolate nel banco: ' + lesson.pins.map(p=>'D'+p+' '+fmt(nativeBoard.ledCurrent(p)*1000,1)+' mA').join(' · ') + (lesson.kind==='analog'?' · PWM: corrente media delle fasi HIGH/LOW.':'');
         if (iMaxMa > 20) {
           $('elecWarn').hidden = false;
           $('elecWarn').textContent = '⚠ Corrente superiore a 20 mA (' + fmt(iMaxMa, 1) + ' mA): su un pin Arduino Uno usa almeno 220–330 Ω.';
@@ -1871,21 +2066,25 @@
         }
       } else if (['button', 'night'].includes(lesson.kind)) {
         const iPd = (5 / 10000) * 1000;
-        $('elecReadout').textContent = 'Pull-down 10 kΩ verso GND · A pulsante premuto: V(D12) = 5,00 V · corrente nel resistore = ' + fmt(iPd, 2) + ' mA.';
+        $('elecReadout').textContent = 'Pull-down 10 kΩ verso GND · valore teorico a pulsante chiuso: 0,50 mA · '+(nativeBoard.peek('D12')===null?'D12 scollegato / non misurabile.':'V(D12) = '+fmt(nativeBoard.peek('D12'),2)+' V.');
         $('elecWarn').hidden = true;
       } else if (lesson.kind === 'analog') {
-        const vA0 = io ? io.adc * 5 / 1023 : 0;
-        $('elecReadout').textContent = 'Partitore su potenziometro 10 kΩ · V(A0) = ' + fmt(vA0, 2) + ' V · ADC = ' + (io ? io.adc : 0) + ' / 1023.';
+        const vA0 = nativeBoard.peek('A0');
+        $('elecReadout').textContent = 'Partitore su potenziometro 10 kΩ · ' + (vA0===null?'A0 scollegato / non misurabile.':'V(A0) = '+fmt(vA0,2)+' V · ADC = '+Math.round(vA0*1023/5)+' / 1023.');
         $('elecWarn').hidden = true;
       } else {
-        $('elecReadout').textContent = 'LED integrato L su D13 con resistore SMD interno sulla scheda Arduino Uno R3.';
+        $('elecReadout').textContent = 'LED integrato L: circuito a bordo della Uno R3 comandato da D13, con buffer e resistenza SMD.';
         $('elecWarn').hidden = true;
       }
 
+      if(usesExt&&['button','night'].includes(lesson.kind)){const v=nativeBoard.peek('D12');$('elecReadout').textContent+=' · '+(v===null?'D12 scollegato':'V(D12) = '+fmt(v,2)+' V');}
+      if(usesExt&&lesson.kind==='analog'){const v=nativeBoard.peek('A0');$('elecReadout').textContent+=' · '+(v===null?'A0 scollegato':'V(A0) = '+fmt(v,3)+' V · ADC '+Math.round(v*1023/5));}
       const mainBands = resistanceToBands(usesExt ? seriesOhms : (['button', 'night'].includes(lesson.kind) ? 10000 : 330));
       $('openResistenze').href = 'resistenze.html?bands=' + mainBands.join(',');
 
     }
+
+    function branchLayout(i) { const span=lesson.kind==='display'?1:2; const col=2+(span+2)*i; return {col,mid:col+span,end:col+span+1}; }
 
     function buildBreadboardProject() {
       const parts = [];
@@ -1898,54 +2097,79 @@
       }
 
       lesson.pins.forEach((pin, i) => {
-        const col = 2 + 3 * i;
+        const {col,mid,end} = branchLayout(i);
         const tag = lesson.kind === 'display' ? '_' + labels[i] : '';
-        const state = io.modes[pin] === 1 && (Boolean(io.pins[pin]) !== commonAnode);
+        const state = io?.modes[pin] === 1 && (Boolean(io.pins[pin]) !== commonAnode);
         const color = road ? ['red','amber','green'][i % 3] : 'amber';
         // Per l’anodo comune il ramo si chiude verso massa.
         const drive = commonAnode ? 'TG' : 'TV';
         const common = commonAnode ? 'TV' : 'TG';
+        // Layout più disteso: jumper Arduino -> nodo ingresso, resistenza più lunga,
+        // LED separato e ritorno esplicito alla rail comune.
         add('D'+pin+tag, 'button', [drive+col,'a'+col], { on: state });
-        add('R_D'+pin, 'resistor', ['e'+col,'e'+(col+1)], {
+        add('R_D'+pin, 'resistor', ['e'+col,'e'+mid], {
           bands: resistanceToBands(usesExternalResistor(lesson) ? seriesOhms : 330)
         });
-        const led = ['a'+(col+1),'a'+(col+2)];
+        const led = ['a'+mid,'a'+end];
         add('LED_D'+pin+tag, 'led', commonAnode ? led.reverse() : led, {color});
-        add('COM_D'+pin, 'wire', ['e'+(col+2), common+(col+2)], {color:commonAnode?'red':'black'});
+        add('COM_D'+pin, 'wire', ['e'+end, common+end], {color:commonAnode?'red':'black'});
       });
 
       if (lesson.kind === 'night' || lesson.kind === 'button') {
-        add('Ingresso_D12','button',['TV27','a27'],{on:io.button});
-        add('PullDown_D12','resistor',['e27','TG27'],{bands:[1,0,3,10]});
+        add('Ingresso_D12','button',['TV27','a27'],{on:io?.button??false});
+        add('PullDown_D12','resistor',['e27','TG30'],{bands:[1,0,3,10]});
       }
       if (lesson.kind === 'analog') {
-        const bottom = 10000 * io.adc / 1023;
+        const bottom = 10000 * (io?.adc??0) / 1023;
         function leg(id, from, to, ohms) {
           if (ohms === 0) add(id,'wire',[from,to]);
-          else add(id,'resistor',[from,to],{bands:resistanceToBands(ohms)});
+          else add(id,'resistor',[from,to],{bands:resistanceToBands(ohms),ohms});
         }
         leg('Pot_alto','TV27','a27',10000-bottom);
-        leg('Pot_basso','e27','TG27',bottom);
+        leg('Pot_basso','e27','TG30',bottom);
         notes.push('A0 in b27, partitore arrotondato a 2 cifre.');
-        if (lesson.pins[0]===9) notes[0]='PWM D9 '+io.pins[9]+'/255. Interruttore chiuso per la fase alta di un PWM attivo.';
+        if (lesson.pins[0]===9) notes[0]='PWM D9 '+(io?.pins[9]??0)+'/255. Interruttore chiuso per la fase alta di un PWM attivo.';
       }
-      if (lesson.pins.includes(13)) notes.push('L è rappresentato da un LED esterno con 330 Ω.');
+      if (lesson.pins.includes(13)) notes.push('L integrato e LED esterno facoltativo su D13.');
       if (commonAnode) notes.push('Anodo comune: interruttore chiuso = pin LOW.');
       return {version:1,supply:5,powered:true,leads:['TV1','TG1'],parts,note:notes.join(' ').slice(0,160)};
     }
 
+    function updateGuideIndicators() {
+      const colors = ['#ef4444', '#f59e0b', '#22c55e'];
+      const usesExt = usesExternalResistor(lesson);
+      for (const [i, p] of lesson.pins.entries()) {
+        const node = $('lamp' + p), v = io.pins[p], pwm = lesson.name.includes('PWM');
+        if(!node)continue;
+        const color = ['night', 'road'].includes(lesson.kind) ? colors[i % 3] : '#f59e0b';
+        const curMa = usesExt ? nativeBoard.ledCurrent(p)*1000 : 0;
+        const lit=curMa>0.001;
+        node.firstChild.style.background = lit ? color : '#64748b';
+        node.firstChild.style.opacity = lit ? Math.min(1,.25+.75*curMa/8).toFixed(2) : 1;
+        node.lastChild.textContent = (lesson.pins.length === 6 ? (i < 3 ? 'A ' : 'B ') + ['rosso', 'giallo', 'verde'][i % 3] + ' · ' : '') +
+          'D' + p + ' ' + (pwm ? v + '/255' : v ? 'HIGH' : 'LOW') + (usesExt ? ' (' + fmt(curMa, 2) + ' mA nel LED)'  : '');
+      }
+
+      $('sevenPreview').hidden=lesson.kind!=='display';
+      if(lesson.kind==='display'){let on=[];['dp','a','b','c','d','e','f','g'].forEach((k,i)=>{let lit=nativeBoard.ledCurrent(5+i)>.0001;$('seg'+k).setAttribute(k==='dp'?'fill':'stroke',lit?'#ff3e38':'#403638');if(lit)on.push(k)});$('segmentStatus').textContent=on.length?'Segmenti accesi: '+on.join(', '):'Tutti i segmenti spenti';}
+      const actualAdc=nativeBoard.peek('A0');
+      $('reading').textContent=lesson.kind==='analog'?(actualAdc===null?'A0 scollegato / non misurabile':Math.round(actualAdc*1023/5)+' / 1023 · '+fmt(actualAdc,3)+' V'):(io.adc+' / 1023');
+    }
+
     function draw() {
+      nativeBoard.update();
       $('clock').textContent = (io.time / 1000).toFixed(2).replace('.', ',') + ' s';
       for (let p = 0; p < 14; p++) {
         const el = $('pin' + p);
         if (!el) continue;
         const isOut = io.modes[p] === 1;
+        const measured = isOut?null:nativeBoard.peek('D'+p);
         const on = isOut
           ? io.pins[p] > 0
-          : (io.modes[p] === 2 ? !(p === 12 ? io.button : io.pinInputs[p]) : (p === 12 ? io.button : io.pinInputs[p]));
+          : measured!==null ? measured>=2.5 : (io.modes[p] === 2 ? !(p === 12 ? io.button : io.pinInputs[p]) : (p === 12 && ['button','night'].includes(lesson.kind)?false:p === 12 ? io.button : io.pinInputs[p]));
         el.classList.toggle('on', on);
         el.classList.toggle('inpin', !isOut);
-        el.title = 'D' + p + ' · ' + (isOut ? 'OUTPUT (' + io.pins[p] + '/255)' : (io.modes[p] === 2 ? 'INPUT_PULLUP' : 'INPUT') + ' (clicca per cambiare)') + ' · ' + (on ? 'HIGH' : 'LOW');
+        el.title = 'D' + p + ' · ' + (isOut ? 'OUTPUT (' + io.pins[p] + '/255)' : (io.modes[p] === 2 ? 'INPUT_PULLUP' : 'INPUT') + ' (ingresso simulato)') + ' · ' + (on ? 'HIGH' : 'LOW');
       }
 
       const lVal = io.modes[13] === 1 ? io.pins[13] : 0;
@@ -1958,28 +2182,15 @@
       txDot.style.boxShadow = io.txPulse > 0 ? '0 0 7px #fde047' : 'none';
 
       const a0El = $('pinA0');
-      if (a0El) a0El.title = 'A0 · ' + io.adc + ' / 1023 (' + (io.adc * 5 / 1023).toFixed(2).replace('.', ',') + ' V)';
+      if(a0El){const v=nativeBoard.peek('A0');a0El.title=v===null?'A0 · non collegato / non misurabile':'A0 · '+Math.round(v*1023/5)+' / 1023 ('+fmt(v,3)+' V)';}
 
-      const colors = ['#ef4444', '#f59e0b', '#22c55e'];
-      const usesExt = usesExternalResistor(lesson);
-      for (const [i, p] of lesson.pins.entries()) {
-        const node = $('lamp' + p), v = io.pins[p], pwm = lesson.name.includes('PWM');
-        const color = ['night', 'road'].includes(lesson.kind) ? colors[i % 3] : '#f59e0b';
-        const curMa = usesExt && v > 0 ? ((5 - 2) * (v / 255) / seriesOhms) * 1000 : 0;
-        node.firstChild.style.background = v ? color : '#64748b';
-        node.firstChild.style.opacity = v ? (0.25 + 0.75 * v / 255).toFixed(2) : 1;
-        node.lastChild.textContent = (lesson.pins.length === 6 ? (i < 3 ? 'A ' : 'B ') + ['rosso', 'giallo', 'verde'][i % 3] + ' · ' : '') +
-          'D' + p + ' ' + (pwm ? v + '/255' : v ? 'HIGH' : 'LOW') + (usesExt && v > 0 ? ' (' + fmt(curMa, 1) + ' mA)' : '');
-      }
-
-      $('reading').textContent = io.adc + ' / 1023 · ' + (io.adc * 5 / 1023).toFixed(2).replace('.', ',') + ' V';
+      updateGuideIndicators();
       const log = io.log.join('\n') + (io.serialBuf ? (io.log.length ? '\n' : '') + io.serialBuf : '');
       const serial = log || 'In attesa di dati…';
       if ($('serial').textContent !== serial) {
         $('serial').textContent = serial;
         $('serial').scrollTop = $('serial').scrollHeight;
       }
-      nativeBoard.update();
       updateElectricalIntegration();
     }
 
@@ -1999,6 +2210,29 @@
         : lesson.code;
     }
 
+    function updateGuideHoles(){
+      const container=$('guideHoles');container.replaceChildren();
+      const pins=lesson.pins, display=lesson.kind==='display',ca=display&&$('pol').selectedIndex===1;
+      function para(t){const p=document.createElement('p');p.textContent=t;container.append(p)}
+      if(!pins.length&&!['button','night','analog'].includes(lesson.kind)){para('Nessun collegamento esterno necessario. La breadboard è inizialmente vuota e rimane utilizzabile.');return}
+      const guideProject=buildBreadboardProject();
+      const guideParts=guideProject.parts.filter(p=>!/^D\d+(?:_|$)/.test(p.id));
+      const need5=guideParts.some(p=>p.p.some(h=>/^TV|^BV/.test(h)));
+      const needG=guideParts.some(p=>p.p.some(h=>/^TG|^BG/.test(h)));
+      const power=[]; if(need5) power.push('5V → TV1'); if(needG) power.push('GND → TG1');
+      para((power.length?'Alimentazione del circuito iniziale: '+power.join('; ')+'. ':'Nessuna alimentazione di rail richiesta nel montaggio guida. ')+'Le sigle dei fori si riferiscono al banco virtuale.');
+      if(pins.length){
+        const sc=document.createElement('div');sc.className='guide-wiring-scroll';const table=document.createElement('table');table.className='guide-wiring-table';sc.append(table);container.append(sc);
+        function tr(cells,header=false){const tr=document.createElement('tr');for(const text of cells){const el=document.createElement(header?'th':'td');el.textContent=text;tr.append(el)}table.append(tr)}
+        tr(['Pin / carico','Jumper','R '+formatOhms(seriesOhms),'Anodo (+)','Catodo (−)','Ritorno'],true);
+        pins.forEach((pin,i)=>{const {col,mid,end}=branchLayout(i),label=display?['dp','a','b','c','d','e','f','g'][i]:pins.length===6?['A rosso','A giallo','A verde','B rosso','B giallo','B verde'][i]:'LED';tr(['D'+pin+' · '+label,'a'+col,'e'+col+'–e'+mid,'a'+(ca?end:mid),'a'+(ca?mid:end),'e'+end+' → '+(ca?'TV':'TG')+end])});
+        para('Inserisci prima i componenti nei fori indicati, poi i cavetti. Il valore della resistenza in serie può essere cambiato dal selettore del laboratorio.');
+      }
+      if(['button','night'].includes(lesson.kind))para('Ingresso D12: pulsante/interruttore TV27–a27, jumper D12 → b27, pull-down 10 kΩ e27–TG30.');
+      if(lesson.kind==='analog')para('Ingresso A0: ramo alto TV27–a27, ramo basso e27–TG30, jumper A0 → b27. I due rami equivalgono a un potenziometro da 10 kΩ e sono comandati dal cursore.');
+      para('Il circuito qui descritto è già montato all’apertura dell’esperienza. Puoi modificarlo liberamente: il reset della Uno non cambia il cablaggio. Usa «Ripristina circuito guida» per tornare al montaggio di riferimento.');
+    }
+
     function selectLesson() {
       const i = Number($('lesson').value);
       lesson = lessons[i];
@@ -2009,7 +2243,6 @@
       for (const [id, key] of Object.entries({ title: 'name', why: 'why', wires: 'wires', watch: 'watch', question: 'challenge', answer: 'answer' })) {
         $(id).textContent = lesson[key];
       }
-      $('schematic').innerHTML = schematic(lesson, seriesOhms);
       $('buttonbox').hidden = !['button', 'night'].includes(lesson.kind);
       $('buttonlabel').textContent = lesson.kind === 'night' ? 'Switch D12 · modalità notte' : 'Pulsante D12 premuto';
       $('adcbox').hidden = lesson.kind !== 'analog';
@@ -2017,6 +2250,7 @@
       $('button').checked = false;
       $('adc').value = 0;
       $('pol').selectedIndex = 0;
+      $('schematic').innerHTML = schematic(lesson, seriesOhms);
       $('solution').open = false;
       $('code').value = source();
       $('loads').replaceChildren();
@@ -2027,7 +2261,9 @@
         el.innerHTML = '<i class="dot"></i><span></span>';
         $('loads').append(el);
       });
-      $('bbSubtitle').textContent = lesson.name;
+      $('bbSubtitle').textContent = lesson.name + ' · circuito guida precaricato';
+      updateGuideHoles();
+      nativeBoard.invalidateGuide();
       reset();
     }
 
@@ -2050,6 +2286,7 @@
         sel.value = String(r);
       }
       $('lesson').value = 3; // Alternare due LED (uses external series resistors)
+      selectLesson();
     }
 
     buildBoardPins();
@@ -2089,14 +2326,26 @@
     function node(h) { const [, r, c] = h.match(/^(\D+)(\d+)$/); return r.length === 2 ? r : (r < 'f' ? 'T' : 'B') + c; }
     function xy(h) { const [, r, c] = h.match(/^(\D+)(\d+)$/); return [70 + (c - 1) * 36, ys[rows.indexOf(r)]]; }
     let net = node, leads = [null, null], wiring = null;
-    let powered = true, actualV = 0, actualI = 0, regime = 'CV';
+    let powered = true, actualV = 0, actualI = 0, regime = 'CV', pwmPhase = null, rmsPower = new Map();
 
     function solve() {
       const target=5;
       if (!Number.isFinite(target) || target < 0 || target > 24) throw Error('Imposta una tensione tra 0 e 24 V.');
       actualV = powered ? target : 0;
       regime = powered ? 'CV' : 'OFF';
-      operatingPoint(actualV);
+      // Media su fasi PWM: ogni uscita commuta fra 0 e 5 V.
+      // In presenza di più PWM, si assume una fase iniziale comune (modello didattico).
+      const duties = [...new Set(jumpers.map(j=>/^D\d+$/.test(j.pin)&&io.modes[+j.pin.slice(1)]===1?io.pins[+j.pin.slice(1)]/255:0).filter(d=>d>0&&d<1))].sort((a,b)=>a-b);
+      rmsPower = new Map();
+      if(!duties.length){operatingPoint(actualV);for(const p of parts)if(p.t==='resistor')rmsPower.set(p.id,(currents.get(p.id)||0)**2*(p.ohms??resistance(p.bands)));return;}
+      const stops=[0,...duties,1],solves=[],meanI=new Map();let totalI=0;
+      try{for(let k=0;k<stops.length-1;k++){
+        const weight=stops[k+1]-stops[k];pwmPhase=(stops[k+1]+stops[k])/2;
+        operatingPoint(actualV);solves.push([weight,voltages]);totalI+=weight*actualI;
+        for(const [id,i] of currents)meanI.set(id,(meanI.get(id)||0)+weight*i);
+        for(const p of parts)if(p.t==='resistor')rmsPower.set(p.id,(rmsPower.get(p.id)||0)+weight*(currents.get(p.id)||0)**2*(p.ohms??resistance(p.bands)));
+      }}finally{pwmPhase=null;}
+      voltages=h=>solves.reduce((sum,[w,read])=>sum+w*read(h),0);currents=meanI;actualI=totalI;
     }
 
     function operatingPoint(v) {
@@ -2107,7 +2356,7 @@
         if (a !== b) parent.set(a, b);
       }
       net = h => root(node(h));
-      const fixed=new Map(); const hi='VCC',lo='GND';
+      const fixed=new Map([['VCC',5],['GND',0]]); const hi='VCC',lo='GND';
       for(const j of jumpers){
         const v=getVoltage(j.pin),n=net(j.h);
         if(v===null)continue;
@@ -2224,7 +2473,7 @@
     function recalc() {
       voltages = null;
       try { solve(); $('error').textContent = ''; }
-      catch (e) { $('error').textContent = e.message; }
+      catch (e) { voltages=null;currents=new Map();rmsPower=new Map();$('error').textContent = e.message; }
     }
 
     function line(x, y, u, v, color, width) {
@@ -2318,6 +2567,7 @@
       return [mx - (dy / len) * bend, my + (dx / len) * bend];
     }
 
+    function blendColor(a,b,t){const x=parseInt(a.slice(1),16),y=parseInt(b.slice(1),16);return '#'+[16,8,0].map(k=>Math.round(((x>>k)&255)*(1-t)+((y>>k)&255)*t).toString(16).padStart(2,'0')).join('');}
     function shape(p, ghost = false) {
       const pts = p.p.map(h => coords[h]), [a, b] = pts;
       const center = pts.length === 3 ? b : [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], [x, y] = center;
@@ -2329,11 +2579,29 @@
         const g=cableShape([a[0],a[1]-9],[b[0],b[1]-9],p.slack??.24,0.9,1);
         art = '<path d="'+g.d+'" fill="none" stroke="transparent" stroke-width="19"/>'+cableArtwork(g,wc,5.1,tool==='select'&&p.id===active)+plug(...a,1.05)+plug(...b,1.05);
       } else {
-        art = pts.map(q =>
-          line(...q, x, y, 'transparent', 15) +
-          line(...q, x, y, 'url(#bbLead)', 3.2) +
-          circle(q[0], q[1], 2.7, '#e2e8f0', 'stroke="#475569" stroke-width="0.8"')
-        ).join('');
+        art = pts.map(q => {
+          const dx = x - q[0], dy = y - q[1];
+          const len = Math.hypot(dx, dy) || 1;
+          const ux = dx / len, uy = dy / len;
+          const neckX = q[0] + ux * Math.min(9, len * 0.28);
+          const neckY = q[1] + uy * Math.min(9, len * 0.28);
+          return '' +
+            // hit zone
+            line(...q, x, y, 'transparent', 15) +
+            // lead shadow and main metallic body
+            line(q[0] + .55, q[1] + 1.2, x + .55, y + 1.2, 'rgba(15,23,42,.18)', 4.9) +
+            line(...q, x, y, '#64748b', 4.2) +
+            line(...q, x, y, 'url(#bbLead)', 3.2) +
+            line(q[0] - .35, q[1] - .45, x - .35, y - .45, 'rgba(255,255,255,.42)', 1.15) +
+            // more visible insertion area on the breadboard side
+            circle(q[0], q[1] + 1.1, 4.6, 'rgba(15,23,42,.12)') +
+            circle(q[0], q[1], 4.0, '#cbd5e1', 'stroke="#64748b" stroke-width="0.9"') +
+            circle(q[0], q[1], 2.5, '#f8fafc', 'stroke="#94a3b8" stroke-width="0.6"') +
+            line(q[0], q[1], neckX, neckY, '#94a3b8', 5.4) +
+            line(q[0], q[1], neckX, neckY, 'url(#bbLead)', 4.2) +
+            line(q[0] - .25, q[1] - .25, neckX - .25, neckY - .25, 'rgba(255,255,255,.55)', 1.4) +
+            circle(neckX, neckY, 1.45, '#e2e8f0', 'stroke="#64748b" stroke-width="0.55"');
+        }).join('');
       }
 
       if (p.t === 'resistor') {
@@ -2343,7 +2611,7 @@
           const fill = band === 10 ? 'url(#bbGold)' : band === 11 ? 'url(#bbSilver)' : palette[band];
           return '<rect x="' + bandPos[i] + '" y="-7.2" width="3.8" height="14.4" fill="' + fill + '"/>';
         }).join('');
-        art += '<g transform="translate(' + x + ' ' + y + ') rotate(' + ang + ')" filter="url(#bbShadow)">' +
+        art += '<g transform="translate(' + x + ' ' + y + ') rotate(' + ang + ') scale(' + Math.min(1,Math.max(.18,(Math.hypot(b[0]-a[0],b[1]-a[1])-14)/42)) + ' 1)" filter="url(#bbShadow)">' +
                '<path d="' + resBody + '" fill="url(#bbResBody)" stroke="#9a7441" stroke-width="1"/>' +
                stripes +
                '<path d="' + resBody + '" fill="none" stroke="#9a7441" stroke-width="0.9"/>' +
@@ -2353,13 +2621,13 @@
       if (p.t === 'led') {
         const lc = ledColors[p.color] || ledColors.red;
         const cur = voltages ? (currents.get(p.id) || 0) : 0;
-        const lit = cur > 0.0001;
-        const bright = Math.min(1, Math.max(0.25, Math.log10(cur * 1000 + 1) / 1.35));
+        const lit = cur > 0.000001;
+        const bright = Math.min(1, Math.max(0.03, Math.log10(Math.max(0,cur) * 1000 + 1) / 1.1));
         const over = cur > 0.025;
         const glow = lit ? circle(x, y, 24, lc.glow, 'opacity="' + bright.toFixed(2) + '"') : '';
         art += glow +
                '<g filter="url(#bbShadow)">' +
-               circle(x, y, 11.5, lit ? lc.on : lc.off, 'stroke="' + (over ? '#fbbf24' : '#334155') + '" stroke-width="' + (over ? 2.4 : 1.5) + '"') +
+               circle(x, y, 11.5, lit ? blendColor(lc.off,lc.on,bright) : lc.off, 'stroke="' + (over ? '#fbbf24' : '#334155') + '" stroke-width="' + (over ? 2.4 : 1.5) + '"') +
                '<path d="M ' + (x - 8.5) + ' ' + (y - 6) + ' A 9.5 9.5 0 0 1 ' + (x + 8.5) + ' ' + (y - 6) + '" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.8"/>' +
                circle(x - 3, y - 3, 3.6, lit ? lc.core : 'rgba(255,255,255,0.35)') +
                '</g>' +
@@ -2404,7 +2672,8 @@
       }
       let body = [
         ...parts.filter(p => p.t === 'wire'),
-        ...parts.filter(p => p.t !== 'wire')
+        ...parts.filter(p => p.t !== 'wire' && p.t !== 'button'),
+        ...parts.filter(p => p.t === 'button')
       ].map(p => shape(pos && p.id === active ? { ...p, p: pos } : p)).join('');
 
       if (Object.prototype.hasOwnProperty.call(terminals, tool) && (draft.length || hover)) {
@@ -2434,7 +2703,7 @@
           : tool === 'probe'
             ? (probes.length === 1 ? 'Tocca il foro B (−) per misurare V(A) − V(B).' : 'Tocca il foro A (+) per iniziare una misura con il voltmetro.')
             : tool === 'select'
-              ? 'Seleziona un componente per ispezionarlo o trascinarlo. Tocca un interruttore selezionato (o premi Spazio) per commutarlo.'
+              ? 'Seleziona un componente per ispezionarlo o trascinarlo. Tocca direttamente un interruttore per commutarlo.'
               : tool === 'wire' && draft.length
                 ? 'Cavo da ' + draft[0] + ' · Tocca il foro di arrivo oppure una presa della Uno.'
                 : names[tool] + ' · ' + terminals[tool][draft.length] + ' — scegli un foro libero (Esc per tornare a Seleziona).'
@@ -2478,6 +2747,8 @@
       if(sw&&io){io.button=sw.on;document.getElementById('button').checked=sw.on;lastButton=sw.on}
 
       recalc();
+      updateGuideIndicators();
+      updateElectricalIntegration();
       updateJacks();
       paint();
       inventory();
@@ -2575,8 +2846,8 @@
             panel.querySelectorAll('select')[k].focus();
           };
         }
-        const r = resistance(p.bands), t = toler[p.bands[3]], out = document.createElement('p');
-        out.textContent = fmt(r) + ' Ω ±' + fmt(t) + '% · ' + fmt(r * (1 - t / 100)) + '–' + fmt(r * (1 + t / 100)) + ' Ω';
+        const r = p.ohms??resistance(p.bands), t = toler[p.bands[3]], out = document.createElement('p');
+        out.textContent = p.ohms!=null ? fmt(r)+' Ω · ramo equivalente del potenziometro (bande indicative)' : fmt(r) + ' Ω ±' + fmt(t) + '% · ' + fmt(r * (1 - t / 100)) + '–' + fmt(r * (1 + t / 100)) + ' Ω';
         panel.append(out);
 
         const link = document.createElement('a');
@@ -2598,7 +2869,7 @@
         const cur = currents.get(p.id);
         extra = '\nI = ' + fmt(cur * 1000) + ' mA';
         if (p.t === 'resistor') {
-          const mw = cur * cur * resistance(p.bands) * 1000;
+          const mw = (rmsPower.get(p.id)??(cur * cur * (p.ohms??resistance(p.bands)))) * 1000;
           extra += ' · P = ' + fmt(mw) + ' mW';
         }
       }
@@ -2613,7 +2884,7 @@
           w.textContent = '⚠ Corrente elevata (' + fmt(cur * 1000) + ' mA > 25 mA): usa una resistenza di limitazione più alta.';
           panel.append(w);
         }
-        if (p.t === 'resistor' && cur * cur * resistance(p.bands) > 0.25) {
+        if (p.t === 'resistor' && (rmsPower.get(p.id)??(cur * cur * (p.ohms??resistance(p.bands)))) > 0.25) {
           const w = document.createElement('p');
           w.className = 'warn-box';
           w.textContent = '⚠ Potenza dissipata superiore a 250 mW (resistenza standard da 1/4 W).';
@@ -2746,7 +3017,7 @@
       if (active && allowDrag) {
         drag = { start: q, pin: e.target.hasAttribute('data-pin') ? Number(e.target.dataset.pin) : null, candidate: null, moved: false };
         svg.setPointerCapture(e.pointerId);
-      } else if (active && active === wasActive && part()?.t === 'button') {
+      } else if (active && part()?.t === 'button') {
         checkpoint();
         part().on = !part().on;
       }
@@ -2825,14 +3096,13 @@
     $('undo').onclick=()=>restore(hist,future);
     $('redo').onclick=()=>restore(future,hist);
     const sockets = new Map();
-    const saved = new Map();
     let jumpers=[], pending='', key='', signature='', lastR, lastAdc, lastButton, lastPol;
     const host = document.querySelector('.physicalBench');
     function getVoltage(pin){
       if(pin==='5V')return 5;
       if(pin==='3V3')return 3.3;
       if(pin.startsWith('GND'))return 0;
-      if(pin.startsWith('D') && io.modes[+pin.slice(1)]===1)return 5*io.pins[+pin.slice(1)]/255;
+      if(pin.startsWith('D') && io.modes[+pin.slice(1)]===1){const duty=io.pins[+pin.slice(1)]/255;return 5*(pwmPhase===null?duty:Number(pwmPhase<duty));}
       return null;
     }
     let selectedJumper=null;
@@ -2900,22 +3170,23 @@
       const changed=key!==document.getElementById('lesson').value;
       if(changed){
         selectedJumper=null;inspectText('Banco fisico','Seleziona un apparato, una presa o un cavetto.');
-        if(key!=='')saved.set(key,structuredClone({parts,jumpers,pol:lastPol}));
         key=document.getElementById('lesson').value;
-        const previous=saved.get(key);
-        if(previous){({parts,jumpers}=structuredClone(previous));lastPol=previous.pol}else lastPol=undefined;
-        if(!previous){
-          const project=buildBreadboardProject();
-          jumpers=[{pin:'5V',h:'TV1',color:'red'},{pin:'GND4',h:'TG1',color:'black'}];
-          parts=project.parts.filter(p=>{
-            const m=p.id.match(/^D(\d+)(?:_|$)/);
-            if(!m)return true;
-            jumpers.push({pin:'D'+m[1],h:p.p[1],color:['blue','orange','green','yellow'][jumpers.length%4]});return false;
-          });
-          if(['button','night'].includes(lesson.kind))jumpers.push({pin:'D12',h:'b27',color:'blue'});
-          if(lesson.kind==='analog')jumpers.push({pin:'A0',h:'b27',color:'green'});
-        }
-        hist.length=0;future.length=0;active='';pending='';draft=[];probes=[];tool='select';hover='';drag=null;notice='';signature='';
+        lastPol=undefined;
+        const project=buildBreadboardProject();
+        jumpers=[];
+        parts=project.parts.filter(p=>{
+          const m=p.id.match(/^D(\d+)(?:_|$)/);
+          if(!m)return true;
+          jumpers.push({pin:'D'+m[1],h:p.p[1],color:['blue','orange','green','yellow'][jumpers.length%4]});return false;
+        });
+        const need5 = parts.some(p=>p.p.some(h=>/^TV|^BV/.test(h)));
+        const needG = parts.some(p=>p.p.some(h=>/^TG|^BG/.test(h)));
+        if(need5) jumpers.unshift({pin:'5V',h:'TV1',color:'red'});
+        if(needG) jumpers.push({pin:'GND4',h:'TG1',color:'black'});
+        if(['button','night'].includes(lesson.kind))jumpers.push({pin:'D12',h:'b27',color:'blue'});
+        if(lesson.kind==='analog')jumpers.push({pin:'A0',h:'b27',color:'green'});
+        hist.length=0;future.length=0;active='';pending='';draft=[];probes=[];tool='select';hover='';drag=null;wiring=null;leads=[null,null];signature='';
+        notice=parts.length?'Circuito guida precaricato: pronto per la simulazione.':'Circuito integrato nella Uno: breadboard libera per aggiungere componenti.';
       }
       if(changed||lastButton!==io.button){
         const button=parts.find(p=>p.id==='Ingresso_D12');if(button)button.on=io.button;
@@ -2926,10 +3197,10 @@
           const p=parts.find(p=>p.id===id);if(p){p.t=r?'resistor':'wire';if(r){p.bands=resistanceToBands(r);p.ohms=r}else{delete p.bands;delete p.ohms}}
         }
       }
-      if(lastR!==seriesOhms&&!changed)for(const p of parts.filter(p=>p.id.startsWith('R_D')))p.bands=resistanceToBands(seriesOhms);
+      if(lastR!==seriesOhms)for(const p of parts.filter(p=>p.id.startsWith('R_D')&&p.t==='resistor')){p.bands=resistanceToBands(seriesOhms);delete p.ohms;}
       const pol=document.getElementById('pol').selectedIndex;
       if(lastPol!==undefined&&lesson.kind==='display'&&pol!==lastPol){
-        for(const p of parts){if(p.id.startsWith('LED_D'))p.p.reverse();if(p.id.startsWith('COM_D'))p.p[1]=p.p[1].replace(/^T[VG]/,pol?'TV':'TG')}
+        for(const p of parts){if(p.id.startsWith('LED_D'))p.p.reverse();if(p.id.startsWith('COM_D')){p.p[1]=p.p[1].replace(/^T[VG]/,pol?'TV':'TG');p.color=pol?'red':'black'}}
       }
       lastAdc=io.adc;lastButton=io.button;lastR=seriesOhms;lastPol=pol;
       const next=JSON.stringify([io.pins,io.modes,io.adc,io.button,seriesOhms,pol]);
@@ -2954,7 +3225,7 @@
         if(!dest)return null;
         taken.add(dest);result.push({id:'UNO_'+j.pin,t:'wire',p:[dest,j.h],on:false,color:j.color});
       }
-      return {version:1,supply:5,powered:true,parts:result,leads:buses,note:'Fotografia digitale Uno: le uscite attive sono a 5 V. PWM e 3V3 sono rappresentati come livello alto.'};
+      return {version:1,supply:5,powered:true,parts:result,leads:buses,note:'Fotografia digitale Uno: le uscite attive sono a 5 V. PWM attivo e 3V3 sono approssimati come 5 V nel solo export DC.'};
     }
     function updateExport(){
       const project=exportProject();
@@ -2981,7 +3252,8 @@
       }
     });
     registerSockets();new ResizeObserver(drawCables).observe(host);
-    return {update:patchGuide,read(pin){
+    document.getElementById('bbRestoreGuide').onclick=()=>{pause();document.getElementById('button').checked=false;document.getElementById('adc').value=0;io.button=false;io.adc=0;key='';patchGuide();draw();notice='Circuito iniziale della guida ripristinato.';paint();};
+    return {update:patchGuide,invalidateGuide(){key='';signature='';},peek(pin){const jack=jumpers.find(j=>j.pin===pin);return voltages&&jack?voltages(jack.h):null;},ledCurrent(pin){const p=parts.find(p=>p.t==='led'&&(p.id==='LED_D'+pin||p.id.startsWith('LED_D'+pin+'_')));return voltages&&p?Math.max(0,currents.get(p.id)||0):0;},read(pin){
       if(!io || !jumpers.some(j=>j.pin===pin))return null;
       patchGuide();
       const jack=jumpers.find(j=>j.pin===pin);
@@ -2990,14 +3262,22 @@
 
     })();
 
-    lessons.forEach((l, i) => $('lesson').add(new Option((i < 15 ? String(i + 1).padStart(2, '0') : 'Extra') + ' · ' + l.name, i)));
+    lessons.forEach((l, i) => $('lesson').add(new Option(String(i + 1).padStart(2, '0') + ' · ' + l.name, i)));
     function fromHash() {
       const n = Number(location.hash.match(/^#guida-(\d+)$/)?.[1]);
       $('lesson').value = n >= 1 && n <= lessons.length ? n - 1 : 0;
       selectLesson();
     }
+    // Solo gli hash delle esperienze possono cambiare il circuito. Le ancore
+    // della pagina non devono azzerare sketch, cablaggio, monitor o cronometro.
     window.addEventListener('hashchange', () => {
-      if (location.hash !== '#guida-' + (Number($('lesson').value) + 1)) fromHash();
+      const match = /^#guida-(\d+)$/.exec(location.hash);
+      if (match && +match[1] >= 1 && +match[1] <= lessons.length &&
+          +match[1] !== Number($('lesson').value) + 1) fromHash();
+    });
+    document.querySelector('a[href="#guideSection"]').addEventListener('click', e => {
+      e.preventDefault();
+      $('guideSection').scrollIntoView({block:'start', behavior:'auto'});
     });
     $('lesson').onchange = selectLesson;
     $('prevLesson').onclick = () => { const i = Number($('lesson').value); if (i > 0) { $('lesson').value = i - 1; selectLesson(); } };
@@ -3048,12 +3328,13 @@
       }
     };
     $('clearSerial').onclick = () => { io.log = []; io.serialBuf = ''; draw(); };
-    $('pol').onchange = () => { $('code').value = source(); reset(); };
+    $('pol').onchange = () => { $('code').value = source(); $('schematic').innerHTML=schematic(lesson,seriesOhms); updateGuideHoles(); nativeBoard.invalidateGuide(); reset(); };
     $('button').onchange = () => { io.button = $('button').checked; draw(); };
     $('adc').oninput = () => { io.adc = Number($('adc').value); draw(); };
     $('seriesR').onchange = () => {
       seriesOhms = Number($('seriesR').value) || 330;
       $('schematic').innerHTML = schematic(lesson, seriesOhms);
+      updateGuideHoles();
       draw();
     };
 
