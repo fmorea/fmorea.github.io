@@ -277,6 +277,7 @@
       <a href="index.html">← Piattaforma</a>
       <a href="resistenze.html" aria-current="page">Resistenze</a>
       <a href="breadboard.html">Breadboard</a>
+      <a href="arduino.html">Arduino Uno</a>
     </nav>
   </header>
 
@@ -362,6 +363,7 @@
       </div>
       <div class="result-actions">
         <a id="toBreadboard" class="btn-link btn-primary" href="breadboard.html">Monta su Breadboard →</a>
+        <a id="toArduino" class="btn-link" href="arduino.html">Usa su Arduino Uno →</a>
       </div>
     </section>
   </main>
@@ -444,7 +446,7 @@
       const best = nearestE24(r);
       return { std: 'Valore non standard in E24', snap: best };
     }
-    function breadboardUrl() {
+    function fourBandQuery() {
       const bbToler = {1:1,2:2,5:5,6:6,7:7,8:8,10:10,11:11};
       let s = significand, e = exp;
       if (digits() === 3) {
@@ -456,8 +458,10 @@
       const clampedExp = Math.max(-2, Math.min(9, e));
       const multIdx = clampedExp < 0 ? 9 - clampedExp : clampedExp;
       const bbTol = count === 3 ? 11 : (tol in bbToler ? tol : 1);
-      return 'breadboard.html?bands=' + [d1, d2, multIdx, bbTol].join(',');
+      return [d1, d2, multIdx, bbTol].join(',');
     }
+    function breadboardUrl() { return 'breadboard.html?bands=' + fourBandQuery(); }
+    function arduinoUrl() { return 'arduino.html?bands=' + fourBandQuery(); }
     function drawResistorSVG(bands, d, titles, pct, tempVal) {
       const type = $('bodyType').value;
       const isMetal = type === 'metal' || (type === 'auto' && count >= 5);
@@ -616,6 +620,7 @@
       }
 
       $('toBreadboard').href = breadboardUrl();
+      $('toArduino').href = arduinoUrl();
     }
 
     function resize(n) {

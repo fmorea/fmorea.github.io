@@ -339,6 +339,7 @@
       <a href="index.html">← Piattaforma</a>
       <a href="resistenze.html">Resistenze</a>
       <a href="breadboard.html" aria-current="page">Breadboard</a>
+      <a href="arduino.html">Arduino Uno</a>
     </nav>
   </header>
 
@@ -356,6 +357,8 @@
           <option value="">Circuiti di esempio…</option>
           <option value="empty">Breadboard vuota</option>
           <option value="led">LED con resistenza (9 V)</option>
+          <option value="arduino_led">Arduino 5 V · LED + 330 Ω</option>
+          <option value="arduino_btn">Arduino 5 V · Pulsante + pull-down 10 kΩ</option>
           <option value="divider">Partitore di tensione (4,5 V)</option>
           <option value="npn">Interruttore a transistor NPN</option>
           <option value="xor">Porta logica XOR (5 transistor)</option>
@@ -481,6 +484,27 @@
           { id: 'R1', t: 'resistor', p: ['TV4', 'a4'], bands: [3, 3, 1, 10], on: false },
           { id: 'LED1', t: 'led', p: ['e4', 'e6'], color: 'red', on: false },
           { id: 'W1', t: 'wire', p: ['a6', 'TG6'], color: 'black', on: false }
+        ]
+      },
+      arduino_led: {
+        supply: 5,
+        leads: ['TV1', 'TG1'],
+        parts: [
+          { id: 'R1', t: 'resistor', p: ['TV4', 'a4'], bands: [3, 3, 1, 10], on: false },
+          { id: 'LED1', t: 'led', p: ['e4', 'e7'], color: 'amber', on: false },
+          { id: 'W1', t: 'wire', p: ['a7', 'TG7'], color: 'black', on: false }
+        ]
+      },
+      arduino_btn: {
+        supply: 5,
+        leads: ['TV1', 'TG1'],
+        parts: [
+          { id: 'S1', t: 'button', p: ['TV4', 'a4'], on: false },
+          { id: 'R_PD', t: 'resistor', p: ['e4', 'e9'], bands: [1, 0, 3, 10], on: false },
+          { id: 'W_GND', t: 'wire', p: ['a9', 'TG9'], color: 'black', on: false },
+          { id: 'R_LED', t: 'resistor', p: ['c4', 'c13'], bands: [3, 3, 1, 10], on: false },
+          { id: 'LED1', t: 'led', p: ['e13', 'e16'], color: 'amber', on: false },
+          { id: 'W_LED', t: 'wire', p: ['a16', 'TG16'], color: 'black', on: false }
         ]
       },
       divider: {
@@ -1465,6 +1489,24 @@
       return true;
     }
 
+    function loadImportedCircuit() {
+      const q = new URLSearchParams(location.search).get('circuit');
+      if (!q) return false;
+      try {
+        const d = readProject(q);
+        parts = d.parts;
+        leads = d.leads;
+        $('supply').value = d.supply;
+        powered = d.powered ?? true;
+        notice = typeof d.note === 'string' && d.note.length <= 160
+          ? d.note
+          : 'Circuito importato dal Laboratorio Arduino Uno.';
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
     $('substrate').innerHTML = base;
     document.onkeydown = e => {
       if (e.key === 'Escape') { setTool('select'); return; }
@@ -1477,7 +1519,7 @@
       }
     };
 
-    loadImportedResistor();
+    if (!loadImportedCircuit()) loadImportedResistor();
     refresh();
   </script>
 </body>
