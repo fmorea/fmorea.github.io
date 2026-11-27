@@ -753,7 +753,9 @@
       .bench { padding: 8px; }
       .lesson-picker select { width: 100%; }
     }
-  </style>
+  .bench{position:relative}#unoCables{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;overflow:visible}.bb-wrap{overflow:visible}#mini-bb{touch-action:pan-y;border-radius:9px}#mini-bb.move-touch{touch-action:none}#bbTools,.bbEdits,#bbInventory,#bbJacks{display:flex;flex-wrap:wrap;gap:5px;margin:8px}#bbTools button svg{width:20px;height:16px;vertical-align:middle;margin-right:4px}#bbTools button,.bbEdits button,#bbPanel button,#bbInventory button,#bbJacks button{min-height:32px;padding:4px 8px;font-size:12px}#bbTools button[aria-pressed=true]{background:#174578;color:white}#bbPanel,#bbStatus,#bbError,.bbTip,.bb-wrap details{margin:6px 10px;font-size:13px}#bbPanel h2{font-size:15px}#bbPanel select{max-width:105px}#bbPanel label{display:inline-grid;margin:2px}#bbPanel .swatches{display:flex;gap:6px}#bbPanel .swatches button{width:26px}#bbError{color:#a21b24}#bbInventory button span{margin-left:5px}.upin[data-socket]{cursor:crosshair}
+.boardscroll{overflow-x:auto;overscroll-behavior-x:contain}.physicalBench{position:relative;min-width:600px;padding-top:12px}.physicalBench .bb-bar{margin-top:8px}#bbPanel .swatch-row{display:flex;gap:4px;margin:5px 0}#bbPanel .swatch{width:26px;min-height:23px;border:2px solid white;outline:1px solid #a6afba}#bbPanel .swatch[aria-pressed=true]{outline:2px solid #25354b}#bbPanel .component-preview{display:flex;gap:4px;background:#daba83;width:72px;height:18px;justify-content:center;border-radius:7px}#bbPanel .component-preview i{width:5px}#mini-bb{touch-action:pan-x pan-y}
+</style>
 </head>
 <body>
   <header class="mast">
@@ -761,7 +763,7 @@
     <nav class="mast-nav" aria-label="Navigazione piattaforma">
       <a href="index.html">← Piattaforma</a>
       <a href="resistenze.html">Resistenze</a>
-      <a href="breadboard.html">Breadboard</a>
+      <a href="https://fmorea.github.io/breadboard">Breadboard</a>
       <a href="arduino.html" aria-current="page">Arduino Uno</a>
     </nav>
   </header>
@@ -795,7 +797,7 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="bench">
+          <div class="bench"><div class="boardscroll"><div class="physicalBench"><svg id="unoCables" aria-hidden="true"></svg>
             <div class="uno-board">
               <div class="uno-top-row" id="unoTop"></div>
               <div class="uno-mid">
@@ -816,12 +818,66 @@
               <div class="uno-bot-row" id="unoBot"></div>
             </div>
 
-            <div class="bb-wrap">
-              <div class="bb-bar">
+            <div class="bb-bar">
                 <strong>Breadboard collegata</strong>
                 <span id="bbSubtitle">Vista live dei componenti esterni</span>
               </div>
-              <svg id="mini-bb" viewBox="0 0 640 164" role="img" aria-label="Breadboard collegata ad Arduino Uno"></svg>
+<svg id="mini-bb" viewBox="0 0 1170 436" aria-label="Breadboard interattiva">
+            <defs>
+              <linearGradient id="bbPsu" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#3f4d61"/>
+                <stop offset="100%" stop-color="#1e293b"/>
+              </linearGradient>
+              <linearGradient id="bbAbs" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#fbfaf4"/>
+                <stop offset="100%" stop-color="#ece9dc"/>
+              </linearGradient>
+              <linearGradient id="bbLead" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#cbd5e1"/>
+                <stop offset="50%" stop-color="#94a3b8"/>
+                <stop offset="100%" stop-color="#475569"/>
+              </linearGradient>
+              <linearGradient id="bbResBody" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#f6e3c2"/>
+                <stop offset="40%" stop-color="#dfba82"/>
+                <stop offset="100%" stop-color="#b4894d"/>
+              </linearGradient>
+              <linearGradient id="bbGold" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#9b7219"/>
+                <stop offset="45%" stop-color="#f3d473"/>
+                <stop offset="100%" stop-color="#876113"/>
+              </linearGradient>
+              <linearGradient id="bbSilver" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#7c8796"/>
+                <stop offset="45%" stop-color="#f1f5f9"/>
+                <stop offset="100%" stop-color="#7c8796"/>
+              </linearGradient>
+              <linearGradient id="bbNpnBody" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#475569"/>
+                <stop offset="40%" stop-color="#1e293b"/>
+                <stop offset="100%" stop-color="#0f172a"/>
+              </linearGradient>
+              <radialGradient id="glowRed"><stop offset="0%" stop-color="#ff6b6b" stop-opacity="0.95"/><stop offset="55%" stop-color="#ef4444" stop-opacity="0.45"/><stop offset="100%" stop-color="#ef4444" stop-opacity="0"/></radialGradient>
+              <radialGradient id="glowAmber"><stop offset="0%" stop-color="#fde047" stop-opacity="0.95"/><stop offset="55%" stop-color="#f59e0b" stop-opacity="0.45"/><stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/></radialGradient>
+              <radialGradient id="glowGreen"><stop offset="0%" stop-color="#86efac" stop-opacity="0.95"/><stop offset="55%" stop-color="#22c55e" stop-opacity="0.45"/><stop offset="100%" stop-color="#22c55e" stop-opacity="0"/></radialGradient>
+              <radialGradient id="glowBlue"><stop offset="0%" stop-color="#93c5fd" stop-opacity="0.95"/><stop offset="55%" stop-color="#3b82f6" stop-opacity="0.45"/><stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/></radialGradient>
+              <radialGradient id="glowWhite"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="55%" stop-color="#bae6fd" stop-opacity="0.45"/><stop offset="100%" stop-color="#bae6fd" stop-opacity="0"/></radialGradient>
+              <filter id="bbShadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="1.8" stdDeviation="1.4" flood-color="#0f172a" flood-opacity="0.28"/>
+              </filter>
+            </defs>
+            <g id="bbSubstrate"></g>
+            <g id="bbOverlay"></g>
+            <g id="bbObjects"></g>
+            <g id="bbInstrument" pointer-events="none"></g>
+          </svg></div></div><div class="bb-wrap"><div id="bbTools" aria-label="Strumenti di montaggio"></div>
+<p class="bbTip">Per collegare la Uno, scegli Cavo, tocca una presa della scheda e poi un foro libero. Per montare un componente, tocca i fori dei suoi terminali.</p>
+<div id="bbStatus" role="status"></div><div id="bbError" role="status"></div>
+<div class="bbEdits"><button id="bbUndo">Annulla</button><button id="bbRedo">Ripeti</button><button id="bbMoveTouch">Trascina su touch</button></div>
+<div id="bbPanel"></div><details><summary>Componenti e cavetti montati</summary><div id="bbInventory"></div><div id="bbJacks"></div></details>              <div style="padding:10px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <a class="btn-link btn-primary" id="bbOpen" href="https://fmorea.github.io/breadboard" target="_blank" rel="noopener">Esporta su Breadboard DC ↗</a>
+                <span style="font-size:13px;color:#475569">Apre in una nuova scheda il circuito nello stato attuale. In DC puoi commutare le uscite a mano.</span>
+              </div>
             </div>
 
             <div class="loads" id="loads"></div>
@@ -909,7 +965,7 @@
             <div class="warn-box" id="elecWarn" hidden></div>
             <div class="integration-actions">
               <a class="btn-link" id="openResistenze" href="resistenze.html">Verifica colori in Resistenze ↗</a>
-              <a class="btn-link btn-primary" id="exportBreadboard" href="breadboard.html">Esporta su Breadboard DC ↗</a>
+              <a class="btn-link btn-primary" id="exportBreadboard" target="_blank" rel="noopener" href="https://fmorea.github.io/breadboard">Esporta su Breadboard DC ↗</a>
             </div>
           </section>
         </div>
@@ -975,7 +1031,7 @@
 
     <footer>
       <span>Appunti di riferimento · Introduzione all’ambiente di Arduino, pp. 286–305.</span>
-      <span>Laboratorio integrato FMOREA · <a href="resistenze.html">Resistenze</a> · <a href="breadboard.html">Breadboard</a></span>
+      <span>Laboratorio integrato FMOREA · <a href="resistenze.html">Resistenze</a> · <a href="https://fmorea.github.io/breadboard">Breadboard</a></span>
     </footer>
   </main>
 
@@ -1283,13 +1339,14 @@
         digitalRead: (p) => {
           checkPin(p);
           if (io.modes[p] === 1) return io.pins[p] > 0 ? 1 : 0;
+          const measured=nativeBoard.read('D'+p); if(measured!==null)return +(measured>=2.5);
           const pressed = p === 12 ? io.button : Boolean(io.pinInputs[p]);
           return io.modes[p] === 2 ? (pressed ? 0 : 1) : (pressed ? 1 : 0);
         },
         analogRead: (p) => {
           const ch = p >= 14 && p <= 19 ? p - 14 : p;
           if (!Number.isInteger(ch) || ch < 0 || ch > 5) throw Error('Ingresso analogico valido: A0…A5');
-          return ch === 0 ? io.adc : 0;
+          const measured=nativeBoard.read('A'+ch);return measured===null?(ch===0?io.adc:0):Math.max(0,Math.min(1023,Math.round(measured*1023/5)));
         },
         pinMode: (p, m) => {
           checkPin(p);
@@ -1707,163 +1764,6 @@
       draw();
     }
 
-    function renderMiniBreadboard() {
-      const svg = $('mini-bb');
-      const rBands = resistanceToBands(seriesOhms);
-      const pdBands = [1, 0, 3, 10];
-
-      function holeGrid(x0, y0, cols, rowsCount) {
-        let out = '';
-        for (let r = 0; r < rowsCount; r++) {
-          for (let c = 0; c < cols; c++) {
-            out += '<rect x="' + (x0 + c * 22 - 3) + '" y="' + (y0 + r * 16 - 3) + '" width="6" height="6" rx="1" fill="#334155"/>';
-          }
-        }
-        return out;
-      }
-
-      function drawRes(x, y, bands, labelText, horiz = true) {
-        const bPos = [-10, -4, 2, 10];
-        const stripes = bands.map((b, i) => '<rect x="' + bPos[i] + '" y="-5.5" width="3" height="11" fill="' + bandPalette[b] + '"/>').join('');
-        const body = '<g transform="translate(' + x + ' ' + y + ')' + (horiz ? '' : ' rotate(90)') + '">' +
-          '<line x1="-24" y1="0" x2="24" y2="0" stroke="#94a3b8" stroke-width="2.4"/>' +
-          '<rect x="-15" y="-6" width="30" height="12" rx="4" fill="#e2be87" stroke="#9a7441" stroke-width="1"/>' +
-          stripes + '</g>';
-        return body + (labelText ? '<text x="' + x + '" y="' + (y + 18) + '" text-anchor="middle" font-size="10" font-weight="700" fill="#334155">' + labelText + '</text>' : '');
-      }
-
-      function drawLed(x, y, colorHex, v, tag) {
-        const curFactor = Math.min(1.15, Math.max(0.18, ((5 - 2) / seriesOhms) / 0.0091));
-        const lvl = v ? Math.min(1, (0.2 + 0.8 * (v / 255)) * curFactor) : 0;
-        const over = v > 0 && ((5 - 2) * (v / 255) / seriesOhms) > 0.020;
-        return (lvl > 0 ? '<circle cx="' + x + '" cy="' + y + '" r="18" fill="' + colorHex + '" opacity="' + (lvl * 0.45).toFixed(2) + '"/>' : '') +
-          '<circle cx="' + x + '" cy="' + y + '" r="9" fill="' + (lvl > 0 ? colorHex : '#475569') + '" opacity="' + (lvl > 0 ? (0.35 + 0.65 * lvl).toFixed(2) : 0.7) + '" stroke="#0f172a" stroke-width="1.3"/>' +
-          '<circle cx="' + (x - 2.5) + '" cy="' + (y - 2.5) + '" r="2.5" fill="rgba(255,255,255,0.55)"/>' +
-          (over ? '<text x="' + (x + 12) + '" y="' + (y - 8) + '" font-size="12" font-weight="900" fill="#b45309">!</text>' : '') +
-          '<text x="' + x + '" y="' + (y + 21) + '" text-anchor="middle" font-size="10" font-weight="700" fill="#0f172a">' + tag + '</text>';
-      }
-
-      function drawWire(d, color = '#2563eb', hi = '#93c5fd', xEnd = null, yEnd = null) {
-        let out = '<path d="' + d + '" fill="none" stroke="rgba(255,255,255,0.95)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>' +
-          '<path d="' + d + '" fill="none" stroke="' + color + '" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>' +
-          '<path d="' + d + '" fill="none" stroke="' + hi + '" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>';
-        if (xEnd !== null && yEnd !== null) {
-          out += '<circle cx="' + xEnd + '" cy="' + yEnd + '" r="4.2" fill="#e2e8f0" stroke="#0f172a" stroke-width="1.3"/>' +
-            '<circle cx="' + xEnd + '" cy="' + yEnd + '" r="2" fill="' + color + '"/>';
-        }
-        return out;
-      }
-
-      const bbShell =
-        '<rect x="12" y="10" width="616" height="144" rx="10" fill="#fbfaf4" stroke="#cbd5e1" stroke-width="1.5"/>' +
-        '<line x1="28" y1="28" x2="612" y2="28" stroke="#ef4444" stroke-width="2.4"/>' +
-        '<line x1="28" y1="138" x2="612" y2="138" stroke="#2563eb" stroke-width="2.4"/>' +
-        '<text x="20" y="32" font-size="12" font-weight="800" fill="#dc2626">+</text>' +
-        '<text x="20" y="142" font-size="12" font-weight="800" fill="#2563eb">−</text>' +
-        '<rect x="28" y="76" width="584" height="10" rx="3" fill="#e2e8f0"/>' +
-        holeGrid(38, 44, 26, 2) + holeGrid(38, 98, 26, 2);
-
-      let partsSvg = '';
-      if (lesson.kind === 'display') {
-        const segCoords = ['12,4 36,4 32,9 16,9','37,5 36,27 31,24 33,11','36,29 34,51 29,46 31,32','12,48 29,48 33,53 8,53','7,29 12,32 10,46 5,51','10,6 15,11 13,24 8,27','10,28 15,25 30,25 34,28 29,31 15,31'];
-        const segs = segCoords.map((s, i) => {
-          const p = [6,7,8,9,10,11,12][i];
-          const act = io.modes[p] === 1 && Boolean(io.pins[p]) !== Boolean($('pol').selectedIndex);
-          return '<polygon points="' + s + '" fill="' + (act ? '#f97316' : '#334155') + '"/>';
-        }).join('');
-        const dpAct = io.modes[5] === 1 && Boolean(io.pins[5]) !== Boolean($('pol').selectedIndex);
-        partsSvg += '<g transform="translate(86 42)">' +
-          '<rect width="58" height="72" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1.5"/>' +
-          '<g transform="translate(5 7)">' + segs + '<circle cx="42" cy="51" r="2.4" fill="' + (dpAct ? '#f97316' : '#334155') + '"/></g></g>';
-        [5,6,7,8,9,10,11,12].forEach((p, idx) => {
-          const rx = 200 + idx * 52;
-          partsSvg += drawWire('M ' + rx + ' 18 V 54', '#2563eb', '#bfdbfe', rx, 54) +
-            '<text x="' + rx + '" y="14" text-anchor="middle" font-size="9.5" font-weight="800" fill="#1e3a8a">D' + p + '</text>' +
-            drawRes(rx, 82, rBands, idx === 0 ? formatOhms(seriesOhms) : '', false);
-        });
-      } else if (lesson.pins.length === 6) {
-        const colors = ['#ef4444', '#f59e0b', '#22c55e'];
-        lesson.pins.forEach((p, i) => {
-          const x = 68 + i * 74;
-          partsSvg += drawWire('M ' + x + ' 16 V 42', '#2563eb', '#bfdbfe', x, 42) +
-            drawWire('M ' + x + ' 118 V 138', '#1e293b', '#94a3b8', x, 138) +
-            '<text x="' + x + '" y="13" text-anchor="middle" font-size="9.5" font-weight="800" fill="#1e3a8a">D' + p + '</text>' +
-            drawRes(x, 64, rBands, i === 0 ? formatOhms(seriesOhms) : '', false) +
-            drawLed(x, 106, colors[i % 3], io.pins[p], (i < 3 ? 'A ' : 'B ') + ['R', 'G', 'V'][i % 3]);
-        });
-        if (lesson.kind === 'night') {
-          const bx = 540;
-          partsSvg += drawWire('M ' + (bx - 16) + ' 58 H 505 V 28', '#dc2626', '#fecaca', 505, 28) +
-            drawWire('M ' + bx + ' 128 V 138', '#1e293b', '#94a3b8', bx, 138) +
-            '<g id="bbButton" style="cursor:pointer">' +
-            '<rect x="' + (bx - 16) + '" y="44" width="32" height="28" rx="5" fill="#1e293b" stroke="#0f172a"/>' +
-            '<circle cx="' + bx + '" cy="58" r="9" fill="' + (io.button ? '#22c55e' : '#94a3b8') + '"/>' +
-            '<text x="' + bx + '" y="36" text-anchor="middle" font-size="9.5" font-weight="800" fill="#1e3a8a">SW D12</text>' +
-            '</g>' +
-            drawRes(bx, 106, pdBands, '10 kΩ', false);
-        }
-      } else if (lesson.pins.length === 2 || lesson.pins[0] === 9) {
-        lesson.pins.forEach((p, i) => {
-          const x = 160 + i * 180;
-          partsSvg += drawWire('M ' + x + ' 18 Q ' + (x - 45) + ' 18 ' + (x - 24) + ' 52', '#2563eb', '#bfdbfe', x - 24, 52) +
-            drawWire('M ' + (x + 65) + ' 62 V 138', '#1e293b', '#94a3b8', x + 65, 138) +
-            '<text x="' + x + '" y="14" text-anchor="middle" font-size="10" font-weight="800" fill="#1e3a8a">D' + p + (p === 9 ? ' (PWM)' : '') + '</text>' +
-            drawRes(x, 52, rBands, formatOhms(seriesOhms), true) +
-            drawLed(x + 65, 52, '#f59e0b', io.pins[p], 'LED D' + p);
-        });
-        if (lesson.kind === 'analog') {
-          const px = 520, ang = -120 + (io.adc / 1023) * 240;
-          partsSvg += drawWire('M 480 28 H 502 V 62', '#dc2626', '#fecaca', 480, 28) +
-            drawWire('M 538 62 V 138', '#1e293b', '#94a3b8', 538, 138) +
-            drawWire('M 520 56 V 18', '#7c3aed', '#ddd6fe', 520, 56) +
-            '<text x="520" y="14" text-anchor="middle" font-size="10" font-weight="800" fill="#5b21b6">A0</text>' +
-            '<g transform="translate(' + px + ' 78)">' +
-            '<circle r="22" fill="#e2e8f0" stroke="#475569" stroke-width="2"/>' +
-            '<line x1="0" y1="0" x2="0" y2="-16" stroke="#2563eb" stroke-width="3" stroke-linecap="round" transform="rotate(' + ang.toFixed(1) + ')"/>' +
-            '<circle r="4" fill="#1e3a8a"/>' +
-            '<text x="0" y="36" text-anchor="middle" font-size="10" font-weight="700" fill="#0f172a">Pot A0 · ' + fmt(io.adc * 5 / 1023) + ' V</text></g>';
-        }
-      } else if (lesson.kind === 'button') {
-        const bx = 240;
-        partsSvg += drawWire('M 140 28 H ' + (bx - 20) + ' V 56', '#dc2626', '#fecaca', 140, 28) +
-          drawWire('M ' + (bx + 20) + ' 58 H 320 V 20', '#2563eb', '#bfdbfe', 320, 58) +
-          drawWire('M 320 58 H 356', '#2563eb', '#bfdbfe', 356, 58) +
-          drawWire('M 404 58 H 450 V 138', '#1e293b', '#94a3b8', 450, 138) +
-          '<g id="bbButton" style="cursor:pointer">' +
-          '<rect x="' + (bx - 20) + '" y="42" width="40" height="32" rx="6" fill="#1e293b" stroke="#0f172a"/>' +
-          '<circle cx="' + bx + '" cy="58" r="11" fill="' + (io.button ? '#22c55e' : '#94a3b8') + '" stroke="#e2e8f0" stroke-width="1.5"/>' +
-          '<text x="' + bx + '" y="35" text-anchor="middle" font-size="10" font-weight="800" fill="#0f172a">Pulsante D12 (clicca)</text>' +
-          '</g>' +
-          '<text x="320" y="15" text-anchor="middle" font-size="10" font-weight="800" fill="#1e3a8a">→ D12</text>' +
-          drawRes(380, 58, pdBands, 'Pull-down 10 kΩ', true);
-      } else if (lesson.kind === 'analog') {
-        const px = 310, ang = -120 + (io.adc / 1023) * 240;
-        partsSvg += drawWire('M 140 28 H 240 V 80 H 286', '#dc2626', '#fecaca', 140, 28) +
-          drawWire('M 334 80 H 390 V 138', '#1e293b', '#94a3b8', 390, 138) +
-          drawWire('M 310 56 V 20', '#7c3aed', '#ddd6fe', 310, 56) +
-          '<text x="310" y="15" text-anchor="middle" font-size="10" font-weight="800" fill="#5b21b6">→ A0</text>' +
-          '<g transform="translate(' + px + ' 82)">' +
-          '<circle r="24" fill="#e2e8f0" stroke="#475569" stroke-width="2"/>' +
-          '<line x1="0" y1="0" x2="0" y2="-18" stroke="#2563eb" stroke-width="3.2" stroke-linecap="round" transform="rotate(' + ang.toFixed(1) + ')"/>' +
-          '<circle r="4.5" fill="#1e3a8a"/>' +
-          '<text x="0" y="38" text-anchor="middle" font-size="10" font-weight="700" fill="#0f172a">Potenziometro 10 kΩ · ' + fmt(io.adc * 5 / 1023) + ' V</text></g>';
-      } else {
-        partsSvg += '<rect x="150" y="42" width="340" height="72" rx="8" fill="#eff6ff" stroke="#bfdbfe"/>' +
-          '<text x="320" y="74" text-anchor="middle" font-size="12.5" font-weight="800" fill="#1e3a8a">Nessun componente esterno necessario</text>' +
-          '<text x="320" y="94" text-anchor="middle" font-size="11" fill="#475569">Usa il LED L integrato su D13 · oppure clicca «Esporta su Breadboard DC»</text>';
-      }
-
-      svg.innerHTML = bbShell + partsSvg;
-      const bbBtn = svg.querySelector('#bbButton');
-      if (bbBtn) {
-        bbBtn.onclick = () => {
-          $('button').checked = !$('button').checked;
-          io.button = $('button').checked;
-          draw();
-        };
-      }
-    }
-
     function updateElectricalIntegration() {
       const chips = $('resistorChips');
       chips.textContent = '';
@@ -1926,56 +1826,54 @@
 
       const mainBands = resistanceToBands(usesExt ? seriesOhms : (['button', 'night'].includes(lesson.kind) ? 10000 : 330));
       $('openResistenze').href = 'resistenze.html?bands=' + mainBands.join(',');
-      $('exportBreadboard').href = buildBreadboardExportUrl();
+
     }
 
-    function buildBreadboardExportUrl() {
-      const rBands = resistanceToBands(seriesOhms);
-      const proj = { version: 1, supply: 5, powered: true, leads: ['TV1', 'TG1'], parts: [], note: 'Esportato da Arduino Uno: ' + lesson.name };
-      if (lesson.kind === 'button') {
-        proj.parts = [
-          { id: 'S1', t: 'button', p: ['TV4', 'a4'], on: false },
-          { id: 'R_PD', t: 'resistor', p: ['e4', 'e9'], bands: [1, 0, 3, 10], on: false },
-          { id: 'W_GND', t: 'wire', p: ['a9', 'TG9'], color: 'black', on: false },
-          { id: 'R_LED', t: 'resistor', p: ['c4', 'c13'], bands: rBands, on: false },
-          { id: 'LED1', t: 'led', p: ['e13', 'e16'], color: 'amber', on: false },
-          { id: 'W_LED', t: 'wire', p: ['a16', 'TG16'], color: 'black', on: false }
-        ];
-      } else if (lesson.kind === 'analog') {
-        const rTop = Math.max(100, Math.round(10000 * (1 - (io ? io.adc : 512) / 1023)));
-        const rBot = Math.max(100, 10000 - rTop);
-        proj.parts = [
-          { id: 'R_TOP', t: 'resistor', p: ['TV5', 'a5'], bands: resistanceToBands(rTop), on: false },
-          { id: 'R_BOT', t: 'resistor', p: ['e5', 'e10'], bands: resistanceToBands(rBot), on: false },
-          { id: 'W_GND', t: 'wire', p: ['a10', 'TG10'], color: 'black', on: false }
-        ];
-      } else if (lesson.pins.length === 6) {
-        const cols = [3, 7, 11, 16, 20, 24];
-        const lCols = ['red', 'amber', 'green', 'red', 'amber', 'green'];
-        cols.forEach((c, i) => {
-          proj.parts.push(
-            { id: 'R' + (i + 1), t: 'resistor', p: ['TV' + c, 'a' + c], bands: rBands, on: false },
-            { id: 'LED' + (i + 1), t: 'led', p: ['e' + c, 'e' + (c + 2)], color: lCols[i], on: false },
-            { id: 'W' + (i + 1), t: 'wire', p: ['a' + (c + 2), 'TG' + (c + 2)], color: 'black', on: false }
-          );
-        });
-      } else if (lesson.pins.length === 2) {
-        proj.parts = [
-          { id: 'R1', t: 'resistor', p: ['TV4', 'a4'], bands: rBands, on: false },
-          { id: 'LED1', t: 'led', p: ['e4', 'e7'], color: 'amber', on: false },
-          { id: 'W1', t: 'wire', p: ['a7', 'TG7'], color: 'black', on: false },
-          { id: 'R2', t: 'resistor', p: ['TV12', 'a12'], bands: rBands, on: false },
-          { id: 'LED2', t: 'led', p: ['e12', 'e15'], color: 'red', on: false },
-          { id: 'W2', t: 'wire', p: ['a15', 'TG15'], color: 'black', on: false }
-        ];
-      } else {
-        proj.parts = [
-          { id: 'R1', t: 'resistor', p: ['TV4', 'a4'], bands: rBands, on: false },
-          { id: 'LED1', t: 'led', p: ['e4', 'e7'], color: 'amber', on: false },
-          { id: 'W1', t: 'wire', p: ['a7', 'TG7'], color: 'black', on: false }
-        ];
+    function buildBreadboardProject() {
+      const parts = [];
+      const commonAnode = lesson.kind === 'display' && $('pol').selectedIndex === 1;
+      const labels = ['dp','a','b','c','d','e','f','g'];
+      const road = lesson.pins.length === 6;
+      const notes = ['Uscite D riprodotte con interruttori.'];
+      function add(id, t, p, extra = {}) {
+        parts.push({ id, t, p, on: false, ...extra });
       }
-      return 'breadboard.html?circuit=' + encodeURIComponent(JSON.stringify(proj));
+
+      lesson.pins.forEach((pin, i) => {
+        const col = 2 + 3 * i;
+        const tag = lesson.kind === 'display' ? '_' + labels[i] : '';
+        const state = io.modes[pin] === 1 && (Boolean(io.pins[pin]) !== commonAnode);
+        const color = road ? ['red','amber','green'][i % 3] : 'amber';
+        // Per l’anodo comune il ramo si chiude verso massa.
+        const drive = commonAnode ? 'TG' : 'TV';
+        const common = commonAnode ? 'TV' : 'TG';
+        add('D'+pin+tag, 'button', [drive+col,'a'+col], { on: state });
+        add('R_D'+pin, 'resistor', ['e'+col,'e'+(col+1)], {
+          bands: resistanceToBands(usesExternalResistor(lesson) ? seriesOhms : 330)
+        });
+        const led = ['a'+(col+1),'a'+(col+2)];
+        add('LED_D'+pin+tag, 'led', commonAnode ? led.reverse() : led, {color});
+        add('COM_D'+pin, 'wire', ['e'+(col+2), common+(col+2)], {color:commonAnode?'red':'black'});
+      });
+
+      if (lesson.kind === 'night' || lesson.kind === 'button') {
+        add('Ingresso_D12','button',['TV27','a27'],{on:io.button});
+        add('PullDown_D12','resistor',['e27','TG27'],{bands:[1,0,3,10]});
+      }
+      if (lesson.kind === 'analog') {
+        const bottom = 10000 * io.adc / 1023;
+        function leg(id, from, to, ohms) {
+          if (ohms === 0) add(id,'wire',[from,to]);
+          else add(id,'resistor',[from,to],{bands:resistanceToBands(ohms)});
+        }
+        leg('Pot_alto','TV27','a27',10000-bottom);
+        leg('Pot_basso','e27','TG27',bottom);
+        notes.push('A0 in b27, partitore arrotondato a 2 cifre.');
+        if (lesson.pins[0]===9) notes[0]='PWM D9 '+io.pins[9]+'/255. Interruttore chiuso per la fase alta di un PWM attivo.';
+      }
+      if (lesson.pins.includes(13)) notes.push('L è rappresentato da un LED esterno con 330 Ω.');
+      if (commonAnode) notes.push('Anodo comune: interruttore chiuso = pin LOW.');
+      return {version:1,supply:5,powered:true,leads:['TV1','TG1'],parts,note:notes.join(' ').slice(0,160)};
     }
 
     function draw() {
@@ -2023,7 +1921,7 @@
         $('serial').textContent = serial;
         $('serial').scrollTop = $('serial').scrollHeight;
       }
-      renderMiniBreadboard();
+      nativeBoard.update();
       updateElectricalIntegration();
     }
 
@@ -2097,6 +1995,880 @@
     }
 
     buildBoardPins();
+    const nativeBoard=(()=>{
+    const $=id=>document.getElementById(id==='board'?'mini-bb':'bb'+id[0].toUpperCase()+id.slice(1));
+    const names = { wire:'Cavo', resistor:'Resistenza', button:'Interruttore', led:'LED', transistor:'NPN' };
+    const rows = ['TV','TG',...'abcdefghij','BV','BG'];
+    const ys = [30,55,96,119,142,165,188,238,261,284,307,330,365,390];
+    const holes = rows.flatMap(r => Array.from({length:30}, (_, i) => r + (i + 1)));
+    const palette = ['#191919','#874b33','#d62828','#f07119','#f3c623','#1f8a4c','#2563eb','#7e3af2','#7a828d','#f8fafc','#c99a2e','#b4bec9'];
+    const labels = 'Nero Marrone Rosso Arancione Giallo Verde Blu Viola Grigio Bianco Oro Argento'.split(' ');
+    const toler = {1:1,2:2,5:.5,6:.25,7:.1,8:.05,10:5,11:10};
+    const wireColors = {
+      red: { label:'Rosso', stroke:'#dc2626', hi:'#fecaca' },
+      black: { label:'Nero', stroke:'#1e293b', hi:'#94a3b8' },
+      blue: { label:'Blu', stroke:'#2563eb', hi:'#bfdbfe' },
+      green: { label:'Verde', stroke:'#16a34a', hi:'#bbf7d0' },
+      yellow: { label:'Giallo', stroke:'#eab308', hi:'#fef9c3' },
+      orange: { label:'Arancione', stroke:'#ea580c', hi:'#fed7aa' }
+    };
+    const ledColors = {
+      red: { label:'Rosso', off:'#7f1d1d', on:'#ef4444', core:'#fecaca', glow:'url(#glowRed)' },
+      amber: { label:'Giallo', off:'#78350f', on:'#f59e0b', core:'#fef08a', glow:'url(#glowAmber)' },
+      green: { label:'Verde', off:'#14532d', on:'#22c55e', core:'#bbf7d0', glow:'url(#glowGreen)' },
+      blue: { label:'Blu', off:'#1e3a8a', on:'#3b82f6', core:'#dbeafe', glow:'url(#glowBlue)' },
+      white: { label:'Bianco', off:'#64748b', on:'#f8fafc', core:'#ffffff', glow:'url(#glowWhite)' }
+    };
+    const fmt = n => Number(n.toPrecision(5)).toLocaleString('it-IT', { maximumSignificantDigits: 5 });
+    const resistance = b => (10 * b[0] + b[1]) * 10 ** (b[2] < 10 ? b[2] : 9 - b[2]);
+    let parts = [], voltages, currents;
+    function node(h) { const [, r, c] = h.match(/^(\D+)(\d+)$/); return r.length === 2 ? r : (r < 'f' ? 'T' : 'B') + c; }
+    function xy(h) { const [, r, c] = h.match(/^(\D+)(\d+)$/); return [70 + (c - 1) * 36, ys[rows.indexOf(r)]]; }
+    let net = node, leads = [null, null], wiring = null;
+    let powered = true, actualV = 0, actualI = 0, regime = 'CV';
+
+    function solve() {
+      const target=5;
+      if (!Number.isFinite(target) || target < 0 || target > 24) throw Error('Imposta una tensione tra 0 e 24 V.');
+      actualV = powered ? target : 0;
+      regime = powered ? 'CV' : 'OFF';
+      operatingPoint(actualV);
+    }
+
+    function operatingPoint(v) {
+      const parent = new Map();
+      function root(n) { while (parent.has(n)) n = parent.get(n); return n; }
+      for (const p of parts.filter(p => p.t === 'wire' || (p.t === 'button' && p.on))) {
+        const [a, b] = p.p.map(h => root(node(h)));
+        if (a !== b) parent.set(a, b);
+      }
+      net = h => root(node(h));
+      const fixed=new Map(); const hi='VCC',lo='GND';
+      for(const j of jumpers){
+        const v=getVoltage(j.pin),n=net(j.h);
+        if(v===null)continue;
+        if(fixed.has(n)&&Math.abs(fixed.get(n)-v)>.001)throw Error('Collegamento in conflitto su '+j.pin+'.');
+        fixed.set(n,v);
+      }
+      const nodes=[...new Set([...parts.flatMap(p=>p.p.map(net)),...jumpers.map(j=>net(j.h))])].filter(n=>!fixed.has(n));
+      const index=new Map(nodes.map((n,i)=>[n,i])),x=nodes.map(()=>0);
+      const val=n=>fixed.get(n)??x[index.get(n)]??0;
+      // Newton con passo limitato. Le giunzioni usano un prolungamento lineare ad alta corrente.
+      function junction(u, scale, vt) {
+        const z = Math.min(u / vt, 32), e = scale * Math.exp(z);
+        return [e - scale + Math.max(0, u - 32 * vt) * e / vt, e / vt];
+      }
+      for (let iter = 0; iter < 450; iter++) {
+        const a = x.map((_, i) => x.map((_, j) => i === j ? 1e-12 : 0)), f = x.map(n => n * 1e-12);
+        currents = new Map();
+        actualI = 0;
+        function stamp(out, ret, pos, neg, i, g) {
+          if (out === hi) actualI += i;
+          if (ret === hi) actualI -= i;
+          for (const [n, sign] of [[out, 1], [ret, -1]]) {
+            if (!index.has(n)) continue;
+            const k = index.get(n);
+            f[k] += sign * i;
+            if (index.has(pos)) a[k][index.get(pos)] += sign * g;
+            if (index.has(neg)) a[k][index.get(neg)] -= sign * g;
+          }
+        }
+        for(const j of jumpers){if(j.pin.startsWith('D')&&io.modes[+j.pin.slice(1)]===2){
+          const n=net(j.h);stamp(n,hi,n,hi,(val(n)-5)/30000,1/30000);
+        }}
+        for (const p of parts) {
+          const [u, w, c] = p.p.map(h => root(node(h))), d = val(u) - val(w);
+          if (p.t === 'resistor' || p.t === 'led') {
+            const [i, g] = p.t === 'led' ? junction(d, 1e-17, .055) : [d / (p.ohms??resistance(p.bands)), 1 / (p.ohms??resistance(p.bands))];
+            stamp(u, w, u, w, i, g);
+            currents.set(p.id, i);
+          }
+          if (p.t === 'transistor') {
+            const [ie, ge] = junction(-d, 1e-14, .026), [ic, gc] = junction(val(w) - val(c), 1e-14, .026);
+            stamp(w, u, w, u, ie, ge);
+            stamp(c, w, w, u, .99 * ie, .99 * ge);
+            stamp(w, c, w, c, ic, gc);
+            stamp(u, w, w, c, .5 * ic, .5 * gc);
+          }
+        }
+        if (f.every(i => Math.abs(i) < 1e-10)) {
+          voltages = h => val(root(node(h)));
+          return;
+        }
+        for (let k = 0; k < x.length; k++) {
+          let q = k;
+          for (let j = k + 1; j < x.length; j++) if (Math.abs(a[j][k]) > Math.abs(a[q][k])) q = j;
+          [a[k], a[q]] = [a[q], a[k]];
+          [f[k], f[q]] = [f[q], f[k]];
+          for (let j = k + 1; j < x.length; j++) {
+            const m = a[j][k] / a[k][k];
+            for (let l = k; l < x.length; l++) a[j][l] -= m * a[k][l];
+            f[j] -= m * f[k];
+          }
+        }
+        for (let k = x.length - 1; k >= 0; k--) {
+          for (let j = k + 1; j < x.length; j++) f[k] -= a[k][j] * f[j];
+          f[k] /= a[k][k];
+        }
+        const damp = Math.max(1, ...f.map(n => Math.abs(n) / .09));
+        x.forEach((_, i) => x[i] -= f[i] / damp);
+      }
+      throw Error('Punto di lavoro non convergente. Controlla i collegamenti.');
+    }
+
+    const svg = $('board'), panel = $('panel'), hist = [], future = [];
+    let probes = [], resistorBands = [1, 0, 2, 10], wireColor = 'blue', ledColor = 'red';
+    let tool = 'select', active = '', draft = [], hover = '', drag = null, notice = '';
+    const part = () => parts.find(p => p.id === active);
+    const coords = Object.fromEntries(holes.map(h => [h, xy(h)]));
+    const terminals = {
+      wire: ['Inizio', 'Fine'],
+      resistor: ['Primo terminale', 'Secondo terminale'],
+      button: ['Contatto 1', 'Contatto 2'],
+      led: ['Anodo (+)', 'Catodo (−)'],
+      transistor: ['Emettitore', 'Base', 'Collettore']
+    };
+
+    function snapshot() { return structuredClone({parts,jumpers}); }
+    function checkpoint() { hist.push(snapshot()); if (hist.length > 100) hist.shift(); future.length = 0; }
+    function restore(from, to) {
+      if (!from.length) return;
+      to.push(snapshot());
+      const state = from.pop();
+      parts = state.parts;
+      jumpers=state.jumpers;
+      setTool('select');
+    }
+    function setTool(t) {
+      pending="";
+      wiring = null;
+      if (t !== 'select') {
+        moveTouch = false;
+        svg.classList.remove('move-touch');
+        $('moveTouch').setAttribute('aria-pressed', 'false');
+      }
+      probes = [];
+      tool = t;
+      draft = [];
+      drag = null;
+      hover = '';
+      active = '';
+      notice = '';
+      refresh();
+    }
+    function recalc() {
+      voltages = null;
+      try { solve(); $('error').textContent = ''; }
+      catch (e) { $('error').textContent = e.message; }
+    }
+
+    function line(x, y, u, v, color, width) {
+      return '<line x1="' + x + '" y1="' + y + '" x2="' + u + '" y2="' + v + '" stroke="' + color + '" stroke-width="' + width + '" stroke-linecap="round"/>';
+    }
+    function circle(x, y, r, color, extra = '') {
+      return '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="' + color + '" ' + extra + '/>';
+    }
+    function label(x, y, t, size = 12, color = '#4b6061', extra = '') {
+      return '<text pointer-events="none" text-anchor="middle" x="' + x + '" y="' + y + '" font-size="' + size + '" fill="' + color + '" ' + extra + '>' + t + '</text>';
+    }
+
+    const fittings = [[18,17],[1152,17],[18,415],[1152,415]].map(([x, y]) =>
+      circle(x, y, 5, '#cbd5c9', 'stroke="#94a3b8" stroke-width="1"') + line(x - 2.5, y + 1.5, x + 2.5, y - 1.5, '#475569', 1.2)
+    ).join('');
+    const colNumbers = Array.from({length:30}, (_, i) => {
+      const col = i + 1, x = 70 + i * 36, major = col === 1 || col % 5 === 0;
+      return label(x, 81, col, major ? 10.5 : 9.5, major ? '#334155' : '#64748b', major ? 'font-weight="700"' : '') +
+             label(x, 350, col, major ? 10.5 : 9.5, major ? '#334155' : '#64748b', major ? 'font-weight="700"' : '');
+    }).join('');
+    const rowLabels = rows.map((r, i) => {
+      const txt = ({TV:'+',TG:'−',BV:'+',BG:'−'})[r] || r;
+      const col = r.endsWith('V') ? '#dc2626' : r.endsWith('G') ? '#2563eb' : '#475569';
+      const y = ys[i] + 4.5;
+      return label(32, y, txt, r.length === 2 ? 15 : 12.5, col, 'font-weight="700"') +
+             (r.length === 1 ? label(1140, y, txt, 12.5, col, 'font-weight="700"') : '');
+    }).join('');
+    const railStripes = [0,1,12,13].map((k, i) =>
+      line(52, ys[k] + 9, 1130, ys[k] + 9, i % 2 ? '#3b82f6' : '#ef4444', 2.2)
+    ).join('');
+    const socketHoles = holes.map(h => {
+      const [x, y] = coords[h];
+      return '<rect x="' + (x - 5.2) + '" y="' + (y - 5.2) + '" width="10.4" height="10.4" rx="2" fill="#d8d5c7"/>' +
+             '<rect x="' + (x - 3.8) + '" y="' + (y - 3.8) + '" width="7.6" height="7.6" rx="1.4" fill="#1e293b"/>' +
+             '<rect x="' + (x - 1.6) + '" y="' + (y - 1.6) + '" width="3.2" height="1.8" rx="0.5" fill="#64748b"/>';
+    }).join('');
+    const base =
+      '<rect x="5" y="4" width="1160" height="426" rx="10" stroke="#94a3b8" stroke-width="2" fill="url(#bbAbs)"/>' +
+      '<rect x="12" y="11" width="1146" height="412" rx="7" stroke="#e2dfd2" stroke-width="1" fill="none"/>' +
+      '<rect x="18" y="201" width="1134" height="24" rx="5" fill="#d4dad3" stroke="#b8c0b8" stroke-width="1"/>' +
+      '<line x1="20" y1="203" x2="1150" y2="203" stroke="#9ca3af" stroke-width="1"/>' +
+      fittings + rowLabels + colNumbers + railStripes + socketHoles;
+
+    function resolveWireColor(p) {
+      if (p.color && wireColors[p.color]) return wireColors[p.color];
+      if (p.p.some(h => h.startsWith('TV') || h.startsWith('BV'))) return wireColors.red;
+      if (p.p.some(h => h.startsWith('TG') || h.startsWith('BG'))) return wireColors.black;
+      return wireColors.blue;
+    }
+
+    function wireArc(a, b) {
+      const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+      const dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy) || 1;
+      const bend = Math.min(38, Math.max(16, len * 0.2));
+      return [mx - (dy / len) * bend, my + (dx / len) * bend];
+    }
+
+    function shape(p, ghost = false) {
+      const pts = p.p.map(h => coords[h]), [a, b] = pts;
+      const center = pts.length === 3 ? b : [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], [x, y] = center;
+      const ang = Math.atan2(b[1] - a[1], b[0] - a[0]) * 180 / Math.PI;
+      let art = '';
+
+      if (p.t === 'wire') {
+        const wc = resolveWireColor(p);
+        const [cx, cy] = wireArc(a, b);
+        const d = 'M ' + a[0] + ' ' + a[1] + ' Q ' + cx + ' ' + cy + ' ' + b[0] + ' ' + b[1];
+        art = '<path d="' + d + '" fill="none" stroke="transparent" stroke-width="18"/>' +
+              '<path d="' + d + '" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="10.5" stroke-linecap="round"/>' +
+              '<path d="' + d + '" fill="none" stroke="' + wc.stroke + '" stroke-width="7.5" stroke-linecap="round" filter="url(#bbShadow)"/>' +
+              '<path d="' + d + '" fill="none" stroke="' + wc.hi + '" stroke-width="2.1" stroke-linecap="round" opacity="0.85"/>' +
+              circle(a[0], a[1], 4.4, '#e2e8f0', 'stroke="#1e293b" stroke-width="1.3"') +
+              circle(a[0], a[1], 2.0, wc.stroke) +
+              circle(b[0], b[1], 4.4, '#e2e8f0', 'stroke="#1e293b" stroke-width="1.3"') +
+              circle(b[0], b[1], 2.0, wc.stroke);
+      } else {
+        art = pts.map(q =>
+          line(...q, x, y, 'transparent', 15) +
+          line(...q, x, y, 'url(#bbLead)', 3.2) +
+          circle(q[0], q[1], 2.7, '#e2e8f0', 'stroke="#475569" stroke-width="0.8"')
+        ).join('');
+      }
+
+      if (p.t === 'resistor') {
+        const resBody = 'M -18 -7.5 C -14 -7.5, -11 -6, -7 -6 L 7 -6 C 11 -6, 14 -7.5, 18 -7.5 C 20 -7.5, 21 -5, 21 0 C 21 5, 20 7.5, 18 7.5 C 14 7.5, 11 6, 7 6 L -7 6 C -11 6, -14 7.5, -18 7.5 C -20 7.5, -21 5, -21 0 C -21 -5, -20 -7.5, -18 -7.5 Z';
+        const bandPos = [-13.5, -7.5, -1.5, 11.5];
+        const stripes = p.bands.map((band, i) => {
+          const fill = band === 10 ? 'url(#bbGold)' : band === 11 ? 'url(#bbSilver)' : palette[band];
+          return '<rect x="' + bandPos[i] + '" y="-7.2" width="3.8" height="14.4" fill="' + fill + '"/>';
+        }).join('');
+        art += '<g transform="translate(' + x + ' ' + y + ') rotate(' + ang + ')" filter="url(#bbShadow)">' +
+               '<path d="' + resBody + '" fill="url(#bbResBody)" stroke="#9a7441" stroke-width="1"/>' +
+               stripes +
+               '<path d="' + resBody + '" fill="none" stroke="#9a7441" stroke-width="0.9"/>' +
+               '</g>';
+      }
+
+      if (p.t === 'led') {
+        const lc = ledColors[p.color] || ledColors.red;
+        const cur = voltages ? (currents.get(p.id) || 0) : 0;
+        const lit = cur > 0.0001;
+        const bright = Math.min(1, Math.max(0.25, Math.log10(cur * 1000 + 1) / 1.35));
+        const over = cur > 0.025;
+        const glow = lit ? circle(x, y, 24, lc.glow, 'opacity="' + bright.toFixed(2) + '"') : '';
+        art += glow +
+               '<g filter="url(#bbShadow)">' +
+               circle(x, y, 11.5, lit ? lc.on : lc.off, 'stroke="' + (over ? '#fbbf24' : '#334155') + '" stroke-width="' + (over ? 2.4 : 1.5) + '"') +
+               '<path d="M ' + (x - 8.5) + ' ' + (y - 6) + ' A 9.5 9.5 0 0 1 ' + (x + 8.5) + ' ' + (y - 6) + '" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.8"/>' +
+               circle(x - 3, y - 3, 3.6, lit ? lc.core : 'rgba(255,255,255,0.35)') +
+               '</g>' +
+               label(a[0] - 9, a[1] - 5, '+', 11.5, '#dc2626') +
+               (over ? label(x, y + 21, '!', 11, '#b45309') : '');
+      }
+
+      if (p.t === 'button') {
+        art += '<g filter="url(#bbShadow)">' +
+               '<rect x="' + (x - 13) + '" y="' + (y - 11) + '" width="26" height="22" rx="4" fill="#334155" stroke="#1e293b" stroke-width="1.3"/>' +
+               circle(x - 9, y - 7, 1.5, '#cbd5e1') + circle(x + 9, y - 7, 1.5, '#cbd5e1') +
+               circle(x - 9, y + 7, 1.5, '#cbd5e1') + circle(x + 9, y + 7, 1.5, '#cbd5e1') +
+               circle(x, y, 7.2, p.on ? '#22c55e' : '#94a3b8', 'stroke="#0f172a" stroke-width="1.2"') +
+               circle(x - 1.8, y - 1.8, 2.2, 'rgba(255,255,255,0.45)') +
+               '</g>';
+      }
+
+      if (p.t === 'transistor') {
+        art += '<g filter="url(#bbShadow)">' +
+               '<path d="M ' + (x - 15) + ' ' + (y + 8) + ' v -7 a 15 15 0 0 1 30 0 v 7 Z" fill="url(#bbNpnBody)" stroke="#0f172a" stroke-width="1.2"/>' +
+               '<text pointer-events="none" text-anchor="middle" x="' + x + '" y="' + (y + 3) + '" font-size="7.5" fill="#cbd5e1">NPN</text>' +
+               '</g>' +
+               pts.map((q, i) => label(q[0], q[1] + 18, 'EBC'[i], 10, '#1e293b')).join('');
+      }
+
+      if (tool === 'select' && p.id === active && !ghost) {
+        art += pts.map((q, i) => circle(...q, 6.2, '#fff', 'stroke="#0284c7" stroke-width="3" data-pin="' + i + '" style="cursor:grab"')).join('');
+      }
+      const lblY = p.t === 'wire' ? wireArc(a, b)[1] - 8 : y - 15;
+      const lblX = p.t === 'wire' ? wireArc(a, b)[0] : x;
+      return '<g data-id="' + p.id + '" style="cursor:grab" opacity="' + (ghost ? .55 : 1) + '">' + art + label(lblX, lblY, p.id, 10, '#0f172a') + '</g>';
+    }
+
+    function paint() {
+      svg.style.cursor = tool === 'select' ? 'default' : 'crosshair';
+      let overlay = '', pos = drag?.candidate;
+      if (hover) {
+        const n = net(hover);
+        overlay += holes.filter(h => net(h) === n).map(h => circle(...coords[h], 6.5, 'rgba(34, 197, 94, 0.45)', 'stroke="#16a34a" stroke-width="1"')).join('');
+      }
+      let body = [
+        ...parts.filter(p => p.t === 'wire'),
+        ...parts.filter(p => p.t !== 'wire')
+      ].map(p => shape(pos && p.id === active ? { ...p, p: pos } : p)).join('');
+
+      if (Object.prototype.hasOwnProperty.call(terminals, tool) && (draft.length || hover)) {
+        const hs = [...draft, ...(hover ? [hover] : [])];
+        overlay += hs.map(h => circle(...coords[h], 7, '#f97316')).join('');
+        if (hs.length >= 2) {
+          body += shape({ id: '', t: tool, p: hs, bands: resistorBands.slice(), color: tool === 'wire' ? wireColor : ledColor }, true);
+        }
+      }
+      if (tool === 'probe') {
+        probes.forEach((h, i) => {
+          const [x, y] = coords[h];
+          const c = i ? '#1e293b' : '#dc2626';
+          body += '<g pointer-events="none">' +
+                  circle(x, y, 7.5, 'rgba(255,255,255,0.8)', 'stroke="' + c + '" stroke-width="2.8"') +
+                  line(x + 2, y - 2, x + 16, y - 20, c, 4) +
+                  line(x, y, x + 4, y - 4, '#cbd5e1', 2) +
+                  label(x + 20, y - 22, i ? 'B (−)' : 'A (+)', 12, c) +
+                  '</g>';
+        });
+      }
+      $('overlay').innerHTML = overlay;
+      $('objects').innerHTML = body;
+      $('status').textContent = notice || (
+        wiring !== null
+          ? 'Tocca un foro libero per collegare il morsetto ' + (wiring === 0 ? 'Va (+).' : 'Vb (−).')
+          : tool === 'probe'
+            ? (probes.length === 1 ? 'Tocca il foro B (−) per misurare V(A) − V(B).' : 'Tocca il foro A (+) per iniziare una misura con il voltmetro.')
+            : tool === 'select'
+              ? 'Seleziona un componente per ispezionarlo o trascinarlo. Tocca un interruttore selezionato (o premi Spazio) per commutarlo.'
+              : tool === 'wire' && draft.length
+                ? 'Cavo da ' + draft[0] + ' · Tocca il foro di arrivo oppure una presa della Uno.'
+                : names[tool] + ' · ' + terminals[tool][draft.length] + ' — scegli un foro libero (Esc per tornare a Seleziona).'
+      ) + (hover ? '   ·   ' + hover + (voltages && Number.isFinite(voltages(hover)) ? ' (' + fmt(voltages(hover)) + ' V)' : '') : '');
+    }
+
+    function inventory() {
+      const box = $('inventory');
+      box.textContent = '';
+      if (!parts.length) { box.textContent = 'La scheda è vuota.'; return; }
+      for (const p of parts) {
+        const b = document.createElement('button'), v = document.createElement('span');
+        b.textContent = p.id;
+        v.textContent = p.t === 'resistor' ? fmt(resistance(p.bands)) + ' Ω' : names[p.t];
+        b.append(v);
+        b.setAttribute('aria-pressed', String(p.id === active));
+        b.onclick = () => { wiring = null; tool = 'select'; active = p.id; draft = []; hover = ''; notice = ''; refresh(); };
+        box.append(b);
+      }
+    }
+
+    function addSwatches(container, dict, currentKey, onPick) {
+      const row = document.createElement('div');
+      row.className = 'swatch-row';
+      for (const [k, info] of Object.entries(dict)) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'swatch';
+        btn.title = info.label;
+        btn.setAttribute('aria-label', info.label);
+        btn.setAttribute('aria-pressed', String(currentKey === k));
+        btn.style.backgroundColor = info.stroke || info.on;
+        btn.onclick = () => onPick(k);
+        row.append(btn);
+      }
+      container.append(row);
+    }
+
+    function refresh() {
+      const sw=parts.find(p=>p.id==='Ingresso_D12');
+      if(sw&&io){io.button=sw.on;document.getElementById('button').checked=sw.on;lastButton=sw.on}
+
+      recalc();
+      updateJacks();
+      paint();
+      inventory();
+      for (const b of $('tools').children) b.setAttribute('aria-pressed', String(b.dataset.tool === tool));
+      $('undo').disabled = !hist.length;
+      $('redo').disabled = !future.length;
+
+      const selected = part(), p = selected || (tool === 'resistor' ? { t: 'resistor', bands: resistorBands } : null);
+      panel.textContent = '';
+      const title = document.createElement('h2');
+      panel.append(title);
+
+      if (wiring !== null) {
+        title.textContent = wiring === 0 ? 'Morsetto Va (+)' : 'Morsetto Vb (−)';
+        panel.append('Scegli un foro libero sulla breadboard. ');
+        if (leads[wiring]) {
+          const btn = document.createElement('button');
+          btn.textContent = 'Scollega cavo';
+          btn.onclick = () => { checkpoint(); leads[wiring] = null; setTool('select'); };
+          panel.append(btn);
+        }
+        return;
+      }
+
+      if (tool === 'probe') {
+        title.textContent = 'Voltmetro DC (DMM)';
+        const [a, b] = probes;
+        const ready = b && voltages && Number.isFinite(voltages(a)) && Number.isFinite(voltages(b));
+        const out = document.createElement('p');
+        out.className = 'readout';
+        out.textContent = ready ? 'ΔV = ' + fmt(voltages(a) - voltages(b)) + ' V' : b ? 'Misura indisponibile' : '— V';
+        panel.append(out, 'Puntale A (+): ' + (a || '…') + '   /   Puntale B (−): ' + (b || '…'));
+        return;
+      }
+
+      title.textContent = selected ? p.id + ' · ' + names[p.t] : tool === 'select' ? 'Banco di montaggio' : names[tool];
+
+      if (tool === 'wire' || (selected && selected.t === 'wire')) {
+        const curColor = selected ? (selected.color || (resolveWireColor(selected) === wireColors.red ? 'red' : resolveWireColor(selected) === wireColors.black ? 'black' : 'blue')) : wireColor;
+        const lbl = document.createElement('small');
+        lbl.textContent = 'Colore guaina cavo:';
+        panel.append(lbl);
+        addSwatches(panel, wireColors, curColor, k => {
+          if (selected) { checkpoint(); selected.color = k; }
+          wireColor = k;
+          refresh();
+        });
+      }
+
+      if (tool === 'led' || (selected && selected.t === 'led')) {
+        const curLed = (selected ? selected.color : ledColor) || 'red';
+        const lbl = document.createElement('small');
+        lbl.textContent = 'Colore LED:';
+        panel.append(lbl);
+        addSwatches(panel, ledColors, curLed, k => {
+          if (selected) { checkpoint(); selected.color = k; }
+          ledColor = k;
+          refresh();
+        });
+      }
+
+      if (!p) {
+        panel.append(tool === 'select'
+          ? 'Scegli uno strumento per montare un componente o misurare una tensione.'
+          : 'Indica sulla breadboard: ' + terminals[tool].join(' → ') + '.');
+        return;
+      }
+
+      if (p.t === 'resistor') {
+        const sample = document.createElement('div');
+        sample.className = 'component-preview';
+        for (const band of p.bands) {
+          const stripe = document.createElement('i');
+          stripe.style.backgroundColor = palette[band];
+          sample.append(stripe);
+        }
+        panel.append(sample);
+        for (let k = 0; k < 4; k++) {
+          const l = document.createElement('label'), s = document.createElement('select');
+          l.className = 'band';
+          l.append(['Prima cifra', 'Seconda cifra', 'Moltiplicatore', 'Tolleranza'][k], s);
+          panel.append(l);
+          labels.forEach((n, i) => {
+            if ((k === 0 && (i === 0 || i > 9)) || (k === 1 && i > 9) || (k === 3 && !(i in toler))) return;
+            s.add(new Option(n, i));
+          });
+          s.value = p.bands[k];
+          s.style.borderBottom = '5px solid ' + palette[p.bands[k]];
+          s.onchange = () => {
+            if (selected) checkpoint();
+            delete p.ohms; p.bands[k] = +s.value;
+            resistorBands = p.bands.slice();
+            refresh();
+            panel.querySelectorAll('select')[k].focus();
+          };
+        }
+        const r = resistance(p.bands), t = toler[p.bands[3]], out = document.createElement('p');
+        out.textContent = fmt(r) + ' Ω ±' + fmt(t) + '% · ' + fmt(r * (1 - t / 100)) + '–' + fmt(r * (1 + t / 100)) + ' Ω';
+        panel.append(out);
+
+        const link = document.createElement('a');
+        link.className = 'btn-link';
+        link.href = 'resistenze.html?bands=' + p.bands.join(',');
+        link.textContent = 'Apri in Resistenze ↗';
+        panel.append(link);
+      }
+
+      if (!selected) {
+        panel.append(document.createElement('p').appendChild(document.createTextNode('Scegli i due fori per montare questa resistenza.')).parentNode);
+        return;
+      }
+
+      const read = document.createElement('p');
+      read.className = 'readout';
+      let extra = '';
+      if (voltages && currents.has(p.id)) {
+        const cur = currents.get(p.id);
+        extra = '\nI = ' + fmt(cur * 1000) + ' mA';
+        if (p.t === 'resistor') {
+          const mw = cur * cur * resistance(p.bands) * 1000;
+          extra += ' · P = ' + fmt(mw) + ' mW';
+        }
+      }
+      read.textContent = p.p.map((h, i) => terminals[p.t][i] + ': ' + h + (voltages ? ' (' + fmt(voltages(h)) + ' V)' : '')).join('\n') + extra;
+      panel.append(read);
+
+      if (voltages && currents.has(p.id)) {
+        const cur = currents.get(p.id);
+        if (p.t === 'led' && cur > 0.025) {
+          const w = document.createElement('p');
+          w.className = 'warn-box';
+          w.textContent = '⚠ Corrente elevata (' + fmt(cur * 1000) + ' mA > 25 mA): usa una resistenza di limitazione più alta.';
+          panel.append(w);
+        }
+        if (p.t === 'resistor' && cur * cur * resistance(p.bands) > 0.25) {
+          const w = document.createElement('p');
+          w.className = 'warn-box';
+          w.textContent = '⚠ Potenza dissipata superiore a 250 mW (resistenza standard da 1/4 W).';
+          panel.append(w);
+        }
+      }
+
+      function action(text, fn) {
+        const b = document.createElement('button');
+        b.textContent = text;
+        b.onclick = fn;
+        panel.append(b);
+      }
+      if (p.t === 'button') action(p.on ? 'Apri interruttore' : 'Chiudi interruttore', () => { checkpoint(); p.on = !p.on; refresh(); });
+      action('Elimina componente', erase);
+    }
+
+    function erase() { if (!part()) return; checkpoint(); parts = parts.filter(p => p.id !== active); active = ''; refresh(); }
+    function point(e) { const q = svg.createSVGPoint(); q.x = e.clientX; q.y = e.clientY; return q.matrixTransform(svg.getScreenCTM().inverse()); }
+    function nearest(q) {
+      if (tool === 'wire' || wiring !== null) {
+        for (const rail of ['TV', 'TG', 'BV', 'BG']) {
+          const [start, y] = coords[rail + '1'], end = coords[rail + '30'][0];
+          if (Math.abs(q.y - y - 9) <= 5 && q.x >= 52 && q.x <= 1130) {
+            return rail + Math.max(1, Math.min(30, 1 + Math.round((q.x - start) * 29 / (end - start))));
+          }
+        }
+      }
+      let best = '', dist = 19;
+      for (const [h, [x, y]] of Object.entries(coords)) {
+        const d = Math.hypot(q.x - x, q.y - y);
+        if (d < dist) { best = h; dist = d; }
+      }
+      return best;
+    }
+    function free(h, ignore) { return !jumpers.some(j=>j.h===h) && !parts.some(p => p.id !== ignore && p.p.includes(h)); }
+    function place(h) {
+      if (!h) return;
+      if (!free(h) || draft.includes(h)) { notice = 'Foro occupato. Scegli un foro libero.'; paint(); return; }
+      notice = '';
+      draft.push(h);
+      if (draft.length === terminals[tool].length) {
+        checkpoint();
+        const prefix = { wire:'W', led:'LED', button:'S', transistor:'Q', resistor:'R' }[tool];
+        let i = 1;
+        while (parts.some(p => p.id === prefix + i)) i++;
+        active = prefix + i;
+        const item = { id: active, t: tool, p: draft, bands: resistorBands.slice(), on: false };
+        if (tool === 'wire') item.color = wireColor;
+        if (tool === 'led') item.color = ledColor;
+        parts.push(item);
+        draft = [];
+        hover = '';
+        refresh();
+      } else {
+        paint();
+      }
+    }
+    function moved(q) {
+      const p = part();
+      if (drag.pin !== null) {
+        const h = nearest(q);
+        if (!h) return null;
+        return p.p.map((v, i) => i === drag.pin ? h : v);
+      }
+      const [sx, sy] = coords[p.p[0]], target = nearest({ x: sx + q.x - drag.start.x, y: sy + q.y - drag.start.y });
+      if (!target) return null;
+      const idx = h => holes.indexOf(h), dx = idx(target) % 30 - idx(p.p[0]) % 30, dy = Math.floor(idx(target) / 30) - Math.floor(idx(p.p[0]) / 30);
+      return p.p.map(h => {
+        const i = idx(h), col = i % 30 + dx, row = Math.floor(i / 30) + dy;
+        return col >= 0 && col < 30 && row >= 0 && row < rows.length ? rows[row] + (col + 1) : null;
+      });
+    }
+
+    let tap = null, moveTouch = false;
+    $('moveTouch').onclick = () => {
+      moveTouch = !moveTouch;
+      setTool('select');
+      svg.classList.toggle('move-touch', moveTouch);
+      $('moveTouch').setAttribute('aria-pressed', String(moveTouch));
+    };
+
+    function chooseLead(i) {
+      if (tool === 'wire' && draft.length === 1) {
+        const h = draft[0];
+        checkpoint();
+        leads[i] = h;
+        draft = [];
+        hover = '';
+        active = '';
+        notice = 'Morsetto ' + (i ? 'Vb' : 'Va') + ' collegato a ' + h + '. Scegli il primo foro del prossimo cavo.';
+        refresh();
+        return;
+      }
+      setTool('select');
+      moveTouch = false;
+      svg.classList.remove('move-touch');
+      $('moveTouch').setAttribute('aria-pressed', 'false');
+      wiring = i;
+      refresh();
+    }
+
+
+
+    function activate(e, allowDrag) {
+      const q = point(e);
+      if(pending){connect(pending,nearest(q));return}
+      const socket = e.target.closest('[data-lead]');
+      if (socket) { chooseLead(Number(socket.dataset.lead)); return; }
+      if (wiring !== null) {
+        const h = nearest(q);
+        if (!h) return;
+        if (leads[wiring] !== h && !free(h)) { notice = 'Foro occupato. Scegli un foro libero.'; paint(); return; }
+        checkpoint();
+        leads[wiring] = h;
+        setTool('select');
+        return;
+      }
+      if (tool === 'probe') {
+        const h = nearest(q);
+        if (h) { if (probes.length === 2) probes = []; probes.push(h); refresh(); }
+        return;
+      }
+      if (tool !== 'select') { hover = ''; place(nearest(q)); return; }
+      const hit = e.target.closest('[data-id]');
+      const hitId = hit?.dataset.id || '';
+      const wasActive = active;
+      active = hitId;
+      notice = '';
+      if (active && allowDrag) {
+        drag = { start: q, pin: e.target.hasAttribute('data-pin') ? Number(e.target.dataset.pin) : null, candidate: null, moved: false };
+        svg.setPointerCapture(e.pointerId);
+      } else if (active && active === wasActive && part()?.t === 'button') {
+        checkpoint();
+        part().on = !part().on;
+      }
+      refresh();
+    }
+
+    svg.onpointerdown = e => {
+      if (e.button !== 0) return;
+      if (e.pointerType === 'touch' && !(moveTouch && tool === 'select')) {
+        tap = e.isPrimary === false ? null : { x: e.clientX, y: e.clientY, id: e.pointerId };
+        return;
+      }
+      activate(e, true);
+    };
+    svg.onpointermove = e => {
+      if (e.pointerType === 'touch' && !drag) {
+        if (tap && Math.hypot(e.clientX - tap.x, e.clientY - tap.y) > 7) tap = null;
+        return;
+      }
+      const q = point(e), h = nearest(q);
+      if (!drag && hover === h) return;
+      hover = h;
+      if (drag) {
+        if (Math.hypot(q.x - drag.start.x, q.y - drag.start.y) > 4) drag.moved = true;
+        const a = moved(q);
+        drag.candidate = a && a.every(h => h && free(h, active)) && new Set(a).size === a.length ? a : null;
+        notice = drag.candidate ? 'Rilascia per posizionare.' : 'Posizione non disponibile.';
+      }
+      paint();
+    };
+    svg.onpointerup = e => {
+      if (tap && tap.id === e.pointerId) {
+        const isTap = Math.hypot(e.clientX - tap.x, e.clientY - tap.y) <= 7;
+        tap = null;
+        if (isTap) activate(e, false);
+        return;
+      }
+      if (!drag) return;
+      const p = part(), a = drag.candidate;
+      if (a && a.some((h, i) => h !== p.p[i])) {
+        checkpoint();
+        p.p = a;
+      } else if (!drag.moved && p?.t === 'button' && drag.pin === null) {
+        // Click rapido su un pulsante gia' presente lo commuta subito
+        checkpoint();
+        p.on = !p.on;
+      }
+      drag = null;
+      notice = '';
+      refresh();
+    };
+    svg.onpointercancel = () => { tap = null; drag = null; notice = ''; paint(); };
+    svg.onpointerleave = () => { hover = ''; paint(); };
+
+    const symbols = {
+      probe: 'M3 16l8-8 4 4-8 8m6-11 7-7',
+      select: 'M5 2v14l4-4 4 6 3-2-4-6h6z',
+      wire: 'M2 15h6l8-10h6',
+      resistor: 'M1 10h5V6h12v8H6v-4m12 0h5',
+      led: 'M1 11h6V5l9 6-9 6v-6m9-7v14m0-7h7m-8-7 4-3m0 5 4-3',
+      button: 'M1 14h5l11-9m1 9h5',
+      transistor: 'M2 10h7m0-7v14m0-8 10-6V1M9 12l10 5v2m-5-3 5 1-2-4'
+    };
+    for (const [t, name] of Object.entries({ select:'Seleziona', ...names, probe:'Voltmetro' })) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.dataset.tool = t;
+      b.innerHTML = '<svg aria-hidden="true" viewBox="0 0 24 20"><path d="' + symbols[t] + '" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';
+      b.append(name);
+      b.onclick = () => setTool(t);
+      $('tools').append(b);
+    }
+
+
+    $('substrate').innerHTML=base;
+    $('undo').onclick=()=>restore(hist,future);
+    $('redo').onclick=()=>restore(future,hist);
+    const sockets = new Map();
+    const saved = new Map();
+    let jumpers=[], pending='', key='', signature='', lastR, lastAdc, lastButton, lastPol;
+    const host = document.querySelector('.physicalBench');
+    function getVoltage(pin){
+      if(pin==='5V')return 5;
+      if(pin==='3V3')return 3.3;
+      if(pin.startsWith('GND'))return 0;
+      if(pin.startsWith('D') && io.modes[+pin.slice(1)]===1)return 5*io.pins[+pin.slice(1)]/255;
+      return null;
+    }
+    function drawCables(){
+      const overlay=document.getElementById('unoCables');
+      const origin=overlay.getBoundingClientRect(), matrix=svg.getScreenCTM();
+      if(!matrix||!origin.width)return;
+      overlay.innerHTML=jumpers.map(({pin,h,color})=>{
+        const socket=sockets.get(pin).getBoundingClientRect();
+        const pos=new DOMPoint(...coords[h]).matrixTransform(matrix);
+        const x=socket.left+socket.width/2-origin.left,y=socket.top+7-origin.top;
+        const u=pos.x-origin.left,w=pos.y-origin.top;
+        const lift=Math.max(14,(w-y)*.55);
+        const path='M '+x+' '+y+' C '+x+' '+(y-lift*.34)+' '+(u+Math.max(-70,Math.min(70,(x-u)*.35)))+' '+(w-lift)+' '+u+' '+w;
+        return '<g><title>'+pin+' → '+h+'</title><path d="'+path+'" fill="none" stroke="#17232e" stroke-width="4.5"/><path d="'+path+'" fill="none" stroke="'+wireColors[color].stroke+'" stroke-width="3.2"/><path d="'+path+'" transform="translate(-.4,-.6)" fill="none" stroke="'+wireColors[color].hi+'" stroke-width=".85"/>'+[[x,y],[u,w]].map(([a,b])=>'<rect x="'+(a-2.5)+'" y="'+(b-5)+'" width="5" height="7" rx="1.2" fill="#263238" stroke="#89949d" stroke-width=".6"/>').join('')+'</g>';
+      }).join('');
+    }
+    function socketClick(pin){
+      if(tool!=='wire')setTool('wire');
+      if(draft.length){connect(pin,draft[0]);return}
+      pending=pin;notice=pin+' · Tocca il foro della basetta dove inserire il cavetto.';paint();
+    }
+    function connect(pin,h){
+      const old=jumpers.find(j=>j.pin===pin);
+      if(!h)return;
+      if(old?.h!==h && !free(h)){notice='Foro occupato. Scegli un foro libero.';paint();return}
+      checkpoint();jumpers=jumpers.filter(j=>j.pin!==pin);jumpers.push({pin,h,color:wireColor});pending='';draft=[];hover='';notice=pin+' collegato a '+h+'.';refresh();
+    }
+    function registerSockets(){
+      for(const [group,defs] of [['unoTop',topPins],['unoBot',botPins]]){
+        [...document.getElementById(group).children].forEach((el,i)=>{
+          const def=defs[i];const pin=def.d!==undefined?'D'+def.d:def.a!==undefined?'A'+def.a:def.type==='gnd'?'GND'+(group==='unoTop'?'T':i):['5V','3V3'].includes(def.label)?def.label:null;
+          if(!pin)return;
+          sockets.set(pin,el);el.dataset.socket=pin;el.tabIndex=0;el.setAttribute('role','button');el.setAttribute('aria-label','Presa '+pin);
+          const previous=el.onclick;
+          el.onclick=()=>{if(tool==='wire'||!previous)socketClick(pin);else previous()};
+          el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();el.click()}};
+        });
+      }
+    }
+    function patchGuide(){
+      const changed=key!==document.getElementById('lesson').value;
+      if(changed){
+        if(key!=='')saved.set(key,structuredClone({parts,jumpers,pol:lastPol}));
+        key=document.getElementById('lesson').value;
+        const previous=saved.get(key);
+        if(previous){({parts,jumpers}=structuredClone(previous));lastPol=previous.pol}else lastPol=undefined;
+        if(!previous){
+          const project=buildBreadboardProject();
+          jumpers=[{pin:'5V',h:'TV1',color:'red'},{pin:'GND4',h:'TG1',color:'black'}];
+          parts=project.parts.filter(p=>{
+            const m=p.id.match(/^D(\d+)(?:_|$)/);
+            if(!m)return true;
+            jumpers.push({pin:'D'+m[1],h:p.p[1],color:['blue','orange','green','yellow'][jumpers.length%4]});return false;
+          });
+          if(['button','night'].includes(lesson.kind))jumpers.push({pin:'D12',h:'b27',color:'blue'});
+          if(lesson.kind==='analog')jumpers.push({pin:'A0',h:'b27',color:'green'});
+        }
+        hist.length=0;future.length=0;active='';pending='';draft=[];probes=[];tool='select';hover='';drag=null;notice='';signature='';
+      }
+      if(changed||lastButton!==io.button){
+        const button=parts.find(p=>p.id==='Ingresso_D12');if(button)button.on=io.button;
+      }
+      if((changed||lastAdc!==io.adc)&&lesson.kind==='analog'){
+        const bottom=10000*io.adc/1023;
+        for(const [id,r] of [['Pot_alto',10000-bottom],['Pot_basso',bottom]]){
+          const p=parts.find(p=>p.id===id);if(p){p.t=r?'resistor':'wire';if(r){p.bands=resistanceToBands(r);p.ohms=r}else{delete p.bands;delete p.ohms}}
+        }
+      }
+      if(lastR!==seriesOhms&&!changed)for(const p of parts.filter(p=>p.id.startsWith('R_D')))p.bands=resistanceToBands(seriesOhms);
+      const pol=document.getElementById('pol').selectedIndex;
+      if(lastPol!==undefined&&lesson.kind==='display'&&pol!==lastPol){
+        for(const p of parts){if(p.id.startsWith('LED_D'))p.p.reverse();if(p.id.startsWith('COM_D'))p.p[1]=p.p[1].replace(/^T[VG]/,pol?'TV':'TG')}
+      }
+      lastAdc=io.adc;lastButton=io.button;lastR=seriesOhms;lastPol=pol;
+      const next=JSON.stringify([io.pins,io.modes,io.adc,io.button,seriesOhms,pol]);
+      if(signature!==next){signature=next;refresh()}
+    }
+    function exportProject(){
+      const result=structuredClone(parts);
+      const taken=new Set([...parts.flatMap(p=>p.p),...jumpers.map(j=>j.h)]);
+      // Reserve two otherwise unused nodes as the virtual 5 V and GND buses.
+      const nodesUsed=new Set([...taken].map(node));
+      const buses=[];
+      for(const h of holes){if(!nodesUsed.has(node(h))){nodesUsed.add(node(h));buses.push(h);if(buses.length===2)break}}
+      if(buses.length<2)return null;
+      const pool=buses.map(h=>holes.filter(k=>node(k)===node(h)&&k!==h));
+      for(const j of jumpers){
+        const v=getVoltage(j.pin);
+        if(v===null)continue;
+        const i=v>0?0:1;
+        let dest=pool[i].pop();
+        if(!dest){for(const other of jumpers){if((getVoltage(other.pin)>0)!==(i===0)||getVoltage(other.pin)===null||!result.some(p=>p.id==='UNO_'+other.pin))continue;
+          dest=holes.find(h=>node(h)===node(other.h)&&!taken.has(h)&&!buses.includes(h));if(dest)break}}
+        if(!dest)return null;
+        taken.add(dest);result.push({id:'UNO_'+j.pin,t:'wire',p:[dest,j.h],on:false,color:j.color});
+      }
+      return {version:1,supply:5,powered:true,parts:result,leads:buses,note:'Fotografia digitale Uno: le uscite attive sono a 5 V. PWM e 3V3 sono rappresentati come livello alto.'};
+    }
+    function updateExport(){
+      const project=exportProject();
+      for(const id of ['bbOpen','exportBreadboard']){
+        const link=document.getElementById(id);
+        if(project){const u=new URL('https://fmorea.github.io/breadboard');u.searchParams.set('circuit',JSON.stringify(project));link.href=u.href}
+        else{link.removeAttribute('href');link.title='Servono due nodi liberi per esportare il circuito.'}
+      }
+    }
+    function updateJacks(){
+      const list=$('jacks');list.replaceChildren();
+      for(const j of jumpers){
+        const b=document.createElement('button');b.type='button';b.textContent=j.pin+' → '+j.h+' ×';b.title='Scollega '+j.pin;
+        b.onclick=()=>{checkpoint();jumpers=jumpers.filter(k=>k!==j);refresh()};list.append(b);
+      }
+      drawCables();updateExport();
+    }
+    host.closest('.bench').addEventListener('keydown',e=>{
+      if(e.target.matches('input,textarea,select'))return;
+      if(e.key==='Escape'){setTool('select');return}
+      if(e.key==='Delete'&&active){e.preventDefault();erase()}
+      if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){
+        e.preventDefault();e.shiftKey?restore(future,hist):restore(hist,future);
+      }
+    });
+    registerSockets();new ResizeObserver(drawCables).observe(host);
+    return {update:patchGuide,read(pin){
+      if(!io || !jumpers.some(j=>j.pin===pin))return null;
+      patchGuide();
+      const jack=jumpers.find(j=>j.pin===pin);
+      return voltages&&jack?voltages(jack.h):null;
+    }};
+
+    })();
+
     lessons.forEach((l, i) => $('lesson').add(new Option((i < 15 ? String(i + 1).padStart(2, '0') : 'Extra') + ' · ' + l.name, i)));
     function fromHash() {
       const n = Number(location.hash.match(/^#guida-(\d+)$/)?.[1]);
@@ -2166,7 +2938,7 @@
 
     fromHash();
     loadImportedResistorFromQuery();
-    if (new URLSearchParams(location.search).has('bands')) selectLesson();
+
   </script>
 </body>
 </html>
