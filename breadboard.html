@@ -573,12 +573,12 @@
     const labels = 'Nero Marrone Rosso Arancione Giallo Verde Blu Viola Grigio Bianco Oro Argento'.split(' ');
     const toler = {1:1,2:2,5:.5,6:.25,7:.1,8:.05,10:5,11:10};
     const wireColors = {
-      red: { label:'Rosso', stroke:'#dc2626', hi:'#fca5a5' },
-      black: { label:'Nero', stroke:'#1e293b', hi:'#64748b' },
-      blue: { label:'Blu', stroke:'#2563eb', hi:'#93c5fd' },
-      green: { label:'Verde', stroke:'#16a34a', hi:'#86efac' },
-      yellow: { label:'Giallo', stroke:'#eab308', hi:'#fef08a' },
-      orange: { label:'Arancione', stroke:'#ea580c', hi:'#fdba74' }
+      red: { label:'Rosso', stroke:'#dc2626', hi:'#fecaca' },
+      black: { label:'Nero', stroke:'#1e293b', hi:'#94a3b8' },
+      blue: { label:'Blu', stroke:'#2563eb', hi:'#bfdbfe' },
+      green: { label:'Verde', stroke:'#16a34a', hi:'#bbf7d0' },
+      yellow: { label:'Giallo', stroke:'#eab308', hi:'#fef9c3' },
+      orange: { label:'Arancione', stroke:'#ea580c', hi:'#fed7aa' }
     };
     const ledColors = {
       red: { label:'Rosso', off:'#7f1d1d', on:'#ef4444', core:'#fecaca', glow:'url(#glowRed)' },
@@ -776,7 +776,7 @@
     function wireArc(a, b) {
       const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
       const dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy) || 1;
-      const bend = Math.min(26, Math.max(8, len * 0.14));
+      const bend = Math.min(38, Math.max(16, len * 0.2));
       return [mx - (dy / len) * bend, my + (dx / len) * bend];
     }
 
@@ -790,11 +790,14 @@
         const wc = resolveWireColor(p);
         const [cx, cy] = wireArc(a, b);
         const d = 'M ' + a[0] + ' ' + a[1] + ' Q ' + cx + ' ' + cy + ' ' + b[0] + ' ' + b[1];
-        art = '<path d="' + d + '" fill="none" stroke="transparent" stroke-width="16"/>' +
-              '<path d="' + d + '" fill="none" stroke="' + wc.stroke + '" stroke-width="6.5" stroke-linecap="round" filter="url(#bbShadow)"/>' +
-              '<path d="' + d + '" fill="none" stroke="' + wc.hi + '" stroke-width="1.6" stroke-linecap="round" opacity="0.6"/>' +
-              circle(a[0], a[1], 3.2, '#cbd5e1', 'stroke="#475569" stroke-width="0.9"') +
-              circle(b[0], b[1], 3.2, '#cbd5e1', 'stroke="#475569" stroke-width="0.9"');
+        art = '<path d="' + d + '" fill="none" stroke="transparent" stroke-width="18"/>' +
+              '<path d="' + d + '" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="10.5" stroke-linecap="round"/>' +
+              '<path d="' + d + '" fill="none" stroke="' + wc.stroke + '" stroke-width="7.5" stroke-linecap="round" filter="url(#bbShadow)"/>' +
+              '<path d="' + d + '" fill="none" stroke="' + wc.hi + '" stroke-width="2.1" stroke-linecap="round" opacity="0.85"/>' +
+              circle(a[0], a[1], 4.4, '#e2e8f0', 'stroke="#1e293b" stroke-width="1.3"') +
+              circle(a[0], a[1], 2.0, wc.stroke) +
+              circle(b[0], b[1], 4.4, '#e2e8f0', 'stroke="#1e293b" stroke-width="1.3"') +
+              circle(b[0], b[1], 2.0, wc.stroke);
       } else {
         art = pts.map(q =>
           line(...q, x, y, 'transparent', 15) +
@@ -940,8 +943,11 @@
           if (h) {
             const [u, y] = coords[h];
             const cx = (x + u) / 2, cy = Math.min(-10, y - 55);
-            cable = '<path d="M ' + x + ' -28 Q ' + cx + ' ' + cy + ' ' + u + ' ' + y + '" fill="none" stroke="' + color + '" stroke-width="4" stroke-linecap="round"/>' +
-                    circle(u, y, 5, color, 'stroke="#fff" stroke-width="1.2"');
+            const pathD = 'M ' + x + ' -28 Q ' + cx + ' ' + cy + ' ' + u + ' ' + y;
+            cable = '<path d="' + pathD + '" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="8" stroke-linecap="round"/>' +
+                    '<path d="' + pathD + '" fill="none" stroke="' + color + '" stroke-width="5.2" stroke-linecap="round"/>' +
+                    '<path d="' + pathD + '" fill="none" stroke="' + (i ? '#94a3b8' : '#fecaca') + '" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>' +
+                    circle(u, y, 5.5, color, 'stroke="#fff" stroke-width="1.5"');
           }
           const btn = $(i ? 'minusLead' : 'plusLead');
           btn.textContent = (i ? 'Vb Nero' : 'Va Rosso') + ' · ' + (h || 'libero');

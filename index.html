@@ -962,8 +962,9 @@ nav .nav-logo {
     }
     .tools-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 8px;
+      gap: 12px;
+      margin-top: 10px;
+      align-items: stretch;
     }
     @media screen and (max-width: 960px) {
       .tools-grid {
@@ -1055,30 +1056,14 @@ nav .nav-logo {
       box-sizing: border-box;
     }
 
-    @supports (display: grid) {
-      .course-card,
-      .mode-card,
-      .tool-card {
-        width: auto;
-        margin: 0;
-      }
-      .mode-card,
-      .tool-card {
-        display: flex;
-      }
-      .student-fields > div {
-        width: auto;
-        margin-right: 0;
-      }
-    }
-
     .mode-card:hover {
       transform: translateY(-3px);
       box-shadow: 0 16px 35px rgba(15, 23, 42, .12);
     }
 
     .tools-section {
-      margin: 12px 0 8px;
+      margin: 14px 0 10px;
+      text-align: left;
     }
 
     .tools-section-label {
@@ -1092,24 +1077,6 @@ nav .nav-logo {
     }
 
     .tool-card {
-      display: -webkit-box;
-      display: -ms-flexbox;
-      display: flex;
-      -webkit-box-align: center;
-      -ms-flex-align: center;
-      align-items: center;
-      gap: 12px;
-      padding: 11px 14px;
-      border: 1px solid #bfdbfe;
-      border-radius: 14px;
-      background: #ffffff;
-      background: -webkit-linear-gradient(top, #ffffff 0%, #f8fbff 100%);
-      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-      color: #0f172a;
-      text-align: left;
-      text-decoration: none;
-      box-shadow: 0 4px 14px rgba(15, 23, 42, .05);
-      transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
       display: inline-block;
       width: 32%;
       margin: 0 1% 10px 0;
@@ -1120,6 +1087,46 @@ nav .nav-logo {
       width: 32%\9;
       margin: 0 1% 10px 0\9;
       box-sizing: border-box;
+      padding: 12px 14px;
+      border: 1px solid #bfdbfe;
+      border-radius: 14px;
+      background: #ffffff;
+      background: -webkit-linear-gradient(top, #ffffff 0%, #f8fbff 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      color: #0f172a;
+      text-align: left;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, .05);
+      transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+    }
+
+    @supports (display: grid) {
+      .course-grid:after,
+      .mode-grid:after,
+      .tools-grid:after {
+        content: none;
+        display: none;
+      }
+      .course-card,
+      .mode-card,
+      .tool-card {
+        width: auto;
+        margin: 0;
+        min-width: 0;
+      }
+      .mode-card {
+        display: flex;
+      }
+      .tool-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+      }
+      .student-fields > div {
+        width: auto;
+        margin-right: 0;
+      }
     }
 
     .tool-card:hover,

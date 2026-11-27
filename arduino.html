@@ -188,7 +188,7 @@
       border: 1px solid #cbd5e1;
       border-radius: 12px;
       padding: 10px 14px;
-      margin-bottom: 14px;
+      margin-top: 14px;
     }
     .theory summary {
       cursor: pointer;
@@ -235,9 +235,25 @@
     }
     .grid {
       display: grid;
-      grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
+      grid-template-columns: minmax(0, 1.16fr) minmax(0, .84fr);
       gap: 16px;
       align-items: start;
+    }
+    .guide-section {
+      margin-top: 18px;
+    }
+    .guide-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+      gap: 18px;
+      align-items: start;
+    }
+    .theory {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-top: 14px;
     }
     .card {
       min-width: 0;
@@ -727,7 +743,7 @@
       gap: 8px;
     }
     @media (max-width: 980px) {
-      .grid { grid-template-columns: 1fr; }
+      .grid, .guide-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 620px) {
       .mast { padding: 8px 12px; }
@@ -754,30 +770,9 @@
     <div class="page-head">
       <div>
         <h1>Laboratorio Arduino Uno</h1>
-        <p class="subtitle">Dal primo LED al controllo di un incrocio: leggi lo schema, modifica lo sketch e verifica scheda, breadboard e resistenze.</p>
+        <p class="subtitle">Simula scheda Uno R3, breadboard e codice C++ in tempo reale. Guida, schema e teoria si trovano sotto al banco.</p>
       </div>
     </div>
-
-    <details class="theory">
-      <summary>Prima di iniziare · scheda Arduino Uno R3, IDE e linguaggio C++</summary>
-      <div class="theory-grid">
-        <div class="theory-block">
-          <h3>Dalla USB al microcontrollore · pp. 286–290</h3>
-          <p>La Uno R3 usa un ATmega328P a 16 MHz. I 14 pin digitali sono numerati da D0 a D13 (PWM su ~3, ~5, ~6, ~9, ~10, ~11). Gli ingressi A0…A5 misurano una tensione rispetto a GND. <strong>L</strong> è il LED integrato su D13; <strong>ON</strong> segnala l’alimentazione; <strong>RX/TX</strong> indicano traffico seriale.</p>
-          <p>Sulla scheda reale, collegala via USB dati, apri Arduino IDE, scegli <em>Arduino Uno</em> e la porta, poi usa <em>Verifica</em> e <em>Carica</em>. Per le stampe apri il Monitor Seriale a 9600 baud.</p>
-        </div>
-        <div class="theory-block">
-          <h3>Come leggere uno sketch · pp. 289–292</h3>
-          <p><code>setup()</code> configura i pin una sola volta all’avvio; <code>loop()</code> si ripete di continuo. Le variabili globali conservano il valore fra un ciclo e l’altro.</p>
-          <p><code>pinMode</code> imposta <code>OUTPUT</code>, <code>INPUT</code> o <code>INPUT_PULLUP</code>. <code>digitalRead</code>/<code>digitalWrite</code> gestiscono i livelli logici, <code>analogRead(A0)</code> converte 0–5 V in 0–1023 (≈ 4,88 mV/passo), <code>analogWrite</code> genera PWM da 0 a 255.</p>
-        </div>
-        <div class="theory-block">
-          <h3>Condizioni, cicli e funzioni · pp. 292–295</h3>
-          <p>Puoi usare <code>if / else</code>, <code>switch / case</code>, <code>for</code>, <code>while</code>, <code>do…while</code>, array e funzioni personalizzate (es. <code>int doppio(int x) { return 2 * x; }</code>).</p>
-          <p>Sono supportate anche <code>millis()</code>, <code>map()</code>, <code>constrain()</code>, <code>min()</code>, <code>max()</code>, <code>abs()</code>, <code>pow()</code>, <code>sqrt()</code>, <code>random()</code>, <code>Serial.print()</code> e <code>Serial.println()</code>. <a href="https://docs.arduino.cc/hardware/uno-rev3/" target="_blank" rel="noopener">Scheda tecnica Uno R3 ↗</a></p>
-        </div>
-      </div>
-    </details>
 
     <div class="lesson-bar">
       <div class="lesson-picker">
@@ -787,65 +782,14 @@
       <div class="lesson-nav">
         <button id="prevLesson" type="button">← Precedente</button>
         <button id="nextLesson" type="button">Successiva →</button>
+        <a class="btn-link" href="#guideSection" style="min-height:36px;padding:6px 11px;font-size:13px;">Guida &amp; Schema ↓</a>
       </div>
     </div>
 
     <div class="grid">
-      <article class="card">
-        <div class="card-head">
-          <h2>Guida e collegamenti</h2>
-          <span class="eyebrow" id="ref"></span>
-        </div>
-        <div class="card-body">
-          <h2 class="lesson-title" id="title"></h2>
-          <p id="why"></p>
-          <h3 class="sec-title">Collegamenti</h3>
-          <p id="wires"></p>
-          <div id="schematic"></div>
-
-          <section class="integration-box" id="integrationBox" aria-label="Integrazione con Resistenze e Breadboard">
-            <div class="integration-box-head">
-              <strong>Integrazione Resistenze &amp; Breadboard</strong>
-            </div>
-            <div class="resistor-row" id="resistorChips"></div>
-            <div id="resistorTunerWrap" hidden>
-              <label style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#1e3a8a;">
-                Resistenza LED in serie:
-                <select id="seriesR" style="min-height:34px;padding:4px 8px;">
-                  <option value="100">100 Ω (Marrone · Nero · Marrone)</option>
-                  <option value="220">220 Ω (Rosso · Rosso · Marrone)</option>
-                  <option value="330" selected>330 Ω · consigliata (Arancione · Arancione · Marrone)</option>
-                  <option value="470">470 Ω (Giallo · Viola · Marrone)</option>
-                  <option value="1000">1 kΩ (Marrone · Nero · Rosso)</option>
-                  <option value="4700">4,7 kΩ (Giallo · Viola · Rosso)</option>
-                  <option value="10000">10 kΩ (Marrone · Nero · Arancione)</option>
-                </select>
-              </label>
-            </div>
-            <div class="elec-readout" id="elecReadout"></div>
-            <div class="warn-box" id="elecWarn" hidden></div>
-            <div class="integration-actions">
-              <a class="btn-link" id="openResistenze" href="resistenze.html">Verifica colori in Resistenze ↗</a>
-              <a class="btn-link btn-primary" id="exportBreadboard" href="breadboard.html">Esporta su Breadboard DC ↗</a>
-            </div>
-          </section>
-
-          <h3 class="sec-title">Prova al banco</h3>
-          <p id="watch"></p>
-          <div class="question">
-            <h3>Prima di eseguire</h3>
-            <p id="question"></p>
-            <details id="solution">
-              <summary>Controlla la risposta</summary>
-              <p id="answer"></p>
-            </details>
-          </div>
-        </div>
-      </article>
-
       <section class="card" aria-label="Simulatore">
         <div class="card-head">
-          <h2>Banco di simulazione</h2>
+          <h2>Banco di simulazione · Arduino Uno + Breadboard</h2>
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
             <output class="clock" id="clock">0,00 s</output>
           </div>
@@ -918,15 +862,23 @@
             </label>
           </div>
           <div class="status-line" role="status" id="status"></div>
+        </div>
+      </section>
 
-          <div class="codehead">
+      <section class="card" aria-label="Sketch e strumenti">
+        <div class="card-head">
+          <h2>Sketch C++ &amp; Strumenti</h2>
+          <span class="eyebrow" id="ref"></span>
+        </div>
+        <div class="card-body">
+          <div class="codehead" style="margin-top:0;">
             <h3><label for="code">Sketch modificabile</label></h3>
             <div class="code-actions">
               <button id="copyCode" type="button">Copia sketch</button>
               <button id="original" type="button">Ripristina esempio</button>
             </div>
           </div>
-          <textarea id="code" spellcheck="false" autocapitalize="off"></textarea>
+          <textarea id="code" spellcheck="false" autocapitalize="off" style="height:265px;"></textarea>
 
           <div class="serial-head">
             <h3>Monitor seriale (9600 baud)</h3>
@@ -934,14 +886,92 @@
           </div>
           <pre id="serial"></pre>
 
-          <details class="sim-notes">
-            <summary>Cosa supporta il simulatore</summary>
-            <p>Interpreta sketch C++ Arduino con <code>int</code>, <code>long</code>, <code>unsigned long</code>, <code>float</code>, <code>bool</code>, <code>byte</code>, <code>const</code>, array 1D, funzioni personalizzate, <code>if/else</code>, <code>for</code>, <code>while</code>, <code>do…while</code>, <code>switch/case</code>, <code>break</code>, <code>continue</code>, <code>return</code> e operatori logici/aritmetici (<code>&&</code>, <code>||</code>, <code>!</code>, <code>+=</code>, <code>++</code>, <code>--</code>).</p>
-            <p>Supporta <code>pinMode</code> (<code>INPUT</code>, <code>OUTPUT</code>, <code>INPUT_PULLUP</code>), <code>digitalRead</code>, <code>digitalWrite</code>, <code>analogRead</code> (A0–A5), <code>analogWrite</code> (PWM su ~3, ~5, ~6, ~9, ~10, ~11), <code>delay</code>, <code>millis</code>, <code>map</code>, <code>constrain</code>, <code>min</code>, <code>max</code>, <code>abs</code>, <code>pow</code>, <code>sqrt</code>, <code>random</code>, <code>Serial.print</code> e <code>Serial.println</code>. Per progetti con librerie esterne, trasferisci lo sketch in Arduino IDE.</p>
-          </details>
+          <section class="integration-box" id="integrationBox" aria-label="Integrazione con Resistenze e Breadboard">
+            <div class="integration-box-head">
+              <strong>Integrazione Resistenze &amp; Breadboard</strong>
+            </div>
+            <div class="resistor-row" id="resistorChips"></div>
+            <div id="resistorTunerWrap" hidden>
+              <label style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#1e3a8a;">
+                Resistenza LED in serie:
+                <select id="seriesR" style="min-height:34px;padding:4px 8px;">
+                  <option value="100">100 Ω (Marrone · Nero · Marrone)</option>
+                  <option value="220">220 Ω (Rosso · Rosso · Marrone)</option>
+                  <option value="330" selected>330 Ω · consigliata (Arancione · Arancione · Marrone)</option>
+                  <option value="470">470 Ω (Giallo · Viola · Marrone)</option>
+                  <option value="1000">1 kΩ (Marrone · Nero · Rosso)</option>
+                  <option value="4700">4,7 kΩ (Giallo · Viola · Rosso)</option>
+                  <option value="10000">10 kΩ (Marrone · Nero · Arancione)</option>
+                </select>
+              </label>
+            </div>
+            <div class="elec-readout" id="elecReadout"></div>
+            <div class="warn-box" id="elecWarn" hidden></div>
+            <div class="integration-actions">
+              <a class="btn-link" id="openResistenze" href="resistenze.html">Verifica colori in Resistenze ↗</a>
+              <a class="btn-link btn-primary" id="exportBreadboard" href="breadboard.html">Esporta su Breadboard DC ↗</a>
+            </div>
+          </section>
         </div>
       </section>
     </div>
+
+    <article class="card guide-section" id="guideSection">
+      <div class="card-head">
+        <h2>Guida all’esperienza &amp; Schema elettrico</h2>
+      </div>
+      <div class="card-body">
+        <div class="guide-grid">
+          <div>
+            <h2 class="lesson-title" id="title" style="margin-top:0;"></h2>
+            <p id="why"></p>
+            <h3 class="sec-title">Collegamenti</h3>
+            <p id="wires"></p>
+            <h3 class="sec-title">Prova al banco</h3>
+            <p id="watch"></p>
+            <div class="question">
+              <h3>Prima di eseguire</h3>
+              <p id="question"></p>
+              <details id="solution">
+                <summary>Controlla la risposta</summary>
+                <p id="answer"></p>
+              </details>
+            </div>
+          </div>
+          <div>
+            <h3 class="sec-title" style="margin-top:0;">Schema dei collegamenti</h3>
+            <div id="schematic"></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <details class="theory">
+      <summary>Riferimenti teorici · scheda Arduino Uno R3, IDE e linguaggio C++</summary>
+      <div class="theory-grid">
+        <div class="theory-block">
+          <h3>Dalla USB al microcontrollore · pp. 286–290</h3>
+          <p>La Uno R3 usa un ATmega328P a 16 MHz. I 14 pin digitali sono numerati da D0 a D13 (PWM su ~3, ~5, ~6, ~9, ~10, ~11). Gli ingressi A0…A5 misurano una tensione rispetto a GND. <strong>L</strong> è il LED integrato su D13; <strong>ON</strong> segnala l’alimentazione; <strong>RX/TX</strong> indicano traffico seriale.</p>
+          <p>Sulla scheda reale, collegala via USB dati, apri Arduino IDE, scegli <em>Arduino Uno</em> e la porta, poi usa <em>Verifica</em> e <em>Carica</em>. Per le stampe apri il Monitor Seriale a 9600 baud.</p>
+        </div>
+        <div class="theory-block">
+          <h3>Come leggere uno sketch · pp. 289–292</h3>
+          <p><code>setup()</code> configura i pin una sola volta all’avvio; <code>loop()</code> si ripete di continuo. Le variabili globali conservano il valore fra un ciclo e l’altro.</p>
+          <p><code>pinMode</code> imposta <code>OUTPUT</code>, <code>INPUT</code> o <code>INPUT_PULLUP</code>. <code>digitalRead</code>/<code>digitalWrite</code> gestiscono i livelli logici, <code>analogRead(A0)</code> converte 0–5 V in 0–1023 (≈ 4,88 mV/passo), <code>analogWrite</code> genera PWM da 0 a 255.</p>
+        </div>
+        <div class="theory-block">
+          <h3>Condizioni, cicli e funzioni · pp. 292–295</h3>
+          <p>Puoi usare <code>if / else</code>, <code>switch / case</code>, <code>for</code>, <code>while</code>, <code>do…while</code>, array e funzioni personalizzate (es. <code>int doppio(int x) { return 2 * x; }</code>).</p>
+          <p>Sono supportate anche <code>millis()</code>, <code>map()</code>, <code>constrain()</code>, <code>min()</code>, <code>max()</code>, <code>abs()</code>, <code>pow()</code>, <code>sqrt()</code>, <code>random()</code>, <code>Serial.print()</code> e <code>Serial.println()</code>. <a href="https://docs.arduino.cc/hardware/uno-rev3/" target="_blank" rel="noopener">Scheda tecnica Uno R3 ↗</a></p>
+        </div>
+      </div>
+    </details>
+
+    <details class="sim-notes">
+      <summary>Cosa supporta il simulatore</summary>
+      <p>Interpreta sketch C++ Arduino con <code>int</code>, <code>long</code>, <code>unsigned long</code>, <code>float</code>, <code>bool</code>, <code>byte</code>, <code>const</code>, array 1D, funzioni personalizzate, <code>if/else</code>, <code>for</code>, <code>while</code>, <code>do…while</code>, <code>switch/case</code>, <code>break</code>, <code>continue</code>, <code>return</code> e operatori logici/aritmetici (<code>&&</code>, <code>||</code>, <code>!</code>, <code>+=</code>, <code>++</code>, <code>--</code>).</p>
+      <p>Supporta <code>pinMode</code> (<code>INPUT</code>, <code>OUTPUT</code>, <code>INPUT_PULLUP</code>), <code>digitalRead</code>, <code>digitalWrite</code>, <code>analogRead</code> (A0–A5), <code>analogWrite</code> (PWM su ~3, ~5, ~6, ~9, ~10, ~11), <code>delay</code>, <code>millis</code>, <code>map</code>, <code>constrain</code>, <code>min</code>, <code>max</code>, <code>abs</code>, <code>pow</code>, <code>sqrt</code>, <code>random</code>, <code>Serial.print</code> e <code>Serial.println</code>. Per progetti con librerie esterne, trasferisci lo sketch in Arduino IDE.</p>
+    </details>
 
     <footer>
       <span>Appunti di riferimento · Introduzione all’ambiente di Arduino, pp. 286–305.</span>
@@ -1713,10 +1743,21 @@
           '<text x="' + x + '" y="' + (y + 21) + '" text-anchor="middle" font-size="10" font-weight="700" fill="#0f172a">' + tag + '</text>';
       }
 
+      function drawWire(d, color = '#2563eb', hi = '#93c5fd', xEnd = null, yEnd = null) {
+        let out = '<path d="' + d + '" fill="none" stroke="rgba(255,255,255,0.95)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>' +
+          '<path d="' + d + '" fill="none" stroke="' + color + '" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>' +
+          '<path d="' + d + '" fill="none" stroke="' + hi + '" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>';
+        if (xEnd !== null && yEnd !== null) {
+          out += '<circle cx="' + xEnd + '" cy="' + yEnd + '" r="4.2" fill="#e2e8f0" stroke="#0f172a" stroke-width="1.3"/>' +
+            '<circle cx="' + xEnd + '" cy="' + yEnd + '" r="2" fill="' + color + '"/>';
+        }
+        return out;
+      }
+
       const bbShell =
         '<rect x="12" y="10" width="616" height="144" rx="10" fill="#fbfaf4" stroke="#cbd5e1" stroke-width="1.5"/>' +
-        '<line x1="28" y1="28" x2="612" y2="28" stroke="#ef4444" stroke-width="2"/>' +
-        '<line x1="28" y1="138" x2="612" y2="138" stroke="#2563eb" stroke-width="2"/>' +
+        '<line x1="28" y1="28" x2="612" y2="28" stroke="#ef4444" stroke-width="2.4"/>' +
+        '<line x1="28" y1="138" x2="612" y2="138" stroke="#2563eb" stroke-width="2.4"/>' +
         '<text x="20" y="32" font-size="12" font-weight="800" fill="#dc2626">+</text>' +
         '<text x="20" y="142" font-size="12" font-weight="800" fill="#2563eb">−</text>' +
         '<rect x="28" y="76" width="584" height="10" rx="3" fill="#e2e8f0"/>' +
@@ -1736,43 +1777,47 @@
           '<g transform="translate(5 7)">' + segs + '<circle cx="42" cy="51" r="2.4" fill="' + (dpAct ? '#f97316' : '#334155') + '"/></g></g>';
         [5,6,7,8,9,10,11,12].forEach((p, idx) => {
           const rx = 200 + idx * 52;
-          partsSvg += '<path d="M ' + rx + ' 18 V 52" stroke="#2563eb" stroke-width="2.5"/>' +
-            '<text x="' + rx + '" y="15" text-anchor="middle" font-size="9.5" font-weight="800" fill="#1e3a8a">D' + p + '</text>' +
-            drawRes(rx, 80, rBands, idx === 0 ? formatOhms(seriesOhms) : '', false);
+          partsSvg += drawWire('M ' + rx + ' 18 V 54', '#2563eb', '#bfdbfe', rx, 54) +
+            '<text x="' + rx + '" y="14" text-anchor="middle" font-size="9.5" font-weight="800" fill="#1e3a8a">D' + p + '</text>' +
+            drawRes(rx, 82, rBands, idx === 0 ? formatOhms(seriesOhms) : '', false);
         });
       } else if (lesson.pins.length === 6) {
         const colors = ['#ef4444', '#f59e0b', '#22c55e'];
         lesson.pins.forEach((p, i) => {
           const x = 68 + i * 74;
-          partsSvg += '<path d="M ' + x + ' 16 V 44" stroke="#2563eb" stroke-width="2.5"/>' +
-            '<text x="' + x + '" y="14" text-anchor="middle" font-size="9.5" font-weight="800" fill="#1e3a8a">D' + p + '</text>' +
+          partsSvg += drawWire('M ' + x + ' 16 V 42', '#2563eb', '#bfdbfe', x, 42) +
+            drawWire('M ' + x + ' 118 V 138', '#1e293b', '#94a3b8', x, 138) +
+            '<text x="' + x + '" y="13" text-anchor="middle" font-size="9.5" font-weight="800" fill="#1e3a8a">D' + p + '</text>' +
             drawRes(x, 64, rBands, i === 0 ? formatOhms(seriesOhms) : '', false) +
-            drawLed(x, 108, colors[i % 3], io.pins[p], (i < 3 ? 'A ' : 'B ') + ['R', 'G', 'V'][i % 3]) +
-            '<path d="M ' + x + ' 118 V 138" stroke="#1e293b" stroke-width="2"/>';
+            drawLed(x, 106, colors[i % 3], io.pins[p], (i < 3 ? 'A ' : 'B ') + ['R', 'G', 'V'][i % 3]);
         });
         if (lesson.kind === 'night') {
           const bx = 540;
-          partsSvg += '<g id="bbButton" style="cursor:pointer">' +
+          partsSvg += drawWire('M ' + (bx - 16) + ' 58 H 505 V 28', '#dc2626', '#fecaca', 505, 28) +
+            drawWire('M ' + bx + ' 128 V 138', '#1e293b', '#94a3b8', bx, 138) +
+            '<g id="bbButton" style="cursor:pointer">' +
             '<rect x="' + (bx - 16) + '" y="44" width="32" height="28" rx="5" fill="#1e293b" stroke="#0f172a"/>' +
             '<circle cx="' + bx + '" cy="58" r="9" fill="' + (io.button ? '#22c55e' : '#94a3b8') + '"/>' +
             '<text x="' + bx + '" y="36" text-anchor="middle" font-size="9.5" font-weight="800" fill="#1e3a8a">SW D12</text>' +
             '</g>' +
-            '<path d="M ' + (bx - 16) + ' 58 H 505 V 28" stroke="#dc2626" stroke-width="2.2" fill="none"/>' +
-            drawRes(bx, 106, pdBands, '10 kΩ', false) +
-            '<path d="M ' + bx + ' 130 V 138" stroke="#1e293b" stroke-width="2"/>';
+            drawRes(bx, 106, pdBands, '10 kΩ', false);
         }
       } else if (lesson.pins.length === 2 || lesson.pins[0] === 9) {
         lesson.pins.forEach((p, i) => {
           const x = 160 + i * 180;
-          partsSvg += '<path d="M ' + x + ' 20 H ' + (x - 45) + ' V 52" stroke="#2563eb" stroke-width="2.5" fill="none"/>' +
-            '<text x="' + x + '" y="16" text-anchor="middle" font-size="10" font-weight="800" fill="#1e3a8a">D' + p + (p === 9 ? ' (PWM)' : '') + '</text>' +
+          partsSvg += drawWire('M ' + x + ' 18 Q ' + (x - 45) + ' 18 ' + (x - 24) + ' 52', '#2563eb', '#bfdbfe', x - 24, 52) +
+            drawWire('M ' + (x + 65) + ' 62 V 138', '#1e293b', '#94a3b8', x + 65, 138) +
+            '<text x="' + x + '" y="14" text-anchor="middle" font-size="10" font-weight="800" fill="#1e3a8a">D' + p + (p === 9 ? ' (PWM)' : '') + '</text>' +
             drawRes(x, 52, rBands, formatOhms(seriesOhms), true) +
-            drawLed(x + 65, 52, '#f59e0b', io.pins[p], 'LED D' + p) +
-            '<path d="M ' + (x + 65) + ' 62 V 138" stroke="#1e293b" stroke-width="2"/>';
+            drawLed(x + 65, 52, '#f59e0b', io.pins[p], 'LED D' + p);
         });
         if (lesson.kind === 'analog') {
           const px = 520, ang = -120 + (io.adc / 1023) * 240;
-          partsSvg += '<g transform="translate(' + px + ' 78)">' +
+          partsSvg += drawWire('M 480 28 H 502 V 62', '#dc2626', '#fecaca', 480, 28) +
+            drawWire('M 538 62 V 138', '#1e293b', '#94a3b8', 538, 138) +
+            drawWire('M 520 56 V 18', '#7c3aed', '#ddd6fe', 520, 56) +
+            '<text x="520" y="14" text-anchor="middle" font-size="10" font-weight="800" fill="#5b21b6">A0</text>' +
+            '<g transform="translate(' + px + ' 78)">' +
             '<circle r="22" fill="#e2e8f0" stroke="#475569" stroke-width="2"/>' +
             '<line x1="0" y1="0" x2="0" y2="-16" stroke="#2563eb" stroke-width="3" stroke-linecap="round" transform="rotate(' + ang.toFixed(1) + ')"/>' +
             '<circle r="4" fill="#1e3a8a"/>' +
@@ -1780,22 +1825,23 @@
         }
       } else if (lesson.kind === 'button') {
         const bx = 240;
-        partsSvg += '<path d="M 140 28 H ' + (bx - 24) + ' V 56" stroke="#dc2626" stroke-width="2.5" fill="none"/>' +
+        partsSvg += drawWire('M 140 28 H ' + (bx - 20) + ' V 56', '#dc2626', '#fecaca', 140, 28) +
+          drawWire('M ' + (bx + 20) + ' 58 H 320 V 20', '#2563eb', '#bfdbfe', 320, 58) +
+          drawWire('M 320 58 H 356', '#2563eb', '#bfdbfe', 356, 58) +
+          drawWire('M 404 58 H 450 V 138', '#1e293b', '#94a3b8', 450, 138) +
           '<g id="bbButton" style="cursor:pointer">' +
           '<rect x="' + (bx - 20) + '" y="42" width="40" height="32" rx="6" fill="#1e293b" stroke="#0f172a"/>' +
           '<circle cx="' + bx + '" cy="58" r="11" fill="' + (io.button ? '#22c55e' : '#94a3b8') + '" stroke="#e2e8f0" stroke-width="1.5"/>' +
           '<text x="' + bx + '" y="35" text-anchor="middle" font-size="10" font-weight="800" fill="#0f172a">Pulsante D12 (clicca)</text>' +
           '</g>' +
-          '<path d="M ' + (bx + 20) + ' 58 H 320 V 20" stroke="#2563eb" stroke-width="2.5" fill="none"/>' +
-          '<text x="320" y="16" text-anchor="middle" font-size="10" font-weight="800" fill="#1e3a8a">→ D12</text>' +
-          drawRes(380, 58, pdBands, 'Pull-down 10 kΩ', true) +
-          '<path d="M 320 58 H 356 M 404 58 H 450 V 138" stroke="#1e293b" stroke-width="2" fill="none"/>';
+          '<text x="320" y="15" text-anchor="middle" font-size="10" font-weight="800" fill="#1e3a8a">→ D12</text>' +
+          drawRes(380, 58, pdBands, 'Pull-down 10 kΩ', true);
       } else if (lesson.kind === 'analog') {
         const px = 310, ang = -120 + (io.adc / 1023) * 240;
-        partsSvg += '<path d="M 140 28 H 240 V 80 H 286" stroke="#dc2626" stroke-width="2.5" fill="none"/>' +
-          '<path d="M 334 80 H 390 V 138" stroke="#1e293b" stroke-width="2.5" fill="none"/>' +
-          '<path d="M 310 56 V 20" stroke="#2563eb" stroke-width="2.5" fill="none"/>' +
-          '<text x="310" y="16" text-anchor="middle" font-size="10" font-weight="800" fill="#1e3a8a">→ A0</text>' +
+        partsSvg += drawWire('M 140 28 H 240 V 80 H 286', '#dc2626', '#fecaca', 140, 28) +
+          drawWire('M 334 80 H 390 V 138', '#1e293b', '#94a3b8', 390, 138) +
+          drawWire('M 310 56 V 20', '#7c3aed', '#ddd6fe', 310, 56) +
+          '<text x="310" y="15" text-anchor="middle" font-size="10" font-weight="800" fill="#5b21b6">→ A0</text>' +
           '<g transform="translate(' + px + ' 82)">' +
           '<circle r="24" fill="#e2e8f0" stroke="#475569" stroke-width="2"/>' +
           '<line x1="0" y1="0" x2="0" y2="-18" stroke="#2563eb" stroke-width="3.2" stroke-linecap="round" transform="rotate(' + ang.toFixed(1) + ')"/>' +
@@ -1804,7 +1850,7 @@
       } else {
         partsSvg += '<rect x="150" y="42" width="340" height="72" rx="8" fill="#eff6ff" stroke="#bfdbfe"/>' +
           '<text x="320" y="74" text-anchor="middle" font-size="12.5" font-weight="800" fill="#1e3a8a">Nessun componente esterno necessario</text>' +
-          '<text x="320" y="94" text-anchor="middle" font-size="11" fill="#475569">Usa il LED L integrato su D13 · oppure clicca «Esporta su Breadboard DC» per provarlo con 330 Ω</text>';
+          '<text x="320" y="94" text-anchor="middle" font-size="11" fill="#475569">Usa il LED L integrato su D13 · oppure clicca «Esporta su Breadboard DC»</text>';
       }
 
       svg.innerHTML = bbShell + partsSvg;
