@@ -1,65 +1,673 @@
-<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FMOREA · Codice colori delle resistenze</title>
-<style>
-*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;padding:clamp(6px,1.2vw,16px);background:#b00000;color:#1e293b;font:16px/1.5 Averta,Inter,"Segoe UI",Arial,sans-serif}header{background:#8e0000;box-shadow:3px 3px 6px #0003}header a{display:block;max-width:1100px;margin:auto;padding:8px 18px;color:white;text-decoration:none;font-weight:800;font-size:34px;letter-spacing:-.3px}main{max-width:1100px;margin:16px auto;padding:clamp(16px,3vw,34px);background:white;border:1px solid #cbd5e1;border-radius:16px;box-shadow:0 10px 25px #0002}h1{font-size:clamp(24px,4vw,34px);letter-spacing:-.03em;margin:0;color:#0f172a}p{margin:6px 0}.toolbar,.modes,.step,.entry{display:flex;align-items:center;flex-wrap:wrap;gap:8px}.toolbar{justify-content:space-between;margin:18px 0}.step strong{min-width:64px;text-align:center}button,select,input{background:#fff;border:1px solid #cbd5e1;border-radius:9px;padding:9px 12px;font:inherit;color:#334155;min-height:43px}button{background:#f1f5f9;cursor:pointer;font-weight:700}button[aria-pressed=true]{background:#2563eb;color:white;border-color:#2563eb}button:disabled{opacity:.45;cursor:default}:focus-visible{outline:3px solid #60a5fa;outline-offset:2px}.diagram{position:relative;display:grid;place-items:center;height:130px;background:linear-gradient(#fff,#eff6ff);border:1px solid #dbeafe;border-radius:14px}.filo{position:absolute;width:83%;height:5px;background:#8995a3}.corpo{position:relative;width:min(58%,410px);height:60px;border:1px solid #ae9167;background:linear-gradient(#f6e4c8,#c9a778);border-radius:20px;overflow:hidden;box-shadow:0 4px 7px #0002}.banda{position:absolute;top:0;bottom:0;width:6%;box-shadow:inset 0 7px 8px #fff3,inset 0 -7px 8px #0002}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin:16px 0}label{font-size:14px;font-weight:700}label select,label input{display:block;width:100%;margin-top:4px;font-weight:500}.entry{align-items:end;margin:14px 0}.entry input{max-width:200px}.result{background:#eff6ff;border:1px solid #dbeafe;border-radius:14px;padding:16px 20px;margin-top:12px}output{font-size:clamp(22px,4vw,34px);font-weight:800;color:#1e3a8a}#error{background:#fff7ed;color:#853d0e;padding:12px;border-radius:9px}
-</style></head><body><header><a href="https://fmorea.github.io/">FMOREA</a></header><main><h1>Codice colori delle resistenze</h1>
-<div class="toolbar"><div class="modes"><button id="forward">Colori → valore</button><button id="inverse">Valore → colori</button></div><div class="step"><button id="minus" aria-label="Rimuovi una banda">−</button><strong id="count"></strong><button id="plus" aria-label="Aggiungi una banda">+</button></div></div>
-<p id="guide"></p><label id="legendBox">Tabella di tolleranza<select style="width:auto" id="legend"><option value="current">IEC 60062:2016</option><option value="classic">Classica · grigio ±0,05%</option></select></label><div class="entry" id="entry" hidden><label>Valore nominale<input id="number" type="text" inputmode="decimal" autocomplete="off"></label><label>Unità<select id="unit"><option value="0">Ω</option><option value="3">kΩ</option><option value="6">MΩ</option><option value="9">GΩ</option></select></label></div>
-<p id="error" role="status" hidden></p><div id="drawing" class="diagram" role="img"><div class="filo"></div><div id="body" class="corpo"></div></div><div id="fields" class="grid"></div>
-<section id="result" class="result" aria-live="polite"><output id="value"></output><p id="sequence"></p><p id="math"></p><p id="range"></p></section></main>
-<script>
-const $=id=>document.getElementById(id);
-const names=['Nero','Marrone','Rosso','Arancione','Giallo','Verde','Blu','Viola','Grigio','Bianco','Oro','Argento','Rosa'];
-const colors=['#202328','#6b3826','#ce303a','#ec761c','#f2cb32','#228451','#2865bf','#8349a2','#7a828d','#fffdf5','#c69930','#aeb8c5','#ec8fb0'];
-const powers=[0,1,2,3,4,5,6,7,8,9,-1,-2,-3];
-const classic={1:1,2:2,5:.5,6:.25,7:.1,8:.05,10:5,11:10};
-const modern={...classic,3:.05,4:.02,8:.01};
-const thermal={0:250,1:100,2:50,3:15,4:25,5:20,6:10,7:5,8:1};
-const fmt=new Intl.NumberFormat('it-IT',{maximumSignificantDigits:14}).format;
-const digits=()=>count>=5?3:2;
-let count=4,reverse=false,significand=10,exp=2,tol=10,temp=1,valid=true;
-function ohms(){return Number(significand+'e'+exp)}
-function formatted(r){for(const [scale,u] of [[1e9,'GΩ'],[1e6,'MΩ'],[1e3,'kΩ']])if(r>=scale)return fmt(r/scale)+' '+u;return fmt(r)+' Ω'}
-function setInput(){const r=ohms(),scale=r>=1e9?9:r>=1e6?6:r>=1e3?3:0;$('unit').value=scale;$('number').value=String(Number(significand+'e'+(exp-scale))).replace('.',',')}
-function encode(){
- const raw=$('number').value.trim().replace(',','.');
- if(raw.length>64||!/^\d*\.?\d+$/.test(raw))return 'Inserisci un valore positivo, senza separatori delle migliaia.';
- const [whole,frac='']=raw.split('.'),str=(whole+frac).replace(/^0+/,'');
- if(!str)return 'Il ponticello da 0 Ω ha una sola banda nera.';
- const significant=str.replace(/0+$/,'');
- if(significant.length>digits())return count<5?'Questo valore richiede più di due cifre significative. Prova il formato a 5 bande.':'Il codice supporta al massimo tre cifre significative. Scegli un valore rappresentabile.';
- const power=str.length-frac.length+Number($('unit').value)-digits();
- if(!powers.includes(power))return 'Il valore è fuori dall’intervallo dei moltiplicatori disponibili per questo formato.';
- significand=Number(significant.padEnd(digits(),'0'));exp=power;return '';
-}
-function roles(){const list=['Prima cifra','Seconda cifra'];if(count>=5)list.push('Terza cifra');list.push('Moltiplicatore');if(count>=4)list.push('Tolleranza');if(count===6)list.push('Coefficiente termico');return list}
-function render(){
- const tolerance=$('legend').value==='current'?modern:classic;
- $('legendBox').hidden=count===3;
- const message=reverse?encode():'';valid=!message;
- $('count').textContent=count+' bande';$('minus').disabled=count===3;$('plus').disabled=count===6;
- $('forward').setAttribute('aria-pressed',String(!reverse));$('inverse').setAttribute('aria-pressed',String(reverse));$('entry').hidden=!reverse;
- $('guide').textContent=(reverse?'Inserisci il valore e scegli le caratteristiche aggiuntive. ':'Leggi le bande da sinistra a destra. ')+({3:'Due cifre e moltiplicatore. Tolleranza implicita ±20%.',4:'Due cifre, moltiplicatore e tolleranza.',5:'Tre cifre, moltiplicatore e tolleranza.',6:'Tre cifre, moltiplicatore, tolleranza e coefficiente termico.'})[count];
- $('error').hidden=valid;$('error').textContent=message;
- for(const id of ['drawing','fields','result'])$(id).hidden=!valid;
- if(!valid)return;
- const d=digits(),bands=String(significand).split('').map(Number);bands.push(powers.indexOf(exp));if(count>=4)bands.push(tol);if(count===6)bands.push(temp);
- const titles=roles(),pts=({3:[15,39,64],4:[13,30,47,77],5:[10,24,38,52,79],6:[9,22,35,48,65,82]})[count];
- $('fields').textContent='';$('body').textContent='';
- bands.forEach((b,i)=>{
- const stripe=document.createElement('span');stripe.className='banda';stripe.style.left=pts[i]+'%';stripe.style.backgroundColor=colors[b];$('body').append(stripe);
- const l=document.createElement('label'),s=document.createElement('select');l.append((i+1)+'ª · '+titles[i],s);$('fields').append(l);
- const map=i<d?Object.fromEntries(names.slice(0,10).map((_,j)=>[j,String(j)])):i===d?Object.fromEntries(powers.map((p,j)=>[j,'×'+fmt(10**p)])):i===d+1?tolerance:thermal;
- for(const [key,val] of Object.entries(map)){if(i===0&&key==='0')continue;const suffix=i===d+1?'±'+fmt(val)+'%':i===d+2?val+' ppm/K':val;s.add(new Option(names[key]+' · '+suffix,key))}
- s.value=b;s.disabled=reverse&&i<=d;s.style.borderBottom='5px solid '+colors[b];s.onchange=()=>{const n=Number(s.value);if(i<d){const chars=String(significand).split('');chars[i]=String(n);significand=Number(chars.join(''))}else if(i===d)exp=powers[n];else if(i===d+1)tol=n;else temp=n;render();$('fields').querySelectorAll('select')[i].focus()};
- });
- const r=ohms(),pct=count===3?20:tolerance[tol],sequence=bands.map(b=>names[b]).join(' · ');
- $('drawing').setAttribute('aria-label',sequence);$('sequence').textContent=sequence;$('value').textContent=formatted(r)+' ±'+fmt(pct)+'%'+(count===6?' · '+thermal[temp]+' ppm/K':'');
- $('math').textContent=significand+' × '+fmt(10**exp)+' = '+fmt(r)+' Ω';$('range').textContent='Da '+fmt(r*(1-pct/100))+' Ω a '+fmt(r*(1+pct/100))+' Ω.';
-}
-function resize(n){if(n<3||n>6)return;const wasReverse=reverse;if(!reverse)setInput();count=n;const message=encode();reverse=wasReverse||!!message;render()}
-$('plus').onclick=()=>resize(count+1);$('minus').onclick=()=>resize(count-1);
-$('inverse').onclick=()=>{if(!reverse)setInput();reverse=true;render()};
-$('forward').onclick=()=>{if(!valid){significand=digits()===3?100:10;exp=digits()===3?1:2}reverse=false;render()};
-$('legend').onchange=()=>{if($('legend').value==='classic'&&!(tol in classic))tol=10;render()};
-$('number').oninput=render;$('unit').onchange=render;render();
-</script></body></html>
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FMOREA · Codice colori delle resistenze</title>
+  <style>
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body {
+      margin: 0;
+      padding: clamp(6px, 1.2vw, 16px);
+      background: #b00000;
+      color: #1e293b;
+      font: 16px/1.5 Averta, Inter, "Segoe UI", Arial, sans-serif;
+    }
+    .mast {
+      background: #8e0000;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
+      max-width: 1100px;
+      margin: 0 auto 12px;
+      padding: 8px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .mast-brand {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 28px;
+      letter-spacing: -.3px;
+      line-height: 1.1;
+    }
+    .mast-nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+    .mast-nav a {
+      color: rgba(255, 255, 255, .92);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, .25);
+      background: rgba(255, 255, 255, .08);
+      transition: background .15s ease, border-color .15s ease;
+    }
+    .mast-nav a:hover {
+      background: rgba(255, 255, 255, .18);
+      border-color: rgba(255, 255, 255, .5);
+    }
+    .mast-nav a[aria-current="page"] {
+      background: #fff;
+      color: #8e0000;
+      border-color: #fff;
+    }
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: clamp(16px, 3vw, 32px);
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, .14);
+    }
+    .page-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    h1 {
+      font-size: clamp(22px, 3.6vw, 32px);
+      letter-spacing: -.03em;
+      margin: 0;
+      color: #0f172a;
+    }
+    .subtitle {
+      margin: 2px 0 0;
+      color: #64748b;
+      font-size: 14px;
+    }
+    p { margin: 6px 0; }
+    .toolbar, .modes, .step, .entry, .presets, .subbar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .toolbar { justify-content: space-between; margin: 16px 0 10px; }
+    .subbar { justify-content: space-between; margin: 8px 0 14px; }
+    .step strong { min-width: 72px; text-align: center; font-size: 15px; }
+    button, select, input, .btn-link {
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+      padding: 8px 12px;
+      font: inherit;
+      font-size: 14px;
+      color: #334155;
+      min-height: 40px;
+      text-decoration: none;
+    }
+    button, .btn-link {
+      background: #f1f5f9;
+      cursor: pointer;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    button:hover, select:hover, .btn-link:hover {
+      background: #e2e8f0;
+      border-color: #94a3b8;
+    }
+    button[aria-pressed=true] {
+      background: #2563eb;
+      color: #fff;
+      border-color: #2563eb;
+    }
+    button.primary, .btn-primary {
+      background: #2563eb;
+      color: #fff;
+      border-color: #2563eb;
+    }
+    button.primary:hover, .btn-primary:hover {
+      background: #1d4ed8;
+      border-color: #1d4ed8;
+    }
+    button:disabled { opacity: .45; cursor: default; }
+    :focus-visible { outline: 3px solid #60a5fa; outline-offset: 2px; }
+    .presets { margin: 10px 0 14px; }
+    .presets-label { font-size: 12px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: .05em; }
+    .chip {
+      min-height: 32px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      background: #f8fafc;
+    }
+    .inline-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: end;
+    }
+    .inline-controls label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #334155;
+    }
+    .entry { align-items: end; margin: 12px 0; }
+    .entry input { max-width: 190px; }
+    .diagram {
+      position: relative;
+      padding: 12px;
+      background: radial-gradient(circle at 50% 35%, #ffffff 0%, #eff6ff 100%);
+      border: 1px solid #dbeafe;
+      border-radius: 16px;
+      margin: 12px 0;
+      overflow: hidden;
+    }
+    .diagram svg {
+      display: block;
+      width: 100%;
+      max-width: 680px;
+      height: auto;
+      margin: 0 auto;
+    }
+    .band-hit { cursor: pointer; transition: opacity .15s ease; }
+    .band-hit:hover { opacity: .86; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin: 14px 0;
+    }
+    .grid label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #334155;
+    }
+    .grid label select {
+      display: block;
+      width: 100%;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+    .result {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .result-main { flex: 1 1 320px; min-width: 0; }
+    output {
+      display: block;
+      font-size: clamp(22px, 4vw, 34px);
+      font-weight: 800;
+      color: #1e3a8a;
+      line-height: 1.2;
+    }
+    .result-meta {
+      margin: 6px 0 0;
+      color: #334155;
+      font-size: 14px;
+    }
+    .series-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .series-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #86efac;
+    }
+    .series-badge.nonstd {
+      background: #fef3c7;
+      color: #92400e;
+      border-color: #fcd34d;
+    }
+    .result-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: stretch;
+    }
+    #error {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+    @media (max-width: 600px) {
+      .mast { padding: 8px 12px; }
+      .mast-brand { font-size: 24px; }
+      .result-actions { width: 100%; }
+      .entry input { max-width: 100%; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header class="mast">
+    <a class="mast-brand" href="index.html">FMOREA</a>
+    <nav class="mast-nav" aria-label="Navigazione piattaforma">
+      <a href="index.html">← Piattaforma</a>
+      <a href="resistenze.html" aria-current="page">Resistenze</a>
+      <a href="breadboard.html">Breadboard</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-head">
+      <div>
+        <h1>Codice colori delle resistenze</h1>
+        <p class="subtitle">Decodifica assiale a 3–6 bande, ricerca inversa e verifica sulle serie standard E12 / E24.</p>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="modes">
+        <button id="forward" type="button">Colori → valore</button>
+        <button id="inverse" type="button">Valore → colori</button>
+      </div>
+      <div class="step">
+        <button id="minus" type="button" aria-label="Rimuovi una banda">−</button>
+        <strong id="count"></strong>
+        <button id="plus" type="button" aria-label="Aggiungi una banda">+</button>
+      </div>
+    </div>
+
+    <p id="guide"></p>
+
+    <div class="subbar">
+      <div class="inline-controls">
+        <label id="legendBox">Tabella di tolleranza
+          <select id="legend">
+            <option value="current">IEC 60062:2016</option>
+            <option value="classic">Classica · grigio ±0,05%</option>
+          </select>
+        </label>
+        <label>Corpo resistenza
+          <select id="bodyType">
+            <option value="auto">Automatico (3–4 carbone · 5–6 metallo)</option>
+            <option value="carbon">Film di carbone (beige)</option>
+            <option value="metal">Film metallico (blu)</option>
+          </select>
+        </label>
+      </div>
+      <div class="presets" aria-label="Valori comuni da laboratorio">
+        <span class="presets-label">Comuni:</span>
+        <button type="button" class="chip" data-preset="22,1">220 Ω</button>
+        <button type="button" class="chip" data-preset="33,1">330 Ω</button>
+        <button type="button" class="chip" data-preset="10,2">1 kΩ</button>
+        <button type="button" class="chip" data-preset="47,2">4,7 kΩ</button>
+        <button type="button" class="chip" data-preset="10,3">10 kΩ</button>
+        <button type="button" class="chip" data-preset="10,4">100 kΩ</button>
+      </div>
+    </div>
+
+    <div class="entry" id="entry" hidden>
+      <label>Valore nominale <input id="number" type="text" inputmode="decimal" autocomplete="off"></label>
+      <label>Unità
+        <select id="unit">
+          <option value="0">Ω</option>
+          <option value="3">kΩ</option>
+          <option value="6">MΩ</option>
+          <option value="9">GΩ</option>
+        </select>
+      </label>
+    </div>
+
+    <p id="error" role="status" hidden></p>
+
+    <div id="drawing" class="diagram" role="img">
+      <svg id="resistorSvg" viewBox="0 0 600 164" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+
+    <div id="fields" class="grid"></div>
+
+    <section id="result" class="result" aria-live="polite">
+      <div class="result-main">
+        <output id="value"></output>
+        <p id="sequence" class="result-meta"></p>
+        <p id="math" class="result-meta"></p>
+        <p id="range" class="result-meta"></p>
+        <div class="series-row">
+          <span id="seriesBadge" class="series-badge"></span>
+          <button id="snapSeries" type="button" class="chip" hidden></button>
+        </div>
+      </div>
+      <div class="result-actions">
+        <a id="toBreadboard" class="btn-link btn-primary" href="breadboard.html">Monta su Breadboard →</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const names = ['Nero','Marrone','Rosso','Arancione','Giallo','Verde','Blu','Viola','Grigio','Bianco','Oro','Argento','Rosa'];
+    const colors = ['#1e2228','#6b3826','#d62828','#f07119','#f3c623','#1f8a4c','#2563eb','#7e3af2','#7a828d','#f8fafc','#c99a2e','#b4bec9','#ec8fb0'];
+    const powers = [0,1,2,3,4,5,6,7,8,9,-1,-2,-3];
+    const classic = {1:1,2:2,5:.5,6:.25,7:.1,8:.05,10:5,11:10};
+    const modern = {...classic,3:.05,4:.02,8:.01};
+    const thermal = {0:250,1:100,2:50,3:15,4:25,5:20,6:10,7:5,8:1};
+    const E12 = [10,12,15,18,22,27,33,39,47,56,68,82];
+    const E24 = [10,11,12,13,15,16,18,20,22,24,27,30,33,36,39,43,47,51,56,62,68,75,82,91];
+    const fmt = new Intl.NumberFormat('it-IT',{maximumSignificantDigits:14}).format;
+    const digits = () => count >= 5 ? 3 : 2;
+    let count = 4, reverse = false, significand = 10, exp = 2, tol = 10, temp = 1, valid = true;
+
+    function ohms() { return Number(significand + 'e' + exp); }
+    function formatted(r) {
+      for (const [scale, u] of [[1e9,'GΩ'],[1e6,'MΩ'],[1e3,'kΩ']]) {
+        if (r >= scale) return fmt(r / scale) + ' ' + u;
+      }
+      return fmt(r) + ' Ω';
+    }
+    function setInput() {
+      const r = ohms(), scale = r >= 1e9 ? 9 : r >= 1e6 ? 6 : r >= 1e3 ? 3 : 0;
+      $('unit').value = scale;
+      $('number').value = String(Number(significand + 'e' + (exp - scale))).replace('.', ',');
+    }
+    function encode() {
+      const raw = $('number').value.trim().replace(',', '.');
+      if (raw.length > 64 || !/^\d*\.?\d+$/.test(raw)) return 'Inserisci un valore positivo, senza separatori delle migliaia.';
+      const [whole, frac = ''] = raw.split('.'), str = (whole + frac).replace(/^0+/, '');
+      if (!str) return 'Il ponticello da 0 Ω ha una sola banda nera.';
+      const significant = str.replace(/0+$/, '');
+      if (significant.length > digits()) {
+        return count < 5
+          ? 'Questo valore richiede più di due cifre significative. Prova il formato a 5 bande.'
+          : 'Il codice supporta al massimo tre cifre significative. Scegli un valore rappresentabile.';
+      }
+      const power = str.length - frac.length + Number($('unit').value) - digits();
+      if (!powers.includes(power)) return 'Il valore è fuori dall’intervallo dei moltiplicatori disponibili per questo formato.';
+      significand = Number(significant.padEnd(digits(), '0'));
+      exp = power;
+      return '';
+    }
+    function roles() {
+      const list = ['Prima cifra','Seconda cifra'];
+      if (count >= 5) list.push('Terza cifra');
+      list.push('Moltiplicatore');
+      if (count >= 4) list.push('Tolleranza');
+      if (count === 6) list.push('Coeff. termico');
+      return list;
+    }
+    function shortRole(i, d) {
+      if (i < d) return (i + 1) + 'ª';
+      if (i === d) return '×10ⁿ';
+      if (i === d + 1) return 'Tol.';
+      return 'TCR';
+    }
+    function nearestE24(r) {
+      const baseExp = Math.floor(Math.log10(r)) - 1;
+      let best = null, bestDiff = Infinity;
+      for (let e = baseExp - 1; e <= baseExp + 1; e++) {
+        const adj = digits() === 3 ? e - 1 : e;
+        if (!powers.includes(adj)) continue;
+        for (const m of E24) {
+          const val = Number(m + 'e' + e);
+          const diff = Math.abs(Math.log(val / r));
+          if (diff < bestDiff) { bestDiff = diff; best = { m, e }; }
+        }
+      }
+      return best;
+    }
+    function checkSeries(r) {
+      const two = digits() === 3 ? (significand % 10 === 0 ? significand / 10 : -1) : significand;
+      if (E12.includes(two)) return { std: 'Valore standard E12 / E24', snap: null };
+      if (E24.includes(two)) return { std: 'Valore standard E24', snap: null };
+      const best = nearestE24(r);
+      return { std: 'Valore non standard in E24', snap: best };
+    }
+    function breadboardUrl() {
+      const bbToler = {1:1,2:2,5:5,6:6,7:7,8:8,10:10,11:11};
+      let s = significand, e = exp;
+      if (digits() === 3) {
+        s = Math.round(s / 10);
+        e += 1;
+        if (s >= 100) { s = Math.round(s / 10); e += 1; }
+      }
+      const d1 = Math.floor(s / 10), d2 = s % 10;
+      const clampedExp = Math.max(-2, Math.min(9, e));
+      const multIdx = clampedExp < 0 ? 9 - clampedExp : clampedExp;
+      const bbTol = count === 3 ? 11 : (tol in bbToler ? tol : 1);
+      return 'breadboard.html?bands=' + [d1, d2, multIdx, bbTol].join(',');
+    }
+    function drawResistorSVG(bands, d, titles, pct, tempVal) {
+      const type = $('bodyType').value;
+      const isMetal = type === 'metal' || (type === 'auto' && count >= 5);
+      const bodyGrad = isMetal
+        ? '<stop offset="0%" stop-color="#8ec5eb"/><stop offset="28%" stop-color="#4e93c9"/><stop offset="72%" stop-color="#3573a6"/><stop offset="100%" stop-color="#224c70"/>'
+        : '<stop offset="0%" stop-color="#f7e7cb"/><stop offset="30%" stop-color="#e2be87"/><stop offset="72%" stop-color="#c3985c"/><stop offset="100%" stop-color="#9c733d"/>';
+      const bodyStroke = isMetal ? '#1e4a70' : '#96713f';
+      const pts = ({3:[190,260,330],4:[178,242,306,422],5:[168,218,268,318,424],6:[162,210,258,306,398,444]})[count];
+      const bw = count >= 5 ? 20 : 22;
+      const bodyPath = 'M 135 42 C 158 42, 175 49, 200 49 L 400 49 C 425 49, 442 42, 465 42 C 478 42, 484 54, 484 74 C 484 94, 478 106, 465 106 C 442 106, 425 99, 400 99 L 200 99 C 175 99, 158 106, 135 106 C 122 106, 116 94, 116 74 C 116 54, 122 42, 135 42 Z';
+
+      const stripes = bands.map((b, i) => {
+        const x = pts[i] - bw / 2;
+        const fill = b === 10 ? 'url(#goldBand)' : b === 11 ? 'url(#silverBand)' : colors[b];
+        const stroke = b === 9 ? 'stroke="#cbd5e1" stroke-width="1"' : '';
+        return `<rect class="band-hit" data-band="${i}" x="${x}" y="38" width="${bw}" height="72" fill="${fill}" ${stroke}/>`;
+      }).join('');
+
+      const markers = bands.map((b, i) => {
+        const cx = pts[i];
+        return `<g class="band-hit" data-band="${i}">
+          <line x1="${cx}" y1="108" x2="${cx}" y2="124" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="2 2"/>
+          <text x="${cx}" y="138" text-anchor="middle" font-size="11" font-weight="700" fill="#475569">${shortRole(i, d)}</text>
+          <text x="${cx}" y="152" text-anchor="middle" font-size="10.5" font-weight="600" fill="#1e3a8a">${names[b]}</text>
+        </g>`;
+      }).join('');
+
+      $('resistorSvg').innerHTML = `
+        <defs>
+          <linearGradient id="leadGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#94a3b8"/>
+            <stop offset="38%" stop-color="#f1f5f9"/>
+            <stop offset="70%" stop-color="#94a3b8"/>
+            <stop offset="100%" stop-color="#64748b"/>
+          </linearGradient>
+          <linearGradient id="resBodyGrad" x1="0" y1="0" x2="0" y2="1">${bodyGrad}</linearGradient>
+          <linearGradient id="goldBand" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#9b7219"/>
+            <stop offset="35%" stop-color="#f3d473"/>
+            <stop offset="65%" stop-color="#c99a2e"/>
+            <stop offset="100%" stop-color="#876113"/>
+          </linearGradient>
+          <linearGradient id="silverBand" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#8792a0"/>
+            <stop offset="40%" stop-color="#f1f5f9"/>
+            <stop offset="70%" stop-color="#b4bec9"/>
+            <stop offset="100%" stop-color="#7c8796"/>
+          </linearGradient>
+          <linearGradient id="bodyGloss" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.42)"/>
+            <stop offset="28%" stop-color="rgba(255,255,255,0.08)"/>
+            <stop offset="65%" stop-color="rgba(0,0,0,0)"/>
+            <stop offset="100%" stop-color="rgba(0,0,0,0.22)"/>
+          </linearGradient>
+          <clipPath id="bodyClip"><path d="${bodyPath}"/></clipPath>
+        </defs>
+        <ellipse cx="300" cy="116" rx="195" ry="9" fill="rgba(15,23,42,0.09)"/>
+        <rect x="28" y="69" width="92" height="10" rx="4" fill="url(#leadGrad)" stroke="#64748b" stroke-width="0.8"/>
+        <rect x="480" y="69" width="92" height="10" rx="4" fill="url(#leadGrad)" stroke="#64748b" stroke-width="0.8"/>
+        <path d="${bodyPath}" fill="url(#resBodyGrad)"/>
+        <g clip-path="url(#bodyClip)">${stripes}</g>
+        <path d="${bodyPath}" fill="url(#bodyGloss)" pointer-events="none"/>
+        <path d="${bodyPath}" fill="none" stroke="${bodyStroke}" stroke-width="1.6" pointer-events="none"/>
+        <text x="300" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#64748b">${isMetal ? 'Film metallico · precisione' : 'Film di carbone · uso generale'}${count >= 4 ? ' · fascia tolleranza distanziata a destra' : ''}</text>
+        ${markers}
+      `;
+
+      $('resistorSvg').querySelectorAll('.band-hit').forEach(el => {
+        el.onclick = () => {
+          const idx = Number(el.dataset.band);
+          const sel = $('fields').querySelectorAll('select')[idx];
+          if (sel && !sel.disabled) sel.focus();
+        };
+      });
+    }
+
+    function render() {
+      const tolerance = $('legend').value === 'current' ? modern : classic;
+      $('legendBox').hidden = count === 3;
+      const message = reverse ? encode() : '';
+      valid = !message;
+      $('count').textContent = count + ' bande';
+      $('minus').disabled = count === 3;
+      $('plus').disabled = count === 6;
+      $('forward').setAttribute('aria-pressed', String(!reverse));
+      $('inverse').setAttribute('aria-pressed', String(reverse));
+      $('entry').hidden = !reverse;
+      $('guide').textContent = (reverse ? 'Inserisci il valore e scegli le caratteristiche aggiuntive. ' : 'Leggi le bande da sinistra a destra (clicca una fascia per modificarla). ') +
+        ({3:'Due cifre e moltiplicatore. Tolleranza implicita ±20%.',4:'Due cifre, moltiplicatore e tolleranza.',5:'Tre cifre, moltiplicatore e tolleranza.',6:'Tre cifre, moltiplicatore, tolleranza e coefficiente termico.'})[count];
+      $('error').hidden = valid;
+      $('error').textContent = message;
+      for (const id of ['drawing','fields','result']) $(id).hidden = !valid;
+      if (!valid) return;
+
+      const d = digits(), bands = String(significand).split('').map(Number);
+      bands.push(powers.indexOf(exp));
+      if (count >= 4) bands.push(tol);
+      if (count === 6) bands.push(temp);
+      const titles = roles();
+
+      $('fields').textContent = '';
+      bands.forEach((b, i) => {
+        const l = document.createElement('label'), s = document.createElement('select');
+        l.append((i + 1) + 'ª · ' + titles[i], s);
+        $('fields').append(l);
+        const map = i < d
+          ? Object.fromEntries(names.slice(0, 10).map((_, j) => [j, String(j)]))
+          : i === d
+            ? Object.fromEntries(powers.map((p, j) => [j, '×' + fmt(10 ** p)]))
+            : i === d + 1 ? tolerance : thermal;
+        for (const [key, val] of Object.entries(map)) {
+          if (i === 0 && key === '0') continue;
+          const suffix = i === d + 1 ? '±' + fmt(val) + '%' : i === d + 2 ? val + ' ppm/K' : val;
+          s.add(new Option(names[key] + ' · ' + suffix, key));
+        }
+        s.value = b;
+        s.disabled = reverse && i <= d;
+        s.style.borderBottom = '5px solid ' + colors[b];
+        s.onchange = () => {
+          const n = Number(s.value);
+          if (i < d) {
+            const chars = String(significand).split('');
+            chars[i] = String(n);
+            significand = Number(chars.join(''));
+          } else if (i === d) exp = powers[n];
+          else if (i === d + 1) tol = n;
+          else temp = n;
+          render();
+          $('fields').querySelectorAll('select')[i].focus();
+        };
+      });
+
+      const r = ohms(), pct = count === 3 ? 20 : tolerance[tol], sequence = bands.map(b => names[b]).join(' · ');
+      drawResistorSVG(bands, d, titles, pct, thermal[temp]);
+      $('drawing').setAttribute('aria-label', sequence);
+      $('sequence').textContent = sequence;
+      $('value').textContent = formatted(r) + ' ±' + fmt(pct) + '%' + (count === 6 ? ' · ' + thermal[temp] + ' ppm/K' : '');
+      $('math').textContent = significand + ' × ' + fmt(10 ** exp) + ' = ' + fmt(r) + ' Ω';
+      $('range').textContent = 'Intervallo reale: da ' + fmt(r * (1 - pct / 100)) + ' Ω a ' + fmt(r * (1 + pct / 100)) + ' Ω.';
+
+      const series = checkSeries(r);
+      $('seriesBadge').textContent = series.std;
+      $('seriesBadge').className = 'series-badge' + (series.snap ? ' nonstd' : '');
+      if (series.snap) {
+        const snapVal = Number(series.snap.m + 'e' + series.snap.e);
+        $('snapSeries').hidden = false;
+        $('snapSeries').textContent = 'Adatta al valore E24 più vicino: ' + formatted(snapVal);
+        $('snapSeries').onclick = () => {
+          significand = digits() === 3 ? series.snap.m * 10 : series.snap.m;
+          exp = digits() === 3 ? series.snap.e - 1 : series.snap.e;
+          if (reverse) setInput();
+          render();
+        };
+      } else {
+        $('snapSeries').hidden = true;
+      }
+
+      $('toBreadboard').href = breadboardUrl();
+    }
+
+    function resize(n) {
+      if (n < 3 || n > 6) return;
+      const wasReverse = reverse;
+      if (!reverse) setInput();
+      count = n;
+      const message = encode();
+      reverse = wasReverse || !!message;
+      render();
+    }
+
+    function loadFromQuery() {
+      const q = new URLSearchParams(location.search).get('bands');
+      if (!q) return;
+      const parts = q.split(',').map(Number);
+      if (parts.length < 3 || parts.length > 6 || parts.some(n => !Number.isInteger(n) || n < 0)) return;
+      const n = parts.length;
+      const d = n >= 5 ? 3 : 2;
+      if (parts[0] < 1 || parts[0] > 9) return;
+      for (let i = 1; i < d; i++) if (parts[i] > 9) return;
+      if (parts[d] >= powers.length) return;
+      count = n;
+      significand = Number(parts.slice(0, d).join(''));
+      exp = powers[parts[d]];
+      if (n >= 4 && parts[d + 1] in modern) {
+        if (!(parts[d + 1] in classic)) $('legend').value = 'current';
+        tol = parts[d + 1];
+      }
+      if (n === 6 && parts[5] in thermal) temp = parts[5];
+    }
+
+    document.querySelectorAll('[data-preset]').forEach(btn => {
+      btn.onclick = () => {
+        const [m, e] = btn.dataset.preset.split(',').map(Number);
+        significand = digits() === 3 ? m * 10 : m;
+        exp = digits() === 3 ? e - 1 : e;
+        if (reverse) setInput();
+        render();
+      };
+    });
+
+    $('plus').onclick = () => resize(count + 1);
+    $('minus').onclick = () => resize(count - 1);
+    $('inverse').onclick = () => { if (!reverse) setInput(); reverse = true; render(); };
+    $('forward').onclick = () => { if (!valid) { significand = digits() === 3 ? 100 : 10; exp = digits() === 3 ? 1 : 2; } reverse = false; render(); };
+    $('legend').onchange = () => { if ($('legend').value === 'classic' && !(tol in classic)) tol = 10; render(); };
+    $('bodyType').onchange = render;
+    $('number').oninput = render;
+    $('unit').onchange = render;
+    loadFromQuery();
+    render();
+  </script>
+</body>
+</html>
