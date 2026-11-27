@@ -755,6 +755,23 @@
     }
   .bench{position:relative}#unoCables{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;overflow:visible}.bb-wrap{overflow:visible}#mini-bb{touch-action:pan-y;border-radius:9px}#mini-bb.move-touch{touch-action:none}#bbTools,.bbEdits,#bbInventory,#bbJacks{display:flex;flex-wrap:wrap;gap:5px;margin:8px}#bbTools button svg{width:20px;height:16px;vertical-align:middle;margin-right:4px}#bbTools button,.bbEdits button,#bbPanel button,#bbInventory button,#bbJacks button{min-height:32px;padding:4px 8px;font-size:12px}#bbTools button[aria-pressed=true]{background:#174578;color:white}#bbPanel,#bbStatus,#bbError,.bbTip,.bb-wrap details{margin:6px 10px;font-size:13px}#bbPanel h2{font-size:15px}#bbPanel select{max-width:105px}#bbPanel label{display:inline-grid;margin:2px}#bbPanel .swatches{display:flex;gap:6px}#bbPanel .swatches button{width:26px}#bbError{color:#a21b24}#bbInventory button span{margin-left:5px}.upin[data-socket]{cursor:crosshair}
 .boardscroll{overflow-x:auto;overscroll-behavior-x:contain}.physicalBench{position:relative;min-width:600px;padding-top:12px}.physicalBench .bb-bar{margin-top:8px}#bbPanel .swatch-row{display:flex;gap:4px;margin:5px 0}#bbPanel .swatch{width:26px;min-height:23px;border:2px solid white;outline:1px solid #a6afba}#bbPanel .swatch[aria-pressed=true]{outline:2px solid #25354b}#bbPanel .component-preview{display:flex;gap:4px;background:#daba83;width:72px;height:18px;justify-content:center;border-radius:7px}#bbPanel .component-preview i{width:5px}#mini-bb{touch-action:pan-x pan-y}
+
+/* Banco fisico: geometrie originali, scala relativa e terminali realmente ancorati. */
+.physicalBench{min-width:680px;padding:24px 12px 12px;--uno-left:13%;isolation:isolate}
+.uno-board{width:74%;aspect-ratio:700/545;left:var(--uno-left);padding:0;border:0;border-radius:0;background:none;box-shadow:none;margin:0 0 28px;color:#fff;position:relative}
+.uno-art{position:absolute;inset:0;width:100%;height:100%;overflow:visible;filter:drop-shadow(3px 7px 5px #0f172a35)}
+.uno-top-row,.uno-bot-row{position:absolute;inset:0;display:block;margin:0;pointer-events:none;z-index:1}
+.uno-board .upin{position:absolute;transform:translate(-50%,-50%);width:3.38%;height:4.45%;padding:0;border-radius:2px;background:linear-gradient(145deg,#42474b,#181d20 55%,#111619);border:1px solid #131c20;box-shadow:inset 1px 1px 0 #737b7d,0 1px 1px #002c30;pointer-events:auto;font:700 clamp(7px,1vw,10px)/1 monospace;display:grid;place-items:center;overflow:visible}
+.uno-board .upin::before,.uno-board .upin::after{display:none;content:none}
+.uno-board .pin-hole{width:49%;height:49%;background:#151a1b;box-shadow:inset 1px 1px 0 #090e10,inset -1px -1px 0 #96958c;border:1px solid #5c6261;border-radius:1px;display:block;position:relative;pointer-events:none}
+.uno-board .pin-hole:after{content:'';position:absolute;left:27%;top:26%;width:46%;height:48%;background:linear-gradient(135deg,#d8c998,#827443);opacity:.8}
+.uno-board .pin-label{font-size:clamp(6px,.72vw,8px);position:absolute;white-space:nowrap;top:118%;left:50%;transform:translateX(-50%);color:#e5f6ef;text-shadow:0 1px #004c50;pointer-events:none}
+.uno-board .uno-bot-row .pin-label{top:auto;bottom:118%}
+.uno-board .upin.on .pin-hole{outline:2px solid #facc15;box-shadow:0 0 5px #facc15}.uno-board .upin.inpin{outline:none}.uno-board .upin.inpin .pin-label{color:#c6e4ff}.uno-board .upin:hover{outline:2px solid #facc15}.uno-board .upin.connected .pin-hole{background:#252b2e}
+.uno-board .uno-mid{position:absolute;inset:0;display:block;margin:0;pointer-events:none}.uno-board .uno-ports,.uno-board .uno-brand,.uno-board .uno-leds{display:contents}.uno-board .uno-usb,.uno-board .uno-brand b,.uno-board .uno-mcu{display:none}
+.uno-board .uno-rst{position:absolute;left:9.4%;top:8%;width:4.8%;height:6.1%;min-height:0;padding:0;border-radius:4px;background:linear-gradient(145deg,#e1e3e1,#919899);border:1px solid #5f6a70;font-size:0;pointer-events:auto;box-shadow:1px 2px 2px #17232c55}.uno-board .uno-rst:after{content:'';width:48%;height:48%;background:#8c2926;border-radius:50%;border:1px solid #641b1b}.uno-board .uno-rst:active:after{transform:scale(.85)}
+.uno-board .uled{position:absolute;font-size:0;gap:0}.uno-board .uled i{width:100%;height:100%;border-radius:1px;border:1px solid #b2a172;background:#505646}.uno-board .uled-on{left:86.7%;top:36.1%;width:2.4%;height:1.55%}.uno-board #ledTX{left:36.1%;top:26.3%;width:2.4%;height:1.55%}.uno-board #ledL{left:36.1%;top:18.9%;width:2.4%;height:1.55%}
+#mini-bb{aspect-ratio:1170 / 682;height:auto;background:transparent;overflow:visible}#unoCables{z-index:3;pointer-events:none}.jumper-hit{pointer-events:none}.physicalBench.inspect-wires .jumper-hit{pointer-events:stroke;cursor:grab}.jumper-hit:focus-visible{outline:none;stroke:#2563eb66}.physical-controls{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:0 0 8px;padding:7px 10px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:12px}.physical-controls label{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.physical-controls input[type=range]{width:100px;accent-color:#2563eb}.physical-controls button{font-size:12px;min-height:30px;padding:4px 8px}.physical-inspector{background:#f8fafc;border:1px solid #dbeafe;border-radius:8px;padding:8px 10px;font-size:12px;margin:6px 0;min-height:34px}.physical-inspector strong{color:#1e3a8a}.physical-inspector output{font-family:monospace}.physical-inspector .wire-inspect-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:5px}.physical-inspector button{min-height:28px;font-size:12px;padding:3px 8px}.physical-inspector input{width:105px;accent-color:#2563eb}.physical-inspector select{min-height:28px;padding:2px 6px;font-size:12px}.boardscroll{touch-action:pan-x pan-y}.uno-art [data-hardware]{cursor:help}.uno-art [data-hardware]:hover{filter:brightness(1.13)}
 </style>
 </head>
 <body>
@@ -798,8 +815,26 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="bench"><div class="boardscroll"><div class="physicalBench"><svg id="unoCables" aria-hidden="true"></svg>
+          <div class="bench"><div class="physical-controls"><label for="unoPosition">Posizione della Uno <input id="unoPosition" type="range" min="0" max="100" value="50"></label><button id="physicalReset" type="button">Centra scheda</button><button id="physicalShadows" type="button" aria-pressed="true">Ombre cavi</button><span>Seleziona un cavetto per ispezionarlo e regolare la riserva.</span></div><div class="physical-inspector" id="physicalInspector" aria-live="polite">Banco fisico · seleziona un apparato, una presa o un cavetto.</div><div class="boardscroll"><div class="physicalBench"><svg id="unoCables" aria-hidden="true"></svg>
             <div class="uno-board">
+<svg class="uno-art" viewBox="0 0 700 545" aria-label="Modello geometrico Arduino Uno R3" xmlns="http://www.w3.org/2000/svg">
+<defs><linearGradient id="pcb" x2="1" y2="1"><stop stop-color="#00868b"/><stop offset="1" stop-color="#006169"/></linearGradient><linearGradient id="metal" x2="0" y2="1"><stop stop-color="#f3f5f3"/><stop offset=".4" stop-color="#aab3b5"/><stop offset=".7" stop-color="#dce0df"/><stop offset="1" stop-color="#7c878b"/></linearGradient><linearGradient id="chip" x2="0" y2="1"><stop stop-color="#42474a"/><stop offset=".4" stop-color="#23282c"/><stop offset="1" stop-color="#171c1e"/></linearGradient><linearGradient id="jack" x2="0" y2="1"><stop stop-color="#4d5355"/><stop offset="1" stop-color="#12191c"/></linearGradient><radialGradient id="cap"><stop stop-color="#e4e6df"/><stop offset=".8" stop-color="#aeb5b4"/><stop offset="1" stop-color="#646c6d"/></radialGradient></defs>
+<path d="M10 15H648L674 40V161L690 178V472L673 489V529H10Z" fill="#004e54" stroke="#004148" stroke-width="2" transform="translate(0 6)"/>
+<path d="M10 15H648L674 40V161L690 178V472L673 489V529H10Z" fill="url(#pcb)" stroke="#005459" stroke-width="2"/>
+<g stroke="#6eb3a4" stroke-width="2" opacity=".21" fill="none"><path d="M175 58V85L195 115V220L205 240"/><path d="M199 58V97L218 127V240L228 260"/><path d="M223 58V109L241 139V260L251 280"/><path d="M247 58V121L264 151V220L274 240"/><path d="M271 58V133L287 163V240L297 260"/><path d="M295 58V85L310 115V260L320 280"/><path d="M319 58V97L333 127V220L343 240"/><path d="M343 58V109L356 139V240L366 260"/><path d="M367 58V121L379 151V260L389 280"/><path d="M391 58V133L402 163V220L412 240"/><path d="M415 58V85L425 115V240L435 260"/><path d="M439 58V97L448 127V260L458 280"/><path d="M463 58V109L471 139V220L481 240"/><path d="M487 58V121L494 151V240L504 260"/><path d="M511 58V133L517 163V260L527 280"/><path d="M535 58V85L540 115V220L550 240"/><path d="M559 58V97L563 127V240L573 260"/><path d="M583 58V109L586 139V260L596 280"/><path d="M230 485V453L210 428V396"/><path d="M254 485V446L235 421V396"/><path d="M278 485V439L260 414V396"/><path d="M302 485V432L285 407V396"/><path d="M326 485V453L310 428V396"/><path d="M350 485V446L335 421V396"/><path d="M374 485V439L360 414V396"/><path d="M398 485V432L385 407V396"/><path d="M422 485V453L410 428V396"/><path d="M446 485V446L435 421V396"/><path d="M470 485V439L460 414V396"/><path d="M494 485V432L485 407V396"/><path d="M518 485V453L510 428V396"/><path d="M542 485V446L535 421V396"/><path d="M566 485V439L560 414V396"/><path d="M590 485V432L585 407V396"/></g>
+<g fill="#d4ddc9" stroke="#5d8984" stroke-width="2"><circle cx="38" cy="41" r="15"/><circle cx="38" cy="41" r="10.5" fill="#334751" stroke="#ebeddf" stroke-width="1.5"/><circle cx="650" cy="76" r="15"/><circle cx="650" cy="76" r="10.5" fill="#334751" stroke="#ebeddf" stroke-width="1.5"/><circle cx="650" cy="463" r="15"/><circle cx="650" cy="463" r="10.5" fill="#334751" stroke="#ebeddf" stroke-width="1.5"/><circle cx="38" cy="489" r="15"/><circle cx="38" cy="489" r="10.5" fill="#334751" stroke="#ebeddf" stroke-width="1.5"/></g>
+<g fill="#e2f2e7" font-family="monospace" font-size="10" opacity=".95"><text x="210" y="93">DIGITAL (PWM ~)</text><text x="249" y="466">POWER</text><text x="526" y="466">ANALOG IN</text><text x="94" y="88">RESET</text><text x="260" y="111">L</text><text x="260" y="151">TX</text><text x="260" y="174">RX</text><text x="609" y="185">ON</text><text x="35" y="298">DC IN</text><text x="105" y="232">USB</text><text x="516" y="315">ICSP</text><text x="510" y="273">16 MHz</text></g>
+<g data-hardware="USB tipo B|Interfaccia USB dati e alimentazione 5 V" tabindex="0" role="button"><rect x="-9" y="104" width="162" height="120" rx="8" fill="#687477" stroke="#495459" stroke-width="2"/><rect x="-9" y="98" width="160" height="115" rx="6" fill="url(#metal)" stroke="#687477" stroke-width="2"/><path d="M-9 114H25V198H-9Z" fill="#7b8587" stroke="#4b5559"/><rect x="0" y="129" width="15" height="58" rx="3" fill="#1f282d"/><path d="M5 134V182" stroke="#d5d4c9" stroke-width="4"/><rect x="35" y="116" width="97" height="5" rx="2" fill="#dfe2e0" opacity=".7"/><path d="M37 200H134" stroke="#717b80" stroke-width="2"/></g>
+<g data-hardware="Jack di alimentazione DC|Ingresso per alimentatore esterno. Il simulatore mantiene l’alimentazione virtuale a 5 V." tabindex="0" role="button"><rect x="-8" y="323" width="144" height="110" rx="8" fill="#13191c"/><rect x="-8" y="315" width="143" height="108" rx="7" fill="url(#jack)" stroke="#12191c" stroke-width="2"/><rect x="-7" y="334" width="31" height="76" rx="5" fill="#1b2226"/><ellipse cx="7" cy="372" rx="10" ry="25" fill="#080d10"/><ellipse cx="7" cy="372" rx="3" ry="12" fill="#c8ae77"/><path d="M31 327H122" stroke="#687073" stroke-width="3"/></g>
+<g data-hardware="ATmega328P-PU|Microcontrollore AVR a 8 bit, 28 pin DIP, 16 MHz" tabindex="0" role="button"><rect x="224" y="330" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="248" y="330" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="272" y="330" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="296" y="330" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="320" y="330" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="344" y="330" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="368" y="330" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="392" y="330" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="416" y="330" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="440" y="330" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="464" y="330" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="488" y="330" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="512" y="330" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="536" y="330" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="224" y="412" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="248" y="412" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="272" y="412" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="296" y="412" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="320" y="412" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="344" y="412" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="368" y="412" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="392" y="412" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="416" y="412" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="440" y="412" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="464" y="412" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="488" y="412" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="512" y="412" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="536" y="412" width="9" height="22" rx="1" fill="url(#metal)" stroke="#596364" stroke-width=".8"/><rect x="211" y="343" width="341" height="79" rx="5" fill="#101719" stroke="#13242a" stroke-width="2"/><rect x="216" y="341" width="332" height="72" rx="5" fill="url(#chip)" stroke="#596061" stroke-width="1"/><path d="M216 365a12 12 0 0 1 0 24" stroke="#868d8a" stroke-width="2" fill="none"/><circle cx="231" cy="355" r="3" fill="#7d8584"/><text x="383" y="375" fill="#b7bdb7" font-size="15" text-anchor="middle" font-family="monospace">ATMEGA328P-PU</text><text x="383" y="393" fill="#8e9792" font-size="9" text-anchor="middle" font-family="monospace">MICROCHIP / AVR</text></g>
+<g data-hardware="ATmega16U2|Convertitore USB–seriale della Uno R3" tabindex="0" role="button" transform="translate(193 155)"><rect x="-18" y="-24" width="3.5" height="48" fill="#c6cbcc"/><rect x="-24" y="-18" width="48" height="3.5" fill="#c6cbcc"/><rect x="-12" y="-24" width="3.5" height="48" fill="#c6cbcc"/><rect x="-24" y="-12" width="48" height="3.5" fill="#c6cbcc"/><rect x="-6" y="-24" width="3.5" height="48" fill="#c6cbcc"/><rect x="-24" y="-6" width="48" height="3.5" fill="#c6cbcc"/><rect x="0" y="-24" width="3.5" height="48" fill="#c6cbcc"/><rect x="-24" y="0" width="48" height="3.5" fill="#c6cbcc"/><rect x="6" y="-24" width="3.5" height="48" fill="#c6cbcc"/><rect x="-24" y="6" width="48" height="3.5" fill="#c6cbcc"/><rect x="12" y="-24" width="3.5" height="48" fill="#c6cbcc"/><rect x="-24" y="12" width="48" height="3.5" fill="#c6cbcc"/><rect x="18" y="-24" width="3.5" height="48" fill="#c6cbcc"/><rect x="-24" y="18" width="48" height="3.5" fill="#c6cbcc"/><rect x="-20" y="-20" width="40" height="40" rx="2" fill="url(#chip)"/><circle cx="-14" cy="-14" r="2" fill="#b2bbba"/><text x="0" y="2" fill="#b5bdb9" font-family="monospace" font-size="8" text-anchor="middle">16U2</text></g>
+<g data-hardware="Quarzo e risonatore|Riferimento temporale del microcontrollore" tabindex="0" role="button"><rect x="152" y="232" width="67" height="25" rx="12" fill="url(#metal)" stroke="#7c8b8b"/><text x="185" y="247" font-size="9" text-anchor="middle" fill="#3e4649">16.000</text><rect x="500" y="282" width="45" height="18" rx="6" fill="#bda991" stroke="#807768"/></g>
+<g data-hardware="Regolatore di tensione|Regolazione della tensione di alimentazione" tabindex="0" role="button"><rect x="148" y="321" width="47" height="39" rx="3" fill="#d5d9d4"/><rect x="149" y="324" width="43" height="24" rx="2" fill="url(#chip)"/><rect x="154" y="347" width="7" height="17" fill="url(#metal)"/><rect x="166" y="347" width="7" height="17" fill="url(#metal)"/><rect x="178" y="347" width="7" height="17" fill="url(#metal)"/></g>
+<g data-hardware="Condensatori elettrolitici|Filtraggio dell’alimentazione" tabindex="0" role="button"><circle cx="158" cy="410" r="22" fill="#163639"/><circle cx="158" cy="406" r="21" fill="#505c5d" stroke="#18292b"/><circle cx="158" cy="403" r="18" fill="url(#cap)"/><path d="M148 403h20m-10 -10v20" stroke="#7c8585" fill="none" stroke-width="1.3"/><circle cx="207" cy="454" r="22" fill="#163639"/><circle cx="207" cy="450" r="21" fill="#505c5d" stroke="#18292b"/><circle cx="207" cy="447" r="18" fill="url(#cap)"/><path d="M197 447h20m-10 -10v20" stroke="#7c8585" fill="none" stroke-width="1.3"/></g>
+<g data-hardware="ICSP|Connettore di programmazione in-circuit" tabindex="0" role="button"><rect x="584" y="316" width="50" height="72" rx="3" fill="#263033"/><rect x="594" y="326" width="8" height="8" rx="1" fill="#d4bd7b" stroke="#897749"/><rect x="594" y="346" width="8" height="8" rx="1" fill="#d4bd7b" stroke="#897749"/><rect x="594" y="366" width="8" height="8" rx="1" fill="#d4bd7b" stroke="#897749"/><rect x="615" y="326" width="8" height="8" rx="1" fill="#d4bd7b" stroke="#897749"/><rect x="615" y="346" width="8" height="8" rx="1" fill="#d4bd7b" stroke="#897749"/><rect x="615" y="366" width="8" height="8" rx="1" fill="#d4bd7b" stroke="#897749"/></g>
+<g fill="#e1eee6" font-family="system-ui" text-anchor="middle"><path d="M304 211 C323 185 346 185 366 211 S412 236 432 211 S413 186 390 211 S347 236 327 211" fill="none" stroke="#e1eee6" stroke-width="8" stroke-linecap="round"/><text x="343" y="215" font-size="14" font-weight="bold">−</text><text x="402" y="215" font-size="14" font-weight="bold">+</text><text x="367" y="259" font-size="30" font-weight="750" letter-spacing="3">ARDUINO</text><text x="367" y="287" font-size="23" font-weight="700">UNO R3</text></g>
+<g fill="#c7be9d" stroke="#4f7772" stroke-width=".6"><rect x="155" y="83" width="10" height="5" rx="1"/><rect x="169" y="83" width="10" height="5" rx="1"/><rect x="150" y="272" width="18" height="8" rx="1"/><rect x="180" y="274" width="12" height="8" rx="1"/><rect x="204" y="273" width="10" height="8" rx="1"/><rect x="236" y="140" width="11" height="6" rx="1"/><rect x="236" y="156" width="11" height="6" rx="1"/><rect x="236" y="172" width="11" height="6" rx="1"/><rect x="237" y="104" width="11" height="6" rx="1"/><rect x="242" y="119" width="10" height="5" rx="1"/><rect x="575" y="248" width="14" height="7" rx="1"/><rect x="588" y="265" width="14" height="7" rx="1"/><rect x="610" y="245" width="14" height="7" rx="1"/><rect x="587" y="418" width="10" height="5" rx="1"/><rect x="603" y="418" width="10" height="5" rx="1"/><rect x="617" y="418" width="10" height="5" rx="1"/><rect x="142" y="293" width="10" height="5" rx="1"/><rect x="159" y="293" width="10" height="5" rx="1"/><rect x="178" y="293" width="10" height="5" rx="1"/></g><rect x="253" y="165" width="17" height="8" rx="1" fill="#a49872"/><rect x="59" y="455" width="58" height="15" rx="2" fill="#e0e6dc" opacity=".85"/><text x="88" y="466" font-size="8" text-anchor="middle" fill="#365859">UNO R3</text>
+</svg>
               <div class="uno-top-row" id="unoTop"></div>
               <div class="uno-mid">
                 <div class="uno-ports">
@@ -823,7 +858,7 @@
                 <strong>Breadboard collegata</strong>
                 <span id="bbSubtitle">Vista live dei componenti esterni</span>
               </div>
-<svg id="mini-bb" viewBox="0 0 1170 436" aria-label="Breadboard interattiva">
+<svg id="mini-bb" preserveAspectRatio="none" viewBox="0 0 1170 436" aria-label="Breadboard interattiva">
             <defs>
               <linearGradient id="bbPsu" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stop-color="#3f4d61"/>
@@ -1025,7 +1060,7 @@
     </details>
 
     <details class="sim-notes">
-      <summary>Cosa supporta il simulatore</summary>
+      <summary>Cosa supporta il simulatore</summary><p>Il banco fisico usa un modello geometrico 2,5D e un rilassamento numerico dei cavetti (gravità, vincoli di lunghezza, appoggio su un piano semplificato; i jumper conservano una lunghezza nominale durante lo spostamento della scheda). Non calcola collisioni complete tra singoli componenti o deformazioni meccaniche certificate; la logica elettrica rimane separata.</p>
       <p>Interpreta sketch C++ Arduino con <code>int</code>, <code>long</code>, <code>unsigned long</code>, <code>float</code>, <code>bool</code>, <code>byte</code>, <code>const</code>, array 1D, funzioni personalizzate, <code>if/else</code>, <code>for</code>, <code>while</code>, <code>do…while</code>, <code>switch/case</code>, <code>break</code>, <code>continue</code>, <code>return</code> e operatori logici/aritmetici (<code>&&</code>, <code>||</code>, <code>!</code>, <code>+=</code>, <code>++</code>, <code>--</code>).</p>
       <p>Supporta <code>pinMode</code> (<code>INPUT</code>, <code>OUTPUT</code>, <code>INPUT_PULLUP</code>), <code>digitalRead</code>, <code>digitalWrite</code>, <code>analogRead</code> (A0–A5), <code>analogWrite</code> (PWM su ~3, ~5, ~6, ~9, ~10, ~11), <code>delay</code>, <code>millis</code>, <code>map</code>, <code>constrain</code>, <code>min</code>, <code>max</code>, <code>abs</code>, <code>pow</code>, <code>sqrt</code>, <code>random</code>, <code>Serial.print</code> e <code>Serial.println</code>. Per progetti con librerie esterne, trasferisci lo sketch in Arduino IDE.</p>
     </details>
@@ -2018,6 +2053,12 @@
     }
 
     buildBoardPins();
+    // Pin headers physically grouped 10+8 and 8+6; preserve original electrical IDs.
+    const topX=Array.from({length:18},(_,i)=>175+i*25.4+(i>=10?15:0));
+    const bottomX=[252,277.4,302.8,328.2,353.6,379,404.4,226.6,493,518.4,543.8,569.2,594.6,620];
+    for(const [id,xs,y] of [['unoTop',topX,42],['unoBot',bottomX,503]]){
+      [...$(id).children].forEach((el,i)=>{const label=el.textContent;el.replaceChildren();let h=document.createElement('span'),t=document.createElement('span');h.className='pin-hole';t.className='pin-label';t.textContent=label==='IORF'?'IOREF':label;if(label.length>3)t.style.fontSize='6.8px';el.append(h,t);el.style.left=xs[i]/7+'%';el.style.top=y/5.45+'%';});
+    }
     const nativeBoard=(()=>{
     const $=id=>document.getElementById(id==='board'?'mini-bb':'bb'+id[0].toUpperCase()+id.slice(1));
     const names = { wire:'Cavo', resistor:'Resistenza', button:'Interruttore', led:'LED', transistor:'NPN' };
@@ -2160,6 +2201,7 @@
       const state = from.pop();
       parts = state.parts;
       jumpers=state.jumpers;
+      selectedJumper=null;inspectText('Banco fisico','Cronologia ripristinata. Seleziona un cavetto.');
       setTool('select');
     }
     function setTool(t) {
@@ -2220,7 +2262,7 @@
              '<rect x="' + (x - 1.6) + '" y="' + (y - 1.6) + '" width="3.2" height="1.8" rx="0.5" fill="#64748b"/>';
     }).join('');
     const base =
-      '<rect x="5" y="4" width="1160" height="426" rx="10" stroke="#94a3b8" stroke-width="2" fill="url(#bbAbs)"/>' +
+      '<rect x="7" y="12" width="1158" height="422" rx="10" fill="#a3aaa9" stroke="#7f8a8b" stroke-width="1.5"/> <rect x="5" y="4" width="1160" height="420" rx="10" stroke="#a2a59a" stroke-width="2" fill="url(#bbAbs)"/>' +
       '<rect x="12" y="11" width="1146" height="412" rx="7" stroke="#e2dfd2" stroke-width="1" fill="none"/>' +
       '<rect x="18" y="201" width="1134" height="24" rx="5" fill="#d4dad3" stroke="#b8c0b8" stroke-width="1"/>' +
       '<line x1="20" y1="203" x2="1150" y2="203" stroke="#9ca3af" stroke-width="1"/>' +
@@ -2233,6 +2275,42 @@
       return wireColors.blue;
     }
 
+    // Quasi-static 3D cable model: discrete inextensible segments, pinned ends,
+    // gravity relaxation and floor contact. Coordinates are local drawing units.
+    // Electrical connectivity is independent of geometry.
+    const cableCache = new Map();
+    function cableShape(a,b,slack=.30,scale=1,side=1,fixedLength=null){
+      const key=[...a,...b,slack,scale,side,fixedLength??0].map(n=>Number(n).toFixed(2)).join('/');
+      if(cableCache.has(key))return cableCache.get(key);
+      let dx=b[0]-a[0],dy=b[1]-a[1],d=Math.hypot(dx,dy)||.01,n=24;
+      let target=Math.max(d,fixedLength??(d*(1+slack)+8*scale)),seg=target/n;
+      const nx=-dy/d*side,ny=dx/d*side;
+      // Match the target length before relaxing, so the solver need not create tiny loops.
+      const points=(amp)=>Array.from({length:n+1},(_,i)=>{let t=i/n,k=Math.sin(Math.PI*t);return [a[0]+dx*t+nx*amp*k,a[1]+dy*t+ny*amp*k,Math.min(18*scale,d*.06)*k];});
+      const lengthOf=ps=>ps.slice(1).reduce((sum,p,i)=>sum+Math.hypot(...p.map((v,j)=>v-ps[i][j])),0);
+      let lo=0,hi=target;for(let i=0;i<24;i++){let mid=(lo+hi)/2;if(lengthOf(points(mid))>target)hi=mid;else lo=mid;}
+      const pts=points((lo+hi)/2);
+      const anchorA=[...a,0],anchorB=[...b,0];
+      for(let it=0;it<60;it++){
+        const previous=pts.map(p=>p.slice());
+        for(let i=1;i<n;i++){let p=pts[i];for(let j=0;j<3;j++)p[j]+=.13*((previous[i-1][j]+previous[i+1][j])/2-p[j]);p[2]=Math.max(0,p[2]-.10*scale);if(i===1||i===n-1)p[2]=Math.max(p[2],Math.min(4*scale,seg*.55));}
+        for(let pass=0;pass<6;pass++){
+          for(let j=0;j<n;j++){let i=pass%2?n-1-j:j,p=pts[i],q=pts[i+1],x=q[0]-p[0],y=q[1]-p[1],z=q[2]-p[2],l=Math.hypot(x,y,z)||.001,k=(l-seg)/l,wa=i===0?0:1,wb=i+1===n?0:1,sum=wa+wb;if(!sum)continue;for(let t=0;t<3;t++){let delta=[x,y,z][t]*k/sum;p[t]+=delta*wa;q[t]-=delta*wb;}}
+          pts[0]=anchorA.slice();pts[n]=anchorB.slice();for(let i=1;i<n;i++)pts[i][2]=Math.max(0,pts[i][2]);
+        }
+      }
+      const visible=pts.map(([x,y,z])=>[x+z*.18,y-z*.65]),shadow=pts.map(([x,y,z])=>[x+z*.35+1.4*scale,y+z*.20+2.2*scale]);
+      function smooth(p){let out=`M ${p[0][0]} ${p[0][1]}`;for(let i=0;i<p.length-1;i++){let a=p[Math.max(0,i-1)],b=p[i],c=p[i+1],d=p[Math.min(p.length-1,i+2)];out+=` C ${b[0]+(c[0]-a[0])/6} ${b[1]+(c[1]-a[1])/6} ${c[0]-(d[0]-b[0])/6} ${c[1]-(d[1]-b[1])/6} ${c[0]} ${c[1]}`;}return out;}
+      let length=0;for(let i=1;i<pts.length;i++)length+=Math.hypot(...pts[i].map((v,j)=>v-pts[i-1][j]));
+      const result={d:smooth(visible),shadow:smooth(shadow),length,mid:visible[Math.floor(n/2)]};if(cableCache.size>350)cableCache.clear();cableCache.set(key,result);return result;
+    }
+    let showCableShadows=true;
+    function cableArtwork(g,wc,width,selected=false,hit=''){
+      return (showCableShadows?`<path d="${g.shadow}" fill="none" stroke="#0f172a" opacity=".19" stroke-width="${width+2}" stroke-linecap="round" pointer-events="none"/>`:'')+
+      (selected?`<path d="${g.d}" fill="none" stroke="#2563eb" opacity=".32" stroke-width="${width+6}" stroke-linecap="round" pointer-events="none"/>`:'')+
+      `<path d="${g.d}" fill="none" stroke="#243038" stroke-width="${width+1}" stroke-linecap="round" pointer-events="none"/><path d="${g.d}" fill="none" stroke="${wc.stroke}" stroke-width="${width}" stroke-linecap="round" pointer-events="none"/><path d="${g.d}" fill="none" stroke="${wc.hi}" stroke-width="${width*.25}" opacity=".65" transform="translate(-.45,-.65)" stroke-linecap="round" pointer-events="none"/>`+hit;
+    }
+    function plug(x,y,k=1){return `<g pointer-events="none" transform="translate(${x} ${y}) scale(${k})"><path d="M0 0V-4" stroke="#b6a36a" stroke-width="2" stroke-linecap="round"/><rect x="-3.1" y="-10" width="6.2" height="8" rx=".8" fill="#20282d" stroke="#11191e" stroke-width=".7"/><path d="M-2.1 -9V-3" stroke="#66727a" stroke-width=".8"/><rect x="-1.6" y="-12" width="3.2" height="2.5" rx=".5" fill="#38454b"/></g>`;}
     function wireArc(a, b) {
       const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
       const dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy) || 1;
@@ -2248,16 +2326,8 @@
 
       if (p.t === 'wire') {
         const wc = resolveWireColor(p);
-        const [cx, cy] = wireArc(a, b);
-        const d = 'M ' + a[0] + ' ' + a[1] + ' Q ' + cx + ' ' + cy + ' ' + b[0] + ' ' + b[1];
-        art = '<path d="' + d + '" fill="none" stroke="transparent" stroke-width="18"/>' +
-              '<path d="' + d + '" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="10.5" stroke-linecap="round"/>' +
-              '<path d="' + d + '" fill="none" stroke="' + wc.stroke + '" stroke-width="7.5" stroke-linecap="round" filter="url(#bbShadow)"/>' +
-              '<path d="' + d + '" fill="none" stroke="' + wc.hi + '" stroke-width="2.1" stroke-linecap="round" opacity="0.85"/>' +
-              circle(a[0], a[1], 4.4, '#e2e8f0', 'stroke="#1e293b" stroke-width="1.3"') +
-              circle(a[0], a[1], 2.0, wc.stroke) +
-              circle(b[0], b[1], 4.4, '#e2e8f0', 'stroke="#1e293b" stroke-width="1.3"') +
-              circle(b[0], b[1], 2.0, wc.stroke);
+        const g=cableShape([a[0],a[1]-9],[b[0],b[1]-9],p.slack??.24,0.9,1);
+        art = '<path d="'+g.d+'" fill="none" stroke="transparent" stroke-width="19"/>'+cableArtwork(g,wc,5.1,tool==='select'&&p.id===active)+plug(...a,1.05)+plug(...b,1.05);
       } else {
         art = pts.map(q =>
           line(...q, x, y, 'transparent', 15) +
@@ -2318,13 +2388,15 @@
       if (tool === 'select' && p.id === active && !ghost) {
         art += pts.map((q, i) => circle(...q, 6.2, '#fff', 'stroke="#0284c7" stroke-width="3" data-pin="' + i + '" style="cursor:grab"')).join('');
       }
-      const lblY = p.t === 'wire' ? wireArc(a, b)[1] - 8 : y - 15;
-      const lblX = p.t === 'wire' ? wireArc(a, b)[0] : x;
+      const mid=p.t==='wire'?cableShape([a[0],a[1]-9],[b[0],b[1]-9],p.slack??.24,0.9,1).mid:null;
+      const lblY = mid ? mid[1]-8 : y-15;
+      const lblX = mid ? mid[0] : x;
       return '<g data-id="' + p.id + '" style="cursor:grab" opacity="' + (ghost ? .55 : 1) + '">' + art + label(lblX, lblY, p.id, 10, '#0f172a') + '</g>';
     }
 
     function paint() {
       svg.style.cursor = tool === 'select' ? 'default' : 'crosshair';
+      host.classList.toggle('inspect-wires',tool==='select');
       let overlay = '', pos = drag?.candidate;
       if (hover) {
         const n = net(hover);
@@ -2453,6 +2525,7 @@
           wireColor = k;
           refresh();
         });
+        if(selected){const l=document.createElement('label'),r=document.createElement('input'),o=document.createElement('output');r.type='range';r.min=5;r.max=95;r.value=Math.round((selected.slack??.24)*100);o.textContent=r.value+'%';l.append('Riserva del cavo ',r,o);panel.append(l);r.addEventListener('pointerdown',checkpoint);r.oninput=()=>{selected.slack=+r.value/100;o.textContent=r.value+'%';paint()};}
       }
 
       if (tool === 'led' || (selected && selected.t === 'led')) {
@@ -2762,20 +2835,44 @@
       if(pin.startsWith('D') && io.modes[+pin.slice(1)]===1)return 5*io.pins[+pin.slice(1)]/255;
       return null;
     }
+    let selectedJumper=null;
+    const inspector=document.getElementById('physicalInspector');
+    function inspectText(title,detail){inspector.replaceChildren();let b=document.createElement('strong');b.textContent=title;inspector.append(b,document.createTextNode(' · '+detail));}
+    function jumperMetrics(j){const matrix=svg.getScreenCTM(),overlay=document.getElementById('unoCables'),origin=overlay.getBoundingClientRect(),socket=sockets.get(j.pin)?.querySelector('.pin-hole')?.getBoundingClientRect();if(!matrix||!socket||!coords[j.h])return null;const p=new DOMPoint(...coords[j.h]).matrixTransform(matrix),a=[socket.left+socket.width/2-origin.left,socket.top+socket.height/2-origin.top],b=[p.x-origin.left,p.y-origin.top],unit=36*Math.hypot(matrix.a,matrix.b)/2.54,d=Math.hypot(b[0]-a[0],b[1]-a[1]);return {a,b,unit,d};}
+    function inspectJumper(pin){
+      const j=jumpers.find(j=>j.pin===pin);if(!j){selectedJumper=null;inspectText('Banco fisico','Seleziona un apparato o un cavetto.');return;}
+      selectedJumper=pin;inspectText(pin+' → '+j.h,'Cavetto jumper unipolare · '+wireColors[j.color].label+' · terminali maschio–maschio');const m=jumperMetrics(j);if(m&&j.lengthMM)inspector.append(document.createTextNode(' · '+j.lengthMM.toFixed(0)+' mm (modello)')); 
+      let row=document.createElement('div');row.className='wire-inspect-controls';let l=document.createElement('label'),r=document.createElement('input'),v=document.createElement('output');r.type='range';r.min='5';r.max='95';r.value=Math.max(5,Math.min(95,Math.round(m&&j.lengthMM?100*(j.lengthMM*m.unit/Math.max(1,m.d)-1):(j.slack??.30)*100)));l.append('Riserva ',r,v);v.textContent=r.value+'%';r.addEventListener('pointerdown',checkpoint);r.oninput=()=>{j.slack=+r.value/100;const q=jumperMetrics(j);if(q)j.lengthMM=q.d*(1+j.slack)/q.unit;v.textContent=r.value+'% · '+(j.lengthMM??0).toFixed(0)+' mm';drawCables()};let c=document.createElement('select');c.setAttribute('aria-label','Colore del jumper');for(const [k,w] of Object.entries(wireColors))c.add(new Option(w.label,k));c.value=j.color;c.onchange=()=>{checkpoint();j.color=c.value;drawCables();inspectJumper(pin)};let b=document.createElement('button');b.textContent='Scollega';b.onclick=()=>{checkpoint();jumpers=jumpers.filter(x=>x.pin!==pin);selectedJumper=null;inspectText('Cavetto rimosso',pin);refresh()};row.append(l,c,b);inspector.append(row);drawCables();
+    }
     function drawCables(){
       const overlay=document.getElementById('unoCables');
       const origin=overlay.getBoundingClientRect(), matrix=svg.getScreenCTM();
       if(!matrix||!origin.width)return;
-      overlay.innerHTML=jumpers.map(({pin,h,color})=>{
-        const socket=sockets.get(pin).getBoundingClientRect();
+      // All socket anchors come from the physical hole, not the label or header box.
+      for(const [pin,el] of sockets)el.classList.toggle('connected',jumpers.some(j=>j.pin===pin));
+      overlay.innerHTML=jumpers.map((j,i)=>{const {pin,h,color,slack}=j;
+        const el=sockets.get(pin);if(!el||!coords[h])return '';
+        const socket=el.querySelector('.pin-hole').getBoundingClientRect();
         const pos=new DOMPoint(...coords[h]).matrixTransform(matrix);
-        const x=socket.left+socket.width/2-origin.left,y=socket.top+7-origin.top;
+        const x=socket.left+socket.width/2-origin.left,y=socket.top+socket.height/2-origin.top;
         const u=pos.x-origin.left,w=pos.y-origin.top;
-        const lift=Math.max(14,(w-y)*.55);
-        const path='M '+x+' '+y+' C '+x+' '+(y-lift*.34)+' '+(u+Math.max(-70,Math.min(70,(x-u)*.35)))+' '+(w-lift)+' '+u+' '+w;
-        return '<g><title>'+pin+' → '+h+'</title><path d="'+path+'" fill="none" stroke="#17232e" stroke-width="4.5"/><path d="'+path+'" fill="none" stroke="'+wireColors[color].stroke+'" stroke-width="3.2"/><path d="'+path+'" transform="translate(-.4,-.6)" fill="none" stroke="'+wireColors[color].hi+'" stroke-width=".85"/>'+[[x,y],[u,w]].map(([a,b])=>'<rect x="'+(a-2.5)+'" y="'+(b-5)+'" width="5" height="7" rx="1.2" fill="#263238" stroke="#89949d" stroke-width=".6"/>').join('')+'</g>';
+        const unit=36*Math.hypot(matrix.a,matrix.b)/2.54,d=Math.hypot(u-x,w-y);if(!j.lengthMM)j.lengthMM=(d*(1+(slack??.30))+8)/unit;const side=(x+u)/2<origin.width*.26?(w>y?-1:1):(x+u)/2>origin.width*.74?(w>y?1:-1):i%2?1:-1;const g=cableShape([x,y-8.4],[u,w-8.4],slack??.30,unit/8,side,j.lengthMM*unit),wc=wireColors[color]||wireColors.blue;
+        const hit=`<path class="jumper-hit" data-jumper="${pin}" tabindex="0" role="button" aria-label="Ispeziona cavetto ${pin} verso ${h}" d="${g.d}" fill="none" stroke="transparent" stroke-width="12"/>`;
+        return `<g><title>${pin} → ${h} · ${wc.label}</title>${cableArtwork(g,wc,3.8,selectedJumper===pin,hit)}${plug(x,y,.70)}${plug(u,w,.70)}</g>`;
       }).join('');
+      overlay.querySelectorAll('[data-jumper]').forEach(e=>{e.onclick=ev=>{if(tool!=='select')return;ev.stopPropagation();inspectJumper(e.dataset.jumper)};e.onkeydown=ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();inspectJumper(e.dataset.jumper)}}});
     }
+    let boardPosition=50;
+    function moveBoard(requested){
+      const set=n=>host.style.setProperty('--uno-left',(n*.26)+'%');const feasible=()=>jumpers.every(j=>{const m=jumperMetrics(j);return !m||!j.lengthMM||m.d<=j.lengthMM*m.unit+.5;});
+      set(requested);let next=requested;
+      if(!feasible()){let lo=0,hi=1;for(let k=0;k<12;k++){let t=(lo+hi)/2;set(boardPosition+(requested-boardPosition)*t);if(feasible())lo=t;else hi=t;}next=boardPosition+(requested-boardPosition)*lo;set(next);inspectText('Cavetto in tensione','Spostamento limitato: aumenta la riserva o scollega il cavo.');selectedJumper=null;}
+      boardPosition=next;document.getElementById('unoPosition').value=Math.round(next);drawCables();
+    }
+    document.getElementById('unoPosition').oninput=e=>moveBoard(+e.target.value);
+    document.getElementById('physicalReset').onclick=()=>moveBoard(50);
+    document.getElementById('physicalShadows').onclick=e=>{showCableShadows=!showCableShadows;e.currentTarget.setAttribute('aria-pressed',String(showCableShadows));drawCables();paint()};
+    document.querySelectorAll('.uno-art [data-hardware]').forEach(el=>{const action=()=>{selectedJumper=null;inspectText(...el.dataset.hardware.split('|'));drawCables()};el.onclick=action;el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();action()}}});
     function socketClick(pin){
       if(tool!=='wire')setTool('wire');
       if(draft.length){connect(pin,draft[0]);return}
@@ -2785,16 +2882,16 @@
       const old=jumpers.find(j=>j.pin===pin);
       if(!h)return;
       if(old?.h!==h && !free(h)){notice='Foro occupato. Scegli un foro libero.';paint();return}
-      checkpoint();jumpers=jumpers.filter(j=>j.pin!==pin);jumpers.push({pin,h,color:wireColor});pending='';draft=[];hover='';notice=pin+' collegato a '+h+'.';refresh();
+      checkpoint();jumpers=jumpers.filter(j=>j.pin!==pin);jumpers.push({pin,h,color:wireColor,slack:.30});selectedJumper=null;inspectText(pin+' → '+h,'Cavetto inserito · '+wireColors[wireColor].label);pending='';draft=[];hover='';notice=pin+' collegato a '+h+'.';refresh();
     }
     function registerSockets(){
       for(const [group,defs] of [['unoTop',topPins],['unoBot',botPins]]){
         [...document.getElementById(group).children].forEach((el,i)=>{
           const def=defs[i];const pin=def.d!==undefined?'D'+def.d:def.a!==undefined?'A'+def.a:def.type==='gnd'?'GND'+(group==='unoTop'?'T':i):['5V','3V3'].includes(def.label)?def.label:null;
           if(!pin)return;
-          sockets.set(pin,el);el.dataset.socket=pin;el.tabIndex=0;el.setAttribute('role','button');el.setAttribute('aria-label','Presa '+pin);
+          sockets.set(pin,el);if(def.d===undefined)el.title=pin+' · '+(pin.startsWith('GND')?'massa / riferimento 0 V':pin==='5V'?'alimentazione 5 V':pin==='3V3'?'alimentazione 3,3 V':'ingresso analogico');el.dataset.socket=pin;el.tabIndex=0;el.setAttribute('role','button');el.setAttribute('aria-label','Presa '+pin);
           const previous=el.onclick;
-          el.onclick=()=>{if(tool==='wire'||!previous)socketClick(pin);else previous()};
+          el.onclick=()=>{if(tool==='wire'||!previous)socketClick(pin);else {previous();inspectText(pin,el.title||'Presa digitale della Uno');}};
           el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();el.click()}};
         });
       }
@@ -2802,6 +2899,7 @@
     function patchGuide(){
       const changed=key!==document.getElementById('lesson').value;
       if(changed){
+        selectedJumper=null;inspectText('Banco fisico','Seleziona un apparato, una presa o un cavetto.');
         if(key!=='')saved.set(key,structuredClone({parts,jumpers,pol:lastPol}));
         key=document.getElementById('lesson').value;
         const previous=saved.get(key);
@@ -2869,8 +2967,8 @@
     function updateJacks(){
       const list=$('jacks');list.replaceChildren();
       for(const j of jumpers){
-        const b=document.createElement('button');b.type='button';b.textContent=j.pin+' → '+j.h+' ×';b.title='Scollega '+j.pin;
-        b.onclick=()=>{checkpoint();jumpers=jumpers.filter(k=>k!==j);refresh()};list.append(b);
+        const b=document.createElement('button');b.type='button';b.textContent=j.pin+' → '+j.h;b.title='Ispeziona '+j.pin;
+        b.onclick=()=>inspectJumper(j.pin);list.append(b);
       }
       drawCables();updateExport();
     }
