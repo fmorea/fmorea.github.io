@@ -961,7 +961,9 @@ nav .nav-logo {
       *zoom: 1;
     }
     .tools-grid {
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 8px;
     }
     .course-grid:after,
     .mode-grid:after,
@@ -1071,35 +1073,47 @@ nav .nav-logo {
     }
 
     .tools-section {
-      margin-top: 28px;
-      padding-top: 24px;
-      border-top: 1px solid #e2e8f0;
+      margin: 12px 0 8px;
+    }
+
+    .tools-section-label {
+      display: block;
+      color: #1d4ed8;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      text-align: left;
     }
 
     .tool-card {
+      display: -webkit-box;
+      display: -ms-flexbox;
       display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 20px 22px;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 14px;
       border: 1px solid #bfdbfe;
-      border-radius: 18px;
+      border-radius: 14px;
       background: #ffffff;
       background: -webkit-linear-gradient(top, #ffffff 0%, #f8fbff 100%);
       background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
       color: #0f172a;
       text-align: left;
       text-decoration: none;
-      box-shadow: 0 6px 20px rgba(15, 23, 42, .05);
+      box-shadow: 0 4px 14px rgba(15, 23, 42, .05);
       transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
       display: inline-block;
-      width: 47%;
-      margin: 1% 1% 14px 0;
+      width: 48%;
+      margin: 0 1% 10px 0;
       display: inline-block\9;
       *display: inline;
       *zoom: 1;
       vertical-align: top;
-      width: 47%\9;
-      margin: 1% 1% 14px 0\9;
+      width: 48%\9;
+      margin: 0 1% 10px 0\9;
       box-sizing: border-box;
     }
 
@@ -1107,65 +1121,86 @@ nav .nav-logo {
     .tool-card:focus-visible {
       transform: translateY(-2px);
       border-color: #2563eb;
-      box-shadow: 0 12px 28px rgba(37, 99, 235, .12);
-    }
-
-    .tool-card-top {
-      display: flex;
-      width: 100%;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 12px;
+      box-shadow: 0 10px 22px rgba(37, 99, 235, .12);
     }
 
     .tool-card-icon {
+      display: -webkit-inline-box;
+      display: -ms-inline-flexbox;
       display: inline-flex;
-      width: 44px;
-      height: 44px;
+      width: 38px;
+      height: 38px;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
       align-items: center;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
       justify-content: center;
+      flex-shrink: 0;
+      -ms-flex-negative: 0;
       border: 1px solid #dbeafe;
-      border-radius: 12px;
+      border-radius: 10px;
       background: #eff6ff;
       color: #1d4ed8;
+    }
+
+    .tool-card-body {
+      -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+      flex: 1 1 auto;
+      min-width: 0;
+      display: block;
+    }
+
+    .tool-card-head {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      gap: 6px;
     }
 
     .tool-badge-new {
       display: inline-block;
-      padding: 3px 9px;
+      padding: 1px 7px;
       border: 1px solid #bfdbfe;
       border-radius: 9999px;
       background: #eff6ff;
       color: #1d4ed8;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 800;
-      letter-spacing: .06em;
+      letter-spacing: .05em;
       text-transform: uppercase;
+      line-height: 1.5;
     }
 
     .tool-card-title {
-      display: block;
-      font-size: 18px;
+      display: inline-block;
+      font-size: 15px;
       font-weight: 800;
       color: #0f172a;
+      line-height: 1.25;
     }
 
     .tool-card-desc {
       display: block;
-      margin-top: 6px;
+      margin-top: 2px;
       color: #475569;
-      font-size: 13px;
-      line-height: 1.5;
+      font-size: 12px;
+      line-height: 1.35;
     }
 
-    .tool-card-action {
-      display: inline-block;
-      margin-top: auto;
-      padding-top: 12px;
+    .tool-card-arrow {
+      flex-shrink: 0;
+      -ms-flex-negative: 0;
       color: #1d4ed8;
-      font-size: 13px;
+      font-size: 16px;
       font-weight: 800;
+      line-height: 1;
     }
 
     .course-card-erasmus {
@@ -1340,8 +1375,15 @@ nav .nav-logo {
       .learning-pdf-frame { height: 70vh; min-height: 360px; }
       .student-fields { gap: 8px; padding: 12px; }
       .student-fields input { padding: 10px; font-size: 13px; }
+      #step-registration { padding: 14px 16px; }
+      .home-hero { padding: 8px 4px 2px; }
       .course-grid, .mode-grid, .tools-grid { grid-template-columns: 1fr; }
-      .course-card, .mode-card, .tool-card { width: 100%; margin: 0 0 12px; }
+      .tools-grid { gap: 8px; }
+      .course-card, .mode-card { width: 100%; margin: 0 0 12px; }
+      .tool-card { width: 100%; margin: 0; padding: 10px 12px; gap: 10px; border-radius: 12px; }
+      .tool-card-icon { width: 34px; height: 34px; border-radius: 9px; }
+      .tool-card-title { font-size: 14px; }
+      .tool-card-desc { font-size: 11.5px; }
       .lesson-image-wrap { min-height: 240px; padding: 8px; }
       .lesson-image { max-height: none; }
       .lesson-zoom-controls { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); justify-items: center; gap: 6px; padding: 8px; }
@@ -1790,6 +1832,59 @@ nav .nav-logo {
       <div class="home-hero">
         <span class="rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-800" style="padding: 5px 12px; display: inline-block;" data-i18n="platform_badge">Piattaforma didattica</span>
         <h1 data-i18n="hero_title">Da dove vuoi iniziare?</h1>
+
+        <!-- LABORATORI E STRUMENTI INTERATTIVI IN CIMA -->
+        <section class="tools-section" aria-labelledby="tools-section-title">
+          <span id="tools-section-title" class="tools-section-label" data-i18n="tools_section_title">Strumenti interattivi</span>
+          <div class="tools-grid">
+            <a href="resistenze.html" class="tool-card" id="home-tool-resistenze">
+              <span class="tool-card-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+                  <line x1="2" y1="12" x2="5" y2="12"></line>
+                  <rect x="5" y="7" width="14" height="10" rx="3" fill="#fef3c7" stroke="#b45309"></rect>
+                  <line x1="8.5" y1="7" x2="8.5" y2="17" stroke="#dc2626" stroke-width="2"></line>
+                  <line x1="11.5" y1="7" x2="11.5" y2="17" stroke="#2563eb" stroke-width="2"></line>
+                  <line x1="15.5" y1="7" x2="15.5" y2="17" stroke="#ca8a04" stroke-width="2"></line>
+                  <line x1="19" y1="12" x2="22" y2="12"></line>
+                </svg>
+              </span>
+              <span class="tool-card-body">
+                <span class="tool-card-head">
+                  <span class="tool-card-title" data-i18n="tool_resistenze_title">Codice colori resistenze</span>
+                  <span class="tool-badge-new" data-i18n="badge_new">Nuovo</span>
+                </span>
+                <span class="tool-card-desc" data-i18n="tool_resistenze_desc">3–6 bande · colori ↔ Ω · IEC 60062 e classica</span>
+              </span>
+              <span class="tool-card-arrow" aria-hidden="true">→</span>
+            </a>
+            <a href="breadboard.html" class="tool-card" id="home-tool-breadboard">
+              <span class="tool-card-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+                  <rect x="3" y="4" width="18" height="16" rx="2.5" fill="#f8fafc"></rect>
+                  <line x1="3" y1="12" x2="21" y2="12" stroke="#cbd5e1"></line>
+                  <circle cx="7" cy="8" r="1" fill="currentColor"></circle>
+                  <circle cx="11" cy="8" r="1" fill="currentColor"></circle>
+                  <circle cx="15" cy="8" r="1" fill="currentColor"></circle>
+                  <circle cx="17" cy="8" r="1" fill="currentColor"></circle>
+                  <circle cx="7" cy="16" r="1" fill="currentColor"></circle>
+                  <circle cx="11" cy="16" r="1" fill="currentColor"></circle>
+                  <circle cx="15" cy="16" r="1" fill="currentColor"></circle>
+                  <circle cx="17" cy="16" r="1" fill="currentColor"></circle>
+                  <path d="M7 8 C7 5, 15 5, 15 8" stroke="#dc2626"></path>
+                  <path d="M11 16 C11 19, 17 19, 17 16" stroke="#2563eb"></path>
+                </svg>
+              </span>
+              <span class="tool-card-body">
+                <span class="tool-card-head">
+                  <span class="tool-card-title" data-i18n="tool_breadboard_title">Breadboard &amp; simulatore DC</span>
+                  <span class="tool-badge-new" data-i18n="badge_new">Nuovo</span>
+                </span>
+                <span class="tool-card-desc" data-i18n="tool_breadboard_desc">Resistenze, LED, NPN, voltmetro e schema live</span>
+              </span>
+              <span class="tool-card-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>
         <div class="mt-3 rounded-lg border p-3 text-sm text-slate-700" role="note" style="display: table; width: 100%; border-color: #cbd5e1; background: #f8fafc;">
           <div style="display: table-cell; width: 62px; padding-right: 12px; vertical-align: top;">
             <img src="assets/mim-logo.svg" alt="Emblema del Ministero dell'Istruzione e del Merito" style="display: block; width: 48px; height: auto; padding: 4px; border: 1px solid #06c; border-radius: 6px; background: #06c;">
@@ -1831,58 +1926,6 @@ nav .nav-logo {
       </div>
       <div class="course-grid" id="materie-selector" aria-label="Classi disponibili"></div>
       <p class="platform-storage-notice hidden mt-4 rounded-lg border p-3 text-xs text-amber-900" role="status" style="border-color: #fcd34d; background: #fffbeb;"></p>
-
-      <!-- LABORATORI E STRUMENTI INTERATTIVI -->
-      <section class="tools-section" aria-labelledby="tools-section-title">
-        <div>
-          <h2 id="tools-section-title" class="text-xl font-bold text-slate-900" data-i18n="tools_section_title">Laboratori e strumenti interattivi</h2>
-          <p class="text-sm text-slate-500" data-i18n="tools_section_subtitle">Nuovi simulatori e calcolatori pratici di elettronica utilizzabili direttamente nel browser.</p>
-        </div>
-        <div class="tools-grid">
-          <a href="resistenze.html" class="tool-card" id="home-tool-resistenze">
-            <div class="tool-card-top">
-              <span class="tool-card-icon" aria-hidden="true">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;">
-                  <line x1="2" y1="12" x2="5" y2="12"></line>
-                  <rect x="5" y="7" width="14" height="10" rx="3" fill="#fef3c7" stroke="#b45309"></rect>
-                  <line x1="8.5" y1="7" x2="8.5" y2="17" stroke="#dc2626" stroke-width="2"></line>
-                  <line x1="11.5" y1="7" x2="11.5" y2="17" stroke="#2563eb" stroke-width="2"></line>
-                  <line x1="15.5" y1="7" x2="15.5" y2="17" stroke="#ca8a04" stroke-width="2"></line>
-                  <line x1="19" y1="12" x2="22" y2="12"></line>
-                </svg>
-              </span>
-              <span class="tool-badge-new" data-i18n="badge_new">Nuovo</span>
-            </div>
-            <span class="tool-card-title" data-i18n="tool_resistenze_title">Codice colori delle resistenze</span>
-            <span class="tool-card-desc" data-i18n="tool_resistenze_desc">Converti bande colorate da 3 a 6 bande in valore in Ω o ricava i colori dal valore nominale (IEC 60062:2016 e classica).</span>
-            <span class="tool-card-action" data-i18n="tool_resistenze_action">Apri calcolatore →</span>
-          </a>
-          <a href="breadboard.html" class="tool-card" id="home-tool-breadboard">
-            <div class="tool-card-top">
-              <span class="tool-card-icon" aria-hidden="true">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;">
-                  <rect x="3" y="4" width="18" height="16" rx="2.5" fill="#f8fafc"></rect>
-                  <line x1="3" y1="12" x2="21" y2="12" stroke="#cbd5e1"></line>
-                  <circle cx="7" cy="8" r="1" fill="currentColor"></circle>
-                  <circle cx="11" cy="8" r="1" fill="currentColor"></circle>
-                  <circle cx="15" cy="8" r="1" fill="currentColor"></circle>
-                  <circle cx="17" cy="8" r="1" fill="currentColor"></circle>
-                  <circle cx="7" cy="16" r="1" fill="currentColor"></circle>
-                  <circle cx="11" cy="16" r="1" fill="currentColor"></circle>
-                  <circle cx="15" cy="16" r="1" fill="currentColor"></circle>
-                  <circle cx="17" cy="16" r="1" fill="currentColor"></circle>
-                  <path d="M7 8 C7 5, 15 5, 15 8" stroke="#dc2626"></path>
-                  <path d="M11 16 C11 19, 17 19, 17 16" stroke="#2563eb"></path>
-                </svg>
-              </span>
-              <span class="tool-badge-new" data-i18n="badge_new">Nuovo</span>
-            </div>
-            <span class="tool-card-title" data-i18n="tool_breadboard_title">Breadboard interattiva e simulatore DC</span>
-            <span class="tool-card-desc" data-i18n="tool_breadboard_desc">Monta resistenze, LED, interruttori e transistor NPN con alimentatore DC, voltmetro a 2 puntali e schema elettrico in tempo reale.</span>
-            <span class="tool-card-action" data-i18n="tool_breadboard_action">Apri simulatore →</span>
-          </a>
-        </div>
-      </section>
 
       <!-- QR CODE DELLA PIATTAFORMA SULLA HOME -->
       <div id="home-qrcode-container" class="mt-8 p-5 rounded-2xl border border-slate-200 bg-slate-50 flex flex-wrap items-center justify-between" style="gap: 20px;">
@@ -2860,15 +2903,12 @@ nav .nav-logo {
         mode_erasmus_action: "Apri presentazione (EN) →",
         home_erasmus_title: "Presentazione Erasmus+ (4B INF)",
         home_erasmus_desc: "Telecomunicazioni · Presentazione in inglese per docenti in visita Erasmus+",
-        tools_section_title: "Laboratori e strumenti interattivi",
-        tools_section_subtitle: "Nuovi simulatori e calcolatori pratici di elettronica utilizzabili direttamente nel browser.",
+        tools_section_title: "Strumenti interattivi",
         badge_new: "Nuovo",
-        tool_resistenze_title: "Codice colori delle resistenze",
-        tool_resistenze_desc: "Converti bande colorate da 3 a 6 bande in valore in Ω o ricava i colori dal valore nominale (IEC 60062:2016 e classica).",
-        tool_resistenze_action: "Apri calcolatore →",
-        tool_breadboard_title: "Breadboard interattiva e simulatore DC",
-        tool_breadboard_desc: "Monta resistenze, LED, interruttori e transistor NPN con alimentatore DC, voltmetro a 2 puntali e schema elettrico in tempo reale.",
-        tool_breadboard_action: "Apri simulatore →",
+        tool_resistenze_title: "Codice colori resistenze",
+        tool_resistenze_desc: "3–6 bande · colori ↔ Ω · IEC 60062 e classica",
+        tool_breadboard_title: "Breadboard & simulatore DC",
+        tool_breadboard_desc: "Resistenze, LED, NPN, voltmetro e schema live",
         qrcode_badge: "Accesso Rapido Mobile",
         qrcode_title: "QR Code della Piattaforma",
         qrcode_desc: "Inquadra questo codice con la fotocamera del tuo smartphone o tablet per aprire e utilizzare direttamente la piattaforma didattica.",
@@ -2992,15 +3032,12 @@ nav .nav-logo {
         mode_erasmus_action: "Open presentation (EN) →",
         home_erasmus_title: "Erasmus+ Presentation (4B INF)",
         home_erasmus_desc: "Telecommunications · English presentation for visiting Erasmus+ teachers",
-        tools_section_title: "Interactive Labs & Tools",
-        tools_section_subtitle: "New practical electronics simulators and calculators ready to use in your browser.",
+        tools_section_title: "Interactive Tools",
         badge_new: "New",
-        tool_resistenze_title: "Resistor Color Code Calculator",
-        tool_resistenze_desc: "Decode 3- to 6-band resistors into Ω values or encode nominal values into color bands (IEC 60062:2016 and classic).",
-        tool_resistenze_action: "Open calculator →",
-        tool_breadboard_title: "Interactive Breadboard & DC Simulator",
-        tool_breadboard_desc: "Place resistors, LEDs, switches, and NPN transistors with a DC power supply, 2-probe voltmeter, and live schematic.",
-        tool_breadboard_action: "Open simulator →",
+        tool_resistenze_title: "Resistor Color Code",
+        tool_resistenze_desc: "3–6 bands · colors ↔ Ω · IEC 60062 & classic",
+        tool_breadboard_title: "Breadboard & DC Simulator",
+        tool_breadboard_desc: "Resistors, LEDs, NPN, voltmeter & live schematic",
         qrcode_badge: "Quick Mobile Access",
         qrcode_title: "Platform QR Code",
         qrcode_desc: "Scan this code with your smartphone or tablet camera to open the learning platform directly.",
