@@ -818,7 +818,7 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="bench"><div class="physical-controls"><label for="unoPosition">Posizione della Uno <input id="unoPosition" type="range" min="0" max="100" value="50"></label><button id="physicalReset" type="button">Centra scheda</button><button id="physicalShadows" type="button" aria-pressed="true">Ombre cavi (2D)</button><span>Seleziona un cavetto per ispezionarlo e regolare la riserva.</span></div><div class="physical-inspector" id="physicalInspector" aria-live="polite">Banco fisico · seleziona un apparato, una presa o un cavetto.</div><button id="toggle3d" type="button" aria-pressed="false">Vista 3D</button><div class="view3d" id="view3d" hidden><div class="view3d-controls"><button id="orbit3d" type="button">Vista orbitale</button><button id="top3d" type="button">Dall’alto</button><button id="focusBB3d" type="button">Breadboard</button><button id="focusUno3d" type="button">Uno</button><button id="focusLoad3d" type="button">Componenti</button><button id="plus3d" type="button">+</button><button id="minus3d" type="button">−</button><button id="move3d" type="button" aria-pressed="false">Sposta componente</button></div><div class="view3d-stage"><canvas id="lab3d" aria-label="Banco tridimensionale WebGL"></canvas><canvas id="labels3d" aria-hidden="true"></canvas></div><div id="status3d">Trascina per ruotare · rotella/pinch per zoom · tasto destro per spostare · clic per montare o ispezionare</div></div><div class="boardscroll"><div class="physicalBench"><svg id="unoCables" aria-hidden="true"></svg>
+          <div class="bench"><div class="physical-controls"><label for="unoPosition">Posizione della Uno <input id="unoPosition" type="range" min="0" max="100" value="50"></label><button id="physicalReset" type="button">Centra scheda</button><button id="physicalShadows" type="button" aria-pressed="true">Ombre cavi (2D)</button><span>Seleziona un cavetto per ispezionarlo e regolare la riserva.</span></div><div class="physical-inspector" id="physicalInspector" aria-live="polite">Banco fisico · seleziona un apparato, una presa o un cavetto.</div><button id="toggle3d" type="button" aria-pressed="false">Vista 3D</button><div class="view3d" id="view3d" hidden><div class="view3d-controls"><button id="orbit3d" type="button">Vista orbitale</button><button id="top3d" type="button">Dall’alto</button><button id="focusBB3d" type="button">Breadboard</button><button id="focusUno3d" type="button">Uno</button><button id="focusLoad3d" type="button">Componenti</button><button id="plus3d" type="button">+</button><button id="minus3d" type="button">−</button><button id="move3d" type="button" aria-pressed="false">Sposta componente</button></div><div id="led3dControls" style="display:flex;flex-wrap:wrap;gap:7px;align-items:center;padding:8px 0;font-size:12px"><strong>LED THT Ø5 mm</strong><select id="led3dTarget" aria-label="LED da osservare"></select><label>Colore <select id="led3dColor" aria-label="Colore del LED"></select></label><button id="led3dFocus" type="button">Dettaglio LED</button><button id="led3dCut" type="button" aria-pressed="false">Sezione della resina</button><output id="led3dData" style="flex-basis:100%"></output></div><div class="view3d-stage"><canvas id="lab3d" aria-label="Banco tridimensionale WebGL"></canvas><canvas id="labels3d" aria-hidden="true"></canvas></div><div id="status3d">Trascina per ruotare · rotella/pinch per zoom · tasto destro per spostare · clic per montare o ispezionare</div></div><div class="boardscroll"><div class="physicalBench"><svg id="unoCables" aria-hidden="true"></svg>
             <div class="uno-board">
 <svg class="uno-art" viewBox="0 0 700 545" aria-label="Modello geometrico Arduino Uno R3" xmlns="http://www.w3.org/2000/svg">
 <defs><linearGradient id="pcb" x2="1" y2="1"><stop stop-color="#00868b"/><stop offset="1" stop-color="#006169"/></linearGradient><linearGradient id="metal" x2="0" y2="1"><stop stop-color="#f3f5f3"/><stop offset=".4" stop-color="#aab3b5"/><stop offset=".7" stop-color="#dce0df"/><stop offset="1" stop-color="#7c878b"/></linearGradient><linearGradient id="chip" x2="0" y2="1"><stop stop-color="#42474a"/><stop offset=".4" stop-color="#23282c"/><stop offset="1" stop-color="#171c1e"/></linearGradient><linearGradient id="jack" x2="0" y2="1"><stop stop-color="#4d5355"/><stop offset="1" stop-color="#12191c"/></linearGradient><radialGradient id="cap"><stop stop-color="#e4e6df"/><stop offset=".8" stop-color="#aeb5b4"/><stop offset="1" stop-color="#646c6d"/></radialGradient></defs>
@@ -1070,7 +1070,7 @@
 
     <footer>
       <span>Appunti di riferimento · Introduzione all’ambiente di Arduino, pp. 286–305.</span>
-      <span>Laboratorio integrato FMOREA · <a href="resistenze.html">Resistenze</a> · <a href="https://fmorea.github.io/breadboard">Breadboard</a></span>
+      <span>Modello LED: <a href="https://lastminuteengineers.com/light-emitting-diode-led/" target="_blank" rel="noopener">riferimento costruttivo</a> · Laboratorio integrato FMOREA · <a href="resistenze.html">Resistenze</a> · <a href="https://fmorea.github.io/breadboard">Breadboard</a></span>
     </footer>
   </main>
 
@@ -2055,7 +2055,7 @@
 
       if (usesExt) {
         $('elecReadout').textContent =
-          'Pin Uno 5 V (Vf LED ≈ 2,0 V) · R = ' + formatOhms(seriesOhms) +
+          'Pin Uno 5 V (esempio teorico con Vf = 2,0 V) · R = ' + formatOhms(seriesOhms) +
           ' → I teorica a 5 V = ' + fmt(iMaxMa, 1) + ' mA. Correnti calcolate nel banco: ' + lesson.pins.map(p=>'D'+p+' '+fmt(nativeBoard.ledCurrent(p)*1000,1)+' mA').join(' · ') + (lesson.kind==='analog'?' · PWM: corrente media delle fasi HIGH/LOW.':'');
         if (iMaxMa > 20) {
           $('elecWarn').hidden = false;
@@ -2318,11 +2318,13 @@
       orange: { label:'Arancione', stroke:'#ea580c', hi:'#fed7aa' }
     };
     const ledColors = {
-      red: { label:'Rosso', off:'#7f1d1d', on:'#ef4444', core:'#fecaca', glow:'url(#glowRed)' },
-      amber: { label:'Giallo', off:'#78350f', on:'#f59e0b', core:'#fef08a', glow:'url(#glowAmber)' },
-      green: { label:'Verde', off:'#14532d', on:'#22c55e', core:'#bbf7d0', glow:'url(#glowGreen)' },
-      blue: { label:'Blu', off:'#1e3a8a', on:'#3b82f6', core:'#dbeafe', glow:'url(#glowBlue)' },
-      white: { label:'Bianco', off:'#64748b', on:'#f8fafc', core:'#ffffff', glow:'url(#glowWhite)' }
+      red: { label:'Rosso', vf:1.85, off:'#7f1d1d', on:'#ef4444', core:'#fecaca', glow:'url(#glowRed)' },
+      amber: { label:'Giallo', vf:2.1, off:'#78350f', on:'#f59e0b', core:'#fef08a', glow:'url(#glowAmber)' },
+      green: { label:'Verde', vf:2.2, off:'#14532d', on:'#22c55e', core:'#bbf7d0', glow:'url(#glowGreen)' },
+      blue: { label:'Blu', vf:3.1, off:'#1e3a8a', on:'#3b82f6', core:'#dbeafe', glow:'url(#glowBlue)' },
+      white: { label:'Bianco', vf:3.1, off:'#64748b', on:'#f8fafc', core:'#ffffff', glow:'url(#glowWhite)' },
+      orange: {label:'Arancione',vf:2.05,off:'#8c3611',on:'#ff8a24',core:'#ffd3a0',glow:'url(#glowAmber)'},
+      violet: {label:'Viola',vf:3.3,off:'#542675',on:'#b56bff',core:'#e4c4ff',glow:'url(#glowBlue)'}
     };
     const fmt = n => Number(n.toPrecision(5)).toLocaleString('it-IT', { maximumSignificantDigits: 5 });
     const resistance = b => (10 * b[0] + b[1]) * 10 ** (b[2] < 10 ? b[2] : 9 - b[2]);
@@ -2396,7 +2398,7 @@
         for (const p of parts) {
           const [u, w, c] = p.p.map(h => root(node(h))), d = val(u) - val(w);
           if (p.t === 'resistor' || p.t === 'led') {
-            const [i, g] = p.t === 'led' ? junction(d, 1e-17, .055) : [d / (p.ohms??resistance(p.bands)), 1 / (p.ohms??resistance(p.bands))];
+            const [i, g] = p.t === 'led' ? junction(d, 1e-12, (ledColors[p.color]?.vf??2.1)/Math.log(1e10+1)) : [d / (p.ohms??resistance(p.bands)), 1 / (p.ohms??resistance(p.bands))];
             stamp(u, w, u, w, i, g);
             currents.set(p.id, i);
           }
@@ -3170,6 +3172,7 @@
     function patchGuide(){
       const changed=key!==document.getElementById('lesson').value;
       if(changed){
+        scene3d?.resetLED?.();
         selectedJumper=null;inspectText('Banco fisico','Seleziona un apparato, una presa o un cavetto.');
         key=document.getElementById('lesson').value;
         lastPol=undefined;
@@ -3269,7 +3272,7 @@
       buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);for(const [name,off] of [['p',0],['c',12],['ident',24]]){const a=gl.getAttribLocation(prog,name);gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,3,gl.FLOAT,false,36,off)}
       U=Object.fromEntries(['right','down','normal','origin','scale','picking','alpha'].map(s=>[s,gl.getUniformLocation(prog,s)]));gl.enable(gl.DEPTH_TEST);gl.disable(gl.DITHER);}
       let mesh=null,softwareIds=null;
-      let verts=[],resinVerts=[],opaqueCount=0,ids=[],idMap=new Map(),labels=[],count=0,visible=false,queued=false,dirty=true,lastKey='',yaw=-.24,tilt=.60,zoom=1,pan=[0,0],frame3=null,movePart=false;
+      let verts=[],resinVerts=[],opaqueCount=0,ids=[],idMap=new Map(),labels=[],count=0,visible=false,queued=false,dirty=true,lastKey='',yaw=-.24,tilt=.60,zoom=1,pan=[0,0],frame3=null,movePart=false,ledTarget='',ledCut=false,ledDetail=false;
       const add=(a,b)=>a.map((v,i)=>v+b[i]),sub=(a,b)=>a.map((v,i)=>v-b[i]),mul=(a,k)=>a.map(v=>v*k),cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],dot=(a,b)=>a.reduce((s,v,i)=>s+v*b[i],0),unit=a=>mul(a,1/(Math.hypot(...a)||1));
       const light=unit([-.45,-.55,1]);
       function rgb(c){const n=parseInt(c.slice(1),16);return [n>>16&255,n>>8&255,n&255].map(v=>v/255)}
@@ -3309,48 +3312,82 @@
         for(const [x,y,on,name] of [[612,199,true,'ON'],[257,108,io?.pins[13]>0,'L'],[257,148,io?.txPulse>0,'TX']]){B(x-8,y-5,20,16,10,4,'#b3a78a');B(x-5,y-4,24,10,8,4,on?'#facc37':'#555a42');tag(P(x+14,y,28),name,'#ffffff',9)}
         tag(P(488,276,21),'ARDUINO  UNO R3','#e5f6ef',17);tag(P(408,88,21),'DIGITAL (PWM ~)','#e5f6ef',10);tag(P(329,465,21),'POWER','#e5f6ef',10);tag(P(554,465,21),'ANALOG IN','#e5f6ef',10);
         let pinPos={};for(const [defs,xs,y,grp] of [[topPins,topX,42,'T'],[botPins,bottomX,503,'B']])defs.forEach((d,i)=>{let x=xs[i],pin=d.d!==undefined?'D'+d.d:d.a!==undefined?'A'+d.a:d.type==='gnd'?'GND'+(grp==='T'?'T':i):['5V','3V3'].includes(d.label)?d.label:null,ref=pin?{socket:pin}:hardware(d.label,'Presa ausiliaria');let q=P(x,y,76);if(pin)pinPos[pin]=q;for(const [dx,dy,w,h] of [[-11,-11,22,6],[-11,5,22,6],[-11,-5,6,10],[5,-5,6,10]])B(x+dx,y+dy,20,w,h,56,'#24292b',ref);B(x-5,y-5,20,10,10,8,'#11191d',ref);B(x-2,y-2,28,4,4,5,'#bcb388',ref);tag(P(x,y+(grp==='T'?28:-24),21),d.label,'#f0f9f4',9)});
-        for(const p of parts){let ref={part:p.id},ps=p.p.map(hp),a=ps[0],b=ps[1];if(!a||!b)continue;let mid=mul(add(a,b),.5),axis=unit([b[0]-a[0],b[1]-a[1],0]);if(p.t==='wire'){flexible(plug3(a,ref),plug3(b,ref),resolveWireColor(p).stroke,ref,p.slack??.24);continue}
+        for(const p of parts){if(ledDetail&&p.id!==ledTarget)continue;let ref={part:p.id},ps=p.p.map(hp),a=ps[0],b=ps[1];if(!a||!b)continue;let mid=mul(add(a,b),.5),axis=unit([b[0]-a[0],b[1]-a[1],0]);if(p.t==='wire'){flexible(plug3(a,ref),plug3(b,ref),resolveWireColor(p).stroke,ref,p.slack??.24);continue}
           const z=p.t==='led'?BBZ+190:BBZ+32;let c=[mid[0],mid[1],z];
           if(p.t==='resistor'){let dist=Math.hypot(...sub(a,b)),half=Math.min(44.5,dist*.39),l=add(c,mul(axis,-half)),r=add(c,mul(axis,half));for(const [q,e] of [[a,l],[b,r]]){peg(q,ref);lead(add(q,[0,0,11]),[q[0],q[1],z],ref);lead([q[0],q[1],z],e,ref)}lathe(l,r,[[0,11],[.07,16],[.2,16],[.35,13.2],[.65,13.2],[.8,16],[.93,16],[1,11]],'#d6b17c',ref);(p.bands||[1,0,2,10]).forEach((band,i)=>{let t=[.17,.35,.51,.80][i],s=add(l,mul(sub(r,l),t-.035)),e=add(l,mul(sub(r,l),t+.035));lathe(s,e,[[0,i===0||i===3?16.4:14.2],[1,i===0||i===3?16.4:14.2]],palette[band]||'#b59a52',ref)})}
           else if(p.t==='led'){
-            const lc=ledColors[p.color]||ledColors.red,cur=Math.max(0,currents?.get(p.id)||0),color=cur>.000001?blendColor(lc.off,lc.on,Math.min(1,.22+cur*95)):blendColor(lc.off,lc.on,.35);
-            const base=[c[0],c[1],z],span=Math.hypot(...sub(a,b)),pitch=18; // 2.54 mm at package
+            // LED THT Ø5 mm, ricostruito come componente reale: post, anvil/cup, die, wire bond e resina trasparente.
+            const lc=ledColors[p.color]||ledColors.red,cur=Math.max(0,currents?.get(p.id)||0),lit=Math.min(1,cur/.012);
+            const base=c,perp=[-axis[1],axis[0],0],pitch=18,metal='#c8d0d3',anode='#d5dde0',cathode='#bcc7cc';
+            const L=(u,v,h)=>add(add(add(base,mul(axis,u)),mul(perp,v)),[0,0,h]);
+            const tagRef=(name,desc)=>({part:p.id,detail:[name,desc]});
+            const ra=tagRef('Anodo (+)','Reoforo lungo e post interno del LED.'),rk=tagRef('Catodo (−)','Reoforo corto e supporto con coppa riflettente.'),rc=tagRef('Coppa riflettente','Cavità metallica del catodo che ospita il chip.'),rd=tagRef('Chip semiconduttore','La giunzione luminosa è montata dentro la coppa.'),rw=tagRef('Wire bond','Filamento che unisce chip e post anodico.');
+            function strip(points,width,depth,col,ref){let rings=points.map(q=>[-1,1].flatMap(v=>[-1,1].map(u=>add(add(q,mul(axis,u*width/2)),mul(perp,v*depth/2)))));let order=[0,1,3,2];for(let i=0;i<rings.length-1;i++)for(let j=0;j<4;j++){let k=(j+1)%4;quad(rings[i][order[j]],rings[i][order[k]],rings[i+1][order[k]],rings[i+1][order[j]],col,ref)}for(let i of [0,rings.length-1])quad(...order.map(k=>rings[i][k]),col,ref)}
+            function plate(poly,thick,col,ref){const f=poly.map(([u,h])=>L(u,-thick/2,h)),g=poly.map(([u,h])=>L(u,thick/2,h));for(let i=1;i<f.length-1;i++){tri(f[0],f[i+1],f[i],col,ref);tri(g[0],g[i],g[i+1],col,ref)}for(let i=0;i<f.length;i++){let j=(i+1)%f.length;quad(f[i],f[j],g[j],g[i],col,ref)}}
+            // Reofori lunghi e sottili, con due piccoli rigonfiamenti stampati vicino al corpo.
+            const leadWidth=4.3,leadDepth=4.3;
             for(let i=0;i<2;i++){
-              const q=ps[i],sign=i?1:-1,end=add(base,mul(axis,sign*pitch)),bend=add(end,mul(axis,sign*Math.max(0,(span/2-pitch)*.27)));
-              // Both legs penetrate their own hole and remain individually visible below the lens.
-              tube([[q[0],q[1],BBZ-10],[q[0],q[1],BBZ+8],[bend[0],bend[1],z-58],[end[0],end[1],z-13],[end[0],end[1],z+8]],3.5,'#b9c3c6',ref,8);
+              const q=ps[i],sign=i?1:-1,rr=i?rk:ra;
+              strip([[q[0],q[1],BBZ-12],[q[0],q[1],BBZ+6],L(sign*pitch,0,-58),L(sign*pitch,0,8)],leadWidth,leadDepth,metal,rr);
+              strip([L(sign*pitch,0,-24),L(sign*pitch,0,-18)],6.0,5.4,metal,rr);
+              strip([L(sign*pitch,0,-4),L(sign*pitch,0,1)],5.5,5.0,metal,rr);
             }
-            // Real leadframe silhouettes inside the epoxy: cathode reflector cup and anode post.
-            const ia=add(base,mul(axis,-pitch)),ik=add(base,mul(axis,pitch));
-            tube([add(ia,[0,0,3]),add(ia,[0,0,34])],3.2,'#bfc9cb',ref,10);
-            tube([add(ik,[0,0,3]),add(ik,[0,0,27])],4,'#afbcbf',ref,10);
-            lathe(add(ik,[0,0,27]),add(ik,[0,0,42]),[[0,5],[.6,13],[1,14]],'#aebbbd',ref,20);
-            tube([add(ik,[0,0,42]),add(ik,[0,0,45])],4.8,cur>0?'#d7f6a4':'#c6c7ad',ref,10);
-            tube([add(ia,[0,0,34]),add(ia,[0,0,54]),add(ik,[0,0,46])],.8,'#e1c47b',ref,8);
-            // Molded 5 mm epoxy cylinder, rounded dome, 5.7 mm flange with cathode flat.
-            const resin={...ref,resin:true};const r=35.4,flange=40.2,side=80,profile=[[0,flange],[5,flange],[7,r],[side,r]];
-            for(let i=1;i<=16;i++){const t=i*Math.PI/32;profile.push([side+r*Math.sin(t),r*Math.cos(t)])}
-            const perp=[-axis[1],axis[0],0],N=48;
-            const rings=profile.map(([h,radius])=>Array.from({length:N},(_,j)=>{const a=j*2*Math.PI/N;let u=radius*Math.cos(a),v=radius*Math.sin(a);if(h<=5)u=Math.min(u,32);return add(add(add(base,[0,0,h]),mul(axis,u)),mul(perp,v))}));
-            for(let k=0;k<rings.length-1;k++)for(let j=0;j<N;j++){const m=(j+1)%N;quad(rings[k][j],rings[k][m],rings[k+1][m],rings[k+1][j],color,resin,cur>0?Math.min(.36,cur*40):0)}
-            for(let j=0;j<N;j++)tri(base,rings[0][(j+1)%N],rings[0][j],color,resin);
+            // Post anodico snello a sinistra (leadframe stretto).
+            plate([[-18,0],[-11,0],[-11,43],[-13.5,49],[-18,46]],5.8,anode,ra);
+            // Catodo con anvil e coppa più larga, come nei LED trasparenti classici.
+            plate([[10,0],[18,0],[18,23],[27,31],[29,38],[6,38],[4,28],[10,19]],7.4,cathode,rk);
+            // Coppa riflettente ben visibile.
+            const cup=L(16.5,0,33),cupTop=L(16.5,0,45),Ncup=36;
+            const ring=(center,r)=>Array.from({length:Ncup},(_,j)=>add(center,add(mul(axis,r*Math.cos(j*2*Math.PI/Ncup)),mul(perp,r*Math.sin(j*2*Math.PI/Ncup)))));
+            const outer0=ring(cup,5.8),outer1=ring(cupTop,11.8),inner1=ring(cupTop,9.1),inner0=ring(L(16.5,0,36.3),3.45);
+            for(let j=0;j<Ncup;j++){const k=(j+1)%Ncup;quad(outer0[j],outer0[k],outer1[k],outer1[j],cathode,rc);quad(outer1[j],outer1[k],inner1[k],inner1[j],'#f1f5f6',rc);quad(inner1[j],inner1[k],inner0[k],inner0[j],'#dde6e8',rc);tri(L(16.5,0,36.3),inner0[j],inner0[k],'#8a989f',rc)}
+            // Chip piccolo sul fondo della coppa.
+            const dieColor=cur>.000001?lc.on:'#95a57b';
+            plate([[13.5,37.8],[19.6,37.8],[19.6,40.6],[13.5,40.6]],5.2,dieColor,rd);
+            // Wire bond molto visibile dal chip al post.
+            const bond=Array.from({length:28},(_,j)=>{let t=j/27,u=1-t;return L(u*u*u*(-14)+3*u*u*t*(-12.2)+3*u*t*t*4.6+t*t*t*16.5,0,u*u*u*48+3*u*u*t*67+3*u*t*t*61+t*t*t*41)});
+            tube(bond,.44,'#dcc075',rw,10);
+            // Guscio trasparente: flangia, cilindro e cupola emisferica. Faccia piatta sul catodo.
+            const resin={...ref,resin:true,detail:['Lente in resina epossidica','Corpo trasparente Ø5 mm con faccia piatta sul lato catodo.']};
+            const glass=blendColor('#eef7fb',lc.on,.10+lit*.18),glow=blendColor('#dff1f7',lc.on,.18+lit*.30),r=31.5,flange=35.5,side=72;
+            const profile=[[0,flange],[4.5,flange],[5.5,r],[side,r]];
+            for(let i=1;i<=22;i++){const t=i*Math.PI/44;profile.push([side+r*Math.sin(t),r*Math.cos(t)])}
+            const N=72,rings=profile.map(([h,radius])=>Array.from({length:N},(_,j)=>{const a=j*2*Math.PI/N;const flatClamp=h<=4.5?Math.min(radius*Math.cos(a),26.5):radius*Math.cos(a);return L(h, radius*Math.sin(a), flatClamp)}));
+            const cut=ledCut&&p.id===ledTarget,keep=j=>!cut||Math.cos((j+.5)*2*Math.PI/N)>0;
+            for(let k=0;k<rings.length-1;k++)for(let j=0;j<N;j++){
+              if(!keep(j))continue;const m=(j+1)%N;
+              if(cut)quad(rings[k][m],rings[k][j],rings[k+1][j],rings[k+1][m],glass,resin,.14+lit*.22);
+              else quad(rings[k][j],rings[k][m],rings[k+1][m],rings[k+1][j],glass,resin,.11+lit*.19);
+            }
+            for(let j=0;j<N;j++)if(keep(j))tri(base,rings[0][(j+1)%N],rings[0][j],glow,resin,.14+lit*.22);
+            // Piccolo riflesso speculare vicino alla cupola.
+            tube([L(92,-8,11),L(98,-2,14)],1.4,'#ffffff',{part:p.id,detail:['Riflesso superficiale','Indicazione visiva della lente in resina lucida.']},6);
             tag(add(a,mul(axis,-15)),'A+','#a33131',11);tag(add(b,mul(axis,15)),'K−','#334155',11);
           }
           else{for(const q of ps){peg(q,ref);lead(add(q,[0,0,11]),[q[0],q[1],z],ref);lead([q[0],q[1],z],c,ref)}box(c[0]-13,c[1]-12,z-7,26,24,17,'#303a43',ref);if(p.t==='button')tube([add(c,[0,0,10]),add(c,[0,0,p.on?13:19])],9,p.on?'#23974b':'#9ba5a6',ref,16)}
-          if(p.id===active)tag(add(c,[0,0,52]),p.id,'#174a9d',13);
+          if(p.id===active&&!ledDetail)tag(add(c,[0,0,52]),p.id,'#174a9d',13);
         }
-        jumpers.forEach((j,i)=>{if(!pinPos[j.pin]||!coords[j.h])return;let ref={jumper:j.pin},a=plug3(pinPos[j.pin],ref),b=plug3(hp(j.h),ref);flexible(a,b,(wireColors[j.color]||wireColors.blue).stroke,ref,j.slack??.3,i%2?1:-1)});
+        if(!ledDetail)jumpers.forEach((j,i)=>{if(!pinPos[j.pin]||!coords[j.h])return;let ref={jumper:j.pin},a=plug3(pinPos[j.pin],ref),b=plug3(hp(j.h),ref);flexible(a,b,(wireColors[j.color]||wireColors.blue).stroke,ref,j.slack??.3,i%2?1:-1)});
         for(const h of [...draft,...probes])if(coords[h]){const p=hp(h);tube([add(p,[0,0,1]),add(p,[0,0,3])],8,'#f59e0b',{hole:h},14);tag(add(p,[0,0,9]),h,'#a04c00',11)}
+        if(hoverHole3d && coords[hoverHole3d]){const p=hp(hoverHole3d);tube([add(p,[0,0,1]),add(p,[0,0,4.2])],8.6,'#22c55e',{hole:hoverHole3d},16);tag(add(p,[0,0,11]),hoverHole3d,'#166534',11)}
         opaqueCount=verts.length/9;count=opaqueCount+resinVerts.length/9;mesh=new Float32Array(count*9);mesh.set(verts);mesh.set(resinVerts,verts.length);resinVerts=[];if(gl){gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,mesh,gl.STATIC_DRAW)}verts=[];dirty=false;
       }
       function camera(){const r=[Math.cos(yaw),Math.sin(yaw),0],d=[-Math.sin(yaw)*Math.cos(tilt),Math.cos(yaw)*Math.cos(tilt),-Math.sin(tilt)],n=cross(r,d);let w=canvas.width,h=canvas.height,scale=Math.min(w/2480,h/1850)*zoom,origin=add([1170,-35,85],add(mul(r,pan[0]),mul(d,pan[1])));return {r,d,n,origin,scale,w,h}}
       function resize(){const rect=canvas.getBoundingClientRect(),dpr=gl?Math.min(2,window.devicePixelRatio||1):Math.min(1.35,Math.max(1,window.devicePixelRatio||1),1100/Math.max(1,rect.width));let w=Math.max(1,Math.round(rect.width*dpr)),h=Math.max(1,Math.round(rect.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;labelCanvas.width=w;labelCanvas.height=h}}
       // CPU fallback uses the same triangle mesh, a per-pixel z-buffer and object IDs.
       function raster(v){let {w,h,scale,origin,r,d,n}=v;let image=cpu.createImageData(w,h),pixels=new Uint32Array(image.data.buffer),depth=new Float32Array(w*h);depth.fill(-Infinity);pixels.fill(0xfff0ebe3);softwareIds=new Uint32Array(w*h);let projected=new Float32Array(count*3);for(let i=0,j=0;i<mesh.length;i+=9,j+=3){let x=mesh[i]-origin[0],y=mesh[i+1]-origin[1],z=mesh[i+2]-origin[2];projected[j]=w/2+(x*r[0]+y*r[1]+z*r[2])*scale;projected[j+1]=h/2+(x*d[0]+y*d[1]+z*d[2])*scale;projected[j+2]=x*n[0]+y*n[1]+z*n[2]}
-      for(let j=0,i=0;j<projected.length;j+=9,i+=27){let ax=projected[j],ay=projected[j+1],az=projected[j+2],bx=projected[j+3],by=projected[j+4],bz=projected[j+5],cx=projected[j+6],cy=projected[j+7],cz=projected[j+8];let det=(bx-ax)*(cy-ay)-(by-ay)*(cx-ax);const transparent=i>=opaqueCount*9;if(Math.abs(det)<.01||(transparent&&det<0))continue;let minX=Math.max(0,Math.floor(Math.min(ax,bx,cx))),maxX=Math.min(w-1,Math.ceil(Math.max(ax,bx,cx))),minY=Math.max(0,Math.floor(Math.min(ay,by,cy))),maxY=Math.min(h-1,Math.ceil(Math.max(ay,by,cy)));let color=0xff000000|(Math.round(mesh[i+5]*255)<<16)|(Math.round(mesh[i+4]*255)<<8)|Math.round(mesh[i+3]*255),ident=Math.round(mesh[i+6]*255)+256*Math.round(mesh[i+7]*255)+65536*Math.round(mesh[i+8]*255);for(let y=minY;y<=maxY;y++)for(let x=minX;x<=maxX;x++){let u=((x+.5-ax)*(cy-ay)-(y+.5-ay)*(cx-ax))/det,vv=((bx-ax)*(y+.5-ay)-(by-ay)*(x+.5-ax))/det;if(u<-.00001||vv<-.00001||u+vv>1.00001)continue;let z=az+u*(bz-az)+vv*(cz-az),idx=y*w+x;if(z>depth[idx]){depth[idx]=z;if(transparent){const old=pixels[idx],a=.76;let rr=Math.round((color&255)*a+(old&255)*(1-a)),gg=Math.round(((color>>8)&255)*a+((old>>8)&255)*(1-a)),bb=Math.round(((color>>16)&255)*a+((old>>16)&255)*(1-a));pixels[idx]=0xff000000|(bb<<16)|(gg<<8)|rr;}else pixels[idx]=color;softwareIds[idx]=ident}}}cpu.putImageData(image,0,0)}
-      function render(pick=false){if(!visible)return;resize();if(dirty)build();const v=camera();if(gl){gl.viewport(0,0,v.w,v.h);gl.clearColor(pick?0:.89,pick?0:.92,pick?0:.94,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniform3fv(U.right,v.r);gl.uniform3fv(U.down,v.d);gl.uniform3fv(U.normal,v.n);gl.uniform3fv(U.origin,v.origin);gl.uniform2f(U.scale,2*v.scale/v.w,2*v.scale/v.h);gl.uniform1f(U.picking,pick?1:0);gl.uniform1f(U.alpha,1);gl.drawArrays(gl.TRIANGLES,0,pick?count:opaqueCount);if(!pick&&count>opaqueCount){gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);gl.enable(gl.CULL_FACE);gl.frontFace(gl.CW);gl.uniform1f(U.alpha,.76);gl.drawArrays(gl.TRIANGLES,opaqueCount,count-opaqueCount);gl.disable(gl.CULL_FACE);gl.depthMask(true);gl.disable(gl.BLEND);gl.uniform1f(U.alpha,1)}}else raster(v);if(!pick){labelCtx.clearRect(0,0,v.w,v.h);if(tilt<1.38){for(const l of labels){let q=sub(l.p,v.origin),x=v.w/2+dot(q,v.r)*v.scale,y=v.h/2+dot(q,v.d)*v.scale;let px=l.size*Math.max(.78,Math.min(1.8,v.scale*1.7));labelCtx.font=`600 ${px}px monospace`;labelCtx.fillStyle=l.c;labelCtx.textAlign='center';labelCtx.textBaseline='middle';labelCtx.fillText(l.t,x,y)}}}}
+      for(let j=0,i=0;j<projected.length;j+=9,i+=27){let ax=projected[j],ay=projected[j+1],az=projected[j+2],bx=projected[j+3],by=projected[j+4],bz=projected[j+5],cx=projected[j+6],cy=projected[j+7],cz=projected[j+8];let det=(bx-ax)*(cy-ay)-(by-ay)*(cx-ax);const transparent=i>=opaqueCount*9;if(Math.abs(det)<.01||(transparent&&det<0))continue;let minX=Math.max(0,Math.floor(Math.min(ax,bx,cx))),maxX=Math.min(w-1,Math.ceil(Math.max(ax,bx,cx))),minY=Math.max(0,Math.floor(Math.min(ay,by,cy))),maxY=Math.min(h-1,Math.ceil(Math.max(ay,by,cy)));let color=0xff000000|(Math.round(mesh[i+5]*255)<<16)|(Math.round(mesh[i+4]*255)<<8)|Math.round(mesh[i+3]*255),ident=Math.round(mesh[i+6]*255)+256*Math.round(mesh[i+7]*255)+65536*Math.round(mesh[i+8]*255);for(let y=minY;y<=maxY;y++)for(let x=minX;x<=maxX;x++){let u=((x+.5-ax)*(cy-ay)-(y+.5-ay)*(cx-ax))/det,vv=((bx-ax)*(y+.5-ay)-(by-ay)*(x+.5-ax))/det;if(u<-.00001||vv<-.00001||u+vv>1.00001)continue;let z=az+u*(bz-az)+vv*(cz-az),idx=y*w+x;if(z>depth[idx]){depth[idx]=z;if(transparent){const old=pixels[idx],a=.40;let rr=Math.round((color&255)*a+(old&255)*(1-a)),gg=Math.round(((color>>8)&255)*a+((old>>8)&255)*(1-a)),bb=Math.round(((color>>16)&255)*a+((old>>16)&255)*(1-a));pixels[idx]=0xff000000|(bb<<16)|(gg<<8)|rr;}else pixels[idx]=color;softwareIds[idx]=ident}}}cpu.putImageData(image,0,0)}
+      function render(pick=false){if(!visible)return;resize();if(dirty)build();const v=camera();if(gl){gl.viewport(0,0,v.w,v.h);gl.clearColor(pick?0:.89,pick?0:.92,pick?0:.94,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniform3fv(U.right,v.r);gl.uniform3fv(U.down,v.d);gl.uniform3fv(U.normal,v.n);gl.uniform3fv(U.origin,v.origin);gl.uniform2f(U.scale,2*v.scale/v.w,2*v.scale/v.h);gl.uniform1f(U.picking,pick?1:0);gl.uniform1f(U.alpha,1);gl.drawArrays(gl.TRIANGLES,0,pick?count:opaqueCount);if(!pick&&count>opaqueCount){gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);gl.enable(gl.CULL_FACE);gl.frontFace(gl.CW);gl.uniform1f(U.alpha,.40);gl.drawArrays(gl.TRIANGLES,opaqueCount,count-opaqueCount);gl.disable(gl.CULL_FACE);gl.depthMask(true);gl.disable(gl.BLEND);gl.uniform1f(U.alpha,1)}}else raster(v);if(!pick){labelCtx.clearRect(0,0,v.w,v.h);if(tilt<1.38){for(const l of labels){let q=sub(l.p,v.origin),x=v.w/2+dot(q,v.r)*v.scale,y=v.h/2+dot(q,v.d)*v.scale;let px=l.size*Math.max(.78,Math.min(1.8,v.scale*1.7));labelCtx.font=`600 ${px}px monospace`;labelCtx.fillStyle=l.c;labelCtx.textAlign='center';labelCtx.textBaseline='middle';labelCtx.fillText(l.t,x,y)}}}}
       function request(){if(!visible||queued)return;queued=true;requestAnimationFrame(()=>{queued=false;render()})}
-      function update(){if(!visible)return;const k=JSON.stringify([parts,jumpers.map(({pin,h,color,slack})=>[pin,h,color,slack]),boardPosition,active,draft,probes,io?.pins,io?.txPulse>0,parts.filter(p=>p.t==='led').map(p=>currents?.get(p.id)||0)]);if(k!==lastKey){lastKey=k;dirty=true;request()}}
+      const ledSelect=document.getElementById('led3dTarget'), colorSelect=document.getElementById('led3dColor'),cutButton=document.getElementById('led3dCut'),ledData=document.getElementById('led3dData');
+      for(const [k,v] of Object.entries(ledColors))colorSelect.add(new Option(v.label,k));
+      function syncLED(){const list=parts.filter(p=>p.t==='led');const selected=part();if(selected?.t==='led')ledTarget=selected.id;if(!list.some(p=>p.id===ledTarget)){ledTarget=list[0]?.id||'';ledCut=false;ledDetail=false}const key=list.map(p=>p.id).join('|');if(ledSelect.dataset.key!==key){ledSelect.replaceChildren(...list.map(p=>new Option(p.id,p.id)));ledSelect.dataset.key=key}ledSelect.value=ledTarget;const p=list.find(p=>p.id===ledTarget);for(const el of [ledSelect,colorSelect,cutButton,document.getElementById('led3dFocus')])el.disabled=!p;cutButton.setAttribute('aria-pressed',String(ledCut));if(!p){ledData.textContent='Monta un LED per ispezionarlo.';return}colorSelect.value=p.color||'red';const lc=ledColors[colorSelect.value];ledData.textContent=`${p.id} · A+ ${p.p[0]} · K− ${p.p[1]} · ${lc.label} · Vf nominale a 10 mA: ${lc.vf.toFixed(2)} V · I = ${fmt(Math.max(0,currents?.get(p.id)||0)*1000)} mA`+(ledCut?' · Sezione: montante anodico, bonding, chip e coppa catodica.':'');}
+      function focusLED(){const p=parts.find(p=>p.id===ledTarget);if(!p)return;ledDetail=true;dirty=true;const a=coords[p.p[0]],b=coords[p.p[1]];yaw=Math.atan2(b[1]-a[1],b[0]-a[0]);tilt=1.30;focus3d([(a[0]+b[0])/2,(a[1]+b[1])/2,BBZ+155],5.4);status3.textContent='Dettaglio LED · altri componenti nascosti solo nella vista · Dall’alto per tornare al banco.';}
+      ledSelect.onchange=()=>{ledTarget=ledSelect.value;active=ledTarget;tool='select';refresh();if(ledDetail||ledCut)focusLED();};
+      colorSelect.onchange=()=>{const p=parts.find(p=>p.id===ledTarget);if(!p)return;checkpoint();p.color=colorSelect.value;active=p.id;tool='select';refresh();};
+      cutButton.onclick=()=>{ledCut=!ledCut;dirty=true;syncLED();if(ledCut)focusLED();request();};
+      document.getElementById('led3dFocus').onclick=focusLED;
+      function update(){if(!visible)return;syncLED();const k=JSON.stringify([ledTarget,ledCut,ledDetail,parts,jumpers.map(({pin,h,color,slack})=>[pin,h,color,slack]),boardPosition,active,draft,probes,io?.pins,io?.txPulse>0,parts.filter(p=>p.t==='led').map(p=>currents?.get(p.id)||0)]);if(k!==lastKey){lastKey=k;dirty=true;request()}}
       function pick(x,y){
         render(true);
         const rect=canvas.getBoundingClientRect(),px=Math.max(0,Math.min(canvas.width-1,Math.floor((x-rect.left)*canvas.width/rect.width))),py=Math.max(0,Math.min(canvas.height-1,Math.floor((y-rect.top)*canvas.height/rect.height)));
@@ -3368,18 +3405,68 @@
         if(gl) render();
         return ref;
       }
-      function action(ref){if(!ref)return;if(ref.reset){document.getElementById('boardReset').click();return}if(ref.hardware){inspectText(...ref.hardware);return}if(ref.socket){socketClick(ref.socket);return}if(ref.jumper){if(tool==='select')inspectJumper(ref.jumper);return}if(ref.hole){const h=ref.hole;if(pending){connect(pending,h);return}if(tool==='probe'){if(probes.length===2)probes=[];probes.push(h);refresh();return}if(tool!=='select'){place(h);update();return}if(movePart&&active){let p=part(),start=p?.p[0];if(start){let targets=translatePart(p,h);if(targets&&targets.every(k=>k&&free(k,active))){checkpoint();p.p=targets;movePart=false;document.getElementById('move3d').setAttribute('aria-pressed','false');refresh();return}}}inspectText(h,'Foro breadboard · '+(voltages?fmt(voltages(h))+' V':'non misurato'));return}if(ref.part){if(tool==='probe'){status3.textContent='Tocca un foro libero della stessa colonna o linea per misurare la tensione.';return}if(tool!=='select')return;active=ref.part;let p=part();if(p?.t==='button'){checkpoint();p.on=!p.on}refresh()}}
+      let hoverHole3d='';
+      function nearestHoleAtScreen(x,y,allowOccupied=false){
+        const v=camera(),rect=canvas.getBoundingClientRect();
+        let best='',dist=allowOccupied?26:22;
+        for(const [h,p] of Object.entries(coords)){
+          if(!allowOccupied && !free(h,active)) continue;
+          const q=hp(h),qq=sub(q,v.origin),sx=rect.left+(v.w/2+dot(qq,v.r)*v.scale)*rect.width/v.w,sy=rect.top+(v.h/2+dot(qq,v.d)*v.scale)*rect.height/v.h;
+          const d=Math.hypot(x-sx,y-sy);
+          if(d<dist){best=h;dist=d;}
+        }
+        return best;
+      }
+      function resolveHoleRef(ref,x,y,allowOccupied=false){
+        if(ref?.hole) return ref.hole;
+        return nearestHoleAtScreen(x,y,allowOccupied);
+      }
+      function action(ref,x,y){
+        const hole=resolveHoleRef(ref,x,y,movePart);
+        if(!ref&&hole){ref={hole};}
+        if(!ref)return;
+        if(ref.reset){document.getElementById('boardReset').click();return}
+        if(ref.socket){socketClick(ref.socket);return}
+        if(ref.jumper){if(tool==='select')inspectJumper(ref.jumper);return}
+        if(ref.part){
+          if(tool==='probe'){status3.textContent='Tocca un foro libero della stessa colonna o linea per misurare la tensione.';return}
+          if(tool!=='select'){
+            if(hole){place(hole);update();return}
+            return;
+          }
+          active=ref.part;let p=part();
+          if(p?.t==='led'){ledTarget=p.id;inspectText(...(ref.detail||[p.id,'LED THT · anodo '+p.p[0]+' · catodo '+p.p[1]]));}
+          if(p?.t==='button'){checkpoint();p.on=!p.on}
+          refresh();return;
+        }
+        if(ref.hardware){
+          if((tool!=='select'||pending||movePart||tool==='probe')&&hole){ref={hole};}
+          else {inspectText(...ref.hardware);return}
+        }
+        if(ref.hole){
+          const h=ref.hole;
+          if(pending){connect(pending,h);return}
+          if(tool==='probe'){if(probes.length===2)probes=[];probes.push(h);refresh();return}
+          if(tool!=='select'){place(h);update();return}
+          if(movePart&&active){let p=part(),start=p?.p[0];if(start){let targets=translatePart(p,h);if(targets&&targets.every(k=>k&&free(k,active))){checkpoint();p.p=targets;movePart=false;document.getElementById('move3d').setAttribute('aria-pressed','false');refresh();return}}}
+          inspectText(h,'Foro breadboard · '+(voltages?fmt(voltages(h))+' V':'non misurato'));return;
+        }
+      }
       function show(on){visible=on;wrap.hidden=!on;flat.classList.toggle('hidden3d',on);toggle.textContent=on?'Vista 2D (montaggio)':'Vista 3D';toggle.setAttribute('aria-pressed',String(on));if(on){dirty=true;update();request()}else{drawCables();paint()}}
       toggle.onclick=()=>show(!visible);
-      document.getElementById('top3d').onclick=()=>{yaw=0;tilt=0;zoom=1;pan=[0,0];status3.textContent='Vista ortografica dall’alto · clic per inserire o ispezionare · rotella/pinch per zoom';request()};
-      document.getElementById('orbit3d').onclick=()=>{yaw=-.24;tilt=.60;zoom=1;pan=[0,0];status3.textContent='Vista orbitale · trascina per ruotare · tasto destro per spostare';request()};
+      document.getElementById('top3d').onclick=()=>{ledDetail=false;dirty=true;yaw=0;tilt=0;zoom=1;pan=[0,0];status3.textContent='Vista ortografica dall’alto · clic vicino a un foro per aggancio automatico · rotella/pinch per zoom';request()};
+      document.getElementById('orbit3d').onclick=()=>{ledDetail=false;dirty=true;yaw=-.24;tilt=.60;zoom=1;pan=[0,0];status3.textContent='Vista orbitale · trascina per ruotare · tasto destro per spostare';request()};
       function focus3d(point,z){const v=camera(),delta=sub(point,[1170,-35,85]);pan=[dot(delta,v.r),dot(delta,v.d)];zoom=z;request()}
-      document.getElementById('focusBB3d').onclick=()=>focus3d([1170,390,116],1.05);
-      document.getElementById('focusUno3d').onclick=()=>focus3d([1170+(boardPosition-50)*6.7,-505,70],2.1);
-      document.getElementById('focusLoad3d').onclick=()=>{const p=parts.find(p=>p.id===active)||parts.find(p=>p.t==='led')||parts.find(p=>p.t==='resistor');if(p){const a=coords[p.p[0]],b=coords[p.p[1]];yaw=-.18;tilt=.92;status3.textContent='Dettaglio componente · vista inclinata per osservare i terminali';focus3d([(a[0]+b[0])/2,(a[1]+b[1])/2,p.t==='led'?BBZ+135:BBZ+35],4.7)}else focus3d([1170,390,116],1.05)};
-      document.getElementById('plus3d').onclick=()=>{zoom=Math.min(5,zoom*1.2);request()};document.getElementById('minus3d').onclick=()=>{zoom=Math.max(.65,zoom/1.2);request()};document.getElementById('move3d').onclick=e=>{movePart=!movePart;e.currentTarget.setAttribute('aria-pressed',String(movePart));status3.textContent=movePart?'Seleziona un componente, poi il nuovo foro del suo primo terminale.':'Vista ortografica dall’alto · clic per montare / ispezionare';};
-      const pointers=new Map();let start=null,travel=0;canvas.oncontextmenu=e=>e.preventDefault();canvas.onpointerdown=e=>{pointers.set(e.pointerId,[e.clientX,e.clientY]);canvas.setPointerCapture(e.pointerId);if(pointers.size===1){start={x:e.clientX,y:e.clientY,pan:e.button===2||e.shiftKey};travel=0}else travel=99};canvas.onpointermove=e=>{let old=pointers.get(e.pointerId);if(!old)return;let dx=e.clientX-old[0],dy=e.clientY-old[1];travel+=Math.hypot(dx,dy);if(pointers.size===2){let other=[...pointers].find(([k])=>k!==e.pointerId)[1],d0=Math.hypot(old[0]-other[0],old[1]-other[1]),d1=Math.hypot(e.clientX-other[0],e.clientY-other[1]);zoom=Math.max(.65,Math.min(5,zoom*d1/Math.max(1,d0)));}else if(start?.pan){let s=camera().scale/(canvas.width/canvas.clientWidth);pan[0]-=dx/s;pan[1]-=dy/s}else if(travel>4){yaw-=dx*.009;tilt=Math.max(0,Math.min(1.48,tilt+dy*.008))}pointers.set(e.pointerId,[e.clientX,e.clientY]);request()};canvas.onpointerup=e=>{if(travel<5&&e.button===0)action(pick(e.clientX,e.clientY));pointers.delete(e.pointerId);if(!pointers.size)start=null};canvas.onpointercancel=e=>pointers.delete(e.pointerId);canvas.addEventListener('wheel',e=>{e.preventDefault();const rect=canvas.getBoundingClientRect(),v=camera(),px=(e.clientX-rect.left)*v.w/rect.width-v.w/2,py=(e.clientY-rect.top)*v.h/rect.height-v.h/2,old=v.scale;zoom=Math.max(.65,Math.min(5,zoom*Math.exp(-e.deltaY*.0012)));const next=camera().scale;pan[0]+=px*(1/old-1/next);pan[1]+=py*(1/old-1/next);request()},{passive:false});new ResizeObserver(request).observe(wrap);canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();show(false);toggle.disabled=true;status3.textContent='Contesto grafico perso: vista 2D disponibile.'});
-      yaw=0;tilt=0;zoom=1;pan=[0,0];status3.textContent='Vista ortografica dall’alto · clic per inserire o ispezionare · rotella/pinch per zoom';show(true);return {update,render,pick,show,screenPoint(p){const v=camera(),q=sub(p,v.origin),r=canvas.getBoundingClientRect();return [r.left+(v.w/2+dot(q,v.r)*v.scale)*r.width/v.w,r.top+(v.h/2+dot(q,v.d)*v.scale)*r.height/v.h]},debug:()=>({count,visible,ids:ids.length,renderer:gl?"WebGL":"CPU z-buffer"})};
+      document.getElementById('focusBB3d').onclick=()=>{ledDetail=false;dirty=true;focus3d([1170,390,116],1.05)};
+      document.getElementById('focusUno3d').onclick=()=>{ledDetail=false;dirty=true;focus3d([1170+(boardPosition-50)*6.7,-505,70],2.1)};
+      document.getElementById('focusLoad3d').onclick=()=>{ledDetail=false;dirty=true;const p=parts.find(p=>p.id===active)||parts.find(p=>p.t==='led')||parts.find(p=>p.t==='resistor');if(p){const a=coords[p.p[0]],b=coords[p.p[1]];yaw=-.18;tilt=.92;status3.textContent='Dettaglio componente · vista inclinata per osservare i terminali';focus3d([(a[0]+b[0])/2,(a[1]+b[1])/2,p.t==='led'?BBZ+135:BBZ+35],4.7)}else focus3d([1170,390,116],1.05)};
+      document.getElementById('plus3d').onclick=()=>{zoom=Math.min(12,zoom*1.2);request()};document.getElementById('minus3d').onclick=()=>{zoom=Math.max(.65,zoom/1.2);request()};document.getElementById('move3d').onclick=e=>{movePart=!movePart;e.currentTarget.setAttribute('aria-pressed',String(movePart));status3.textContent=movePart?'Seleziona un componente, poi il nuovo foro del suo primo terminale.':'Vista ortografica dall’alto · clic per montare / ispezionare';};
+      const pointers=new Map();let start=null,travel=0;canvas.oncontextmenu=e=>e.preventDefault();canvas.onpointerdown=e=>{pointers.set(e.pointerId,[e.clientX,e.clientY]);canvas.setPointerCapture(e.pointerId);if(pointers.size===1){start={x:e.clientX,y:e.clientY,pan:e.button===2||e.shiftKey};travel=0}else travel=99};canvas.onpointermove=e=>{let old=pointers.get(e.pointerId);if(!old)return;let dx=e.clientX-old[0],dy=e.clientY-old[1];travel+=Math.hypot(dx,dy);if(pointers.size===2){let other=[...pointers].find(([k])=>k!==e.pointerId)[1],d0=Math.hypot(old[0]-other[0],old[1]-other[1]),d1=Math.hypot(e.clientX-other[0],e.clientY-other[1]);zoom=Math.max(.65,Math.min(12,zoom*d1/Math.max(1,d0)));}else if(start?.pan){let s=camera().scale/(canvas.width/canvas.clientWidth);pan[0]-=dx/s;pan[1]-=dy/s}else if(travel>4){yaw-=dx*.009;tilt=Math.max(0,Math.min(1.48,tilt+dy*.008))}pointers.set(e.pointerId,[e.clientX,e.clientY]);
+        const interactive = tool!=='select' || pending || movePart || tool==='probe';
+        const cand = interactive ? nearestHoleAtScreen(e.clientX,e.clientY,movePart) : '';
+        if(cand!==hoverHole3d){hoverHole3d=cand;dirty=true; if(cand&&interactive) status3.textContent=(tool!=='select'?'Snap foro: ':'Foro: ')+cand+(draft.length?` · terminale ${draft.length+1}/${terminals[tool].length}`:'');}
+        request()};canvas.onpointerup=e=>{if(travel<5&&e.button===0)action(pick(e.clientX,e.clientY),e.clientX,e.clientY);pointers.delete(e.pointerId);if(!pointers.size)start=null};canvas.onpointercancel=e=>{pointers.delete(e.pointerId);hoverHole3d='';dirty=true;request()};canvas.addEventListener('wheel',e=>{e.preventDefault();const rect=canvas.getBoundingClientRect(),v=camera(),px=(e.clientX-rect.left)*v.w/rect.width-v.w/2,py=(e.clientY-rect.top)*v.h/rect.height-v.h/2,old=v.scale;zoom=Math.max(.65,Math.min(12,zoom*Math.exp(-e.deltaY*.0012)));const next=camera().scale;pan[0]+=px*(1/old-1/next);pan[1]+=py*(1/old-1/next);request()},{passive:false});new ResizeObserver(request).observe(wrap);canvas.addEventListener('mouseleave',()=>{if(hoverHole3d){hoverHole3d='';dirty=true;request()}});canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();show(false);toggle.disabled=true;status3.textContent='Contesto grafico perso: vista 2D disponibile.'});
+      yaw=0;tilt=0;zoom=1;pan=[0,0];status3.textContent='Vista ortografica dall’alto · clic vicino a un foro per aggancio automatico · rotella/pinch per zoom';show(true);return {update,render,pick,show,resetLED(){ledTarget='';ledCut=false;ledDetail=false;dirty=true;hoverHole3d='';yaw=0;tilt=0;zoom=1;pan=[0,0];request()},screenPoint(p){const v=camera(),q=sub(p,v.origin),r=canvas.getBoundingClientRect();return [r.left+(v.w/2+dot(q,v.r)*v.scale)*r.width/v.w,r.top+(v.h/2+dot(q,v.d)*v.scale)*r.height/v.h]},debug:()=>({count,visible,ids:ids.length,renderer:gl?"WebGL":"CPU z-buffer"})};
     }
 
     let scene3d=null;registerSockets();new ResizeObserver(drawCables).observe(host);
