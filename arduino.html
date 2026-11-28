@@ -790,6 +790,15 @@ main{padding:12px}.page-head>div{display:flex;flex-wrap:wrap;align-items:baselin
 
 @media(min-width:981px){.earth-main{flex-direction:column;align-items:flex-end;gap:5px}.earth-nav .earth-extra{position:absolute;right:96px;bottom:0;max-height:calc(100dvh - 100px);overflow:auto}.earth-main .earth-zoom{flex-direction:column}.earth-main .earth-zoom button+button{border-left:0;border-top:1px solid #d5dce1}.earth-nav button{min-width:42px;min-height:42px}.earth-nav{right:10px;bottom:8px}.earth-main .earth-zoom button{min-height:35px}}
 @media(min-width:981px) and (max-height:680px){.earth-main{flex-direction:row}.earth-main .earth-zoom{flex-direction:row}.earth-main .earth-zoom button+button{border-top:0;border-left:1px solid #d5dce1}.earth-nav .earth-extra{right:0;bottom:50px}}
+
+/* Workspace UX: one compact navigation strip, two working surfaces, optional tools. */
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0!important;margin:-1px!important;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0!important}
+body{padding:5px;font-size:14px}.mast,main{max-width:none;width:100%}.mast{padding:4px 10px;margin-bottom:5px;border-radius:8px;gap:5px;flex-wrap:nowrap;min-height:36px}.mast-brand{font-size:20px;flex:none}.mast-nav{flex-wrap:nowrap;overflow-x:auto;min-width:0;gap:4px;scrollbar-width:thin}.mast-nav a{white-space:nowrap;padding:3px 9px;font-size:12px}.mast-nav a[aria-current=page]{font-weight:800}
+main{padding:6px;min-height:0;border-radius:9px}.lesson-bar{margin:0 0 6px;padding:3px 6px;border-radius:7px;gap:5px;flex-wrap:nowrap}.lesson-picker{min-width:0;flex:1 1 auto;flex-wrap:nowrap;gap:6px}.lesson-picker select{min-width:0;max-width:620px;width:100%;flex:1 1 auto;min-height:34px}.lesson-nav{flex:none;gap:4px}.lesson-nav button{min-width:35px;min-height:34px}.lesson-nav .btn-link{white-space:nowrap;min-height:34px!important;padding:4px 8px!important}.lesson-nav #toggleSketchPane[aria-expanded=true]{background:#e2e8f0;border-color:#94a3b8}
+.grid{grid-template-columns:minmax(0,1fr) clamp(305px,26vw,440px);gap:6px;align-items:start}.grid.code-hidden{grid-template-columns:minmax(0,1fr)}.grid>.card{border-radius:8px;box-shadow:none}.grid>section:first-child>.card-body{padding:3px}.grid>section:first-child .controls{overflow:visible;margin:0 0 3px;padding:1px 3px;gap:5px;flex-wrap:wrap;align-items:center}.grid>section:first-child .controls button{min-height:34px}.clock{border:0;background:#f1f5f9;border-radius:5px;padding:5px 8px;white-space:nowrap;min-width:75px;text-align:center}.timing-options{position:relative;margin-left:auto;z-index:12}.timing-options summary{list-style:none;cursor:pointer;background:#f1f5f9;border:1px solid var(--rule);border-radius:6px;padding:7px 10px;font-weight:700;font-size:12px}.timing-options summary::-webkit-details-marker{display:none}.timing-options summary::after{content:' ▾'}.timing-inner{position:absolute;right:0;top:calc(100% + 4px);display:flex;gap:5px;flex-wrap:wrap;align-items:center;width:260px;max-width:85vw;background:white;border:1px solid #cbd5e1;border-radius:8px;padding:8px;box-shadow:0 4px 14px #0f172a25}.timing-inner label{margin-left:0!important}.work-toolbar{padding:3px 5px;gap:3px}.work-toolbar button{min-height:34px}.view3d-stage{height:var(--workspace-stage,clamp(340px,calc(100dvh - 200px),1100px));min-height:280px}.view3d{border-radius:6px}.view3d .mount-status{height:30px}.work-settings>summary{min-height:30px;padding:5px 0}.grid>section:first-child .status-line{margin-top:4px}.inputs:has(> [hidden]:only-child),.inputs:not(:has(> :not([hidden]))){display:none}.loads:empty{display:none}.sketch-pane .card-head{padding:4px 8px;flex-wrap:nowrap;min-height:35px;gap:5px}.sketch-pane .card-head h2{flex:1;font-size:14px;white-space:nowrap}.sketch-pane #closeSketchPane{min-width:30px;min-height:30px;font-size:20px;padding:0 6px}.sketch-pane .card-body{padding:7px}.sketch-pane .codehead{margin:0 0 5px;justify-content:flex-end}.sketch-pane .code-actions button{padding:3px 7px;min-height:30px}.sketch-pane #code{height:clamp(170px,calc(100dvh - 340px),660px)!important;min-height:120px;font-size:13px;border-radius:6px;padding:10px;resize:vertical}.serial-head{margin:9px 0 4px}.serial-head h3{font-size:12px}#serial{min-height:70px;max-height:160px;border-radius:6px}.integration-fold{margin-top:8px;border:1px solid #cbd5e1;border-radius:6px;background:#f8fafc}.integration-fold>summary{cursor:pointer;padding:8px;font-weight:700;font-size:12px;color:#1e3a8a}.integration-box{margin:0;border:0;border-top:1px solid #cbd5e1;border-radius:0;padding:8px}.integration-box-head{display:none}.guide-section{margin-top:8px}.view3d:fullscreen .view3d-stage{height:auto;min-height:180px}.guide-section{scroll-margin-top:8px}
+@media(max-width:980px){.grid{grid-template-columns:minmax(0,1fr)}.view3d-stage{height:var(--workspace-stage,clamp(330px,calc(100svh - 220px),850px))}.sketch-pane #code{height:clamp(220px,40svh,500px)!important}}
+@media(max-width:620px){body{padding:3px}main{padding:3px}.mast{padding:4px 5px;min-height:34px}.mast-brand{font-size:17px}.mast-nav a{font-size:11px;padding:4px 7px}.lesson-bar{flex-wrap:wrap;padding:3px;gap:3px}.lesson-picker{flex:1 1 100%;gap:5px}.lesson-picker label{font-size:10px}.lesson-picker select{min-height:40px;font-size:13px}.lesson-nav{width:100%;justify-content:flex-start}.lesson-nav button,.lesson-nav .btn-link{min-height:40px!important;font-size:12px!important}.lesson-nav .btn-link{margin-left:auto}.grid>section:first-child>.card-body{padding:2px}.grid>section:first-child .controls{gap:3px;padding:0}.grid>section:first-child .controls button{min-height:40px;padding:3px 6px}.timing-options summary{padding:10px 6px}.clock{min-width:65px;font-size:11px;padding:5px}.work-toolbar button{min-height:44px}.view3d-stage{min-height:300px;height:var(--workspace-stage,clamp(300px,calc(100svh - 245px),700px))}.view3d .mount-status{height:34px}.sketch-pane #closeSketchPane{min-height:44px;min-width:44px}.integration-fold>summary{min-height:44px}.work-settings>summary{min-height:44px}}
+@media(max-width:620px){.work-toolbar{flex-wrap:wrap;overflow-x:visible;gap:3px;padding:3px}.work-toolbar #mountTools3d{display:contents}.work-toolbar button{min-height:40px;padding:4px 7px}.work-toolbar #quickFocus3d{margin-left:auto}.view3d-stage{min-height:280px}.lesson-nav #toggleSketchPane{min-width:60px}}
 </style>
 </head>
 <body>
@@ -805,12 +814,7 @@ main{padding:12px}.page-head>div{display:flex;flex-wrap:wrap;align-items:baselin
   </header>
 
   <main>
-    <div class="page-head">
-      <div>
-        <h1>Laboratorio Arduino Uno</h1>
-        <p class="subtitle">Simula scheda Uno R3, breadboard e codice C++ in tempo reale. Guida, schema e teoria si trovano sotto al banco.</p>
-      </div>
-    </div>
+    <h1 class="sr-only">Arduino Uno · simulatore</h1>
 
     <div class="lesson-bar">
       <div class="lesson-picker">
@@ -818,24 +822,20 @@ main{padding:12px}.page-head>div{display:flex;flex-wrap:wrap;align-items:baselin
         <select id="lesson"></select>
       </div>
       <div class="lesson-nav">
-        <button id="prevLesson" type="button">← Precedente</button>
-        <button id="nextLesson" type="button">Successiva →</button>
+        <button id="prevLesson" type="button" title="Esperienza precedente" aria-label="Esperienza precedente">←</button>
+        <button id="nextLesson" type="button" title="Esperienza successiva" aria-label="Esperienza successiva">→</button>
+        <button id="toggleSketchPane" type="button" aria-controls="sketchPane" aria-expanded="true">Sketch</button>
         <a class="btn-link" href="#guideSection" style="min-height:36px;padding:6px 11px;font-size:13px;">Guida &amp; Schema ↓</a>
       </div>
     </div>
 
     <div class="grid">
       <section class="card" aria-label="Simulatore">
-        <div class="card-head">
-          <h2>Banco Arduino + breadboard</h2>
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-            <output class="clock" id="clock">0,00 s</output>
-          </div>
-        </div>
+        <h2 class="sr-only">Banco Arduino + breadboard</h2>
         <div class="card-body">
           <div class="controls">
-            <button class="primary" id="go" type="button">▶ Avvia</button><button id="reset" type="button">Reset</button><button id="toggle3d" type="button" aria-pressed="false">Vista 3D</button>
-            <button id="step10" type="button">+ 10 ms</button>
+            <button class="primary" id="go" type="button">▶ Avvia</button><button id="reset" type="button">Reset</button><output class="clock" id="clock" aria-label="Tempo simulato">0,00 s</output><button id="toggle3d" type="button" aria-pressed="false">Vista 3D</button>
+            <details class="timing-options"><summary>Tempo</summary><div class="timing-inner"><button id="step10" type="button">+ 10 ms</button>
             <button id="step" type="button">+ 100 ms</button>
             <button id="sec" type="button">+ 1 s</button>
             
@@ -847,7 +847,7 @@ main{padding:12px}.page-head>div{display:flex;flex-wrap:wrap;align-items:baselin
                 <option value="2">2×</option>
                 <option value="5">5×</option>
               </select>
-            </label>
+            </label></div></details>
           </div>
           <div class="bench"><div class="view3d" id="view3d" hidden><div class="work-toolbar"><div id="mountTools3d" class="mount-row" aria-label="Strumenti montaggio 3D"></div><button id="quickFocus3d" type="button" title="Inquadra la breadboard" aria-label="Inquadra la breadboard">▦</button><button id="quickUndo3d" type="button" title="Annulla ultima modifica" aria-label="Annulla ultima modifica">↶</button><button id="quickCancel3d" type="button" title="Annulla posa" aria-label="Annulla posa">Esc</button></div><div class="view3d-stage" id="navStage3d"><canvas id="lab3d" tabindex="0" aria-label="Banco tridimensionale. Frecce per spostarti, Maiusc e frecce per ruotare, più e meno per lo zoom, punto interrogativo per la guida."></canvas><canvas id="labels3d" aria-hidden="true"></canvas><button class="stage-fullscreen" data-nav="fullscreen" type="button" title="Schermo intero" aria-label="Attiva o esci da schermo intero">⛶</button><div class="earth-nav" role="group" aria-label="Navigazione tridimensionale"><div class="earth-extra" id="earthExtra" hidden><div class="earth-pad" role="group" aria-label="Spostamento"><button data-nav="up" aria-label="Sposta in alto">↑</button><button data-nav="left" aria-label="Sposta a sinistra">←</button><button data-nav="down" aria-label="Sposta in basso">↓</button><button data-nav="right" aria-label="Sposta a destra">→</button></div><div class="earth-angles"><button data-nav="ccw" aria-label="Ruota a sinistra">↶</button><button data-nav="cw" aria-label="Ruota a destra">↷</button><button data-nav="lessTilt" aria-label="Riduci inclinazione">▱−</button><button data-nav="moreTilt" aria-label="Aumenta inclinazione">▱+</button></div><label>Inclinazione <input id="earthTilt" type="range" min="0" max="85" step="1" value="0"><output id="earthTiltValue">0°</output></label><div class="earth-angles"><button data-nav="center" aria-label="Centra banco">Centra banco</button><button data-nav="fullscreen" aria-label="Schermo intero">⛶</button></div></div><div class="earth-main"><button id="earthAccess" aria-expanded="false" aria-controls="earthExtra" aria-label="Controlli di navigazione accessibili" title="Controlli di navigazione"><svg viewBox="0 0 24 24" width="23" height="23" aria-hidden="true"><circle cx="12" cy="4" r="2" fill="currentColor"/><path d="M4 8h16M12 7v7m0 0-5 7m5-7 5 7" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg></button><button data-nav="center" title="Centra banco (R)" aria-label="Centra banco"><svg viewBox="0 0 24 24" width="23" height="23" aria-hidden="true"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 1v5m0 12v5M1 12h5m12 0h5" stroke="currentColor" stroke-width="2"/></svg></button><button id="earthMode" data-nav="mode" title="Alterna vista piana e inclinata (O)" aria-label="Passa a vista inclinata">3D</button><button id="earthCompass" title="Ripristina orientamento (N)" aria-label="Ripristina orientamento"><svg id="earthNeedle" viewBox="0 0 32 32" width="29" height="29" aria-hidden="true"><path d="M16 3 22 17 16 15 10 17Z" fill="#d84438" stroke="#9b3933" stroke-width=".5"/><path d="M16 29 10 17 16 15 22 17Z" fill="#e6edf2" stroke="#64748b" stroke-width=".7"/></svg></button><div class="earth-zoom"><button data-nav="out" aria-label="Riduci zoom" title="Riduci zoom (−)">−</button><button data-nav="in" aria-label="Aumenta zoom" title="Aumenta zoom (+)">+</button></div><button id="earthHelp" title="Scorciatoie (?)" aria-label="Guida alla navigazione" aria-expanded="false">?</button></div></div><div id="earthHelpPanel" class="earth-help" hidden><strong>Navigazione del banco</strong><button id="earthCloseHelp" aria-label="Chiudi guida">×</button><p><b>Mouse:</b> trascina per spostare; Maiusc + trascina o tasto destro per ruotare/inclinare; rotella per zoom sul puntatore; Maiusc + rotella per inclinare.</p><p><b>Tastiera:</b> frecce = sposta; Maiusc + frecce = ruota/inclina; +/− o Pag↑/Pag↓ = zoom; N = orientamento; U = dall’alto; O = 2D/3D; R = centra; Alt = movimento fine; ? = guida.</p><p><b>Touch:</b> un dito sposta; due dita avvicinate/allargate zoomano, ruotate cambiano azimut, mosse parallelamente in verticale inclinano. Tocca brevemente per montare o selezionare.</p><p>La vista 2D di questi comandi è la proiezione dall’alto del banco 3D. Il pulsante «Editor 2D» accanto ai comandi di esecuzione apre invece l’editor SVG.</p></div><div class="mount-row" id="mountChoices3d" aria-label="Candidati di aggancio"></div></div><div class="mount-row mount-status"><strong id="mountStep3d">Selezione</strong><span id="mountHint3d" aria-live="polite"></span></div><details class="work-settings"><summary>Montaggio preciso, inquadrature e dettagli LED</summary><div id="mount3d" class="mount3d"><div class="mount-row"><label>Foro <input id="mountExact3d" list="mountHoleList3d" placeholder="es. a12 o D13" size="8" autocomplete="off"></label><datalist id="mountHoleList3d"></datalist><button id="mountExactGo3d" type="button">Usa sigla</button><label>Presa Uno <select id="mountSocket3d" aria-label="Presa Arduino"><option value="">Scegli…</option></select></label><button id="mountCancel3d" type="button">Annulla posa</button><label><input id="mountConfirm3d" type="checkbox"> Conferma ogni foro</label><span title="Pesi relativi stimati dalla proiezione 3D e dalla precisione del puntatore, non probabilità misurate.">Snap adattivo</span></div></div><div class="view3d-controls"><button id="orbit3d" type="button">Vista orbitale</button><button id="top3d" type="button">Dall’alto</button><button id="focusBB3d" type="button">Breadboard</button><button id="focusUno3d" type="button">Uno</button><button id="focusLoad3d" type="button">Componenti</button><button id="plus3d" type="button">+</button><button id="minus3d" type="button">−</button><button id="move3d" type="button" aria-pressed="false">Sposta componente</button></div><div id="led3dControls" style="display:flex;flex-wrap:wrap;gap:7px;align-items:center;padding:8px 0;font-size:12px"><strong>LED THT Ø5 mm</strong><select id="led3dTarget" aria-label="LED da osservare"></select><label>Colore <select id="led3dColor" aria-label="Colore del LED"></select></label><button id="led3dFocus" type="button">Dettaglio LED</button><button id="led3dCut" type="button" aria-pressed="false">Sezione della resina</button><output id="led3dData" style="flex-basis:100%"></output></div></details><div id="status3d" role="status">Trascina per ruotare · rotella/pinch per zoom · tasto destro per spostare · clic per montare o ispezionare</div></div><details class="work-settings physical-settings"><summary>Impostazioni banco e cavetti</summary><div class="physical-controls"><label for="unoPosition">Posizione della Uno <input id="unoPosition" type="range" min="0" max="100" value="50"></label><button id="physicalReset" type="button">Centra scheda</button><button id="physicalShadows" type="button" aria-pressed="true">Ombre cavi (2D)</button><span>Seleziona un cavetto per ispezionarlo e regolare la riserva.</span></div></details><div class="boardscroll"><div class="physicalBench"><svg id="unoCables" aria-hidden="true"></svg>
             <div class="uno-board">
@@ -975,14 +975,15 @@ main{padding:12px}.page-head>div{display:flex;flex-wrap:wrap;align-items:baselin
         </div>
       </section>
 
-      <section class="card" aria-label="Sketch e strumenti">
+      <section class="card sketch-pane" id="sketchPane" aria-label="Sketch e strumenti">
         <div class="card-head">
-          <h2>Sketch C++ &amp; Strumenti</h2>
+          <h2>Sketch C++</h2>
           <span class="eyebrow" id="ref"></span>
+          <button type="button" id="closeSketchPane" aria-label="Nascondi sketch" title="Nascondi sketch">×</button>
         </div>
         <div class="card-body">
           <div class="codehead" style="margin-top:0;">
-            <h3><label for="code">Sketch modificabile</label></h3>
+            <label class="sr-only" for="code">Sketch modificabile</label>
             <div class="code-actions">
               <button id="copyCode" type="button">Copia sketch</button>
               <button id="original" type="button">Ripristina esempio</button>
@@ -996,7 +997,7 @@ main{padding:12px}.page-head>div{display:flex;flex-wrap:wrap;align-items:baselin
           </div>
           <pre id="serial"></pre>
 
-          <section class="integration-box" id="integrationBox" aria-label="Integrazione con Resistenze e Breadboard">
+          <details class="integration-fold"><summary>Misure elettriche · Resistenze · Esporta</summary><section class="integration-box" id="integrationBox" aria-label="Integrazione con Resistenze e Breadboard">
             <div class="integration-box-head">
               <strong>Integrazione Resistenze &amp; Breadboard</strong>
             </div>
@@ -1021,7 +1022,7 @@ main{padding:12px}.page-head>div{display:flex;flex-wrap:wrap;align-items:baselin
               <a class="btn-link" id="openResistenze" href="resistenze.html">Verifica colori in Resistenze ↗</a>
               <a class="btn-link btn-primary" id="exportBreadboard" target="_blank" rel="noopener" href="https://fmorea.github.io/breadboard">Esporta su Breadboard DC ↗</a>
             </div>
-          </section>
+          </section></details>
         </div>
       </section>
     </div>
@@ -3623,5 +3624,18 @@ main{padding:12px}.page-head>div{display:flex;flex-wrap:wrap;align-items:baselin
     loadImportedResistorFromQuery();
 
   </script>
+<script>
+(()=>{
+ const grid=document.querySelector('.grid'),pane=document.getElementById('sketchPane'),toggle=document.getElementById('toggleSketchPane'),stage=document.getElementById('navStage3d'),view=document.getElementById('view3d'),mq=matchMedia('(max-width:980px)');
+ let chosen=false,raf=0;
+ function fit(){raf=0;if(view.hidden||document.fullscreenElement)return;const rect=stage.getBoundingClientRect();const top=rect.top+window.scrollY;const available=(window.visualViewport?.height||window.innerHeight)-top-74;const height=Math.max(mq.matches?280:280,Math.floor(available));stage.style.setProperty('--workspace-stage',height+'px');}
+ function schedule(){if(!raf)raf=requestAnimationFrame(fit)}
+ function setPane(open,focus=false){pane.hidden=!open;grid.classList.toggle('code-hidden',!open);toggle.setAttribute('aria-expanded',String(open));toggle.textContent=open?'Sketch ✓':'Sketch';schedule();if(focus){if(open&&mq.matches)pane.scrollIntoView({block:'start'});else if(!open){if(mq.matches)window.scrollTo({top:0,behavior:'instant'});toggle.focus({preventScroll:true});}}}
+ toggle.addEventListener('click',()=>{chosen=true;setPane(pane.hidden,true)});document.getElementById('closeSketchPane').addEventListener('click',()=>{chosen=true;setPane(false,true)});
+ mq.addEventListener('change',()=>{if(!chosen)setPane(!mq.matches);schedule()});window.addEventListener('resize',schedule);window.visualViewport?.addEventListener('resize',schedule);document.addEventListener('fullscreenchange',schedule);new ResizeObserver(schedule).observe(document.querySelector('.lesson-bar'));new ResizeObserver(schedule).observe(document.querySelector('.controls'));new ResizeObserver(schedule).observe(document.querySelector('.work-toolbar'));new MutationObserver(schedule).observe(view,{attributes:true,attributeFilter:['hidden']});
+ const timing=document.querySelector('.timing-options');document.addEventListener('pointerdown',e=>{if(timing.open&&!timing.contains(e.target))timing.open=false});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&timing.open){timing.open=false;timing.querySelector('summary').focus()}});
+ setPane(!mq.matches);schedule();
+})();
+</script>
 </body>
 </html>
